@@ -45,7 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ||
     	"succees" => true,
     	"output" => $output
   	);
-	http_response_code(200);
+	
+
+response_code(200);
     print json_encode($rtn);
     return;
 }

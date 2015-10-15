@@ -63,7 +63,9 @@
 
 
 		$travel['checkins']=$checkins;
-	    http_response_code(200);
+	    
+
+response_code(200);
 	    print json_encode($travel);
 	    return;
 	} else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -77,7 +79,9 @@
 
 		addActivity($USER_ID, $travelId, "have created a travel \"".$name."\"");
 
-	    http_response_code(200);
+	    
+
+response_code(200);
 	    print json_encode($travel);
 	} else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 		$sql = "UPDATE travels SET";
@@ -107,7 +111,9 @@
 	    	"success" => true,
 	  		"result" => $result,
 	  	);
-	    http_response_code(200);
+	    
+
+response_code(200);
 	    print json_encode($rtn);
 	    return;
 

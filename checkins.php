@@ -43,7 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$checkin = mysql_fetch_array($result, MYSQL_ASSOC);
 		addActivity($USER_ID,$travelId,"have added a destination in his travel");
 		updateMapForTravel($travelId);
-	    http_response_code(200);
+	    
+
+response_code(200);
 	    print json_encode($checkin);
 	    return;
 } else if  ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
@@ -94,7 +96,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		updateMapForTravel($travelId);
 		addActivity($USER_ID,$travelId,"have changed a destination in his travel");
-	    http_response_code(200);
+	    
+
+response_code(200);
 	    print json_encode($checkin);
 	    return;
 }

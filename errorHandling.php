@@ -1,5 +1,7 @@
 <?php
-	function http_response_code($code)
+	function 
+
+response_code($code)
 	{
 		header(':', true, $code);
 		header('X-PHP-Response-Code: '.$code, true, $code);
@@ -39,7 +41,9 @@
 		      		"body" =>  $message
 	      		)
 	      	);
-  			http_response_code($code);
+  			
+
+response_code($code);
 	        print json_encode($rtn);
 
 	}

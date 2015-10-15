@@ -25,7 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		$comments[] = $row;
 	}
 
-    http_response_code(200);
+    
+
+response_code(200);
     print json_encode($comments);
     return;
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -43,7 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	$sql = "SELECT * FROM comments WHERE id = LAST_INSERT_ID()";
 	$result = mysql_query($sql) or die(mysql_error());
 	$comment = mysql_fetch_array($result, MYSQL_ASSOC);
-    http_response_code(200);
+    
+
+response_code(200);
     print json_encode($comment);
     return;
 } else if  ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
@@ -73,7 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	$result = mysql_query($sql) or die(mysql_error());
 	$comment = mysql_fetch_array($result, MYSQL_ASSOC);
 
-    http_response_code(200);
+    
+
+response_code(200);
     print json_encode($comment);
     return;
 }

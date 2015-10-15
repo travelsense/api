@@ -30,7 +30,9 @@
 		$travel['checkins'][] = $checkin;
 	}
 	
-	http_response_code(200);
+	
+
+response_code(200);
   	print json_encode($travel);
 
 ?>

@@ -42,7 +42,9 @@
 
 		addActivity($USER_ID, $newTravelId, "have copied a travel \"".$name."\"");
 
-	    http_response_code(200);
+	    
+
+response_code(200);
 	    print json_encode($travel);
 	} else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 

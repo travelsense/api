@@ -26,10 +26,14 @@ $database="remizorrr";
       "data" => $items
   );
 
-  http_response_code(200);
+  
+
+response_code(200);
   print json_encode($items);
 
-function http_response_code($code)
+function 
+
+response_code($code)
 {
   header(':', true, $code);
   header('X-PHP-Response-Code: '.$code, true, $code);

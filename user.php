@@ -27,7 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET')
 
 	$result = mysql_query($sql) or die(mysql_error());
 	$user = mysql_fetch_array($result, MYSQL_ASSOC);
-	http_response_code(200);
+	
+
+response_code(200);
     print json_encode($user);
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE')
 {
@@ -40,18 +42,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET')
 	//     "succees" => true,
 	// );
 
-	// http_response_code(200);
+	// 
+
+response_code(200);
  //    print json_encode($rtn);
 } else {
     $rtn = array(  
     	"succees" => false,
   		"error" => "Unknown Error"
   	);
-    http_response_code(500);
+    
+
+response_code(500);
     print json_encode($rtn);
 }
 
-function http_response_code($code)
+function 
+
+response_code($code)
 {
 	header(':', true, $code);
 	header('X-PHP-Response-Code: '.$code, true, $code);

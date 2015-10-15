@@ -33,7 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ||
       		"error" => "Can't create user without FBID",
       		"post" =>  $raw_post
       	);
-        http_response_code(500);
+        
+
+response_code(500);
         print json_encode($rtn);
         return;
     }
@@ -69,7 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ||
 	$message = createAccountMessage($email);
   	sendMessage($message);
 
-	http_response_code(200);
+	
+
+response_code(200);
     print json_encode($rtn);
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE')
 {
@@ -82,14 +86,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ||
 	    "succees" => true,
 	);
 
-	http_response_code(200);
+	
+
+response_code(200);
     print json_encode($rtn);
 } else {
     $rtn = array(  
     	"succees" => false,
   		"error" => "Unknown Error"
   	);
-    http_response_code(500);
+    
+
+response_code(500);
     print json_encode($rtn);
 }
 

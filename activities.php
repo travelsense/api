@@ -26,7 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		$activities[] = $activity;
 	}
 
-    http_response_code(200);
+    
+
+response_code(200);
     if (count($activities)) {
 	    print json_encode($activities);
     } else {
