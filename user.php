@@ -1,68 +1,66 @@
 <?php
-$servername = "localhost";
-$username = "remizorrr";
-$password = "uthipirak";
-$dbname = "remizorrr";
-// $conn = new mysqli($servername, $username, $password, $dbname);
-mysql_connect($servername, $username, $password) or die(mysql_error());
-mysql_select_db($dbname) or die(mysql_error());
+	include 'config.php';
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
+	$userId = $VARS['id'];
+	$first = $VARS['first'];
+	$last = $VARS['last'];
+	$about = $VARS['about'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET')
-{
-	$raw_post = json_decode($HTTP_RAW_POST_DATA, true);
+	if ($_SERVER['REQUEST_METHOD'] === 'GET')
+	{
+	    $sql = "SELECT * FROM users WHERE id = '{$userId}'";
 
-	$fbid = $raw_post['fbid'];
-	$first = $raw_post['first'];
-	$last = $raw_post['last'];
-	$token = $raw_post['token'];
-	$email = $raw_post['email'];
-	$image = $raw_post['image'];
+		$result = mysql_query($sql) or die(mysql_error());
+		$user = mysql_fetch_array($result, MYSQL_ASSOC);
+		response_code(200);
+	    print json_encode($user);
+	}  else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+		$sql = "UPDATE users SET";
 
-    $sql = "SELECT * FROM users WHERE id = 2";
-
-	$result = mysql_query($sql) or die(mysql_error());
-	$user = mysql_fetch_array($result, MYSQL_ASSOC);
+		$variablesToSet;
+		if($first){ $variablesToSet['first'] = $first;}
+		if($last){ $variablesToSet['last'] = $last;}
+		if($about){ $variablesToSet['about'] = $about;}
 	
+		$i = 0;
+		foreach($variablesToSet as $key=>$value) {
+			if($i == count($variablesToSet) - 1)
+			{
+				$sql = $sql." ".$key." = '".$value."'";
+			} else {
+				$sql = $sql." ".$key." = '".$value."',";
+			}
+			++$i;
+    	}
+
+		$sql = $sql." WHERE id = {$userId}";
+
+		$result = mysql_query($sql) or die(mysql_error());
+
+		$rtn = array(  
+	    	"success" => true,
+	  		"result" => $result,
+	  	);
+	    
 
 response_code(200);
-    print json_encode($user);
-} else if ($_SERVER['REQUEST_METHOD'] === 'DELETE')
-{
-	// $fbid = $_GET['fbid'];
+	    print json_encode($rtn);
+	    return;
 
-	// $sql = "DELETE FROM users WHERE fbid = {$fbid}";
-	// $result = mysql_query($sql) or die(mysql_error());
+	} else if ($_SERVER['REQUEST_METHOD'] === 'DELETE')
+	{
+		// $fbid = $_GET['fbid'];
 
-	// $rtn = array(
-	//     "succees" => true,
-	// );
+		// $sql = "DELETE FROM users WHERE fbid = {$fbid}";
+		// $result = mysql_query($sql) or die(mysql_error());
 
-	// 
+		// $rtn = array(
+		//     "succees" => true,
+		// );
 
-response_code(200);
- //    print json_encode($rtn);
-} else {
-    $rtn = array(  
-    	"succees" => false,
-  		"error" => "Unknown Error"
-  	);
-    
+		// 
 
-response_code(500);
-    print json_encode($rtn);
-}
-
-function 
-
-response_code($code)
-{
-	header(':', true, $code);
-	header('X-PHP-Response-Code: '.$code, true, $code);
-	header('Content-Type: application/json');
-}
+		response_code(500);
+	 	//    print json_encode($rtn);
+	} 
 ?>

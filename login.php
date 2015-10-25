@@ -23,6 +23,7 @@ if ($conn->connect_error) {
 	$email = $variables['email'];
 	$password = $variables['password'];
 	$image = $variables['image'];
+	$hometown = $variables['hometown'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' ||
 	$_SERVER['REQUEST_METHOD'] === 'GET')
@@ -46,7 +47,7 @@ response_code(500);
 		$result = mysql_query($sql) or die(mysql_error());
 		$user;
 		if (!mysql_num_rows($result)) {
-			$sql = "INSERT INTO users (fbid, first, last, fbtoken, email, image) VALUES ('{$fbid}','{$first}','{$last}','{$fbtoken}','{$email}','{$image}')";
+			$sql = "INSERT INTO users (fbid, first, last, fbtoken, email, image, hometown) VALUES ('{$fbid}','{$first}','{$last}','{$fbtoken}','{$email}','{$image}','{$hometown}')";
 			$result = mysql_query($sql) or die(mysql_error());
 			$message = createAccountMessage($email);
 		  	sendMessage($message);

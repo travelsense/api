@@ -22,10 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 	while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) 
 	{
+		$userID = $row['user'];
+		$userSql = "SELECT * FROM users WHERE id = {$userID}";
+		$userResult = mysql_query($userSql) or die(mysql_error());
+		$userAssoc = mysql_fetch_array($userResult, MYSQL_ASSOC);
+		$row['user'] = $userAssoc;
 		$comments[] = $row;
 	}
-
-    
 
 response_code(200);
     print json_encode($comments);
@@ -45,9 +48,7 @@ response_code(200);
 	$sql = "SELECT * FROM comments WHERE id = LAST_INSERT_ID()";
 	$result = mysql_query($sql) or die(mysql_error());
 	$comment = mysql_fetch_array($result, MYSQL_ASSOC);
-    
-
-response_code(200);
+	response_code(200);
     print json_encode($comment);
     return;
 } else if  ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
