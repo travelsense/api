@@ -1,0 +1,20 @@
+{
+  "name": "remizorrr/vacarious_web",
+  "description": "Server-side",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Anton Remizov",
+      "email": "a.y.remizov@gmail.com"
+    },
+    {
+      "name": "Alexey Karapetov",
+      "email": "alexey@karapetov.com"
+    }
+  ],
+
+  "require": {
+    "silex/silex": "~1.3"
+  }
+}
