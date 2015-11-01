@@ -22,8 +22,18 @@ class Application extends Silex\Application
         parent::__construct($config);
 
         //load services
+        $app = $this; // used in includes
         foreach ($this['services'] as $serviceLoader) {
             require $serviceLoader;
         }
+    }
+
+    /**
+     * @param string $env
+     * @return Application
+     */
+    static public function createByEnvironment($env)
+    {
+        return new self(require sprintf(__DIR__.'/../app/config/%s.php', $env));
     }
 }

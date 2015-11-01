@@ -1,3 +1,7 @@
 <?php
-$c = require __DIR__.'/common.php';
-return $c;
+return array_replace_recursive(
+    require __DIR__.'/common.php',
+    [
+        'debug' => true, //used by error handler
+    ]
+);

@@ -7,7 +7,13 @@
 return [
     'secure_json' => false,
     'services' => [
-        __DIR__.'/services/storage.php',
+        __DIR__.'/services/app.php',
+    ],
+    'debug' => false,
+    'error_message_mapping' => [
+        404 => 'Resource not found',
+        500 => 'Internal server error',
+        'default' => 'Cthulhu fhtagn!',
     ],
     'storage' => [
         'main' => [
