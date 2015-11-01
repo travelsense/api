@@ -7,8 +7,10 @@
 
 namespace Exception\ApiException;
 
+use Exception\ApiException;
 
-class Forbidden
+class Forbidden extends ApiException
 {
+
 
 }

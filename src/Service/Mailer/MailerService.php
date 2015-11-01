@@ -1,10 +1,10 @@
 <?php
 
-namespace Service\Mail;
+namespace Service\Mailer;
 
 use Mandrill;
 
-class MailService
+class MailerService
 {
 
 }

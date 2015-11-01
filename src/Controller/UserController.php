@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: f3ath
- * Date: 10/31/15
- * Time: 2:57 PM
- */
 
 namespace Controller;
 
@@ -29,21 +23,28 @@ class UserController
     }
 
 
-    public function create($payload)
+    /**
+     * Create a new user
+     * @param array $payload
+     * @throws ApiException
+     */
+    public function create(array $payload)
     {
         $email = A::get($payload, 'email');
         $email = filter_var($email, FILTER_VALIDATE_EMAIL);
         $password = A::get($payload, 'password');
 
         if ( ! $email) {
-            throw new ApiException('Invalid email');
+            throw ApiException::create(ApiException::INVALID_EMAIL);
         }
 
         if (mb_strlen($password)) {
-            throw new ApiException('Invalid email');
+            throw ApiException::create(ApiException::PASSWORD_TOO_SHORT);
         }
 
-        if ($this->userMapper->hasEmail($email))
+        if ($this->userMapper->hasEmail($email)) {
+            throw ApiException::create(ApiException::USER_EXISTS);
+        }
 
     }
 }
