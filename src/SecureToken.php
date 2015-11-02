@@ -46,7 +46,7 @@ class SecureToken
         $container = [$data]; // to check integrity on decryption
         $iv = mcrypt_create_iv($this->ivSize, MCRYPT_RAND);
         $encrypted = mcrypt_encrypt($this->cipher, $this->key, serialize($container), $this->mode, $iv);
-        return base64_encode($iv.$encrypted);
+        return bin2hex($iv.$encrypted);
     }
 
     /**
@@ -56,7 +56,7 @@ class SecureToken
      */
     public function decrypt($encrypted)
     {
-        $decoded = base64_decode($encrypted);
+        $decoded = @hex2bin($encrypted);
         $iv = substr($decoded, 0, $this->ivSize);
         if (strlen($iv) < $this->ivSize) {
             return null;

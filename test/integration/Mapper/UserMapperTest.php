@@ -1,23 +1,34 @@
 <?php
-use Test\DBTestCase;
 
-class UserMapperTest extends DBTestCase
+use Test\DBTesting;
+
+class UserMapperTest extends PHPUnit_Framework_TestCase
 {
+    use DBTesting;
     /**
      * @var Mapper\UserMapper;
      */
     private $mapper;
 
-    protected function loadFixture()
-    {
-        $this->getPdo('main')
-            ->exec(file_get_contents(__DIR__.'/UserMapperTest.sql'));
-    }
+    /**
+     * @var PDO
+     */
+    private $pdo;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->mapper = new Mapper\UserMapper($this->getPdo('main'));
+        $this->pdo = new PDO('pgsql:dbname=vaca_test', 'vaca', 'vaca');
+        $this->setUpDatabase($this->pdo, 'main');
+        $this->pdo
+            ->exec(file_get_contents(__DIR__.'/UserMapperTest.sql'));
+        $this->mapper = new Mapper\UserMapper($this->pdo);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->tearDownDatabase($this->pdo, 'main');
     }
 
     public function testHasEmail()

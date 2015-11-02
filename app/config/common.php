@@ -6,11 +6,13 @@
  */
 return [
     'secure_json' => false,
-    'services' => [
-        __DIR__.'/services/app.php',
-        __DIR__.'/services/storages.php',
-        __DIR__.'/services/controllers.php',
-        __DIR__.'/services/mailer.php',
+    'service' => [
+        __DIR__.'/service/app.php',
+        __DIR__.'/service/storages.php',
+        __DIR__.'/service/mappers.php',
+        __DIR__.'/service/controllers.php',
+        __DIR__.'/service/routing.php',
+        __DIR__.'/service/email.php',
     ],
     'debug' => false,
     'error_message_mapping' => [
@@ -20,9 +22,10 @@ return [
     ],
     'email' => [
         'mandrill' => [
-            'key' => '4JbhVtLpBIUqy3QuiFZGSw',
+            'key' => 'xxx',
         ]
     ],
+    'secure_token_key' => '12341234123412341234123412341234',
     'storage' => [
         'main' => [
             'driver' => 'mysql',

@@ -35,7 +35,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
     public function testServices()
     {
         $app = new Application([
-            'services' => [
+            'service' => [
                 __DIR__.'/ApplicationTest/service.php'
             ]
         ]);

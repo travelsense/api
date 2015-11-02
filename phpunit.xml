@@ -12,11 +12,14 @@
         syntaxCheck="true">
 
     <testsuites>
-        <testsuite name="Unit">
+        <testsuite name="unit">
             <directory>./test/unit/</directory>
         </testsuite>
-        <testsuite name="Integration">
+        <testsuite name="integ">
             <directory>./test/integration/</directory>
+        </testsuite>
+        <testsuite name="func">
+            <directory>./test/functional/</directory>
         </testsuite>
     </testsuites>
     <filter>

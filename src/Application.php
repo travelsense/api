@@ -6,7 +6,7 @@ class Application extends Silex\Application
         $config = array_merge(
             [
                 'secure_json' => false,
-                'services' => [],
+                'service' => [],
             ],
             $config
         );
@@ -21,9 +21,9 @@ class Application extends Silex\Application
 
         parent::__construct($config);
 
-        //load services
+        //load service
         $app = $this; // used in includes
-        foreach ($this['services'] as $serviceLoader) {
+        foreach ($this['service'] as $serviceLoader) {
             require $serviceLoader;
         }
     }

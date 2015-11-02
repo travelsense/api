@@ -2,10 +2,15 @@
   "require": {
     "silex/silex": "~1.3",
     "mandrill/mandrill": "^1.0",
-    "twig/twig": "^1.23"
+    "twig/twig": "^1.23",
+    "symfony/twig-bridge": "^2.7"
   },
 
   "autoload": {
     "psr-4": {"": "src/"}
+  },
+  "require-dev": {
+    "symfony/browser-kit": "^2.7",
+    "symfony/css-selector": "^2.7"
   }
 }
