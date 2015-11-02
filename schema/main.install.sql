@@ -1,3 +1,5 @@
+-- Database: main
+
 -- Automatically change "updated" column
 CREATE OR REPLACE FUNCTION process_updated_column()
   RETURNS TRIGGER AS $$
@@ -14,7 +16,7 @@ CREATE TABLE users
   id SERIAL NOT NULL PRIMARY KEY ,
   email TEXT NOT NULL UNIQUE,
   password TEXT,
-  created TIMESTAMP,
+  created TIMESTAMP DEFAULT now(),
   updated TIMESTAMP
 );
 
