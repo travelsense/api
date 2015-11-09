@@ -16,6 +16,8 @@ $app['controller.user'] = $app->share(function($app) {
         $app['email.mailer'],
         $app['security.token_manager'],
         $app['security.session_manager'],
-        $app['auth.credentials']
+        $app['auth.credentials'],
+        $app['facebook'],
+        $app['password_generator']
     );
 });

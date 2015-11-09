@@ -17,5 +17,7 @@ return array(
     'Symfony\\Bridge\\Twig\\' => array($vendorDir . '/symfony/twig-bridge'),
     'Silex\\' => array($vendorDir . '/silex/silex/src/Silex'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'Hackzilla\\PasswordGenerator\\' => array($vendorDir . '/hackzilla/password-generator'),
+    'Facebook\\' => array($vendorDir . '/facebook/php-sdk-v4/src/Facebook'),
     '' => array($baseDir . '/src'),
 );

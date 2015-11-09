@@ -14,6 +14,7 @@ return [
         __DIR__.'/service/controllers.php',
         __DIR__.'/service/routing.php',
         __DIR__.'/service/email.php',
+        __DIR__.'/service/misc.php',
     ],
     'debug' => false,
     'error_message_mapping' => [
@@ -31,13 +32,18 @@ return [
         'token_key' => '12341234123412341234123412341234',
         'unsecured_routes' => ['register-by-email', 'finish-registration', 'login-by-email'],
     ],
+    'facebook' => [
+        'app_id' => 'xxx',
+        'app_secret' => 'xxx',
+        'default_graph_version' => 'v2.5',
+    ],
     'storage' => [
         'main' => [
-            'driver' => 'mysql',
+            'driver' => 'pgsql',
             'host' => 'localhost',
-            'user' => 'vacarious',
-            'database' => 'vacarious',
-            'password' => 'vacarious',
+            'user' => 'vaca',
+            'database' => 'vaca',
+            'password' => 'vaca',
             'options' => [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ],

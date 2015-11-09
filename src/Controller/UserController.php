@@ -4,6 +4,9 @@ namespace Controller;
 
 use A;
 use Exception\ApiException;
+use Facebook\Facebook;
+use Facebook\GraphNodes\GraphUser;
+use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use Mapper\UserMapper;
 use Security\Authentication\Credentials;
 use Security\SessionManager;
@@ -40,19 +43,42 @@ class UserController
     private $credentials;
 
     /**
+     * @var Facebook
+     */
+    private $facebook;
+
+    /**
+     * @var PasswordGeneratorInterface
+     */
+    private $pwdGenerator;
+
+    /**
      * UserController constructor.
      * @param UserMapper $userMapper
      * @param MailerService $mailer
      * @param TokenManager $secureToken
      * @param SessionManager $sessionManager
+     * @param Credentials $credentials
+     * @param Facebook $facebook
+     * @param PasswordGeneratorInterface $pwdGenerator
      */
-    public function __construct(UserMapper $userMapper, MailerService $mailer, TokenManager $secureToken, SessionManager $sessionManager, Credentials $credentials)
+    public function __construct(
+        UserMapper $userMapper,
+        MailerService $mailer,
+        TokenManager $secureToken,
+        SessionManager $sessionManager,
+        Credentials $credentials,
+        Facebook $facebook,
+        PasswordGeneratorInterface $pwdGenerator
+    )
     {
         $this->userMapper = $userMapper;
         $this->mailer = $mailer;
         $this->tokenManager = $secureToken;
         $this->sessionManager = $sessionManager;
         $this->credentials = $credentials;
+        $this->facebook = $facebook;
+        $this->pwdGenerator = $pwdGenerator;
     }
 
     /**
@@ -116,11 +142,7 @@ class UserController
         if (null === $user) {
             throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
         }
-        $device = $request->headers->get('User-Agent');
-        $token = $this->sessionManager->createSession($user['id'], $device);
-        return [
-            'token' => $token,
-        ];
+        return $this->login($user['id'], $request);
     }
 
     /**
@@ -130,8 +152,48 @@ class UserController
     {
         $userId = $this->credentials->getUser();
         $user = $this->userMapper->fetchById($userId);
+        return array_intersect_key($user, array_flip(['email', 'picture', 'first_name', 'last_name']));
+    }
+
+    /**
+     * @param $payload
+     * @param Request $request
+     * @return array
+     */
+    public function loginUsingFacebook($payload, Request $request)
+    {
+        $fbToken = A::get($payload, 'token');
+        $this->facebook->setDefaultAccessToken($fbToken);
+        $fbUser = $this->facebook
+            ->get('/me?fields=picture,email,first_name,last_name')
+            ->getGraphUser();
+        $user = $this->userMapper->fetchByEmail($fbUser->getEmail());
+        if (null === $user) {
+            $user = [
+                'email' => $fbUser->getEmail(),
+                'first_name' => $fbUser->getFirstName(),
+                'last_name' => $fbUser->getLastName(),
+                'picture' => $fbUser->getPicture()->getUrl(),
+                'password' => $this->pwdGenerator->generatePassword()
+            ];
+            $userId = $this->userMapper->createUser($user);
+        } else {
+            $userId = $user['id'];
+        }
+        return $this->login($userId, $request);
+    }
+
+    /**
+     * @param $userId
+     * @param Request $request
+     * @return array
+     */
+    private function login($userId, Request $request)
+    {
+        $device = $request->headers->get('User-Agent');
+        $token = $this->sessionManager->createSession($userId, $device);
         return [
-            'email' => $user['email'],
+            'token' => $token,
         ];
     }
 }

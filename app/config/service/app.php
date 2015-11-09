@@ -8,6 +8,8 @@
 // Api Exceptions to be shown to user
 use Symfony\Component\HttpFoundation\Request;
 
+$app['debug'] = $app['config']['debug'];
+
 $app->error(function(Exception\ApiException $e) use ($app) {
     return $app->json([
         'error' => $e->getMessage(),
@@ -22,7 +24,7 @@ $app->error(function(Exception $e, $code) use ($app) {
         return;
     }
 
-    $codeToMessage = $app['error_message_mapping'];
+    $codeToMessage = $app['config']['error_message_mapping'];
     if (array_key_exists($code, $codeToMessage)) {
         $message = $codeToMessage[$code];
     } else {

@@ -37,17 +37,22 @@ class AccountWorkflowTest extends FunctionalTestCase
         $this->assertContains('Account has been created.', $client->getResponse()->getContent());
     }
 
-
     public function testLoginByEmail()
     {
         $email = 'test@example.com';
         $password = 'pew-pew';
+        $first = 'Alexander';
+        $last = 'Pushkin';
+        $pic = 'https://pushkin.ru/pic.jpg';
 
         /** @var UserMapper $userMapper */
         $userMapper = $this->app['mapper.user'];
         $userMapper->createUser([
             'email' => $email,
-            'password' => $password
+            'password' => $password,
+            'first_name' => $first,
+            'last_name' => $last,
+            'picture' => $pic,
         ]);
         $client = $this->createApiClient();
 
@@ -63,6 +68,13 @@ class AccountWorkflowTest extends FunctionalTestCase
         $client->callUser();
         $this->assertEquals('application/json', $client->getResponse()->headers->get('Content-Type'));
         $response = $client->getJson();
-        $this->assertEquals(['email' => $email], $response);
+        $this->assertEquals(
+            [
+                'email' => $email,
+                'first_name' => $first,
+                'last_name' => $last,
+                'picture' => $pic,
+            ],
+            $response);
     }
 }

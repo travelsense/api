@@ -16,6 +16,9 @@ CREATE TABLE users
   id SERIAL NOT NULL PRIMARY KEY ,
   email TEXT NOT NULL UNIQUE,
   password TEXT,
+  first_name TEXT,
+  last_name TEXT,
+  picture TEXT,
   created TIMESTAMP DEFAULT now(),
   updated TIMESTAMP
 );

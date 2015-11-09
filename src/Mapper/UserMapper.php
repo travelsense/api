@@ -1,6 +1,7 @@
 <?php
 
 namespace Mapper;
+use A;
 
 class UserMapper extends AbstractMapper
 {
@@ -41,12 +42,21 @@ class UserMapper extends AbstractMapper
     /**
      * Insert a new user
      * @param array $user
+     * @return string user id
      */
     public function createUser(array $user)
     {
-        $insert = $this->pdo->prepare('INSERT INTO users ("email", "password") VALUES (:email, :password)');
-        $user['password'] = $this->getPasswordHash($user['email'], $user['password']);
-        $insert->execute($user);
+        $insert = $this->pdo->prepare('INSERT INTO users'
+            . '("email", "password", "first_name", "last_name", "picture")'
+            . 'VALUES (:email, :password, :first_name, :last_name, :picture) RETURNING id');
+        $insert->execute([
+            ':email' => $user['email'],
+            ':password' => $this->getPasswordHash($user['email'], $user['password']),
+            ':first_name' => A::get($user,'first_name'),
+            ':last_name' => A::get($user, 'last_name'),
+            ':picture' => A::get($user, 'picture'),
+        ]);
+        return $insert->fetchColumn();
     }
 
     /**
@@ -74,6 +84,20 @@ class UserMapper extends AbstractMapper
         $select = $this->pdo->prepare('SELECT * FROM users WHERE "id" = :id');
         $select->execute([
             ':id' => $id,
+        ]);
+
+        return $select->fetch(\PDO::FETCH_ASSOC) ?: null;
+    }
+
+    /**
+     * @param $email
+     * @return array|null
+     */
+    public function fetchByEmail($email)
+    {
+        $select = $this->pdo->prepare('SELECT * FROM users WHERE "email" = :email');
+        $select->execute([
+            ':email' => $email,
         ]);
 
         return $select->fetch(\PDO::FETCH_ASSOC) ?: null;
