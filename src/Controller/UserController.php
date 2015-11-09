@@ -121,8 +121,7 @@ class UserController
             return new Response('Invalid token.');
         }
         $email = A::get($payload, 'email');
-        if ( ! $this->userMapper->hasEmail($email))
-        {
+        if (false === $this->userMapper->hasEmail($email)) {
             $this->userMapper->createUser($payload);
         }
         return new Response('Account has been created.');
@@ -169,14 +168,13 @@ class UserController
             ->getGraphUser();
         $user = $this->userMapper->fetchByEmail($fbUser->getEmail());
         if (null === $user) {
-            $user = [
+            $userId = $this->userMapper->createUser([
                 'email' => $fbUser->getEmail(),
                 'first_name' => $fbUser->getFirstName(),
                 'last_name' => $fbUser->getLastName(),
                 'picture' => $fbUser->getPicture()->getUrl(),
                 'password' => $this->pwdGenerator->generatePassword()
-            ];
-            $userId = $this->userMapper->createUser($user);
+            ]);
         } else {
             $userId = $user['id'];
         }

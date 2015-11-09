@@ -31,6 +31,7 @@ return [
         'enabled' => true,
         'token_key' => '12341234123412341234123412341234',
         'unsecured_routes' => ['register-by-email', 'finish-registration', 'login-by-email'],
+        'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],
     'facebook' => [
         'app_id' => 'xxx',
