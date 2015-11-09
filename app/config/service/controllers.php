@@ -11,10 +11,11 @@ $app['controller.activity'] = $app->share(function($app) {
 });
 
 $app['controller.user'] = $app->share(function($app) {
-    $secureToken = new SecureToken($app['secure_token_key']);
-    return new Controller\UserController($app['mapper.user'], $app['email.mailer'], $secureToken);
-});
-
-$app['controller.test'] = $app->share(function($app) {
-    return new Controller\Test();
+    return new Controller\UserController(
+        $app['mapper.user'],
+        $app['email.mailer'],
+        $app['security.token_manager'],
+        $app['security.session_manager'],
+        $app['auth.credentials']
+    );
 });

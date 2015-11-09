@@ -19,11 +19,11 @@ class Application extends Silex\Application
                 json_decode(file_get_contents($secureConfig), true));
         }
 
-        parent::__construct($config);
+        parent::__construct(['config' => $config]);
 
         //load service
         $app = $this; // used in includes
-        foreach ($this['service'] as $serviceLoader) {
+        foreach ($config['service'] as $serviceLoader) {
             require $serviceLoader;
         }
     }

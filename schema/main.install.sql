@@ -23,3 +23,20 @@ CREATE TABLE users
 CREATE TRIGGER users_before_update BEFORE UPDATE
 ON users FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
+
+-- Sessions
+
+
+CREATE TABLE sessions
+(
+  id SERIAL NOT NULL PRIMARY KEY ,
+  user_id SERIAL REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  salt TEXT,
+  device TEXT,
+  created TIMESTAMP DEFAULT now(),
+  updated TIMESTAMP
+);
+
+CREATE TRIGGER sessions_before_update BEFORE UPDATE
+ON sessions FOR EACH ROW EXECUTE PROCEDURE
+  process_updated_column();

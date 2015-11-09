@@ -9,16 +9,12 @@
 use Symfony\Component\HttpFoundation\Request;
 
 $app->error(function(Exception\ApiException $e) use ($app) {
-    if ($e instanceof \Exception\ApiException\Forbidden) {
-        $httpCode = 403;
-    } else {
-        $httpCode= 400;
-    }
     return $app->json([
         'error' => $e->getMessage(),
         'code' => $e->getCode(),
-    ], $httpCode);
+    ], $e->getHttpCode());
 });
+
 
 // General Exceptions to be logged or shown
 $app->error(function(Exception $e, $code) use ($app) {
@@ -70,3 +66,6 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../../view',
 ));
 
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.logfile' => '/tmp/wtf.log',
+));

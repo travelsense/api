@@ -5,8 +5,11 @@ namespace Controller;
 use A;
 use Exception\ApiException;
 use Mapper\UserMapper;
-use SecureToken;
+use Security\Authentication\Credentials;
+use Security\SessionManager;
+use Security\TokenManager;
 use Service\Mailer\MailerService;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController
@@ -22,21 +25,34 @@ class UserController
     private $mailer;
 
     /**
-     * @var SecureToken
+     * @var TokenManager
      */
-    private $secureToken;
+    private $tokenManager;
+
+    /**
+     * @var SessionManager
+     */
+    private $sessionManager;
+
+    /**
+     * @var Credentials
+     */
+    private $credentials;
 
     /**
      * UserController constructor.
      * @param UserMapper $userMapper
      * @param MailerService $mailer
-     * @param SecureToken $secureToken
+     * @param TokenManager $secureToken
+     * @param SessionManager $sessionManager
      */
-    public function __construct(UserMapper $userMapper, MailerService $mailer, SecureToken $secureToken)
+    public function __construct(UserMapper $userMapper, MailerService $mailer, TokenManager $secureToken, SessionManager $sessionManager, Credentials $credentials)
     {
         $this->userMapper = $userMapper;
         $this->mailer = $mailer;
-        $this->secureToken = $secureToken;
+        $this->tokenManager = $secureToken;
+        $this->sessionManager = $sessionManager;
+        $this->credentials = $credentials;
     }
 
     /**
@@ -63,7 +79,7 @@ class UserController
             throw ApiException::create(ApiException::USER_EXISTS);
         }
 
-        $token = $this->secureToken->encrypt($payload);
+        $token = $this->tokenManager->encrypt($payload);
         $this->mailer->sendAccountConfirmationMessage($email, $token);
         return [];
     }
@@ -74,7 +90,7 @@ class UserController
      */
     public function finishRegisterThroughEmail($token)
     {
-        $payload = $this->secureToken->decrypt($token);
+        $payload = $this->tokenManager->decrypt($token);
         if ($payload === null) {
             return new Response('Invalid token.');
         }
@@ -84,5 +100,38 @@ class UserController
             $this->userMapper->createUser($payload);
         }
         return new Response('Account has been created.');
+    }
+
+    /**
+     * @param array $payload
+     * @param Request $request
+     * @return array
+     * @throws ApiException
+     */
+    public function loginByEmailAndPassword(array $payload, Request $request)
+    {
+        $email = A::get($payload, 'email');
+        $password = A::get($payload, 'password');
+        $user = $this->userMapper->fetchByEmailAndPassword($email, $password);
+        if (null === $user) {
+            throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
+        }
+        $device = $request->headers->get('User-Agent');
+        $token = $this->sessionManager->createSession($user['id'], $device);
+        return [
+            'token' => $token,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getUser()
+    {
+        $userId = $this->credentials->getUser();
+        $user = $this->userMapper->fetchById($userId);
+        return [
+            'email' => $user['email'],
+        ];
     }
 }

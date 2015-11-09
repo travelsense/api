@@ -4,7 +4,6 @@
     "mandrill/mandrill": "^1.0",
     "twig/twig": "^1.23",
     "symfony/twig-bridge": "^2.7",
-    "symfony/security": "^2.7",
     "monolog/monolog": "^1.17"
   },
 

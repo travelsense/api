@@ -15,7 +15,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
                 'bar' => 'baz',
             ],
         ]);
-        $this->assertEquals('baz', $app['foo']['bar']);
+        $this->assertEquals('baz', $app['config']['foo']['bar']);
 
     }
 
@@ -29,7 +29,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
         ];
 
         $app = new Application($config);
-        $this->assertEquals('secret', $app['foo']['bar']);
+        $this->assertEquals('secret', $app['config']['foo']['bar']);
     }
 
     public function testServices()

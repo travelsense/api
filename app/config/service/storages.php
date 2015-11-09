@@ -5,7 +5,7 @@
  */
 
 $app['storage.main.pdo'] = $app->share(function ($app) {
-    $main = $app['storage']['main'];
+    $main = $app['config']['storage']['main'];
     return new PDO(
         sprintf('%s:host=%s;dbname=%s', $main['driver'], $main['host'], $main['database']),
         $main['user'],

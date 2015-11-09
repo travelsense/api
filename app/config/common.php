@@ -8,6 +8,7 @@ return [
     'secure_json' => false,
     'service' => [
         __DIR__.'/service/app.php',
+        __DIR__.'/service/security.php',
         __DIR__.'/service/storages.php',
         __DIR__.'/service/mappers.php',
         __DIR__.'/service/controllers.php',
@@ -25,7 +26,11 @@ return [
             'key' => 'xxx',
         ]
     ],
-    'secure_token_key' => '12341234123412341234123412341234',
+    'security' => [
+        'enabled' => true,
+        'token_key' => '12341234123412341234123412341234',
+        'unsecured_routes' => ['register-by-email', 'finish-registration', 'login-by-email'],
+    ],
     'storage' => [
         'main' => [
             'driver' => 'mysql',

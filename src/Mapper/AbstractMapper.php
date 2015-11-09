@@ -25,6 +25,4 @@ class AbstractMapper
     {
         $this->pdo = $pdo;
     }
-
-
 }

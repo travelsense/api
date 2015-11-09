@@ -18,6 +18,8 @@ class FunctionalTestCase extends WebTestCase
 
     protected $databases = ['main'];
 
+    protected $client;
+
     protected function getPdo($database)
     {
         return $this->app["storage.$database.pdo"];
@@ -52,5 +54,14 @@ class FunctionalTestCase extends WebTestCase
         $app['debug'] = true;
         $app['email.mandrill.messages'] = new MandrillMessagesLogger();
         return $app;
+    }
+
+    /**
+     * @param array $server
+     * @return ApiClient
+     */
+    public function createApiClient(array $server = [])
+    {
+        return new ApiClient($this->app, $server);
     }
 }
