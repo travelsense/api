@@ -1,7 +1,7 @@
 <?php
 class Application extends Silex\Application
 {
-    public function __construct(array $config = array())
+    public function __construct(array $config = [])
     {
         $config = array_merge(
             [

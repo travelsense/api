@@ -1,7 +1,7 @@
 <?php
 
 namespace Mapper;
-use A;
+use PDO;
 
 class UserMapper extends AbstractMapper
 {
@@ -52,9 +52,9 @@ class UserMapper extends AbstractMapper
         $insert->execute([
             ':email' => $user['email'],
             ':password' => $this->getPasswordHash($user['email'], $user['password']),
-            ':first_name' => A::get($user,'first_name'),
-            ':last_name' => A::get($user, 'last_name'),
-            ':picture' => A::get($user, 'picture'),
+            ':first_name' => $user['first_name'],
+            ':last_name' => $user['last_name'],
+            ':picture' => $user['picture'],
         ]);
         return $insert->fetchColumn();
     }
@@ -72,7 +72,7 @@ class UserMapper extends AbstractMapper
             ':password' => $this->getPasswordHash($email, $password),
         ]);
 
-        return $select->fetch(\PDO::FETCH_ASSOC) ?: null;
+        return $select->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
     /**
@@ -86,7 +86,7 @@ class UserMapper extends AbstractMapper
             ':id' => $id,
         ]);
 
-        return $select->fetch(\PDO::FETCH_ASSOC) ?: null;
+        return $select->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
     /**
@@ -100,6 +100,6 @@ class UserMapper extends AbstractMapper
             ':email' => $email,
         ]);
 
-        return $select->fetch(\PDO::FETCH_ASSOC) ?: null;
+        return $select->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 }

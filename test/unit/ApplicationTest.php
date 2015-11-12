@@ -10,7 +10,8 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
 {
     public function testConfig()
     {
-        $app = new Application([
+        $app = new Application(
+            [
             'foo' => [
                 'bar' => 'baz',
             ],

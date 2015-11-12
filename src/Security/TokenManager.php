@@ -53,7 +53,7 @@ class TokenManager
     /**
      * Decrypt message
      * @param $encrypted
-     * @return string|null
+     * @return mixed|null
      */
     public function decrypt($encrypted)
     {

@@ -5,9 +5,10 @@
 
 namespace Exception;
 
+use Exception;
 use LogicException;
 
-class ApiException extends \Exception
+class ApiException extends Exception
 {
     // State related
     const USER_EXISTS = 101;
@@ -15,6 +16,7 @@ class ApiException extends \Exception
     // Format related
     const PASSWORD_TOO_SHORT = 201;
     const INVALID_EMAIL = 202;
+    const JSON_EXPECTED = 203;
 
     // Auth related
     const AUTH_REQUIRED = 301;
@@ -27,6 +29,7 @@ class ApiException extends \Exception
         self::INVALID_EMAIL => [403, 'invalid email'],
         self::AUTH_REQUIRED => [401, 'User exists'],
         self::INVALID_EMAIL_PASSWORD => [401, 'Invalid email or password'],
+        self::JSON_EXPECTED => [401, 'JSON Content-type expected'],
     ];
 
     private $httpCode;

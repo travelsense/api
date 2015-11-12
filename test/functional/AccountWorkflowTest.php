@@ -4,9 +4,7 @@ use Test\FunctionalTestCase;
 use Test\MandrillMessagesLogger;
 
 /**
- * User: f3ath
- * Date: 11/1/15
- * Time: 4:36 PM
+ * @backupGlobals disabled
  */
 class AccountWorkflowTest extends FunctionalTestCase
 {
@@ -35,6 +33,7 @@ class AccountWorkflowTest extends FunctionalTestCase
         $this->assertStringStartsWith('text/html', $client->getResponse()->headers->get('Content-Type'));
         $this->assertEquals('UTF-8', $client->getResponse()->getCharset());
         $this->assertContains('Account has been created.', $client->getResponse()->getContent());
+
     }
 
     public function testLoginByEmail()
@@ -71,8 +70,8 @@ class AccountWorkflowTest extends FunctionalTestCase
         $this->assertEquals(
             [
                 'email' => $email,
-                'first_name' => $first,
-                'last_name' => $last,
+                'firstName' => $first,
+                'lastName' => $last,
                 'picture' => $pic,
             ],
             $response);
