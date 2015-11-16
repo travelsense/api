@@ -24,6 +24,7 @@ class BasicAccountWorkflowTest extends FunctionalTestCase
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertEquals('application/json', $client->getResponse()->headers->get('Content-Type'));
 
+        // Check the email has been sent
         preg_match('#https://.*#', $messages->messages[0]['text'], $matches);
         $url = $matches[0];
 
@@ -36,7 +37,6 @@ class BasicAccountWorkflowTest extends FunctionalTestCase
         $this->assertStringStartsWith('text/html', $client->getResponse()->headers->get('Content-Type'));
         $this->assertEquals('UTF-8', $client->getResponse()->getCharset());
         $this->assertContains('Account has been created.', $client->getResponse()->getContent());
-
     }
 
     /**
@@ -69,6 +69,7 @@ class BasicAccountWorkflowTest extends FunctionalTestCase
         $this->assertArrayHasKey('token', $response);
         $token = $response['token'];
 
+        // Check the token is valid for subsequent calls
         $client->setAuthToken($token);
         $client->callUser();
         $this->assertEquals('application/json', $client->getResponse()->headers->get('Content-Type'));
