@@ -9,7 +9,9 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
+
 -- Users
+
 
 CREATE TABLE users
 (
@@ -27,6 +29,7 @@ CREATE TRIGGER users_before_update BEFORE UPDATE
 ON users FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 
+
 -- Sessions
 
 
@@ -42,4 +45,33 @@ CREATE TABLE sessions
 
 CREATE TRIGGER sessions_before_update BEFORE UPDATE
 ON sessions FOR EACH ROW EXECUTE PROCEDURE
+  process_updated_column();
+
+
+-- Trips
+
+
+CREATE TABLE trips
+(
+  id SERIAL NOT NULL PRIMARY KEY ,
+  user_id SERIAL REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
+  name TEXT NOT NULL,
+  image TEXT NOT NULL,
+  description TEXT NOT NULL,
+  path TEXT,
+  country TEXT,
+  created TIMESTAMP DEFAULT now(),
+  updated TIMESTAMP
+);
+
+CREATE TABLE trip_stats
+(
+  id SERIAL NOT NULL PRIMARY KEY ,
+  trip_id SERIAL REFERENCES trips (id) ON UPDATE CASCADE ON DELETE CASCADE ,
+  rating INT DEFAULT 0,
+  views INT DEFAULT 0
+);
+
+CREATE TRIGGER trips_before_update BEFORE UPDATE
+ON trips FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
