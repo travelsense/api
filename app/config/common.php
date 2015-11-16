@@ -35,6 +35,7 @@ return [
             'finish-registration',
             'login-by-email',
             'login-by-facebook',
+            'change-password-form',
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],
