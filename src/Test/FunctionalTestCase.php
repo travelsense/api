@@ -29,6 +29,7 @@ class FunctionalTestCase extends WebTestCase
     {
         parent::setUp();
         foreach ($this->databases as $db) {
+            $this->tearDownDatabase($this->getPdo($db), $db); // needed in case the previous run has failed
             $this->setUpDatabase($this->getPdo($db), $db);
         }
     }

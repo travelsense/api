@@ -6,8 +6,11 @@ use Test\MandrillMessagesLogger;
 /**
  * @backupGlobals disabled
  */
-class AccountWorkflowTest extends FunctionalTestCase
+class BasicAccountWorkflowTest extends FunctionalTestCase
 {
+    /**
+     * Successful registration by email
+     */
     public function testSuccessfulRegistration()
     {
         /**
@@ -16,7 +19,7 @@ class AccountWorkflowTest extends FunctionalTestCase
         $messages = $this->app['email.mandrill.messages'];
 
         $client = $this->createApiClient();
-        $client->callRegister('alexander@pushkin.ru', 'dantes kozel');
+        $client->callRegister('sasha@pushkin.ru', 'dantes kozel', 'Alexander', 'Pushkin');
 
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertEquals('application/json', $client->getResponse()->headers->get('Content-Type'));
@@ -36,6 +39,9 @@ class AccountWorkflowTest extends FunctionalTestCase
 
     }
 
+    /**
+     * Successful login by email
+     */
     public function testLoginByEmail()
     {
         $email = 'test@example.com';

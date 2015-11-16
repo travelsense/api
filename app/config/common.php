@@ -30,7 +30,12 @@ return [
     'security' => [
         'enabled' => true,
         'token_key' => '12341234123412341234123412341234',
-        'unsecured_routes' => ['register-by-email', 'finish-registration', 'login-by-email'],
+        'unsecured_routes' => [
+            'register-by-email',
+            'finish-registration',
+            'login-by-email',
+            'login-by-facebook',
+        ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],
     'facebook' => [

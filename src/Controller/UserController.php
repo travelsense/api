@@ -159,7 +159,7 @@ class UserController
      * @param Request $request
      * @return array
      */
-    public function loginUsingFacebook(FacebookTokenLoginRequest $loginRequest, Request $request)
+    public function loginByFacebook(FacebookTokenLoginRequest $loginRequest, Request $request)
     {
         $this->facebook->setDefaultAccessToken($loginRequest->token);
         $fbUser = $this->facebook
@@ -167,11 +167,12 @@ class UserController
             ->getGraphUser();
         $user = $this->userMapper->fetchByEmail($fbUser->getEmail());
         if (null === $user) {
+            $pic = $fbUser->getPicture();
             $userId = $this->userMapper->createUser([
                 'email' => $fbUser->getEmail(),
                 'first_name' => $fbUser->getFirstName(),
                 'last_name' => $fbUser->getLastName(),
-                'picture' => $fbUser->getPicture()->getUrl(),
+                'picture' => $pic ? $pic->getUrl() : null,
                 'password' => $this->pwdGenerator->generatePassword()
             ]);
         } else {
