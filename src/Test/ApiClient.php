@@ -27,11 +27,13 @@ class ApiClient extends Client
         $this->authToken = $authToken;
     }
 
-    public function callRegister($email, $password)
+    public function callRegister($email, $password, $firstName, $lastName)
     {
         $json = json_encode([
             'email' => $email,
             'password' => $password,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
         ]);
 
         $this->request(

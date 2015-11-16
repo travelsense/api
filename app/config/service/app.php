@@ -9,25 +9,33 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
+use Exception\ApiException;
+use Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validation;
 
 $app['debug'] = $app['config']['debug'];
 
-$app->error(function(Exception\ApiException $e) use ($app) {
-    return $app->json([
-        'error' => $e->getMessage(),
-        'code' => $e->getCode(),
-    ], $e->getHttpCode());
-});
-
-
-// General Exceptions to be logged or shown
 $app->error(function(Exception $e, $code) use ($app) {
     if ($app['debug']) {
-        return null;
+        return null; // let the internal handler show the exception
     }
-
+    if ($e instanceof ApiException) {
+        $response = [
+            'error' => $e->getMessage(),
+            'code' => $e->getCode(),
+        ];
+        if ($e instanceof ValidationException) {
+            foreach ($e->getViolations() as $violation) {
+                $response['violations'][] = [
+                    'message' => $violation->getMessage(),
+                    'code' => $violation->getCode(),
+                    'property' => $violation->getPropertyPath(),
+                ];
+            }
+        }
+        return $app->json($response, $e->getHttpCode());
+    }
     $codeToMessage = $app['config']['error_message_mapping'];
     if (array_key_exists($code, $codeToMessage)) {
         $message = $codeToMessage[$code];
@@ -36,7 +44,6 @@ $app->error(function(Exception $e, $code) use ($app) {
         error_log($e);
         $message = $codeToMessage['default'];
     }
-
     return $app->json([
         'error' => $message,
         'code' => $code,
@@ -54,9 +61,9 @@ $this['controller_resolver_callback'] = $this->protect(function (Request $reques
             /** @var Api\Request\Request $controllerParameter */
             $controllerParameter = $param->getClass()->newInstance();
             $controllerParameter->init(json_decode($request->getContent(), true));
-            $errors = $app['validator']-> validate($controllerParameter);
+            $errors = $app['validator']->validate($controllerParameter);
             if (count($errors)) {
-                throw new RuntimeException('Validation error');
+                throw new ValidationException($errors);
             }
             $request->attributes->set($param->getName(), $controllerParameter);
             break;

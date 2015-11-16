@@ -11,30 +11,24 @@ use LogicException;
 class ApiException extends Exception
 {
     // State related
-    const USER_EXISTS = 101;
-
-    // Format related
-    const PASSWORD_TOO_SHORT = 201;
-    const INVALID_EMAIL = 202;
-    const JSON_EXPECTED = 203;
+    const USER_EXISTS = 100;
 
     // Auth related
-    const AUTH_REQUIRED = 301;
-    const INVALID_EMAIL_PASSWORD = 302;
+    const AUTH_REQUIRED = 200;
+    const INVALID_EMAIL_PASSWORD = 201;
+
+    const VALIDATION = 300; // Used in ValidationException
 
     // Mapping to HTTP code and message
     private static $map = [
         self::USER_EXISTS => [403, 'User exists'],
-        self::PASSWORD_TOO_SHORT => [403, 'Password too short'],
-        self::INVALID_EMAIL => [403, 'invalid email'],
-        self::AUTH_REQUIRED => [401, 'User exists'],
+        self::AUTH_REQUIRED => [401, 'Authentication required'],
         self::INVALID_EMAIL_PASSWORD => [401, 'Invalid email or password'],
-        self::JSON_EXPECTED => [401, 'JSON Content-type expected'],
     ];
 
     private $httpCode;
 
-    public function __construct($message, $code, Exception $previous, $httpCode = 500)
+    public function __construct($message, $code, Exception $previous = null, $httpCode = 500)
     {
         parent::__construct($message, $code, $previous);
         $this->httpCode = $httpCode;
