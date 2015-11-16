@@ -19,3 +19,6 @@ $app->get('/user/finish-registration/{token}', 'controller.user:finishRegisterTh
     ->bind('finish-registration');
 
 $app->get('/user', 'controller.user:getUser');
+
+$app->get('/change-password', 'controller.user:showPasswordChangeForm')
+    ->bind('change-password-form');

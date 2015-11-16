@@ -5,7 +5,7 @@
  */
 
 $app['email.mandrill'] = $app->share(function($app) {
-    return new Mandrill($app['email']['mandrill']['key']);
+    return new Mandrill($app['config']['email']['mandrill']['key']);
 });
 
 $app['email.mandrill.messages'] = $app->share(function($app) {

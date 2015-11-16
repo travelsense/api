@@ -181,6 +181,11 @@ class UserController
         return $this->login($userId, $request);
     }
 
+    public function showPasswordChangeForm(Request $request)
+    {
+        return 'hello';
+    }
+
     /**
      * @param $userId
      * @param Request $request
