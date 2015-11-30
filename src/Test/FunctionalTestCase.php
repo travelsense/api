@@ -1,14 +1,9 @@
 <?php
-/**
- * User: f3ath
- * Date: 11/1/15
- * Time: 4:36 PM
- */
-
 namespace Test;
 
-
 use Application;
+use PDO;
+use PDOException;
 use Silex\WebTestCase;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -20,17 +15,26 @@ class FunctionalTestCase extends WebTestCase
 
     protected $client;
 
+    /**
+     * @param $database
+     * @return PDO
+     */
     protected function getPdo($database)
     {
-        return $this->app["storage.$database.pdo"];
+        try {
+            return $this->app["storage.$database.pdo"];
+        } catch (PDOException $e) {
+            $this->markTestSkipped('PDOException');
+        }
     }
 
     public function setUp()
     {
         parent::setUp();
         foreach ($this->databases as $db) {
-            $this->tearDownDatabase($this->getPdo($db), $db); // needed in case the previous run has failed
-            $this->setUpDatabase($this->getPdo($db), $db);
+            $pdo = $this->getPdo($db);
+            $this->tearDownDatabase($pdo, $db); // needed in case the previous run has failed
+            $this->setUpDatabase($pdo, $db);
         }
     }
 

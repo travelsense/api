@@ -1,14 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: f3ath
- * Date: 11/8/15
- * Time: 8:42 PM
- */
-
 namespace Test;
-
-
 
 use Symfony\Component\HttpKernel\Client;
 

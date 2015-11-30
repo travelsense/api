@@ -15,6 +15,7 @@ use Security\TokenManager;
 use Service\Mailer\MailerService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use User;
 
 class UserController
 {
@@ -91,7 +92,7 @@ class UserController
      */
     public function startRegisterThroughEmail(RegistrationRequest $request)
     {
-        if ($this->userMapper->hasEmail($request->email)) {
+        if ($this->userMapper->emailExists($request->email)) {
             throw ApiException::create(ApiException::USER_EXISTS);
         }
 
@@ -111,14 +112,15 @@ class UserController
         if ($request === null) {
             return new Response('Invalid token.');
         }
-        if (false === $this->userMapper->hasEmail($request->email)) {
-            $this->userMapper->createUser([
-                'email' => $request->email,
-                'password' => $request->password,
-                'first_name' => $request->firstName,
-                'last_name' => $request->lastName,
-                'picture' => $request->picture,
-            ]);
+        if (false === $this->userMapper->emailExists($request->email)) {
+            $user = new User();
+            $user
+                ->setEmail( $request->email)
+                ->setPassword( $request->password)
+                ->setFirstName( $request->firstName)
+                ->setLastName( $request->lastName)
+                ->setPicture( $request->picture);
+            $this->userMapper->insert($user);
         }
         return new Response('Account has been created.');
     }
@@ -147,10 +149,10 @@ class UserController
         $userId = $this->credentials->getUser();
         $user = $this->userMapper->fetchById($userId);
         return [
-            'email' => $user['email'],
-            'picture' => $user['picture'],
-            'firstName' => $user['first_name'],
-            'lastName' => $user['last_name'],
+            'email' => $user->getEmail(),
+            'picture' => $user->getPicture(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
         ];
     }
 
@@ -168,17 +170,16 @@ class UserController
         $user = $this->userMapper->fetchByEmail($fbUser->getEmail());
         if (null === $user) {
             $pic = $fbUser->getPicture();
-            $userId = $this->userMapper->createUser([
-                'email' => $fbUser->getEmail(),
-                'first_name' => $fbUser->getFirstName(),
-                'last_name' => $fbUser->getLastName(),
-                'picture' => $pic ? $pic->getUrl() : null,
-                'password' => $this->pwdGenerator->generatePassword()
-            ]);
-        } else {
-            $userId = $user['id'];
+            $user = new User();
+            $user
+                ->setEmail($fbUser->getEmail())
+                ->setFirstName($fbUser->getFirstName())
+                ->setLastName($fbUser->getLastName())
+                ->setPicture($pic ? $pic->getUrl() : null)
+                ->setPassword($this->pwdGenerator->generatePassword());
+            $this->userMapper->insert($user);
         }
-        return $this->login($userId, $request);
+        return $this->login($user->getId(), $request);
     }
 
     public function showPasswordChangeForm(Request $request)

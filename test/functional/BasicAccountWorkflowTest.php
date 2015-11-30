@@ -44,21 +44,23 @@ class BasicAccountWorkflowTest extends FunctionalTestCase
      */
     public function testLoginByEmail()
     {
+
         $email = 'test@example.com';
         $password = 'pew-pew';
         $first = 'Alexander';
         $last = 'Pushkin';
         $pic = 'https://pushkin.ru/pic.jpg';
 
+        $user = new User();
+        $user
+            ->setEmail($email)
+            ->setFirstName($first)
+            ->setLastName($last)
+            ->setPassword($password)
+            ->setPicture($pic);
         /** @var UserMapper $userMapper */
         $userMapper = $this->app['mapper.user'];
-        $userMapper->createUser([
-            'email' => $email,
-            'password' => $password,
-            'first_name' => $first,
-            'last_name' => $last,
-            'picture' => $pic,
-        ]);
+        $userMapper->insert($user);
         $client = $this->createApiClient();
 
         $client->callLoginByEmail($email, $password);
