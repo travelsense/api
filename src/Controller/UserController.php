@@ -2,16 +2,16 @@
 
 namespace Controller;
 
-use Api\Request\EmailPasswordLoginRequest;
-use Api\Request\FacebookTokenLoginRequest;
-use Api\Request\RegistrationRequest;
+use DateInterval;
+use DateTime;
 use Exception\ApiException;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
-use Mapper\UserMapper;
+use ExpirableStorage;
+use Mapper\DB\UserMapper as DBUserMapper;
+use Mapper\JSON\UserMapper as JSONUserMapper;
 use Security\Authentication\Credentials;
 use Security\SessionManager;
-use Security\TokenManager;
 use Service\Mailer\MailerService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +20,14 @@ use User;
 class UserController
 {
     /**
-     * @var UserMapper
+     * @var DBUserMapper
      */
-    private $userMapper;
+    private $dbUserMapper;
+
+    /**
+     * @var JSONUserMapper
+     */
+    private $jsonUserMapper;
 
     /**
      * @var MailerService
@@ -30,9 +35,9 @@ class UserController
     private $mailer;
 
     /**
-     * @var TokenManager
+     * @var ExpirableStorage
      */
-    private $tokenManager;
+    private $storage;
 
     /**
      * @var SessionManager
@@ -56,89 +61,34 @@ class UserController
 
     /**
      * UserController constructor.
-     * @param UserMapper $userMapper
+     * @param DBUserMapper $dbUserMapper
+     * @param JSONUserMapper $jsonUserMapper
      * @param MailerService $mailer
-     * @param TokenManager $secureToken
+     * @param ExpirableStorage $storage
      * @param SessionManager $sessionManager
      * @param Credentials $credentials
      * @param Facebook $facebook
      * @param PasswordGeneratorInterface $pwdGenerator
      */
     public function __construct(
-        UserMapper $userMapper,
+        DBUserMapper $dbUserMapper,
+        JSONUserMapper $jsonUserMapper,
         MailerService $mailer,
-        TokenManager $secureToken,
+        ExpirableStorage $storage,
         SessionManager $sessionManager,
         Credentials $credentials,
         Facebook $facebook,
         PasswordGeneratorInterface $pwdGenerator
     )
     {
-        $this->userMapper = $userMapper;
+        $this->dbUserMapper = $dbUserMapper;
+        $this->jsonUserMapper = $jsonUserMapper;
         $this->mailer = $mailer;
-        $this->tokenManager = $secureToken;
+        $this->storage = $storage;
         $this->sessionManager = $sessionManager;
         $this->credentials = $credentials;
         $this->facebook = $facebook;
         $this->pwdGenerator = $pwdGenerator;
-    }
-
-    /**
-     * Start email-based registration. Send a confirmation email.
-     * @param RegistrationRequest $request
-     * @return array
-     * @throws ApiException
-     * @internal param array $payload
-     */
-    public function startRegisterThroughEmail(RegistrationRequest $request)
-    {
-        if ($this->userMapper->emailExists($request->email)) {
-            throw ApiException::create(ApiException::USER_EXISTS);
-        }
-
-        $token = $this->tokenManager->encrypt($request);
-        $this->mailer->sendAccountConfirmationMessage($request->email, $token);
-        return [];
-    }
-
-    /**
-     * @param string $token
-     * @return Response
-     */
-    public function finishRegisterThroughEmail($token)
-    {
-        /** @var RegistrationRequest $request */
-        $request = $this->tokenManager->decrypt($token);
-        if ($request === null) {
-            return new Response('Invalid token.');
-        }
-        if (false === $this->userMapper->emailExists($request->email)) {
-            $user = new User();
-            $user
-                ->setEmail( $request->email)
-                ->setPassword( $request->password)
-                ->setFirstName( $request->firstName)
-                ->setLastName( $request->lastName)
-                ->setPicture( $request->picture);
-            $this->userMapper->insert($user);
-        }
-        return new Response('Account has been created.');
-    }
-
-    /**
-     * @param EmailPasswordLoginRequest $loginRequest
-     * @param Request $request
-     * @return array
-     * @throws ApiException
-     * @internal param array $payload
-     */
-    public function loginByEmailAndPassword(EmailPasswordLoginRequest $loginRequest, Request $request)
-    {
-        $user = $this->userMapper->fetchByEmailAndPassword($loginRequest->email, $loginRequest->password);
-        if (null === $user) {
-            throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
-        }
-        return $this->login($user['id'], $request);
     }
 
     /**
@@ -147,27 +97,75 @@ class UserController
     public function getUser()
     {
         $userId = $this->credentials->getUser();
-        $user = $this->userMapper->fetchById($userId);
-        return [
-            'email' => $user->getEmail(),
-            'picture' => $user->getPicture(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-        ];
+        $user = $this->dbUserMapper->fetchById($userId);
+        return $this->jsonUserMapper->toArray($user);
     }
 
     /**
-     * @param FacebookTokenLoginRequest $loginRequest
+     * Start email-based registration. Send a confirmation email.
+     * @param Request $request
+     * @return array
+     * @throws ApiException
+     */
+    public function createUser(Request $request)
+    {
+        $user = $this->jsonUserMapper->createUser($request);
+        if ($this->dbUserMapper->emailExists($user->getEmail())) {
+            throw ApiException::create(ApiException::USER_EXISTS);
+        }
+        $this->dbUserMapper->insert($user);
+        $token = $this->storage->store($user->getEmail());
+        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
+        return [];
+    }
+
+    /**
+     * @param string $token
+     * @return Response
+     */
+    public function confirmEmail($token)
+    {
+        /** @var User $user */
+        $email = $this->storage->get($token);
+        if ($email === null) {
+            return new Response('Invalid token.');
+        }
+        if (false === $this->dbUserMapper->emailExists($email)) {
+            $this->dbUserMapper->confirmEmail($email);
+        }
+        return new Response('Account has been created.');
+    }
+
+    /**
+     * @param string $email
+     * @param Request $request
+     * @return array
+     * @throws ApiException
+     */
+    public function createTokenByEmail($email, Request $request)
+    {
+        $password = $request->getContent();
+        $user = $this->dbUserMapper->fetchByEmailAndPassword($email, $password);
+        if (null === $user) {
+            throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
+        }
+        $token = $this->sessionManager->createSession($user->getId(), $request);
+        return ['token' => $token];
+    }
+
+
+    /**
+     * @param $fbToken
      * @param Request $request
      * @return array
      */
-    public function loginByFacebook(FacebookTokenLoginRequest $loginRequest, Request $request)
+    public function createTokenByFacebook($fbToken, Request $request)
     {
-        $this->facebook->setDefaultAccessToken($loginRequest->token);
+        $this->facebook->setDefaultAccessToken($fbToken);
         $fbUser = $this->facebook
             ->get('/me?fields=picture,email,first_name,last_name')
             ->getGraphUser();
-        $user = $this->userMapper->fetchByEmail($fbUser->getEmail());
+        $user = $this->dbUserMapper->fetchByEmail($fbUser->getEmail());
         if (null === $user) {
             $pic = $fbUser->getPicture();
             $user = new User();
@@ -177,27 +175,14 @@ class UserController
                 ->setLastName($fbUser->getLastName())
                 ->setPicture($pic ? $pic->getUrl() : null)
                 ->setPassword($this->pwdGenerator->generatePassword());
-            $this->userMapper->insert($user);
+            $this->dbUserMapper->insert($user);
         }
-        return $this->login($user->getId(), $request);
+        $token = $this->sessionManager->createSession($user->getId(), $request);
+        return ['token' => $token];
     }
 
     public function showPasswordChangeForm(Request $request)
     {
         return 'hello';
-    }
-
-    /**
-     * @param $userId
-     * @param Request $request
-     * @return array
-     */
-    private function login($userId, Request $request)
-    {
-        $device = $request->headers->get('User-Agent');
-        $token = $this->sessionManager->createSession($userId, $device);
-        return [
-            'token' => $token,
-        ];
     }
 }

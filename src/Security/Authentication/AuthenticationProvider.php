@@ -31,7 +31,7 @@ class AuthenticationProvider implements ServiceProviderInterface
         $app['auth.authenticator'] = $app->share(function($app) {
             return new UserAuthenticator(
                 $app['auth.credentials'],
-                new SessionManager($app['mapper.sessions'], $app['security.token_manager']),
+                $app['security.session_manager'],
                 $app['auth.unsecured_routes']
             );
         });

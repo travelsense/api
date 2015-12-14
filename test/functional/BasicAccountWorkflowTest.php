@@ -1,5 +1,5 @@
 <?php
-use Mapper\UserMapper;
+use Mapper\DB\UserMapper;
 use Test\FunctionalTestCase;
 use Test\MandrillMessagesLogger;
 
@@ -59,7 +59,7 @@ class BasicAccountWorkflowTest extends FunctionalTestCase
             ->setPassword($password)
             ->setPicture($pic);
         /** @var UserMapper $userMapper */
-        $userMapper = $this->app['mapper.user'];
+        $userMapper = $this->app['mapper.db.user'];
         $userMapper->insert($user);
         $client = $this->createApiClient();
 

@@ -29,13 +29,12 @@ return [
     ],
     'security' => [
         'enabled' => true,
-        'token_key' => '12341234123412341234123412341234',
         'unsecured_routes' => [
-            'register-by-email',
-            'finish-registration',
+            'create-user',
+            'confirm-email',
             'login-by-email',
             'login-by-facebook',
-            'change-password-form',
+            'change-password',
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],

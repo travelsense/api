@@ -12,9 +12,10 @@ $app['controller.activity'] = $app->share(function($app) {
 
 $app['controller.user'] = $app->share(function($app) {
     return new Controller\UserController(
-        $app['mapper.user'],
+        $app['mapper.db.user'],
+        $app['mapper.json.user'],
         $app['email.mailer'],
-        $app['security.token_manager'],
+        $app['storage.expirable_storage'],
         $app['security.session_manager'],
         $app['auth.credentials'],
         $app['facebook'],

@@ -1,7 +1,6 @@
 <?php
-use Mapper\UserMapper;
+use Mapper\DB\UserMapper;
 use Test\FunctionalTestCase;
-use Test\MandrillMessagesLogger;
 
 /**
  * @backupGlobals disabled
@@ -67,7 +66,7 @@ class FacebookAccountWorkflowTest extends FunctionalTestCase
         $this->assertArrayHasKey('token', $response);
 
         /** @var UserMapper $userMapper */
-        $userMapper = $this->app['mapper.user'];
+        $userMapper = $this->app['mapper.db.user'];
 
         // Check the user has been created
         $user = $userMapper->fetchByEmail('sasha@pushkin.ru');

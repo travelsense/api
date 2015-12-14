@@ -10,6 +10,19 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 
+-- Expirable Storage
+
+
+CREATE TABLE expirable_storage
+(
+  id SERIAL NOT NULL PRIMARY KEY ,
+  serialized_object TEXT NOT NULL,
+  token TEXT NOT NULL ,
+  expires TIMESTAMP,
+  created TIMESTAMP DEFAULT now()
+);
+
+
 -- Users
 
 
@@ -17,6 +30,7 @@ CREATE TABLE users
 (
   id SERIAL NOT NULL PRIMARY KEY ,
   email TEXT NOT NULL UNIQUE,
+  email_confirmed BOOLEAN DEFAULT FALSE,
   password TEXT,
   first_name TEXT,
   last_name TEXT,
@@ -37,7 +51,7 @@ CREATE TABLE sessions
 (
   id SERIAL NOT NULL PRIMARY KEY ,
   user_id SERIAL REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
-  salt TEXT,
+  token TEXT,
   device TEXT,
   created TIMESTAMP DEFAULT now(),
   updated TIMESTAMP
