@@ -3,6 +3,6 @@ if [[ $# < 1 ]]; then
     echo "Provide branch or tag"
     exit 1
 fi
-
+TS=`date +%Y%m%d%H%M`
 mkdir -p export
-git archive --format=zip $1 -o export/`date +%Y%m%d%H%M`.zip
+git archive --format=tar.gz $1 --prefix "$TS/" -o "export/$TS.tar.gz"
