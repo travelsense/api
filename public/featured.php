@@ -20,23 +20,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	$featured[] = array(
 		'layout' => 'single', 
 		'title' => '',
-		'travels' => array_slice($items,0,3));
+		'travels' => array_slice($items,0,3),
+		'url' => 'search.php');
 
 	$featured[] = array(
 		'layout' => 'double', 
 		'title' => 'Popular',
-		'travels' => array_slice($items,3,3));
+		'travels' => array_slice($items,3,3),
+		'url' => 'search.php');
 
 	$featured[] = array(
 		'layout' => 'double', 
 		'title' => 'In-Progress',
-		'travels' => array_slice($items,6,3));
+		'travels' => array_slice($items,6,3),
+		'url' => 'search.php');
 
 for ($i=0; $i < 3; $i++) { 
 	$featured[] = array(
 		'layout' => 'double', 
 		'title' => 'Other '.$i,
-		'travels' => array_slice($items,9 + $i*3,3));
+		'travels' => array_slice($items,9 + $i*3,3),
+		'url' => 'search.php');
 }
 	response_code(200);
   	print json_encode($featured);	

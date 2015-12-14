@@ -5,7 +5,9 @@
 	$first = $VARS['first'];
 	$last = $VARS['last'];
 	$about = $VARS['about'];
-
+	$activities = $VARS['activities'];
+	$comments = $VARS['comments'];
+	
 	if ($_SERVER['REQUEST_METHOD'] === 'GET')
 	{
 	    $sql = "SELECT * FROM users WHERE id = '{$userId}'";
@@ -17,10 +19,12 @@
 	}  else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 		$sql = "UPDATE users SET";
 
-		$variablesToSet;
-		if($first){ $variablesToSet['first'] = $first;}
-		if($last){ $variablesToSet['last'] = $last;}
-		if($about){ $variablesToSet['about'] = $about;}
+		$variablesToSet = array();
+		if(strlen($first)){ $variablesToSet['first'] = $first;}
+		if(strlen($last)){ $variablesToSet['last'] = $last;}
+		if(strlen($about)){ $variablesToSet['about'] = $about;}
+		if(strlen($activities)){ $variablesToSet['activities'] = $activities;}
+		if(strlen($comments)){ $variablesToSet['comments'] = $comments;}
 	
 		$i = 0;
 		foreach($variablesToSet as $key=>$value) {
@@ -32,7 +36,6 @@
 			}
 			++$i;
     	}
-
 		$sql = $sql." WHERE id = {$userId}";
 
 		$result = mysql_query($sql) or die(mysql_error());
@@ -42,8 +45,7 @@
 	  		"result" => $result,
 	  	);
 	    
-
-response_code(200);
+		response_code(200);
 	    print json_encode($rtn);
 	    return;
 

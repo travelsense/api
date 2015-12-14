@@ -22,20 +22,38 @@
 			$travel['name'] = $row['name'];;
 			for ($i=0; $i < count($xml->City); $i++) { 
 				$city = $xml->City[$i];
-				$checkin['name'] = "".$city['name'];
-				$checkin['country'] = "".$city['country'];
-				$checkin['transportType'] = "".$city['transportType'];
-				$checkin['roadTime'] = "".$city['roadTime'];
-				$checkin['nightsInCity'] = "".$city['nightsInCity'];
-				$checkin['timeInCity'] = "".$city['timeInCity'];
-				$checkin['latitude'] = "".$city['latitude'];
-				$checkin['longitude'] = "".$city['longitude'];
-				$checkin['notes'] = "".$city->Notes;
-				$checkin['identifier'] = "".generateRandomString(5);
-				$checkin['leaveTime'] = "".$city['leaveTime'];
-				$checkin['roadTime'] = "".$city['roadTime'];
-
-				$checkins[] = $checkin;
+				{
+					$checkin['name'] = "".$city['name'];
+					$checkin['country'] = "".$city['country'];
+					$checkin['nightsInCity'] = "".$city['nightsInCity'];
+					$checkin['timeInCity'] = "".$city['timeInCity'];
+					$checkin['latitude'] = "".$city['latitude'];
+					$checkin['longitude'] = "".$city['longitude'];
+					$checkin['notes'] = "".$city->Notes;
+					$checkin['identifier'] = "".generateRandomString(5);
+					$checkin['leaveTime'] = "".$city['leaveTime'];
+					$checkin['roadTime'] = "".$city['roadTime'];
+					$checkin['type'] = 0;
+					$checkins[] = $checkin;
+				}
+				{
+					$checkin['name'] = "".$city['name'];
+					$checkin['country'] = "".$city['country'];
+					$checkin['transportType'] = "".$city['transportType'];
+					$checkin['roadTime'] = "".$city['roadTime'];
+					$checkin['nightsInCity'] = "".$city['nightsInCity'];
+					$checkin['timeInCity'] = "".$city['timeInCity'];
+					$checkin['latitude'] = "".$city['latitude'];
+					$checkin['longitude'] = "".$city['longitude'];
+					$checkin['notes'] = "".$city->Notes;
+					$checkin['identifier'] = "".generateRandomString(5);
+					$checkin['leaveTime'] = "".$city['leaveTime'];
+					$checkin['roadTime'] = "".$city['roadTime'];
+					$checkin['type'] = 1;
+					$checkins[] = $checkin;
+					
+				}
+				
 			}
 		} else {
   			$query = "SELECT * FROM checkins WHERE travel = {$travelId} ORDER BY start";
