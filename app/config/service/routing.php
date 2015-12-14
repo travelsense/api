@@ -6,19 +6,30 @@
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
-$app->post('/user/register-by-email', 'controller.user:startRegisterThroughEmail')
-    ->bind('register-by-email');
 
-$app->post('/user/login-by-email', 'controller.user:loginByEmailAndPassword')
-    ->bind('login-by-email');
+// API
 
-$app->post('/user/login-by-facebook', 'controller.user:loginByFacebook')
-    ->bind('login-by-facebook');
-
-$app->get('/user/finish-registration/{token}', 'controller.user:finishRegisterThroughEmail')
-    ->bind('finish-registration');
+$app->post('/user', 'controller.user:createUser')
+    ->bind('create-user');
 
 $app->get('/user', 'controller.user:getUser');
 
+$app->post('/token/by-email/{email}', 'controller.user:createTokenByEmail')
+    ->bind('login-by-email');
+
+$app->post('/token/by-facebook/{fbToken}', 'controller.user:createTokenByFacebook')
+    ->assert('fbToken', '.*') // to allow any characters
+    ->convert('fbToken', function ($token) {
+        return urldecode($token);
+    }) // to convert "+" to " "
+    ->bind('login-by-facebook');
+
+
+// Web
+
+$app->get('/confirm-email/{token}', 'controller.user:confirmEmail')
+    ->bind('confirm-email');
+
+
 $app->get('/change-password', 'controller.user:showPasswordChangeForm')
-    ->bind('change-password-form');
+    ->bind('change-password');

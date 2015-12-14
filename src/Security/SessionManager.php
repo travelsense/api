@@ -1,42 +1,39 @@
 <?php
 namespace Security;
 
-use Mapper\SessionMapper;
+use Mapper\DB\SessionMapper;
+use Symfony\Component\HttpFoundation\Request;
 
 class SessionManager
 {
+    const SHA1_LENGTH = 40;
+
     /**
      * @var SessionMapper
      */
     private $sessionMapper;
 
     /**
-     * @var TokenManager
-     */
-    private $tokenManager;
-
-    /**
      * SessionManager constructor.
      * @param SessionMapper $sessionMapper
-     * @param TokenManager $tokenManager
      */
-    public function __construct(SessionMapper $sessionMapper, TokenManager $tokenManager)
+    public function __construct(SessionMapper $sessionMapper)
     {
         $this->sessionMapper = $sessionMapper;
-        $this->tokenManager = $tokenManager;
     }
 
     /**
      * Create a new session token
-     * @param string  $userId
-     * @param string $device
+     * @param string $userId
+     * @param Request $request
      * @return string session token
      */
-    public function createSession($userId, $device)
+    public function createSession($userId, Request $request)
     {
-        $salt = mt_rand();
-        $id = $this->sessionMapper->createSession($userId, $salt, $device);
-        return $this->tokenManager->encrypt("$id.$salt");
+        $token = sha1(mt_rand() . $userId);
+        $device = $request->headers->get('User-Agent');
+        $id = $this->sessionMapper->createSession($userId, $token, $device);
+        return $token . $id;
     }
 
     /**
@@ -46,8 +43,10 @@ class SessionManager
      */
     public function getUserId($token)
     {
-        $decryptedToken = $this->tokenManager->decrypt($token);
-        list($id, $salt) = explode('.', $decryptedToken);
-        return $this->sessionMapper->getUserId($id, $salt);
+        if (strlen($token) <= self::SHA1_LENGTH) {
+            return null;
+        }
+        list($token, $id) = str_split($token, self::SHA1_LENGTH);
+        return $this->sessionMapper->getUserId($id, $token);
     }
 }

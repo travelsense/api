@@ -3,12 +3,8 @@
  * @var $app Application
  */
 
-$app['security.token_manager'] = $app->share(function($app) {
-    return new Security\TokenManager($app['config']['security']['token_key']);
-});
-
 $app['security.session_manager'] = $app->share(function($app) {
-    return new \Security\SessionManager($app['mapper.sessions'], $app['security.token_manager']);
+    return new \Security\SessionManager($app['mapper.db.sessions']);
 });
 
 // Authentication

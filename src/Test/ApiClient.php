@@ -1,14 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: f3ath
- * Date: 11/8/15
- * Time: 8:42 PM
- */
-
 namespace Test;
-
-
 
 use Symfony\Component\HttpKernel\Client;
 
@@ -53,7 +44,7 @@ class ApiClient extends Client
 
         $this->request(
             'POST',
-            'https://example.com/user/register-by-email',
+            'https://example.com/user',
             [],
             [],
             [
@@ -70,20 +61,15 @@ class ApiClient extends Client
      */
     public function callLoginByEmail($email, $password)
     {
-        $json = json_encode([
-            'email' => $email,
-            'password' => $password,
-        ]);
-
         $this->request(
             'POST',
-            'https://example.com/user/login-by-email',
+            sprintf('https://example.com/token/by-email/%s', urlencode($email)),
             [],
             [],
             [
                 'CONTENT_TYPE' => 'application/json',
             ],
-            $json
+            $password
         );
     }
 
@@ -93,19 +79,14 @@ class ApiClient extends Client
      */
     public function callLoginFacebook($token)
     {
-        $json = json_encode([
-            'token' => $token,
-        ]);
-
         $this->request(
             'POST',
-            'https://example.com/user/login-by-facebook',
+            sprintf('https://example.com/token/by-facebook/%s', urlencode($token)),
             [],
             [],
             [
                 'CONTENT_TYPE' => 'application/json',
-            ],
-            $json
+            ]
         );
     }
 

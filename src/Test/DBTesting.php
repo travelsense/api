@@ -1,9 +1,4 @@
 <?php
-/**
- * User: f3ath
- * Date: 11/1/15
- * Time: 4:41 PM
- */
 
 namespace Test;
 

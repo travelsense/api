@@ -13,3 +13,7 @@ $app['storage.main.pdo'] = $app->share(function ($app) {
         $main['options']
     );
 });
+
+$app['storage.expirable_storage'] = $app->share(function($app) {
+    return new ExpirableStorage($app['storage.main.pdo']);
+});

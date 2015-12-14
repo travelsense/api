@@ -1,7 +1,6 @@
 <?php
-use Mapper\UserMapper;
+use Mapper\DB\UserMapper;
 use Test\FunctionalTestCase;
-use Test\MandrillMessagesLogger;
 
 /**
  * @backupGlobals disabled
@@ -67,14 +66,14 @@ class FacebookAccountWorkflowTest extends FunctionalTestCase
         $this->assertArrayHasKey('token', $response);
 
         /** @var UserMapper $userMapper */
-        $userMapper = $this->app['mapper.user'];
+        $userMapper = $this->app['mapper.db.user'];
 
         // Check the user has been created
         $user = $userMapper->fetchByEmail('sasha@pushkin.ru');
-        $this->assertEquals('sasha@pushkin.ru', $user['email']);
-        $this->assertEquals('Alexander', $user['first_name']);
-        $this->assertEquals('Pushkin', $user['last_name']);
-        $this->assertEquals('https://pushkin.ru/pic.jpg', $user['picture']);
+        $this->assertEquals('sasha@pushkin.ru', $user->getEmail());
+        $this->assertEquals('Alexander', $user->getFirstName());
+        $this->assertEquals('Pushkin', $user->getLastName());
+        $this->assertEquals('https://pushkin.ru/pic.jpg', $user->getPicture());
 
         // Trying again, the user should be fetched from the DB
         $client->callLoginFacebook($fbToken);
