@@ -14,7 +14,7 @@
 		$checkins;
 
 		if ($path && strlen($path)) {
-			$xmlpath = "../travel/{$path}/property.xml";   
+			$xmlpath = "../../html/travel/{$path}/property.xml";   
 		   	$xml = simplexml_load_file($xmlpath) or die("Error loading $xmlpath");
 			$tripName = $xml['name'];
 			
