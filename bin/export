@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+if [[ $# < 1 ]]; then
+    echo "Provide branch or tag"
+    exit 1
+fi
+
+mkdir -p export
+git archive --format=zip $1 -o export/`date +%Y%m%d%H%M`.zip
