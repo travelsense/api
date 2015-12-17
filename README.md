@@ -49,5 +49,6 @@ php composer.phar install
 APP_ENV=dev php -S localhost:8000 public/app.php
 ```
 * Open in browser localhost:8000, all errors showing in terminal windows.
-####Work with repo
-* Work with commits <a href="http://nvie.com/posts/a-successful-git-branching-model/">model</a> 
+
+#### Branching <a href="http://nvie.com/posts/a-successful-git-branching-model/">model</a> 
+
