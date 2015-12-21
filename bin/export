@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+if [[ $# < 1 ]]; then
+    echo "Provide branch or tag"
+    exit 1
+fi
+TS=`date +%Y%m%d%H%M`
+mkdir -p export
+git archive --format=tar.gz $1 --prefix "$TS/" -o "export/$TS.tar.gz"
