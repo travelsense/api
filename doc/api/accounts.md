@@ -26,5 +26,5 @@ The account is created (or updated) automatically when the user [logs in](auth.m
 # Email confirmation
 ### Request: `GET /confirm-email/{token}`
 * token - email confirmation token from the email
-* 
+
 ### Response: HTML, text to confirm account creation
