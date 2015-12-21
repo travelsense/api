@@ -10,4 +10,9 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Pimple' => array($vendorDir . '/pimple/pimple/lib'),
     'Mandrill' => array($vendorDir . '/mandrill/mandrill/src'),
+    'KevinGH\\Amend' => array($vendorDir . '/kherge/amend/src/lib'),
+    'Herrera\\Version' => array($vendorDir . '/herrera-io/version/src/lib'),
+    'Herrera\\Phar\\Update' => array($vendorDir . '/herrera-io/phar-update/src/lib'),
+    'Herrera\\Json' => array($vendorDir . '/herrera-io/json/src/lib'),
+    'Evenement' => array($vendorDir . '/evenement/evenement/src'),
 );

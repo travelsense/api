@@ -1,0 +1,10 @@
+#!/usr/bin/env php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+Symfony\Component\Debug\ErrorHandler::register(false);
+
+$console = new Symfony\Component\Console\Application('PurePHP', '1.1.0');
+$console->add(new Pure\Console\StartCommand());
+$console->add(new Pure\Console\ClientCommand());
+$console->run();
