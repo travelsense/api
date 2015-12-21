@@ -8,12 +8,12 @@
     "monolog/monolog": "^1.17",
     "hackzilla/password-generator": "^1.1"
   },
-
-  "autoload": {
-    "psr-4": {"": "src/"}
-  },
   "require-dev": {
     "symfony/browser-kit": "^2.7",
-    "symfony/css-selector": "^2.7"
+    "symfony/css-selector": "^2.7",
+    "deployer/deployer": "~3.0"
+  },
+  "autoload": {
+    "psr-4": {"": "src/"}
   }
 }
