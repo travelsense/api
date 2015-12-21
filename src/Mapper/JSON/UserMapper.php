@@ -1,11 +1,7 @@
 <?php
-
-
 namespace Mapper\JSON;
-
-
 use Symfony\Component\HttpFoundation\Request;
-use User;
+use Model\User;
 
 class UserMapper
 {

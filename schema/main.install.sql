@@ -50,7 +50,7 @@ ON users FOR EACH ROW EXECUTE PROCEDURE
 CREATE TABLE sessions
 (
   id SERIAL NOT NULL PRIMARY KEY ,
-  user_id SERIAL REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
   token TEXT,
   device TEXT,
   created TIMESTAMP DEFAULT now(),
@@ -62,30 +62,19 @@ ON sessions FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 
 
--- Trips
+-- Travels
 
 
-CREATE TABLE trips
+CREATE TABLE travels
 (
   id SERIAL NOT NULL PRIMARY KEY ,
-  user_id SERIAL REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
-  name TEXT NOT NULL,
-  image TEXT NOT NULL,
+  user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
+  title TEXT NOT NULL,
   description TEXT NOT NULL,
-  path TEXT,
-  country TEXT,
   created TIMESTAMP DEFAULT now(),
   updated TIMESTAMP
 );
 
-CREATE TABLE trip_stats
-(
-  id SERIAL NOT NULL PRIMARY KEY ,
-  trip_id SERIAL REFERENCES trips (id) ON UPDATE CASCADE ON DELETE CASCADE ,
-  rating INT DEFAULT 0,
-  views INT DEFAULT 0
-);
-
-CREATE TRIGGER trips_before_update BEFORE UPDATE
-ON trips FOR EACH ROW EXECUTE PROCEDURE
+CREATE TRIGGER travels_before_update BEFORE UPDATE
+ON travels FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();

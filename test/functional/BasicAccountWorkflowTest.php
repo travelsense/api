@@ -2,6 +2,7 @@
 use Mapper\DB\UserMapper;
 use Test\FunctionalTestCase;
 use Test\MandrillMessagesLogger;
+use Model\User;
 
 /**
  * @backupGlobals disabled

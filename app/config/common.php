@@ -35,6 +35,7 @@ return [
             'login-by-email',
             'login-by-facebook',
             'change-password',
+            'travels-by-id',
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],

@@ -24,6 +24,9 @@ $app->post('/token/by-facebook/{fbToken}', 'controller.user:createTokenByFaceboo
     }) // to convert "+" to " "
     ->bind('login-by-facebook');
 
+$app->get('/travel/{id}', 'controller.travel:getTravel')
+    ->assert('id', '\\d+')
+    ->bind('travels-by-id');
 
 // Web
 

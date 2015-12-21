@@ -2,8 +2,6 @@
 
 namespace Controller;
 
-use DateInterval;
-use DateTime;
 use Exception\ApiException;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
@@ -15,7 +13,7 @@ use Security\SessionManager;
 use Service\Mailer\MailerService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use User;
+use Model\User;
 
 class UserController
 {

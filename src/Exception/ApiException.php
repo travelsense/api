@@ -19,11 +19,14 @@ class ApiException extends Exception
 
     const VALIDATION = 300; // Used in ValidationException
 
+    const RESOURCE_NOT_FOUND = 400;
+
     // Mapping to HTTP code and message
     private static $map = [
         self::USER_EXISTS => [403, 'User exists'],
         self::AUTH_REQUIRED => [401, 'Authentication required'],
         self::INVALID_EMAIL_PASSWORD => [401, 'Invalid email or password'],
+        self::RESOURCE_NOT_FOUND => [404, 'Resource not found'],
     ];
 
     private $httpCode;

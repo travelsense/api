@@ -3,7 +3,7 @@
 namespace Mapper\DB;
 use PDO;
 use PDOStatement;
-use User;
+use Model\User;
 
 class UserMapper extends AbstractMapper
 {
@@ -44,7 +44,7 @@ class UserMapper extends AbstractMapper
 
 
     /**
-     * Insert a new user
+     * Insert into DB, update id
      * @param User $user
      */
     public function insert(User $user)

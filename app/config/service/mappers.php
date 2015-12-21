@@ -18,6 +18,14 @@ $app['mapper.db.expirable_storage'] = $app->share(function($app) {
     return new \Mapper\DB\ExpirableStorage($app['storage.main.pdo']);
 });
 
+$app['mapper.db.travel'] = $app->share(function($app) {
+    return new \Mapper\DB\TravelMapper($app['storage.main.pdo']);
+});
+
 $app['mapper.json.user'] = $app->share(function($app) {
     return new \Mapper\JSON\UserMapper();
+});
+
+$app['mapper.json.travel'] = $app->share(function($app) {
+    return new \Mapper\JSON\TravelMapper();
 });

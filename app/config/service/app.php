@@ -54,7 +54,7 @@ $app->error(function(Exception $e, $code) use ($app) {
 $app->before(function (Request $request) {
     if ($request->isMethod(Request::METHOD_GET)) {
         foreach ($request->query as $key => $val) {
-            if ( ! $request->attributes->has($key)) {
+            if (false === $request->attributes->has($key)) {
                 $request->attributes->set($key, $val);
             }
         }
