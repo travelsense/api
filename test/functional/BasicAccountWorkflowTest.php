@@ -68,9 +68,7 @@ class BasicAccountWorkflowTest extends FunctionalTestCase
 
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertEquals('application/json', $client->getResponse()->headers->get('Content-Type'));
-        $response = $client->getJson();
-        $this->assertArrayHasKey('token', $response);
-        $token = $response['token'];
+        $token = $client->getJson();
 
         // Check the token is valid for subsequent calls
         $client->setAuthToken($token);

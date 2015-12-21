@@ -11,6 +11,7 @@ use Mapper\JSON\UserMapper as JSONUserMapper;
 use Security\Authentication\Credentials;
 use Security\SessionManager;
 use Service\Mailer\MailerService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Model\User;
@@ -148,7 +149,7 @@ class UserController
             throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
         }
         $token = $this->sessionManager->createSession($user->getId(), $request);
-        return ['token' => $token];
+        return new JsonResponse($token);
     }
 
 
@@ -176,7 +177,7 @@ class UserController
             $this->dbUserMapper->insert($user);
         }
         $token = $this->sessionManager->createSession($user->getId(), $request);
-        return ['token' => $token];
+        return new JsonResponse($token);
     }
 
     public function showPasswordChangeForm(Request $request)

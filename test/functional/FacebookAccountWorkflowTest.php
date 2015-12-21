@@ -62,8 +62,6 @@ class FacebookAccountWorkflowTest extends FunctionalTestCase
         $client->callLoginFacebook($fbToken);
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertEquals('application/json', $client->getResponse()->headers->get('Content-Type'));
-        $response = $client->getJson();
-        $this->assertArrayHasKey('token', $response);
 
         /** @var UserMapper $userMapper */
         $userMapper = $this->app['mapper.db.user'];
@@ -79,9 +77,5 @@ class FacebookAccountWorkflowTest extends FunctionalTestCase
         $client->callLoginFacebook($fbToken);
         $this->assertTrue($client->getResponse()->isOk());
         $this->assertEquals('application/json', $client->getResponse()->headers->get('Content-Type'));
-        $response = $client->getJson();
-        $this->assertArrayHasKey('token', $response);
-
     }
-
 }
