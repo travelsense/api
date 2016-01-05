@@ -36,10 +36,10 @@ createuser --interactive
 ```
 psql postgres -U postgres
 ```
-* In psql run sql query for change psw, create new db add rules for user vaca:
+* In psql run sql query for change psw, create new db and add rules for user vaca:
 ```sql
 alter user vaca password 'vaca';
-createdb vaca;
+create database vaca;
 grant all on DATABASE vaca to vaca;
 ```
 * Exit from psql ``` \q ``` and reconnect from user ``` vaca ``` for test connection:
