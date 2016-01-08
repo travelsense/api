@@ -10,7 +10,7 @@ class MandrillMessagesLogger extends \Mandrill_Messages
 
     public $messages = [];
 
-    public function send($message)
+    public function send($message, $async = false, $ip_pool = NULL, $send_at = NULL)
     {
         $this->messages[] = $message;
     }
