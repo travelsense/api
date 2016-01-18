@@ -15,17 +15,15 @@ $app['mapper.db.sessions'] = $app->share(function($app) {
 });
 
 $app['mapper.db.expirable_storage'] = $app->share(function($app) {
-    return new \Mapper\DB\ExpirableStorage($app['storage.main.pdo']);
+    return new ExpirableStorage($app['storage.main.pdo']);
 });
 
 $app['mapper.db.travel'] = $app->share(function($app) {
     return new \Mapper\DB\TravelMapper($app['storage.main.pdo']);
 });
 
-$app['mapper.json.user'] = $app->share(function($app) {
-    return new \Mapper\JSON\UserMapper();
-});
-
-$app['mapper.json.travel'] = $app->share(function($app) {
-    return new \Mapper\JSON\TravelMapper();
+$app['mapper.db.travel_comment'] = $app->share(function($app) {
+    $mapper = new \Mapper\DB\TravelCommentMapper($app['storage.main.pdo']);
+    $mapper->setUserMapper($app['mapper.db.user']);
+    return $mapper;
 });

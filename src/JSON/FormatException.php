@@ -1,8 +1,5 @@
 <?php
-
-
-namespace Mapper\JSON;
-
+namespace JSON;
 
 class FormatException extends \InvalidArgumentException
 {

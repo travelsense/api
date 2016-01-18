@@ -5,7 +5,7 @@ use Exception\ApiException;
 use Mapper\DB\TravelCommentMapper as DBCommentMapper;
 use Mapper\JSON\TravelCommentMapper as JSONCommentMapper;
 
-class CommentController
+class TravelCommentController
 {
     /**
      * @var DBCommentMapper
@@ -28,12 +28,13 @@ class CommentController
         $this->jsonCommentMapper = $jsonCommentMapper;
     }
 
-    public function getComment($id)
+    /**
+     * @param int $id Travel id
+     * @param int $page
+     */
+    public function getByTravel($id, $page)
     {
-        $Comment = $this->dbCommentMapper->fetchById($id);
-        if (null === $Comment) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
-        }
-        return $this->jsonCommentMapper->toArray($Comment);
+        $limit = 10;
+        $comments = $this->dbCommentMapper->fetchByTravelId($id, $limit, $page * $limit);
     }
 }

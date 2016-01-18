@@ -1,7 +1,6 @@
 <?php
-
-
-namespace Mapper\JSON;
+namespace JSON;
+use Mapper\JSON\FormatException;
 
 /**
  * JSON Data Object

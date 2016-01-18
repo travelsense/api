@@ -3,6 +3,8 @@ namespace Model;
 
 class TravelComment
 {
+    use TimestampTrait;
+
     /**
      * @var int
      */
@@ -14,6 +16,21 @@ class TravelComment
     private $text;
 
     /**
+     * @var int
+     */
+    private $userId;
+
+    /**
+     * @var int
+     */
+    private $travelId;
+
+    /**
+     * @var User
+     */
+    private $author;
+
+    /**
      * @return int
      */
     public function getId()
@@ -23,7 +40,7 @@ class TravelComment
 
     /**
      * @param int $id
-     * @return Travel
+     * @return $this
      */
     public function setId($id)
     {
@@ -41,11 +58,66 @@ class TravelComment
 
     /**
      * @param string $text
-     * @return Travel
+     * @return $this
      */
     public function setText($text)
     {
         $this->text = $text;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param int $userId
+     * @return $this
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTravelId()
+    {
+        return $this->travelId;
+    }
+
+    /**
+     * @param int $travelId
+     * @return $this
+     */
+    public function setTravelId($travelId)
+    {
+        $this->travelId = $travelId;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param User $author
+     * @return $this
+     */
+    public function setAuthor($author)
+    {
+        $this->setUserId($author->getId());
+        $this->author = $author;
         return $this;
     }
 
