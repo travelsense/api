@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: f3ath
- * Date: 11/8/15
- * Time: 6:15 PM
- */
-
 namespace Security\Authentication;
 
 use Security\SessionManager;
