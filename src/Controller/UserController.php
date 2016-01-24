@@ -6,8 +6,8 @@ use Exception\ApiException;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use ExpirableStorage;
-use Mapper\DB\UserMapper as DBUserMapper;
-use Mapper\JSON\UserMapper as JSONUserMapper;
+use JSON\DataObject;
+use Mapper\DB\UserMapper;
 use Security\Authentication\Credentials;
 use Security\SessionManager;
 use Service\Mailer\MailerService;
@@ -19,14 +19,9 @@ use Model\User;
 class UserController
 {
     /**
-     * @var DBUserMapper
+     * @var UserMapper
      */
-    private $dbUserMapper;
-
-    /**
-     * @var JSONUserMapper
-     */
-    private $jsonUserMapper;
+    private $userMapper;
 
     /**
      * @var MailerService
@@ -60,8 +55,7 @@ class UserController
 
     /**
      * UserController constructor.
-     * @param DBUserMapper $dbUserMapper
-     * @param JSONUserMapper $jsonUserMapper
+     * @param UserMapper $userMapper
      * @param MailerService $mailer
      * @param ExpirableStorage $storage
      * @param SessionManager $sessionManager
@@ -70,8 +64,7 @@ class UserController
      * @param PasswordGeneratorInterface $pwdGenerator
      */
     public function __construct(
-        DBUserMapper $dbUserMapper,
-        JSONUserMapper $jsonUserMapper,
+        UserMapper $userMapper,
         MailerService $mailer,
         ExpirableStorage $storage,
         SessionManager $sessionManager,
@@ -80,8 +73,7 @@ class UserController
         PasswordGeneratorInterface $pwdGenerator
     )
     {
-        $this->dbUserMapper = $dbUserMapper;
-        $this->jsonUserMapper = $jsonUserMapper;
+        $this->userMapper = $userMapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
         $this->sessionManager = $sessionManager;
@@ -96,8 +88,13 @@ class UserController
     public function getUser()
     {
         $userId = $this->credentials->getUser();
-        $user = $this->dbUserMapper->fetchById($userId);
-        return $this->jsonUserMapper->toArray($user);
+        $user = $this->userMapper->fetchById($userId);
+        return [
+            'email' => $user->getEmail(),
+            'picture' => $user->getPicture(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+        ];
     }
 
     /**
@@ -108,11 +105,20 @@ class UserController
      */
     public function createUser(Request $request)
     {
-        $user = $this->jsonUserMapper->createUser($request);
-        if ($this->dbUserMapper->emailExists($user->getEmail())) {
+        $json = new DataObject($request->getContent());
+
+        $user = new User();
+        $user
+            ->setEmail($json->get('email', 'string'))
+            ->setPassword($json->get('password', 'string'))
+            ->setFirstName($json->get('firstName', 'string'))
+            ->setLastName($json->get('lastName', 'string'))
+            ->setPicture($json->get('picture', 'string', null, ''));
+
+        if ($this->userMapper->emailExists($user->getEmail())) {
             throw ApiException::create(ApiException::USER_EXISTS);
         }
-        $this->dbUserMapper->insert($user);
+        $this->userMapper->insert($user);
         $token = $this->storage->store($user->getEmail());
         $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
         return [];
@@ -129,8 +135,8 @@ class UserController
         if ($email === null) {
             return new Response('Invalid token.');
         }
-        if (false === $this->dbUserMapper->emailExists($email)) {
-            $this->dbUserMapper->confirmEmail($email);
+        if (false === $this->userMapper->emailExists($email)) {
+            $this->userMapper->confirmEmail($email);
         }
         return new Response('Account has been created.');
     }
@@ -144,7 +150,7 @@ class UserController
     public function createTokenByEmail($email, Request $request)
     {
         $password = $request->getContent();
-        $user = $this->dbUserMapper->fetchByEmailAndPassword($email, $password);
+        $user = $this->userMapper->fetchByEmailAndPassword($email, $password);
         if (null === $user) {
             throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
         }
@@ -164,7 +170,7 @@ class UserController
         $fbUser = $this->facebook
             ->get('/me?fields=picture,email,first_name,last_name')
             ->getGraphUser();
-        $user = $this->dbUserMapper->fetchByEmail($fbUser->getEmail());
+        $user = $this->userMapper->fetchByEmail($fbUser->getEmail());
         if (null === $user) {
             $pic = $fbUser->getPicture();
             $user = new User();
@@ -174,7 +180,7 @@ class UserController
                 ->setLastName($fbUser->getLastName())
                 ->setPicture($pic ? $pic->getUrl() : null)
                 ->setPassword($this->pwdGenerator->generatePassword());
-            $this->dbUserMapper->insert($user);
+            $this->userMapper->insert($user);
         }
         $token = $this->sessionManager->createSession($user->getId(), $request);
         return new JsonResponse($token);

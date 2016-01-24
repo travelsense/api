@@ -28,6 +28,7 @@ $app->get('/travel/{id}', 'controller.travel:getTravel')
     ->assert('id', '\\d+')
     ->bind('travels-by-id');
 
+
 // Web
 
 $app->get('/confirm-email/{token}', 'controller.user:confirmEmail')

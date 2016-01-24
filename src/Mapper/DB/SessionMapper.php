@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: f3ath
- * Date: 11/8/15
- * Time: 3:08 PM
- */
-
 namespace Mapper\DB;
 
+use AbstractPDOMapper;
+use BadMethodCallException;
 
-class SessionMapper extends AbstractMapper
+class SessionMapper extends AbstractPDOMapper
 {
     /**
      * @param string $userId
@@ -19,8 +14,7 @@ class SessionMapper extends AbstractMapper
      */
     public function createSession($userId, $token, $device)
     {
-        $insert = $this->pdo
-            ->prepare('INSERT INTO sessions (user_id, token, device) VALUES (:user_id, :token, :device) RETURNING id');
+        $insert = $this->prepare('INSERT INTO sessions (user_id, token, device) VALUES (:user_id, :token, :device) RETURNING id');
         $insert->execute([
             ':user_id' => $userId,
             ':token' => $token,
@@ -36,12 +30,19 @@ class SessionMapper extends AbstractMapper
      */
     public function getUserId($id, $token)
     {
-        $select = $this->pdo
-            ->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
+        $select = $this->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
         $select->execute([
             ':id' => $id,
             ':token' => $token,
         ]);
         return $select->fetchColumn(0) ?: null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function create(array $row)
+    {
+        throw new BadMethodCallException;
     }
 }

@@ -3,6 +3,8 @@ namespace Model;
 
 class User
 {
+    use TimestampTrait;
+
     /**
      * @var string
      */
@@ -140,6 +142,4 @@ class User
         $this->password = $password;
         return $this;
     }
-
-
 }

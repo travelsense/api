@@ -3,6 +3,8 @@ namespace Model;
 
 class Travel
 {
+    use TimestampTrait;
+
     /**
      * @var int
      */

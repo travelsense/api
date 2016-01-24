@@ -1,11 +1,10 @@
 <?php
 
 namespace Mapper\DB;
-use PDO;
-use PDOStatement;
+use AbstractPDOMapper;
 use Model\User;
 
-class UserMapper extends AbstractMapper
+class UserMapper extends AbstractPDOMapper
 {
     /**
      * @var string
@@ -26,7 +25,7 @@ class UserMapper extends AbstractMapper
      */
     public function emailExists($email)
     {
-        $select = $this->pdo->prepare('SELECT id FROM users WHERE email=:email');
+        $select = $this->prepare('SELECT id FROM users WHERE email=:email');
         $select->execute([':email' => $email]);
         return $select->rowCount() == 1;
     }
@@ -37,11 +36,9 @@ class UserMapper extends AbstractMapper
      */
     public function confirmEmail($email)
     {
-        $select = $this->pdo->prepare('UPDATE users SET email_confirmed = true WHERE email=:email');
+        $select = $this->prepare('UPDATE users SET email_confirmed = true WHERE email=:email');
         $select->execute([':email' => $email]);
     }
-
-
 
     /**
      * Insert into DB, update id
@@ -56,7 +53,7 @@ VALUES
   (:email, :password, :first_name, :last_name, :picture)
 RETURNING id
 SQL;
-        $insert = $this->pdo->prepare($sql);
+        $insert = $this->prepare($sql);
         $insert->execute([
             ':email' => $user->getEmail(),
             ':password' => $this->getPasswordHash($user->getPassword()),
@@ -75,13 +72,13 @@ SQL;
      */
     public function fetchByEmailAndPassword($email, $password)
     {
-        $select = $this->pdo->prepare('SELECT * FROM users WHERE email = :email AND "password" = :password');
+        $select = $this->prepare('SELECT * FROM users WHERE email = :email AND "password" = :password');
 
         $select->execute([
             ':email' => $email,
             ':password' => $this->getPasswordHash($password),
         ]);
-        return $this->createUser($select);
+        return $this->fetch($select);
     }
 
     /**
@@ -90,11 +87,11 @@ SQL;
      */
     public function fetchById($id)
     {
-        $select = $this->pdo->prepare('SELECT * FROM users WHERE "id" = :id');
+        $select = $this->prepare('SELECT * FROM users WHERE "id" = :id');
         $select->execute([
             ':id' => $id,
         ]);
-        return $this->createUser($select);
+        return $this->fetch($select);
     }
 
     /**
@@ -103,11 +100,11 @@ SQL;
      */
     public function fetchByEmail($email)
     {
-        $select = $this->pdo->prepare('SELECT * FROM users WHERE "email" = :email');
+        $select = $this->prepare('SELECT * FROM users WHERE "email" = :email');
         $select->execute([
             ':email' => $email,
         ]);
-        return $this->createUser($select);
+        return $this->fetch($select);
     }
 
     /**
@@ -119,16 +116,8 @@ SQL;
         return sha1($password . $this->salt);
     }
 
-    /**
-     * @param PDOStatement $stmt
-     * @return User|null
-     */
-    private function createUser(PDOStatement $stmt)
+    public function create(array $row)
     {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (false === $row) {
-            return null;
-        }
         $user = new User();
         return $user
             ->setId($row['id'])

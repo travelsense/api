@@ -2,38 +2,33 @@
 namespace Controller;
 
 use Exception\ApiException;
-use Mapper\DB\TravelMapper as DBTravelMapper;
-use Mapper\JSON\TravelMapper as JSONTravelMapper;
+use Mapper\DB\TravelMapper;
 
 class TravelController
 {
     /**
-     * @var DBTravelMapper
+     * @var TravelMapper
      */
-    private $dbTravelMapper;
-
-    /**
-     * @var JSONTravelMapper
-     */
-    private $jsonTravelMapper;
+    private $travelMapper;
 
     /**
      * TravelController constructor.
-     * @param DBTravelMapper $dbTravelMapper
-     * @param JSONTravelMapper $jsonTravelMapper
+     * @param TravelMapper $travelMapper
      */
-    public function __construct(DBTravelMapper $dbTravelMapper, JSONTravelMapper $jsonTravelMapper)
+    public function __construct(TravelMapper $travelMapper)
     {
-        $this->dbTravelMapper = $dbTravelMapper;
-        $this->jsonTravelMapper = $jsonTravelMapper;
+        $this->travelMapper = $travelMapper;
     }
 
     public function getTravel($id)
     {
-        $travel = $this->dbTravelMapper->fetchById($id);
+        $travel = $this->travelMapper->fetchById($id);
         if (null === $travel) {
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
-        return $this->jsonTravelMapper->toArray($travel);
+        return [
+            'title' => $travel->getTitle(),
+            'description' => $travel->getDescription(),
+        ];
     }
 }

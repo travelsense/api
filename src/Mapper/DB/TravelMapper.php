@@ -1,12 +1,10 @@
 <?php
-
 namespace Mapper\DB;
 
+use AbstractPDOMapper;
 use Model\Travel;
-use PDO;
-use PDOStatement;
 
-class TravelMapper extends AbstractMapper
+class TravelMapper extends AbstractPDOMapper
 {
     /**
      * @param $id
@@ -14,9 +12,9 @@ class TravelMapper extends AbstractMapper
      */
     public function fetchById($id)
     {
-        $select = $this->pdo->prepare('SELECT * FROM travels WHERE id = :id');
+        $select = $this->prepare('SELECT * FROM travels WHERE id = :id');
         $select->execute(['id' => $id]);
-        return $this->createTravel($select);
+        return $this->fetch($select);
     }
 
     /**
@@ -25,8 +23,7 @@ class TravelMapper extends AbstractMapper
      */
     public function insert(Travel $travel)
     {
-        $insert = $this->pdo
-            ->prepare('INSERT INTO travels (title, description) VALUES (:title, :description) RETURNING id');
+        $insert = $this->prepare('INSERT INTO travels (title, description) VALUES (:title, :description) RETURNING id');
         $insert->execute([
             ':title' => $travel->getTitle(),
             ':description' => $travel->getDescription(),
@@ -35,16 +32,8 @@ class TravelMapper extends AbstractMapper
         $travel->setId($id);
     }
 
-    /**
-     * @param PDOStatement $stmt
-     * @return Travel|null
-     */
-    private function createTravel(PDOStatement $stmt)
+    public function create(array $row)
     {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (false === $row) {
-            return null;
-        }
         $travel = new Travel();
         return $travel
             ->setId($row['id'])

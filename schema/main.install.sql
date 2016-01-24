@@ -78,3 +78,21 @@ CREATE TABLE travels
 CREATE TRIGGER travels_before_update BEFORE UPDATE
 ON travels FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
+
+
+-- Travel comments
+
+
+CREATE TABLE travel_comments
+(
+  id SERIAL NOT NULL PRIMARY KEY ,
+  author_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
+  travel_id INTEGER REFERENCES travels (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  text TEXT NOT NULL,
+  created TIMESTAMP DEFAULT now(),
+  updated TIMESTAMP
+);
+
+CREATE TRIGGER travel_comments_before_update BEFORE UPDATE
+ON travel_comments FOR EACH ROW EXECUTE PROCEDURE
+  process_updated_column();
