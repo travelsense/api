@@ -23,6 +23,6 @@ $app['user'] = function ($app) {
         return null;
     }
     /** @var \Mapper\DB\UserMapper $userMapper */
-    $userMapper = $app['mapper.user'];
+    $userMapper = $app['mapper.db.user'];
     return $userMapper->fetchById($id);
 };

@@ -39,11 +39,6 @@ class UserController
     private $sessionManager;
 
     /**
-     * @var Credentials
-     */
-    private $credentials;
-
-    /**
      * @var Facebook
      */
     private $facebook;
@@ -59,7 +54,6 @@ class UserController
      * @param MailerService $mailer
      * @param ExpirableStorage $storage
      * @param SessionManager $sessionManager
-     * @param Credentials $credentials
      * @param Facebook $facebook
      * @param PasswordGeneratorInterface $pwdGenerator
      */
@@ -68,7 +62,6 @@ class UserController
         MailerService $mailer,
         ExpirableStorage $storage,
         SessionManager $sessionManager,
-        Credentials $credentials,
         Facebook $facebook,
         PasswordGeneratorInterface $pwdGenerator
     )
@@ -77,18 +70,16 @@ class UserController
         $this->mailer = $mailer;
         $this->storage = $storage;
         $this->sessionManager = $sessionManager;
-        $this->credentials = $credentials;
         $this->facebook = $facebook;
         $this->pwdGenerator = $pwdGenerator;
     }
 
     /**
+     * @param User $user
      * @return array
      */
-    public function getUser()
+    public function getUser(User $user)
     {
-        $userId = $this->credentials->getUser();
-        $user = $this->userMapper->fetchById($userId);
         return [
             'email' => $user->getEmail(),
             'picture' => $user->getPicture(),
