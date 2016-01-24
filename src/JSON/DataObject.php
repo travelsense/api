@@ -1,6 +1,5 @@
 <?php
 namespace JSON;
-use Mapper\JSON\FormatException;
 
 /**
  * JSON Data Object
@@ -29,6 +28,7 @@ class DataObject
      * @param string|callable $constraint Regexp (preg_match) or a callable
      * @param mixed $default Default value
      * @return mixed
+     * @throws FormatException
      */
     public function get($property, $types = null, $constraint = null, $default = null)
     {
