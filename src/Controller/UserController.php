@@ -8,7 +8,6 @@ use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use ExpirableStorage;
 use JSON\DataObject;
 use Mapper\DB\UserMapper;
-use Security\Authentication\Credentials;
 use Security\SessionManager;
 use Service\Mailer\MailerService;
 use Symfony\Component\HttpFoundation\JsonResponse;
