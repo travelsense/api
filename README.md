@@ -55,7 +55,8 @@ php composer.phar install
 
 * For run app with <a href="http://silex.sensiolabs.org/">Silex</a> enter in terminal:
 ```
-APP_ENV=dev php -S localhost:8000 public/app.php
+cd public
+APP_ENV=dev php -S localhost:8000 app.php
 ```
 * Open in browser http://localhost:8000
 * Debug/errors showing in terminal.
