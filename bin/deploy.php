@@ -15,15 +15,15 @@ $release = sprintf(
     )
     . "Last commit:\n" . `git log -1` . "\n";
 run('git fetch');
-run("rm -rf $tmp/build");
-run("git archive --format=tar --prefix=build/ $tag | (cd $tmp/ && tar xf -)");
-chdir("$tmp/build");
+run("mkdir $tmp/$build");
+run("git archive --format=tar $tag | (cd $tmp/$build && tar xf -)");
+chdir("$tmp/$build");
 run("composer install --no-dev");
 file_put_contents('RELEASE', $release);
-run("tar -zcf $archive .");
-chdir("/tmp");
-run("rm -rf $tmp/build");
+chdir($tmp);
+run("tar -zcf $archive $build");
+run("rm -rf $build");
 echo "\n*********************************************************\n\n";
 echo "DONE: $archive\n\n";
-echo "TO DEPLOY RUN: sudo tar -zxvf $archive -C /www/release/$build\n\n";
+echo "TO DEPLOY RUN: sudo tar -zxvf $archive -C /www/release/\n\n";
 echo "TO SWITCH RUN: sudo ln -sf /www/release/$build /www/current\n\n";
