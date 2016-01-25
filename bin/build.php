@@ -16,7 +16,7 @@ $release = sprintf(
     . "Last commit:\n" . `git log -1` . "\n";
 run('git fetch');
 run("mkdir $tmp/$build");
-run("git archive --format=tar $tag | (cd $tmp/$build && tar xf -)");
+run("git archive --format=tar origin/$tag | (cd $tmp/$build && tar xf -)");
 chdir("$tmp/$build");
 run("composer install --no-dev");
 file_put_contents('RELEASE', $release);
