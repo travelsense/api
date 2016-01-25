@@ -25,5 +25,5 @@ run("tar -zcf $archive $build");
 run("rm -rf $build");
 echo "\n*********************************************************\n\n";
 echo "DONE: $archive\n\n";
-echo "TO DEPLOY RUN: sudo tar -zxvf $archive -C /www/release/\n\n";
+echo "TO DEPLOY RUN: sudo tar -zxf $archive -C /www/release/\n\n";
 echo "TO SWITCH RUN: sudo ln -sf /www/release/$build /www/current\n\n";
