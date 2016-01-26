@@ -15,6 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validation;
 
 $app['debug'] = $app['config']['debug'];
+$app['resolver'] = $app->share(function () use ($app) {
+    // Use the project specific ControllerResolver
+    return new ControllerResolver($app, $app['logger']);
+});
 
 $app->error(function(Exception $e, $code) use ($app) {
     if ($app['debug']) {

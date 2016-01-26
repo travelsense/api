@@ -12,7 +12,6 @@ $app['controller.user'] = $app->share(function($app) {
         $app['email.mailer'],
         $app['storage.expirable_storage'],
         $app['security.session_manager'],
-        $app['auth.credentials'],
         $app['facebook'],
         $app['password_generator']
     );

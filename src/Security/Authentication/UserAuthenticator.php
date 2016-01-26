@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: f3ath
- * Date: 11/8/15
- * Time: 2:08 PM
- */
-
 namespace Security\Authentication;
 
 use Security\AuthenticationException;

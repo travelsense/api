@@ -25,7 +25,7 @@ abstract class AbstractPDOMapper
      * @param string $sql
      * @return PDOStatement
      */
-    public function prepare(string $sql):PDOStatement
+    public function prepare($sql)
     {
         return $this->pdo->prepare($sql, $this->driverOptions);
     }
@@ -47,7 +47,7 @@ abstract class AbstractPDOMapper
      * @param string $prefix
      * @return mixed
      */
-    public function createJoined(array $row, string $prefix)
+    public function createJoined(array $row, $prefix)
     {
         $prefixLen = mb_strlen($prefix);
         foreach ($row as $key => $item) {
