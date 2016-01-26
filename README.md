@@ -5,6 +5,9 @@ We are using JSON RESTful(ish) API.
 * [Accounts](doc/api/accounts.md)
 * [Travels](doc/api/travels.md)
 
+# Deployment
+* [Production deployment](doc/deploy.md)
+
 # Dev environment set up
 
 ####Install process for Ubuntu
