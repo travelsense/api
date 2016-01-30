@@ -17,6 +17,9 @@ return [
         __DIR__.'/service/misc.php',
     ],
     'debug' => false,
+    'log' => [
+        'main' => '/var/log/vaca.log',
+    ],
     'error_message_mapping' => [
         404 => 'Resource not found',
         500 => 'Internal server error',

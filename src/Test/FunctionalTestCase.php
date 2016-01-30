@@ -24,7 +24,7 @@ class FunctionalTestCase extends WebTestCase
         try {
             return $this->app["storage.$database.pdo"];
         } catch (PDOException $e) {
-            $this->markTestSkipped('PDOException');
+            $this->markTestSkipped('PDOException: '. $e->getMessage());
         }
     }
 

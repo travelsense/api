@@ -1,2 +1,3 @@
 /app/config/local.json
 /vendor
+.vagrant
