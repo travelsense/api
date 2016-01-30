@@ -13,7 +13,7 @@ class Application extends Silex\Application
 
         // load secure config
         $secureConfig = $config['secure_json'];
-        if ($secureConfig) {
+        if ($secureConfig && file_exists($secureConfig)) {
             $config = array_replace_recursive(
                 $config,
                 json_decode(file_get_contents($secureConfig), true));

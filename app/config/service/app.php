@@ -71,10 +71,10 @@ $app->view(function(array $response) use ($app) {
 });
 
 // Twig
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
+$app->register(new Silex\Provider\TwigServiceProvider(), [
     'twig.path' => __DIR__.'/../../view',
-));
+]);
 
-$app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.logfile' => '/tmp/wtf.log',
-));
+$app->register(new Silex\Provider\MonologServiceProvider(), [
+    'monolog.logfile' => $app['config']['log']['main'],
+]);
