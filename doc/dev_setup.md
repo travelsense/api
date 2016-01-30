@@ -12,7 +12,7 @@
 * open http://vacarious-dev.com
 
 ## Like real men do
-* get php (5.6 or higher), postgres (9.0 or higher). No Web server is required to run the API
+* get php (5.6 or higher), postgres (9.0 or higher). No Web server is actually required to run the API
 * git clone, composer install, you know
 * do some other stuff from [setup.sh](provision/setup.sh)
 * ``` cd public && APP_ENV=dev php -S localhost:8000 app.php```
