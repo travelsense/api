@@ -25,14 +25,14 @@ class DataObject
     /**
      * @param $property
      * @param string|array $types List of expected types (@see gettype() function)
-     * @param string|callable $constraint Regexp (for preg_match) or a callable (bool: true if valid)
+     * @param string|callable $constraint Regexp (preg_match) or a callable
      * @param mixed $default Default value
      * @return mixed
      * @throws FormatException
      */
     public function get($property, $types = null, $constraint = null, $default = null)
     {
-        if (false === isset($this->data-> $property)) {
+        if (false === property_exists($this->data, $property)) {
             if (null !== $default) {
                 return $default;
             }
@@ -51,7 +51,7 @@ class DataObject
         }
 
         if (null !== $constraint) {
-            if (is_callable($constraint) && true !== $error = $constraint($value)) {
+            if (is_callable($constraint) && false !== $error = $constraint($value)) {
                 throw new FormatException(sprintf('Property %s is invalid: %s', $property, $error));
             } elseif (false === preg_match($constraint, $value)) {
                 throw new FormatException(sprintf('Property %s does not match %s', $property, $constraint));
