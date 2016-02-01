@@ -22,11 +22,13 @@ class AuthenticationProvider implements ServiceProviderInterface
     {
         $app['auth.credentials'] = new Credentials();
         $app['auth.authenticator'] = $app->share(function($app) {
-            return new UserAuthenticator(
+            $auth = new UserAuthenticator(
                 $app['auth.credentials'],
                 $app['security.session_manager'],
                 $app['auth.unsecured_routes']
             );
+            $auth->setLogger($app['monolog']);
+            return $auth;
         });
     }
 

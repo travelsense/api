@@ -1,8 +1,8 @@
 <?php
 namespace Security\Authentication;
 
+use Psr\Log\LoggerAwareTrait;
 use Security\AuthenticationException;
-use Security\Exception\AuthorizationException;
 use Security\SessionManager;
 use Silex\Application;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class UserAuthenticator implements EventSubscriberInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var Credentials
      */
@@ -51,10 +53,16 @@ class UserAuthenticator implements EventSubscriberInterface
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
         if ($this->isExcludedRoute($route)) {
+            if ($this->logger) {
+                $this->logger->info('Route excluded from auth');
+            }
             return;
         }
 
         $authHeader = $request->headers->get('Authorization');
+        if ($this->logger) {
+            $this->logger->info('Authorization header', ['Authorization' => $authHeader]);
+        }
         if (! preg_match('/^Token (.+)/i', $authHeader, $matches)) {
             $event->setResponse(new Response('', 401, ['WWW-Authenticate' => 'Token']));
             return;

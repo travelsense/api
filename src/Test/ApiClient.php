@@ -39,7 +39,7 @@ class ApiClient
     /**
      * Register new user
      * @param array $user
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return string Auth token
      */
     public function registerUser(array $user)
     {
@@ -50,6 +50,20 @@ class ApiClient
     {
         return $this->http
             ->post('/token/by-email/'.urldecode($email), ['json' => $password])
-            ->getBody();
+            ->getBody()
+            ->getContents();
+    }
+
+    /**
+     * Get current user info
+     * @return object
+     */
+    public function getCurrentUser()
+    {
+        $json = $this->http
+            ->get('/user', ['headers' => ['Authorization' => 'Token: '.$this->authToken]])
+            ->getBody()
+            ->getContents();
+        return json_decode($json, true);
     }
 }
