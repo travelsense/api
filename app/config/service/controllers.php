@@ -26,6 +26,7 @@ $app['controller.api.auth'] = $app->share(function($app) {
         $app['facebook'],
         $app['password_generator']
     );
+    $controller->setLogger($app['monolog']);
     return $controller;
 });
 
