@@ -93,6 +93,9 @@ class UserController
         }
         $this->userMapper->insert($user);
         $token = $this->storage->store($user->getEmail());
+        if ($this->logger) {
+            $this->logger->info('Expirable token created', ['token' => $token]);
+        }
         $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
         return [];
     }

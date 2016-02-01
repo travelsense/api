@@ -18,12 +18,13 @@ class ApiClient
     /**
      * ApiClient constructor.
      * @param string $apiUrl
+     * @param float $timeout
      */
-    public function __construct($apiUrl)
+    public function __construct($apiUrl, $timeout = 5.0)
     {
         $this->http = new HttpClient([
             'base_uri' => $apiUrl,
-            'timeout' => 1.0,
+            'timeout' => $timeout,
         ]);
     }
 
