@@ -1,11 +1,17 @@
 <?php
-namespace Controller;
+namespace Controller\Api;
 
 use Exception\ApiException;
 use Mapper\DB\TravelMapper;
+use Psr\Log\LoggerAwareTrait;
 
+/**
+ * Travel API controller
+ */
 class TravelController
 {
+    use LoggerAwareTrait;
+
     /**
      * @var TravelMapper
      */
