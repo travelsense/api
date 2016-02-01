@@ -31,4 +31,3 @@ $switchCmd = "sudo ln -sfT /www/release/$build /www/current";
 echo "DONE: $archive\n\n";
 echo "DEPLOY: $deployCmd\n\n";
 echo "SWITCH: $switchCmd\n\n";
-echo "DEPLOY AND SWITCH: $deployCmd && $switchCmd\n\n";
