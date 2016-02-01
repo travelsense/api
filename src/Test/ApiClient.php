@@ -67,7 +67,7 @@ class ApiClient
     public function getCurrentUser()
     {
         $json = $this->http
-            ->get('/user', ['headers' => ['Authorization' => 'Token: '.$this->authToken]])
+            ->get('/user', ['headers' => ['Authorization' => 'Token '.$this->authToken]])
             ->getBody()
             ->getContents();
         return json_decode($json, true);
