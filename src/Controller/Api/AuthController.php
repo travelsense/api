@@ -66,7 +66,7 @@ class AuthController
      */
     public function createTokenByEmail($email, Request $request)
     {
-        $password = $request->getContent();
+        $password = json_decode($request->getContent());
         if ($this->logger) {
             $this->logger->debug('Password', ['password' => $password]);
         }

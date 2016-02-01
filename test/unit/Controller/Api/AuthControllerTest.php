@@ -75,7 +75,7 @@ class AuthControllerTest extends ControllerTestCase
             ->getMockForAbstractClass();
 
         $this->request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
-        $this->request->method('getContent')->willReturn('123');
+        $this->request->method('getContent')->willReturn(json_encode('123'));
 
         $this->controller = new AuthController(
             $this->userMapper,
