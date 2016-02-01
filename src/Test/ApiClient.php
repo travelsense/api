@@ -45,4 +45,11 @@ class ApiClient
     {
         return $this->http->post('/user', ['json' => $user]);
     }
+
+    public function authByEmail($email, $password)
+    {
+        return $this->http
+            ->post('/token/by-email/'.urldecode($email), ['json' => $password])
+            ->getBody();
+    }
 }
