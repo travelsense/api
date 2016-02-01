@@ -2,7 +2,9 @@
 namespace Controller\Api;
 
 use Exception\ApiException;
+use JSON\FormatException;
 use Model\User;
+use Symfony\Component\HttpFoundation\Response;
 use Test\ControllerTestCase;
 
 class UserControllerTest extends ControllerTestCase
@@ -103,9 +105,27 @@ class UserControllerTest extends ControllerTestCase
             $this->fail('No exception thrown');
         } catch (ApiException $e) {
             $this->assertEquals(ApiException::USER_EXISTS, $e->getCode());
-            $this->assertEquals(403, $e->getHttpCode());
+            $this->assertEquals(Response::HTTP_FORBIDDEN, $e->getHttpCode());
         }
 
         $this->assertEquals([], $this->controller->createUser($request));
+    }
+
+    public function testCreateUserValidation()
+    {
+        $json = json_encode([
+            'ololo' => 'invalid stuff',
+        ]);
+
+        $request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
+        $request->method('getContent')->willReturn($json);
+
+        try {
+            $this->controller->createUser($request);
+            $this->fail();
+        } catch (ApiException $e) {
+            $this->assertEquals(ApiException::VALIDATION, $e->getCode());
+            $this->assertEquals(Response::HTTP_BAD_REQUEST, $e->getHttpCode());
+        }
     }
 }

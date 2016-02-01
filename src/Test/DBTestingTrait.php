@@ -4,7 +4,7 @@ namespace Test;
 
 use PDO;
 
-trait DBTesting
+trait DBTestingTrait
 {
     protected function setUpDatabase(PDO $pdo, $database)
     {

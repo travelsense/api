@@ -5,11 +5,13 @@ namespace Controller\Api;
 use Exception\ApiException;
 use ExpirableStorage;
 use JSON\DataObject;
+use JSON\FormatException;
 use Mapper\DB\UserMapper;
 use Model\User;
 use Psr\Log\LoggerAwareTrait;
 use Service\Mailer\MailerService;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * User API controller
@@ -75,12 +77,16 @@ class UserController
         $json = new DataObject($request->getContent());
 
         $user = new User();
-        $user
-            ->setEmail($json->getString('email'))
-            ->setPassword($json->getString('password'))
-            ->setFirstName($json->getString('firstName'))
-            ->setLastName($json->getString('lastName'))
-            ->setPicture($json->has('picture') ? $json->getString('picture') : '');
+        try {
+            $user
+                ->setEmail($json->getString('email'))
+                ->setPassword($json->getString('password'))
+                ->setFirstName($json->getString('firstName'))
+                ->setLastName($json->getString('lastName'))
+                ->setPicture($json->has('picture') ? $json->getString('picture') : '');
+        } catch (FormatException $e) {
+            throw new ApiException($e->getMessage(), ApiException::VALIDATION, $e, Response::HTTP_BAD_REQUEST);
+        }
 
         if ($this->userMapper->emailExists($user->getEmail())) {
             throw ApiException::create(ApiException::USER_EXISTS);
