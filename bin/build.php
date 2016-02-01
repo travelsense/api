@@ -1,7 +1,6 @@
 #!/usr/bin/env php
 <?php
 require_once 'cli.php';
-$slack =
 $tag = $argc > 1 ? $argv[1] : 'master';
 $build = date('YmdHis') . '-' . $tag;
 $tmp = '/tmp';
