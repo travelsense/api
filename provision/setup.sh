@@ -7,8 +7,6 @@ apt-get upgrade -y
 
 ### PHP
 apt-get install php5-common php5-dev php5-cli php5-fpm curl php5-curl php5-pgsql -y
-ln -sf /etc/php5/mods-available/pdo_pgsql.ini /etc/php5/cli/conf.d/pdo_pgsql.ini
-ln -sf /etc/php5/mods-available/pdo_pgsql.ini /etc/php5/fpm/conf.d/pdo_pgsql.ini
 for SAPI in cli fpm;
  do
     cp "/vagrant/provision/config/php/$SAPI/php.ini" "/etc/php5/$SAPI/php.ini"

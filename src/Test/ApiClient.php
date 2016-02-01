@@ -1,14 +1,31 @@
 <?php
 namespace Test;
 
-use Symfony\Component\HttpKernel\Client;
+use GuzzleHttp\Client as HttpClient;
 
-class ApiClient extends Client
+class ApiClient
 {
+    /**
+     * @var HttpClient
+     */
+    private $http;
+
     /**
      * @var string
      */
     private $authToken;
+
+    /**
+     * ApiClient constructor.
+     * @param string $apiUrl
+     */
+    public function __construct($apiUrl)
+    {
+        $this->http = new HttpClient([
+            'base_uri' => $apiUrl,
+            'timeout' => 1.0,
+        ]);
+    }
 
     /**
      * @param string $authToken
@@ -19,94 +36,12 @@ class ApiClient extends Client
     }
 
     /**
-     * @return mixed
+     * Register new user
+     * @param array $user
+     * @return mixed|\Psr\Http\Message\ResponseInterface
      */
-    public function getJson()
+    public function registerUser(array $user)
     {
-        return json_decode($this->getResponse()->getContent(), true);
+        return $this->http->post('/user', ['json' => $user]);
     }
-
-    /**
-     * Register by email and password
-     * @param $email
-     * @param $password
-     * @param $firstName
-     * @param $lastName
-     */
-    public function callRegister($email, $password, $firstName, $lastName)
-    {
-        $json = json_encode([
-            'email' => $email,
-            'password' => $password,
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-        ]);
-
-        $this->request(
-            'POST',
-            'https://example.com/user',
-            [],
-            [],
-            [
-                'CONTENT_TYPE' => 'application/json',
-            ],
-            $json
-        );
-    }
-
-    /**
-     * Login by email and password
-     * @param $email
-     * @param $password
-     */
-    public function callLoginByEmail($email, $password)
-    {
-        $this->request(
-            'POST',
-            sprintf('https://example.com/token/by-email/%s', urlencode($email)),
-            [],
-            [],
-            [
-                'CONTENT_TYPE' => 'application/json',
-            ],
-            $password
-        );
-    }
-
-    /**
-     * Login facebook token
-     * @param $token
-     */
-    public function callLoginFacebook($token)
-    {
-        $this->request(
-            'POST',
-            sprintf('https://example.com/token/by-facebook/%s', urlencode($token)),
-            [],
-            [],
-            [
-                'CONTENT_TYPE' => 'application/json',
-            ]
-        );
-    }
-
-
-
-    /**
-     * Get user object
-     */
-    public function callUser()
-    {
-        $this->request(
-            'GET',
-            'https://example.com/user',
-            [],
-            [],
-            [
-                'CONTENT_TYPE' => 'application/json',
-                'HTTP_Authorization' => 'Token ' . $this->authToken,
-            ]
-        );
-    }
-
 }

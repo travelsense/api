@@ -2,21 +2,21 @@
 
 namespace Controller;
 
-use Exception\ApiException;
-use Facebook\Facebook;
-use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use ExpirableStorage;
-use JSON\DataObject;
 use Mapper\DB\UserMapper;
-use Security\SessionManager;
+use Model\User;
+use Psr\Log\LoggerAwareTrait;
 use Service\Mailer\MailerService;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Model\User;
 
+/**
+ * User Web controller
+ */
 class UserController
 {
+    use LoggerAwareTrait;
+
     /**
      * @var UserMapper
      */
@@ -33,85 +33,20 @@ class UserController
     private $storage;
 
     /**
-     * @var SessionManager
-     */
-    private $sessionManager;
-
-    /**
-     * @var Facebook
-     */
-    private $facebook;
-
-    /**
-     * @var PasswordGeneratorInterface
-     */
-    private $pwdGenerator;
-
-    /**
      * UserController constructor.
      * @param UserMapper $userMapper
      * @param MailerService $mailer
      * @param ExpirableStorage $storage
-     * @param SessionManager $sessionManager
-     * @param Facebook $facebook
-     * @param PasswordGeneratorInterface $pwdGenerator
      */
     public function __construct(
         UserMapper $userMapper,
         MailerService $mailer,
-        ExpirableStorage $storage,
-        SessionManager $sessionManager,
-        Facebook $facebook,
-        PasswordGeneratorInterface $pwdGenerator
+        ExpirableStorage $storage
     )
     {
         $this->userMapper = $userMapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
-        $this->sessionManager = $sessionManager;
-        $this->facebook = $facebook;
-        $this->pwdGenerator = $pwdGenerator;
-    }
-
-    /**
-     * @param User $user
-     * @return array
-     */
-    public function getUser(User $user)
-    {
-        return [
-            'email' => $user->getEmail(),
-            'picture' => $user->getPicture(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-        ];
-    }
-
-    /**
-     * Start email-based registration. Send a confirmation email.
-     * @param Request $request
-     * @return array
-     * @throws ApiException
-     */
-    public function createUser(Request $request)
-    {
-        $json = new DataObject($request->getContent());
-
-        $user = new User();
-        $user
-            ->setEmail($json->get('email', 'string'))
-            ->setPassword($json->get('password', 'string'))
-            ->setFirstName($json->get('firstName', 'string'))
-            ->setLastName($json->get('lastName', 'string'))
-            ->setPicture($json->get('picture', 'string', null, ''));
-
-        if ($this->userMapper->emailExists($user->getEmail())) {
-            throw ApiException::create(ApiException::USER_EXISTS);
-        }
-        $this->userMapper->insert($user);
-        $token = $this->storage->store($user->getEmail());
-        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
-        return [];
     }
 
     /**
@@ -123,58 +58,22 @@ class UserController
         /** @var User $user */
         $email = $this->storage->get($token);
         if ($email === null) {
+            if ($this->logger) {
+                $this->logger->warning('Expired token', ['token' => $token]);
+            }
             return new Response('Invalid token.');
         }
-        if (false === $this->userMapper->emailExists($email)) {
+        if ($this->userMapper->emailExists($email)) {
             $this->userMapper->confirmEmail($email);
+        } else {
+            if ($this->logger) {
+                $this->logger->error('Email not found', ['token' => $token, 'email' => $email]);
+            }
         }
         return new Response('Account has been created.');
     }
 
-    /**
-     * @param string $email
-     * @param Request $request
-     * @return array
-     * @throws ApiException
-     */
-    public function createTokenByEmail($email, Request $request)
-    {
-        $password = $request->getContent();
-        $user = $this->userMapper->fetchByEmailAndPassword($email, $password);
-        if (null === $user) {
-            throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
-        }
-        $token = $this->sessionManager->createSession($user->getId(), $request);
-        return new JsonResponse($token);
-    }
 
-
-    /**
-     * @param $fbToken
-     * @param Request $request
-     * @return array
-     */
-    public function createTokenByFacebook($fbToken, Request $request)
-    {
-        $this->facebook->setDefaultAccessToken($fbToken);
-        $fbUser = $this->facebook
-            ->get('/me?fields=picture,email,first_name,last_name')
-            ->getGraphUser();
-        $user = $this->userMapper->fetchByEmail($fbUser->getEmail());
-        if (null === $user) {
-            $pic = $fbUser->getPicture();
-            $user = new User();
-            $user
-                ->setEmail($fbUser->getEmail())
-                ->setFirstName($fbUser->getFirstName())
-                ->setLastName($fbUser->getLastName())
-                ->setPicture($pic ? $pic->getUrl() : null)
-                ->setPassword($this->pwdGenerator->generatePassword());
-            $this->userMapper->insert($user);
-        }
-        $token = $this->sessionManager->createSession($user->getId(), $request);
-        return new JsonResponse($token);
-    }
 
     public function showPasswordChangeForm(Request $request)
     {

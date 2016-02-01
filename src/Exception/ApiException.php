@@ -7,6 +7,7 @@ namespace Exception;
 
 use Exception;
 use LogicException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiException extends Exception
 {
@@ -17,21 +18,22 @@ class ApiException extends Exception
     const AUTH_REQUIRED = 200;
     const INVALID_EMAIL_PASSWORD = 201;
 
-    const VALIDATION = 300; // Used in ValidationException
+    // Validation
+    const VALIDATION = 300; // Input data validation errors
 
     const RESOURCE_NOT_FOUND = 400;
 
     // Mapping to HTTP code and message
     private static $map = [
-        self::USER_EXISTS => [403, 'User exists'],
-        self::AUTH_REQUIRED => [401, 'Authentication required'],
-        self::INVALID_EMAIL_PASSWORD => [401, 'Invalid email or password'],
-        self::RESOURCE_NOT_FOUND => [404, 'Resource not found'],
+        self::USER_EXISTS => [Response::HTTP_FORBIDDEN, 'User exists'],
+        self::AUTH_REQUIRED => [Response::HTTP_UNAUTHORIZED, 'Authentication required'],
+        self::INVALID_EMAIL_PASSWORD => [Response::HTTP_UNAUTHORIZED, 'Invalid email or password'],
+        self::RESOURCE_NOT_FOUND => [Response::HTTP_NOT_FOUND, 'Resource not found'],
     ];
 
     private $httpCode;
 
-    public function __construct($message, $code, Exception $previous = null, $httpCode = 500)
+    public function __construct($message, $code, Exception $previous = null, $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
         parent::__construct($message, $code, $previous);
         $this->httpCode = $httpCode;
