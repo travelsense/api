@@ -38,17 +38,24 @@ class ApiClient
 
     /**
      * Register new user
-     * @param array $user
-     * @return string Auth token
+     * @param array $user (firstName, lastName, email, password, picture)
+     * @return void
+     *
+     * Example: $client->registerUser([
+     *  'firstName' => 'Alexander'
+     *  'lastName'=> 'Pushkin',
+     *  'email' => 'sashs@nashe-vse.ru',
+     *  'password' => 'd4n73s l0h',
+     * ]);
      */
     public function registerUser(array $user)
     {
-        return $this->http->post('/user', ['json' => $user]);
+        $this->http->post('/user', ['json' => $user]);
     }
 
     /**
-     * @param $email
-     * @param $password
+     * @param string $email
+     * @param string $password
      * @return string Auth token
      */
     public function authByEmail($email, $password)
