@@ -6,6 +6,7 @@ use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use Mapper\DB\UserMapper;
 use Model\User;
+use Psr\Log\LoggerAwareTrait;
 use Security\SessionManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AuthController
 {
+    use LoggerAwareTrait;
+
     /**
      * @var PasswordGeneratorInterface
      */
@@ -63,7 +66,10 @@ class AuthController
      */
     public function createTokenByEmail($email, Request $request)
     {
-        $password = $request->getContent();
+        $password = json_decode($request->getContent());
+        if ($this->logger) {
+            $this->logger->debug('Password', ['password' => $password]);
+        }
         $user = $this->userMapper->fetchByEmailAndPassword($email, $password);
         if (null === $user) {
             throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
