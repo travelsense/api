@@ -13,8 +13,8 @@ for SAPI in cli fpm;
 done
 
 ### Composer
-php -r "readfile('https://getcomposer.org/installer');" | php
-sudo mv composer.phar /usr/local/bin/composer
+curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+cd /vagrant
 composer install
 
 ### PostgreSQL
