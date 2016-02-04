@@ -38,6 +38,10 @@ $app['controller.api.travel'] = $app->share(function($app) {
     return $controller;
 });
 
+$app['controller.api.uber'] = $app->share(function($app) {
+    return new Controller\Api\UberController($app['uber']);
+});
+
 // Web
 
 $app['controller.user'] = $app->share(function($app) {

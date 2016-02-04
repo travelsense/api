@@ -8,13 +8,13 @@ return [
     'secure_json' => false,
     'service' => [
         __DIR__.'/service/app.php',
+        __DIR__.'/service/controllers.php',
+        __DIR__.'/service/email.php',
+        __DIR__.'/service/mappers.php',
+        __DIR__.'/service/misc.php',
+        __DIR__.'/service/routing.php',
         __DIR__.'/service/security.php',
         __DIR__.'/service/storages.php',
-        __DIR__.'/service/mappers.php',
-        __DIR__.'/service/controllers.php',
-        __DIR__.'/service/routing.php',
-        __DIR__.'/service/email.php',
-        __DIR__.'/service/misc.php',
     ],
     'debug' => false,
     'log' => [
@@ -59,4 +59,7 @@ return [
             ],
         ],
     ],
+    'uber' => [
+        'server_token' => 'xxx'
+    ]
 ];

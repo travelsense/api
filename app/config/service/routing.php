@@ -24,9 +24,7 @@ $app->post('/token/by-facebook/{fbToken}', 'controller.api.auth:createTokenByFac
     }) // to convert "+" to " "
     ->bind('login-by-facebook');
 
-$app->get('/travel/{id}', 'controller.api.travel:getTravel')
-    ->assert('id', '\\d+')
-    ->bind('travels-by-id');
+$app->get('/cab/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.api.uber:getPriceEstimate');
 
 
 // Web

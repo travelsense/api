@@ -19,3 +19,7 @@ $app['password_generator'] = $app->share(function ($app) {
 
    return $generator;
 });
+
+$app['uber'] = $app->share(function ($app) {
+   return new \F3\SimpleUber\Uber($app['config']['uber']['server_token']);
+});
