@@ -79,4 +79,13 @@ class ApiClient
             ->getContents();
         return json_decode($json, true);
     }
+
+    public function getCabEstimates($lat1, $lon1, $lat2, $lon2)
+    {
+        $json = $this->http
+            ->get("/cab/$lat1/$lon1/$lat2/$lon2", ['headers' => ['Authorization' => 'Token '.$this->authToken]])
+            ->getBody()
+            ->getContents();
+        return json_decode($json, true);
+    }
 }
