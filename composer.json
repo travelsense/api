@@ -7,7 +7,8 @@
     "facebook/php-sdk-v4" : "~5.0",
     "monolog/monolog": "^1.17",
     "hackzilla/password-generator": "^1.1",
-    "f3ath/simpleuber": "^1.0"
+    "f3ath/simpleuber": "^1.0",
+    "sorien/silex-pimple-dumper": "~1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.1",

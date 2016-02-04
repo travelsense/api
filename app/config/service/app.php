@@ -78,3 +78,5 @@ $app->register(new Silex\Provider\TwigServiceProvider(), [
 $app->register(new Silex\Provider\MonologServiceProvider(), [
     'monolog.logfile' => $app['config']['log']['main'],
 ]);
+
+$app->register(new Sorien\Provider\PimpleDumpProvider());

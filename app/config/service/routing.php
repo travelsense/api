@@ -9,6 +9,9 @@ $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 // API
 
+/**
+ *
+ */
 $app->post('/user', 'controller.api.user:createUser')
     ->bind('create-user');
 

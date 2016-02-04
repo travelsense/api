@@ -61,5 +61,5 @@ return [
     ],
     'uber' => [
         'server_token' => 'xxx'
-    ]
+    ],
 ];
