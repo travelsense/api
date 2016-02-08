@@ -55,14 +55,15 @@ class WegoClient
      * @param string $location The location ID of the location to search for.
      * @param DateTime $checkIn Check-in date
      * @param DateTime $checkOut Check-out date
-     * @param string $ip The IP address of the end user who is performing the search (not your backend server). We require this to display room rates that are valid for the user's country.
-     * @param string $country Country code of the user. We require this to display room rates that are valid for the user's country.
      * @param int $rooms Number of hotel rooms required. Defaults to 1
      * @param int $guests Number of guests staying. Defaults to 2
+     * @param string $ip The IP address of the end user who is performing the search (not your backend server). We require this to display room rates that are valid for the user's country.
+     * @param string $country Country code of the user. We require this to display room rates that are valid for the user's country.
+
      *
      * @return string Search ID
      */
-    public function startSearch($location, DateTime $checkIn, DateTime $checkOut, $ip = 'direct', $country = 'US', $rooms = 1, $guests = 2)
+    public function startSearch($location, DateTime $checkIn, DateTime $checkOut, $rooms = 1, $guests = 2, $ip = 'direct', $country = 'US')
     {
         $response = $this->call('/hotels/api/search/new', [
             'location_id' => $location,
@@ -107,7 +108,7 @@ class WegoClient
     /**
      * Get results of a search
      *
-     * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_show_hotel_id
+     * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_search_search_id
      *
      * @param string $id ID of search for retrieving "live" prices together with the hotel
      * @param bool $refresh  Whether to refresh the results with any new results since the last request.
@@ -122,7 +123,7 @@ class WegoClient
      */
     public function getSearchResults($id, $refresh = false, $currency = 'USD', $sort = 'popularity', $order = 'asc', $popularWith = 'XX', $page = 1, $perPage = 20)
     {
-        return $this->call('/hotels/api/search/show/' . urlencode($id), [
+        return $this->call('/hotels/api/search/' . urlencode($id), [
             'refresh' => $refresh,
             'currency_code' => $currency,
             'sort' => $sort ? 'true' : 'false',

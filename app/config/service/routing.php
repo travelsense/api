@@ -9,9 +9,6 @@ $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 // API
 
-/**
- *
- */
 $app->post('/user', 'controller.api.user:createUser')
     ->bind('create-user');
 
@@ -22,13 +19,20 @@ $app->post('/token/by-email/{email}', 'controller.api.auth:createTokenByEmail')
 
 $app->post('/token/by-facebook/{fbToken}', 'controller.api.auth:createTokenByFacebook')
     ->assert('fbToken', '.*') // to allow any characters
-    ->convert('fbToken', function ($token) {
-        return urldecode($token);
-    }) // to convert "+" to " "
+    ->convert('fbToken', 'urldecode') // to convert "+" to " "
     ->bind('login-by-facebook');
 
-$app->get('/cab/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.api.uber:getPriceEstimate');
+$app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.api.uber:getPriceEstimate');
 
+$app->post('/hotel/search-results/{id}/{page}')
+    ->convert('in', $app['converter.date'])
+    ->convert('out', $app['converter.date'])
+    ->convert('rooms', 'intval');
+
+$app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.api.wego')
+    ->convert('in', $app['converter.date'])
+    ->convert('out', $app['converter.date'])
+    ->convert('rooms', 'intval');
 
 // Web
 

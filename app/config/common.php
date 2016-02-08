@@ -60,6 +60,10 @@ return [
         ],
     ],
     'uber' => [
-        'server_token' => 'xxx'
+        'server_token' => 'xxx',
+    ],
+    'wego' => [
+        'key' => 'xxx',
+        'ts_code' => 'xxx',
     ],
 ];
