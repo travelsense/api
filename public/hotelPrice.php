@@ -8,6 +8,7 @@
 
 	$locationID = $VARS['location'];
 	$hotelID = $VARS['hotel'];
+	$hotel_id = $VARS['hotel_id'];
 	$checkin = $VARS['checkin'];
 	$checkout = $VARS['checkout'];
 	$adults = $VARS['adults'];
@@ -18,11 +19,10 @@
 		$searchID = startSearch($locationID, $checkin, $checkout);
 		$hotel = array();
 		$hotel["search"] = $searchID;
-		for($i = 0; $i < 15; ++$i) {
-			sleep(1);
-			$hotelsAnswer = getHotelPrice($searchID, $hotelID);			
-			$hotel["raw"] = $hotelsAnswer["hotel"];
-			if(count($hotelsAnswer["room_rates"]) > 0) { 
+		for($i = 0; $i < 25; ++$i) {
+			$hotelsAnswer = getHotelPrice($searchID, $hotelID);		
+			if(count($hotelsAnswer["hotel"]["room_rates"]) > 0) { 
+				$hotel["raw"] = $hotelsAnswer["hotel"];
 				break;
 			}
 		}
@@ -66,7 +66,6 @@
 		$json = json_decode(trim($result), true);
 
 		curl_close($ch);
-
 		return $json["search_id"];
 	}
 	
