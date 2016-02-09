@@ -6,6 +6,15 @@
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
+// Parameter converters
+
+$toDate = function ($date) {
+    return new DateTime($date);
+};
+
+$toInt = function ($val) {
+    return intval($val);
+};
 
 // API
 
@@ -19,20 +28,20 @@ $app->post('/token/by-email/{email}', 'controller.api.auth:createTokenByEmail')
 
 $app->post('/token/by-facebook/{fbToken}', 'controller.api.auth:createTokenByFacebook')
     ->assert('fbToken', '.*') // to allow any characters
-    ->convert('fbToken', 'urldecode') // to convert "+" to " "
+    ->convert('fbToken', function ($val) {
+        return urldecode($val);
+    }) // to convert "+" to " "
     ->bind('login-by-facebook');
 
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.api.uber:getPriceEstimate');
 
-$app->post('/hotel/search-results/{id}/{page}')
-    ->convert('in', $app['converter.date'])
-    ->convert('out', $app['converter.date'])
-    ->convert('rooms', 'intval');
+$app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.api.wego:startSearch')
+    ->convert('in', $toDate)
+    ->convert('out', $toDate)
+    ->convert('rooms', $toInt);
 
-$app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.api.wego')
-    ->convert('in', $app['converter.date'])
-    ->convert('out', $app['converter.date'])
-    ->convert('rooms', 'intval');
+$app->get('/hotel/search-results/{id}/{page}', 'controller.api.wego:getSearchResults')
+    ->convert('page', $toInt);
 
 // Web
 

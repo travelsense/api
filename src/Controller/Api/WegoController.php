@@ -2,6 +2,7 @@
 namespace Controller\Api;
 
 use DateTime;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Wego\WegoClient;
 
 class WegoController
@@ -30,9 +31,7 @@ class WegoController
      */
     public function startSearch($location, DateTime $in, DateTime $out, $rooms)
     {
-        return [
-            'searchId' => $this->wego->startSearch($location, $in, $out, $rooms),
-        ];
+        return new JsonResponse($this->wego->startSearch($location, $in, $out, $rooms));
     }
 
     /**

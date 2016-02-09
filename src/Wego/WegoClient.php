@@ -59,12 +59,18 @@ class WegoClient
      * @param int $guests Number of guests staying. Defaults to 2
      * @param string $ip The IP address of the end user who is performing the search (not your backend server). We require this to display room rates that are valid for the user's country.
      * @param string $country Country code of the user. We require this to display room rates that are valid for the user's country.
-
      *
      * @return string Search ID
      */
-    public function startSearch($location, DateTime $checkIn, DateTime $checkOut, $rooms = 1, $guests = 2, $ip = 'direct', $country = 'US')
-    {
+    public function startSearch(
+        $location,
+        DateTime $checkIn,
+        DateTime $checkOut,
+        $rooms = 1,
+        $guests = 2,
+        $ip = 'direct',
+        $country = 'US'
+    ) {
         $response = $this->call('/hotels/api/search/new', [
             'location_id' => $location,
             'check_in' => $checkIn->format(self::DATE_FORMAT),
@@ -99,8 +105,8 @@ class WegoClient
         return $this->call('/hotels/api/locations/search', [
             'q' => $query,
             'lang' => $lang,
-            'page' => (int) $page,
-            'per_page' => (int) $perPage,
+            'page' => (int)$page,
+            'per_page' => (int)$perPage,
         ]);
     }
 
@@ -111,9 +117,9 @@ class WegoClient
      * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_search_search_id
      *
      * @param string $id ID of search for retrieving "live" prices together with the hotel
-     * @param bool $refresh  Whether to refresh the results with any new results since the last request.
+     * @param bool $refresh Whether to refresh the results with any new results since the last request.
      * @param string $currency Currency to display prices in - use ISO 4217 3-letter currency codes. Defaults to USD
-     * @param string $sort  popularity|name|price|satisfaction|stars
+     * @param string $sort popularity|name|price|satisfaction|stars
      * @param string $order asc|desc
      * @param string $popularWith 2-character country code
      * @param int $page Page of results to return
@@ -121,8 +127,16 @@ class WegoClient
      *
      * @return mixed
      */
-    public function getSearchResults($id, $refresh = false, $currency = 'USD', $sort = 'popularity', $order = 'asc', $popularWith = 'XX', $page = 1, $perPage = 20)
-    {
+    public function getSearchResults(
+        $id,
+        $refresh = false,
+        $currency = 'USD',
+        $sort = 'popularity',
+        $order = 'asc',
+        $popularWith = 'XX',
+        $page = 1,
+        $perPage = 20
+    ) {
         return $this->call('/hotels/api/search/' . urlencode($id), [
             'refresh' => $refresh,
             'currency_code' => $currency,
@@ -167,7 +181,6 @@ class WegoClient
         $query['key'] = $this->key;
         $query['ts_code'] = $this->tsCode;
         $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
-        var_dump($fullUrl);
         $response = $this->http->get($fullUrl);
         $json = json_decode($response->getBody(), true);
         if ($response->getCode() === 200) {

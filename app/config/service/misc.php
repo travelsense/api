@@ -25,11 +25,5 @@ $app['uber'] = $app->share(function ($app) {
 });
 
 $app['wego'] = $app->share(function ($app) {
-    return new \Wego\WegoClient($app['config']['wego']['key'], $app['config']['wego']['key']);
-});
-
-// Parameter converters used in routes. TODO: find a better place for converters
-
-$app['converter.date'] = $app->protect(function ($dateAsString) {
-    return new DateTime($dateAsString);
+    return new \Wego\WegoClient($app['config']['wego']['key'], $app['config']['wego']['ts_code']);
 });

@@ -22,6 +22,7 @@ $app['resolver'] = $app->share(function () use ($app) {
 
 $app->error(function(Exception $e, $code) use ($app) {
     if ($app['debug']) {
+        error_log($e);
         return null; // let the internal handler show the exception
     }
     if ($e instanceof ApiException) {
