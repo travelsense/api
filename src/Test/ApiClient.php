@@ -62,8 +62,7 @@ class ApiClient
     {
         $json = $this->http
             ->post('/token/by-email/'.urldecode($email), ['json' => $password])
-            ->getBody()
-            ->getContents();
+            ->getBody()->getContents();
         return json_decode($json);
     }
 
@@ -75,8 +74,7 @@ class ApiClient
     {
         $json = $this->http
             ->get('/user', ['headers' => ['Authorization' => 'Token '.$this->authToken]])
-            ->getBody()
-            ->getContents();
+            ->getBody()->getContents();
         return json_decode($json, true);
     }
 
@@ -84,8 +82,37 @@ class ApiClient
     {
         $json = $this->http
             ->get("/cab/$lat1/$lon1/$lat2/$lon2", ['headers' => ['Authorization' => 'Token '.$this->authToken]])
-            ->getBody()
-            ->getContents();
+            ->getBody()->getContents();
+        return json_decode($json, true);
+    }
+
+    /**
+     * start search
+     * @param int $location wego location id
+     * @param string $in yyyy-mm-dd
+     * @param string $out yyyy-mm-dd
+     * @param int $rooms
+     * @return int wego search id
+     */
+    public function startHotelSearch($location, $in, $out, $rooms)
+    {
+        $json = $this->http
+            ->post("/hotel/search/$location/$in/$out/$rooms", ['headers' => ['Authorization' => 'Token '.$this->authToken]])
+            ->getBody()->getContents();
+        return json_decode($json, true);
+    }
+
+    /**
+     * get search results
+     * @param int $id wego search id
+     * @param int $page page number
+     * @return array
+     */
+    public function getHotelSearchResults($id, $page = 1)
+    {
+        $json = $this->http
+            ->get("/hotel/search-results/$id/$page", ['headers' => ['Authorization' => 'Token '.$this->authToken]])
+            ->getBody()->getContents();
         return json_decode($json, true);
     }
 }

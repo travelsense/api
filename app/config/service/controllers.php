@@ -42,6 +42,10 @@ $app['controller.api.uber'] = $app->share(function($app) {
     return new Controller\Api\UberController($app['uber']);
 });
 
+$app['controller.api.wego'] = $app->share(function($app) {
+    return new Controller\Api\WegoController($app['wego']);
+});
+
 // Web
 
 $app['controller.user'] = $app->share(function($app) {

@@ -2,7 +2,7 @@
 <?php
 require_once 'cli.php';
 $tag = $argc > 1 ? $argv[1] : 'master';
-$build = date('YmdHis') . '-' . $tag;
+$build = date('YmdHis') . '-' . strtr($tag, '/', '-');
 $tmp = '/tmp';
 $archive = "$tmp/$build.tar.gz";
 $release = sprintf(
