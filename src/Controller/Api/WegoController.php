@@ -27,7 +27,7 @@ class WegoController
      * @param DateTime $in
      * @param DateTime $out
      * @param int $rooms
-     * @return array
+     * @return JsonResponse
      */
     public function startSearch($location, DateTime $in, DateTime $out, $rooms)
     {

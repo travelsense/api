@@ -86,6 +86,14 @@ class ApiClient
         return json_decode($json, true);
     }
 
+    /**
+     * start search
+     * @param int $location wego location id
+     * @param string $in yyyy-mm-dd
+     * @param string $out yyyy-mm-dd
+     * @param int $rooms
+     * @return int wego search id
+     */
     public function startHotelSearch($location, $in, $out, $rooms)
     {
         $json = $this->http
@@ -94,6 +102,12 @@ class ApiClient
         return json_decode($json, true);
     }
 
+    /**
+     * get search results
+     * @param int $id wego search id
+     * @param int $page page number
+     * @return array
+     */
     public function getHotelSearchResults($id, $page = 1)
     {
         $json = $this->http
