@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
-<head>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>TravelSense</title>
@@ -19,69 +19,86 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@SiteTwitter">
     <meta name="twitter:creator" content="@sapegin">
-    <link rel="apple-touch-icon" href="./s/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="stylesheet" href="./s/css/style.min.css">
     <!--scripts-->
     <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-</head>
-<body>
-<div id="wrapper">
-    <header id="header">
+  </head>
+  <body>
+    <div id="wrapper">
+      <header id="header">
         <div class="container">
-            <div class="row"><a href="#" class="logo-link p-left"><img src="./s/img/logo.png"></a>
-                <nav class="nav-main p-right"><a href="#" class="navicon">
-                    <hr>
-                    <hr>
-                    <hr></a>
-                    <ul>
-                        <li><a href="#"> About</a></li>
-                        <li><a href="#"> Team</a></li>
-                        <li><a href="#"> Contact</a></li>
-                    </ul>
-                </nav>
-            </div>
+          <div class="row"><a href="#" class="logo-link p-left"><img src="./s/img/logo.png"></a>
+            <nav class="nav-main p-right"><a href="#" class="navicon">
+                <hr>
+                <hr>
+                <hr></a>
+              <ul>
+                <li><a href="#"> About</a></li>
+                <li><a href="#"> Team</a></li>
+                <li><a href="#"> Contact</a></li>
+              </ul>
+            </nav>
+          </div>
         </div>
-    </header>
-    <div id="hero" style="background-image:url(./s/img/bg-san-francisco.jpg);">
-        <div class="container">
+      </header>
+      <div id="hero" data-slide-pause="5000" class="slideshow">
+        <div style="background-image:url(./s/img/bg-san_francisco.jpg);" class="slide retina">
+          <div class="container">
             <h2>See the sights of San Francisco.</h2>
+          </div>
         </div>
-    </div>
-    <div id="layout">
+        <div style="background-image:url(./s/img/bg-kauai.jpg);" class="slide retina">
+          <div class="container">
+            <h2>Feel the warm air of Kauai.</h2>
+          </div>
+        </div>
+        <div style="background-image:url(./s/img/bg-new_york.jpg);" class="slide retina">
+          <div class="container">
+            <h2>Hear the hustle and bustle of New York.</h2>
+          </div>
+        </div>
+        <div style="background-image:url(./s/img/bg-vietnam.jpg);" class="slide retina">
+          <div class="container">
+            <h2>Taste the flavors of Vietnam.</h2>
+          </div>
+        </div>
+      </div>
+      <div id="layout">
         <div class="container">
-            <div class="row features">
-                <div class="col col-third">
-                    <article><img src="./s/img/icon-balloon.png" class="icon">
-                        <h3>Discover New Experiences</h3>
-                        <div class="desc">
-                            <p>TravelSense is a new way to discover and book travel experiences. All plans are created by fellow users, including by world travelers and knowledgeable locals.</p>
-                        </div>
-                    </article>
+          <div class="row features">
+            <div class="col col-third">
+              <article><img src="./s/img/icon-balloon.png" class="icon">
+                <h3>Discover New Experiences</h3>
+                <div class="desc">
+                  <p>TravelSense is a new way to discover and book travel experiences. All plans are created by fellow users, including by world travelers and knowledgeable locals.</p>
                 </div>
-                <div class="col col-third">
-                    <article><img src="./s/img/icon-suitcases.png" class="icon">
-                        <h3>Quick and Easy Booking</h3>
-                        <div class="desc">
-                            <p>Booking is quick and easy. Simply find your perfect travel experience, and TravelSense will find you the best deals on hotels, transportation, and more. All it takes is a tap!</p>
-                        </div>
-                    </article>
-                </div>
-                <div class="col col-third">
-                    <article><img src="./s/img/icon-map.png" class="icon">
-                        <h3>Create and Share Travel Plans</h3>
-                        <div class="desc">
-                            <p>Have you ever had incredible travel experiences that you wish you could share? With TravelSense, you can easily create unique travel experiences for other users.</p>
-                        </div>
-                    </article>
-                </div>
+              </article>
             </div>
+            <div class="col col-third">
+              <article><img src="./s/img/icon-suitcases.png" class="icon">
+                <h3>Quick and Easy Booking</h3>
+                <div class="desc">
+                  <p>Booking is quick and easy. Simply find your perfect travel experience, and TravelSense will find you the best deals on hotels, transportation, and more. All it takes is a tap!</p>
+                </div>
+              </article>
+            </div>
+            <div class="col col-third">
+              <article><img src="./s/img/icon-map.png" class="icon">
+                <h3>Create and Share Travel Plans</h3>
+                <div class="desc">
+                  <p>Have you ever had incredible travel experiences that you wish you could share? With TravelSense, you can easily create unique travel experiences for other users.</p>
+                </div>
+              </article>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-<!--scripts-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>-->
-<script src="./s/js/jquery.mobile-events.min.js"></script>
-<script src="./s/js/adaptive.min.js"></script>
-</body>
+    <!--scripts-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="./s/js/lib/jquery.mobile-events.min.js"></script>
+    <script src="./s/js/lib/retina.min.js"></script>
+    <script src="./s/js/adaptive.min.js"></script>
+  </body>
 </html>
