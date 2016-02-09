@@ -14,7 +14,7 @@ $release = sprintf(
         phpversion()
     )
     . "Last commit:\n" . `git log -1 origin/$tag` . "\n";
-run('git fetch');
+run('git pull');
 run("mkdir $tmp/$build");
 run("git archive --format=tar origin/$tag | (cd $tmp/$build && tar xf -)");
 chdir("$tmp/$build");
