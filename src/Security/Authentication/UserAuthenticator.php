@@ -1,8 +1,8 @@
 <?php
 namespace Security\Authentication;
 
+use Exception\ApiException;
 use Psr\Log\LoggerAwareTrait;
-use Security\AuthenticationException;
 use Security\SessionManager;
 use Silex\Application;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -47,6 +47,7 @@ class UserAuthenticator implements EventSubscriberInterface
 
     /**
      * @param GetResponseEvent $event
+     * @throws ApiException
      */
     public function onRequest(GetResponseEvent $event)
     {
@@ -70,7 +71,7 @@ class UserAuthenticator implements EventSubscriberInterface
         $token = $matches[1];
         $userId = $this->sessionManager->getUserId($token);
         if (null === $userId) {
-            throw new AuthenticationException('Invalid token');
+            throw ApiException::create(ApiException::INVALID_TOKEN);
         }
         $this->credentials->setUser($userId);
     }

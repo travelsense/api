@@ -133,16 +133,4 @@ function crypto_rand_secure($min, $max) {
         } while ($rnd >= $range);
         return $min + $rnd;
 }
-
-function getToken($length=32){
-    // $token = "";
-    // $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    // $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
-    // $codeAlphabet.= "0123456789";
-    // for($i=0;$i<$length;$i++){
-    //     $token .= $codeAlphabet[crypto_rand_secure(0,strlen($codeAlphabet))];
-    // }
-    // return $token;
-    return md5(uniqid(rand(), true));
-}
 ?>

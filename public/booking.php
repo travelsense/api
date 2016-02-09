@@ -24,12 +24,13 @@
 		print "TO: ".json_encode($to);
 		
 		if(strlen($when) <= 0) {
-			$when = "2015-12-23";
+			$when = "2016-05-23";
 		}
-		
+
 		$finalCarrierName;
-		$finalPrice=999999;
+		$finalPrice = 999999;
 		$airpot;
+
 		for($i = 0; $i < count($from); ++$i) {
 			for($j = 0; $j < count($to); ++$j) {
 				$planeDetails = airplineData($from[$i]["code"], $to[$j]["code"], $when);
@@ -43,7 +44,7 @@
 				}
 			}
 		}
-		
+
 		$price = uberPrice($latitude,$longitude,$airpot["lat"],$airpot["lon"]);
 		
 		$bookings[] = array(
@@ -59,11 +60,14 @@
 			'image' => 'https://img.s-hawaiianairlines.com/~/media/images/brand/airplanes/airbus-a330/a330-plane2014.jpg?version=c973&sc_lang=en&w=535',
 			'price' => $finalPrice
 		);
-		
+
 		$images = array('https://cdn.kiwicollection.com/media/property/PR000183/xl/000183-01-pool-exterior-night.jpg',
 		'https://cdn.kiwicollection.com/media/property/PR011090/xl/011090-01-hotel-view-night.jpg'
 		);
+
 		for($i = 0; $i < $count; ++$i) {
+			$checkin = $travel["checkins"][$i];
+
 			$index = rand(0, 1);
 			$bookings[] = array(
 						'type' => 'hotel',

@@ -1,3 +1,4 @@
 /app/config/local.json
 /vendor
 .vagrant
+/pimple.json
