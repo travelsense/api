@@ -1,11 +1,16 @@
 <?php
 	function getTravel($travelId, $numberOfCheckins = -1/*All Checkins*/) {
+		global $USER_ID;
 		$query = "SELECT * FROM travels WHERE id = {$travelId}";
 
 	   	$result = mysql_query($query);
 		$travel = mysql_fetch_array($result, MYSQL_ASSOC);
 		$path = $travel['path'];	
 
+		$query = "SELECT * FROM travel_favorite WHERE travel = {$travelId} AND user = {$USER_ID}";
+	   	$result = mysql_query($query);
+		$num_rows = mysql_num_rows($result);
+		$travel['favorite'] = $num_rows;
 		$travel['checkins']=getCheckins($travelId, $path, $numberOfCheckins);
 		return $travel;
 	}
@@ -73,14 +78,41 @@
 					$todos[] = $row;
 				}
 				$checkins[$i]['todos'] = $todos;
+				$checkins[$i]['hotels'] = getHotels($checkinID);
 			}
-
 		}
 
 		if($numberOfCheckins >= 0) {
 			$checkins = array_slice($checkins, 0, $numberOfCheckins);
 		}
 		return $checkins;
+	}
+	
+	function getHotels($checkinId) {
+		$query = "SELECT * FROM hotels INNER JOIN checkin_hotels ON hotels.id = checkin_hotels.hotel WHERE checkin_hotels.checkin = {$checkinId}";
+	   	$result = mysql_query($query);
+		$hotels;
+		while ($hotel = mysql_fetch_array($result, MYSQL_ASSOC)) {
+			$hotels[] = $hotel;
+		}
+		return $hotels;
+	}
+
+	function getNewCheckin($checkinId) {
+		$query = "SELECT * FROM checkins WHERE id = {$checkinId}";
+	   	$result = mysql_query($query);
+		$checkin = mysql_fetch_array($result, MYSQL_ASSOC);
+		return $checkin;
+	}
+	
+	function getCheckin($travelId, $index) {
+		$query = "SELECT * FROM travels WHERE id = {$travelId}";
+	   	$result = mysql_query($query);
+		$travel = mysql_fetch_array($result, MYSQL_ASSOC);
+		$path = $travel['path'];	
+
+		$checkins =getCheckins($travelId, $path, $numberOfCheckins);
+		return $checkins[$index];
 	}
 
 ?>

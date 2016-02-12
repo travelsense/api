@@ -8,6 +8,7 @@
 	$USER;
 	$USER_ID;
 
+	error_reporting(E_ALL);
 	mysql_connect('localhost',$user,$password);
 	@mysql_select_db($database) or die( "Unable to select database");
 

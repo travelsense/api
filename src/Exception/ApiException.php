@@ -17,6 +17,7 @@ class ApiException extends Exception
     // Auth related
     const AUTH_REQUIRED = 200;
     const INVALID_EMAIL_PASSWORD = 201;
+    const INVALID_TOKEN = 202;
 
     // Validation
     const VALIDATION = 300; // Input data validation errors
@@ -28,6 +29,7 @@ class ApiException extends Exception
         self::USER_EXISTS => [Response::HTTP_FORBIDDEN, 'User exists'],
         self::AUTH_REQUIRED => [Response::HTTP_UNAUTHORIZED, 'Authentication required'],
         self::INVALID_EMAIL_PASSWORD => [Response::HTTP_UNAUTHORIZED, 'Invalid email or password'],
+        self::INVALID_TOKEN => [Response::HTTP_UNAUTHORIZED, 'Invalid or expired auth token'],
         self::RESOURCE_NOT_FOUND => [Response::HTTP_NOT_FOUND, 'Resource not found'],
     ];
 

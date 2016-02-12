@@ -110,4 +110,8 @@ response_code($code);
 		}
 		return $data;
 	}
+
+	function getToken($length=32){
+    return md5(uniqid(rand(), true));
+	}
 ?>
