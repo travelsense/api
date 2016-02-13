@@ -2,15 +2,16 @@
 
 namespace Service\Mailer;
 
-use Mandrill_Messages;
+use Swift_Mailer;
+use Swift_Message;
 use Twig_Environment;
 
 class MailerService
 {
     /**
-     * @var Mandrill_Messages
+     * @var Swift_Mailer
      */
-    private $messages;
+    private $mailer;
 
     /**
      * @var Twig_Environment
@@ -18,14 +19,21 @@ class MailerService
     private $twig;
 
     /**
-     * MailerService constructor.
-     * @param Mandrill_Messages $messages
-     * @param Twig_Environment $twig
+     * @var array
      */
-    public function __construct(Mandrill_Messages $messages, Twig_Environment $twig)
+    private $conf;
+
+    /**
+     * MailerService constructor.
+     * @param Swift_Mailer $mailer
+     * @param Twig_Environment $twig
+     * @param array $conf
+     */
+    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, array $conf)
     {
-        $this->messages = $messages;
+        $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->conf = $conf;
     }
 
     /**
@@ -35,20 +43,13 @@ class MailerService
      */
     public function sendAccountConfirmationMessage($email, $token)
     {
-        $body = $this->twig->render('email/user-acct-confirmation.twig', ['token' => $token]);
-        $message = [
-            'text' => $body,
-            'subject' => 'Acct confirmation',
-            'to' => [
-                ['email' => $email],
-            ],
-            'from_email' => 'info@vacarious.org',
-            'from_name' => 'Vacarious',
-            'headers' => [
-                'Reply-To' => 'info@vacarious.org',
-            ],
-            'tags' => ['password-resets'],
-        ];
-        $this->messages->send($message);
+        $message = Swift_Message::newInstance()
+            ->setSubject($this->twig->render('email/acct_confirmation_subj.twig'))
+            ->setFrom($this->conf['from_address'], $this->conf['from_name'])
+            ->setTo($email)
+            ->setBody($this->twig->render('email/acct_confirmation_body.twig', ['token' => $token]));
+
+        $this->mailer->send($message);
+
     }
 }

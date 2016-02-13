@@ -1,17 +1,16 @@
 <?php
 /**
- * Email service config
+ * Mail service config
  * @var $app Application
  */
 
-$app['email.mandrill'] = $app->share(function($app) {
-    return new Mandrill($app['config']['email']['mandrill']['key']);
+
+// Swift Mailer
+$app['swiftmailer.transport'] = 'Swift_SendmailTransport';
+$app->register(new Silex\Provider\SwiftmailerServiceProvider());
+
+// MailerService
+$app['email.mailer'] = $app->share(function($app) {
+    return new \Service\Mailer\MailerService($app['mailer'], $app['twig'], $app['config']['email']);
 });
 
-$app['email.mandrill.messages'] = $app->share(function($app) {
-    return $app['email.mandrill']->messages;
-});
-
-$app['email.mailer'] = $app->share(function ($app) {
-   return new Service\Mailer\MailerService($app['email.mandrill.messages'], $app['twig']);
-});

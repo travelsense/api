@@ -7,14 +7,15 @@
 return [
     'secure_json' => false,
     'service' => [
-        __DIR__.'/service/app.php',
-        __DIR__.'/service/controllers.php',
-        __DIR__.'/service/email.php',
-        __DIR__.'/service/mappers.php',
-        __DIR__.'/service/misc.php',
-        __DIR__.'/service/routing.php',
-        __DIR__.'/service/security.php',
-        __DIR__.'/service/storages.php',
+        __DIR__ . '/service/app.php',
+        __DIR__ . '/service/controllers.php',
+        __DIR__ . '/service/email.php',
+        __DIR__ . '/service/mappers.php',
+        __DIR__ . '/service/misc.php',
+        __DIR__ . '/service/routing.php',
+        __DIR__ . '/service/security.php',
+        __DIR__ . '/service/storages.php',
+        __DIR__ . '/service/translator.php',
     ],
     'debug' => false,
     'log' => [
@@ -26,9 +27,8 @@ return [
         'default' => 'Cthulhu fhtagn!',
     ],
     'email' => [
-        'mandrill' => [
-            'key' => 'xxx',
-        ]
+        'from_address' => 'robot@travelsen.se',
+        'from_name' => 'Travelsen.se',
     ],
     'security' => [
         'enabled' => true,

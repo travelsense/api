@@ -76,8 +76,10 @@ $app->register(new Silex\Provider\TwigServiceProvider(), [
     'twig.path' => __DIR__.'/../../view',
 ]);
 
+// Monolog
 $app->register(new Silex\Provider\MonologServiceProvider(), [
     'monolog.logfile' => $app['config']['log']['main'],
 ]);
 
+// Pimple dumper
 $app->register(new Sorien\Provider\PimpleDumpProvider());
