@@ -21,10 +21,6 @@ $app['resolver'] = $app->share(function () use ($app) {
 });
 
 $app->error(function(Exception $e, $code) use ($app) {
-    if ($app['debug']) {
-        error_log($e);
-        return null; // let the internal handler show the exception
-    }
     if ($e instanceof ApiException) {
         $response = [
             'error' => $e->getMessage(),
@@ -40,6 +36,10 @@ $app->error(function(Exception $e, $code) use ($app) {
             }
         }
         return $app->json($response, $e->getHttpCode());
+    }
+    if ($app['debug']) {
+        error_log($e);
+        return null; // let the internal handler show the exception
     }
     $codeToMessage = $app['config']['error_message_mapping'];
     if (array_key_exists($code, $codeToMessage)) {

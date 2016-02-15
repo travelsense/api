@@ -39,7 +39,7 @@ class ApiClient
     /**
      * Register new user
      * @param array $user (firstName, lastName, email, password, picture)
-     * @return void
+     * @return object
      *
      * Example: $client->registerUser([
      *  'firstName' => 'Alexander'
@@ -50,7 +50,9 @@ class ApiClient
      */
     public function registerUser(array $user)
     {
-        $this->http->post('/user', ['json' => $user]);
+        $json = $this->http->post('/user', ['json' => $user])
+            ->getBody()->getContents();
+        return json_decode($json);
     }
 
     /**
@@ -62,6 +64,30 @@ class ApiClient
     {
         $json = $this->http
             ->post('/token/by-email/'.urldecode($email), ['json' => $password])
+            ->getBody()->getContents();
+        return json_decode($json);
+    }
+
+    public function confirmEmail($email)
+    {
+        $json = $this->http
+            ->post('/email/confirm/'.urldecode($email))
+            ->getBody()->getContents();
+        return json_decode($json);
+    }
+
+    public function requestPasswordReset($email)
+    {
+        $json = $this->http
+            ->post('/password/link/'.urldecode($email))
+            ->getBody()->getContents();
+        return json_decode($json);
+    }
+
+    public function updatePassword($token, $password)
+    {
+        $json = $this->http
+            ->post('/password/reset/'.urldecode($token), ['json' => $password])
             ->getBody()->getContents();
         return json_decode($json);
     }

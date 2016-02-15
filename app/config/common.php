@@ -15,7 +15,6 @@ return [
         __DIR__ . '/service/routing.php',
         __DIR__ . '/service/security.php',
         __DIR__ . '/service/storages.php',
-        __DIR__ . '/service/translator.php',
     ],
     'debug' => false,
     'log' => [
@@ -29,6 +28,8 @@ return [
     'email' => [
         'from_address' => 'robot@travelsen.se',
         'from_name' => 'Travelsen.se',
+        'base_url' => 'https://travelnsen.se',
+        ''
     ],
     'security' => [
         'enabled' => true,
@@ -38,6 +39,8 @@ return [
             'login-by-email',
             'login-by-facebook',
             'change-password',
+            'send-password-reset-link',
+            'reset-password',
             'travels-by-id',
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',

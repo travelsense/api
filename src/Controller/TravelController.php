@@ -1,5 +1,5 @@
 <?php
-namespace Controller\Api;
+namespace Controller;
 
 use Exception\ApiException;
 use Mapper\DB\TravelMapper;

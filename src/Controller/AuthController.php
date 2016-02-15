@@ -1,5 +1,5 @@
 <?php
-namespace Controller\Api;
+namespace Controller;
 
 use Exception\ApiException;
 use Facebook\Facebook;

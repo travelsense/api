@@ -23,11 +23,6 @@ class MailerService
     private $twig;
 
     /**
-     * @var Translator
-     */
-    private $translator;
-
-    /**
      * @var array
      */
     private $conf;
@@ -36,14 +31,12 @@ class MailerService
      * MailerService constructor.
      * @param Swift_Mailer $mailer
      * @param Twig_Environment $twig
-     * @param Translator $translator
      * @param array $conf
      */
-    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, Translator $translator, array $conf)
+    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, array $conf)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
-        $this->translator = $translator;
         $this->conf = $conf;
     }
 
@@ -54,15 +47,45 @@ class MailerService
      */
     public function sendAccountConfirmationMessage($email, $token)
     {
-        $subj = $this->translator->trans('acct_confirmation', [], 'email');
-        $body = $this->twig->render('email/acct_confirmation.twig', ['token' => $token]);
-        $message = Swift_Message::newInstance($subj, $body)
+        $emailTpl = $this->twig->loadTemplate('email/confirmation.twig');
+
+        $link = "https://travelsen.se/#confirm/$token";
+
+        $message = Swift_Message::newInstance($emailTpl->renderBlock('subj', []))
+            ->setBody($emailTpl->renderBlock('body', ['link' => $link]))
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($email);
 
         $sent = $this->mailer->send($message);
         if ($this->logger) {
             $this->logger->info('Sending account confirmation email',
+                [
+                    'email' => $email,
+                    'token' => $token,
+                    'sent' => $sent,
+                ]
+            );
+        }
+    }
+
+    /**
+     * @param $email
+     * @param $token
+     */
+    public function sendPasswordResetLink($email, $token)
+    {
+        $emailTpl = $this->twig->loadTemplate('email/reset.twig');
+
+        $link = "https://travelsen.se/#reset/$token";
+
+        $message = Swift_Message::newInstance($emailTpl->renderBlock('subj', []))
+            ->setBody($emailTpl->renderBlock('body', ['link' => $link]))
+            ->setFrom($this->conf['from_address'], $this->conf['from_name'])
+            ->setTo($email);
+
+        $sent = $this->mailer->send($message);
+        if ($this->logger) {
+            $this->logger->info('Sending password reset link',
                 [
                     'email' => $email,
                     'token' => $token,
