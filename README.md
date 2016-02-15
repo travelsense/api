@@ -1,1 +1,1 @@
-# See the [Wiki page](https://github.com/travelsense/api/wiki)
+# See the [Wiki pages](https://github.com/travelsense/api/wiki)
