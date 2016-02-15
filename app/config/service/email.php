@@ -12,8 +12,8 @@ $app['swiftmailer.transport'] = $app->share(function($app) {
 });
 
 // MailerService
-$app['email.mailer'] = $app->share(function($app) {
-    $mailer = new \Service\Mailer\MailerService($app['mailer'], $app['twig'], $app['config']['email']);
+$app['email.service'] = $app->share(function($app) {
+    $mailer = new \Service\Mailer\MailerService($app['mailer'], $app['twig'], $app['translator'], $app['config']['email']);
     $mailer->setLogger($app['monolog']);
     return $mailer;
 });

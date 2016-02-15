@@ -3,6 +3,7 @@
 namespace Service\Mailer;
 
 use Psr\Log\LoggerAwareTrait;
+use Silex\Translator;
 use Swift_Mailer;
 use Swift_Message;
 use Twig_Environment;
@@ -22,6 +23,11 @@ class MailerService
     private $twig;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * @var array
      */
     private $conf;
@@ -30,12 +36,14 @@ class MailerService
      * MailerService constructor.
      * @param Swift_Mailer $mailer
      * @param Twig_Environment $twig
+     * @param Translator $translator
      * @param array $conf
      */
-    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, array $conf)
+    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, Translator $translator, array $conf)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->translator = $translator;
         $this->conf = $conf;
     }
 
@@ -46,8 +54,8 @@ class MailerService
      */
     public function sendAccountConfirmationMessage($email, $token)
     {
-        $subj = $this->twig->render('email/acct_confirmation_subj.twig');
-        $body = $this->twig->render('email/acct_confirmation_body.twig', ['token' => $token]);
+        $subj = $this->translator->trans('acct_confirmation', [], 'email');
+        $body = $this->twig->render('email/acct_confirmation.twig', ['token' => $token]);
         $message = Swift_Message::newInstance($subj, $body)
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($email);

@@ -4,9 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e46437c9aff93b565be879e837884b08",
-    "content-hash": "0437f632f5a2aad52d6c57e14c9a3248",
+    "hash": "996e143104980f3c9772c379d1430995",
+    "content-hash": "80689a724c7d0448ad89e65d17b0b026",
     "packages": [
+        {
+            "name": "f3ath/lazypdo",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/f3ath/lazypdo.git",
+                "reference": "1a65c8f99779d296e428a5aefa01ce80f2a213dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/f3ath/lazypdo/zipball/1a65c8f99779d296e428a5aefa01ce80f2a213dc",
+                "reference": "1a65c8f99779d296e428a5aefa01ce80f2a213dc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "F3\\LazyPDO\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Karapetov",
+                    "email": "karapetov@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "LazyPDO is a wrapper over PHP's standard PDO class. It postpones instantiating original PDO class until one is really needed. Also it can be (un)serialized. The main goal of this class is to allow you to mock PDO instances in your unit tests.",
+            "homepage": "https://github.com/f3ath/LazyPDO",
+            "keywords": [
+                "lazy load",
+                "lazyload",
+                "mock",
+                "pdo",
+                "phpunit",
+                "serializable",
+                "serialize",
+                "test",
+                "unit test"
+            ],
+            "time": "2014-02-16 23:14:12"
+        },
         {
             "name": "f3ath/simpleuber",
             "version": "1.0.0",
