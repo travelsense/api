@@ -46,22 +46,21 @@ class MailerService
      */
     public function sendAccountConfirmationMessage($email, $token)
     {
-        if ($this->logger) {
-            $this->logger->info('Sending account confirmation email',
-                [
-                    'email' => $email,
-                    'token' => $token,
-                    'config' => $this->conf,
-                ]
-            );
-        }
         $subj = $this->twig->render('email/acct_confirmation_subj.twig');
         $body = $this->twig->render('email/acct_confirmation_body.twig', ['token' => $token]);
         $message = Swift_Message::newInstance($subj, $body)
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($email);
 
-        $this->mailer->send($message);
-
+        $sent = $this->mailer->send($message);
+        if ($this->logger) {
+            $this->logger->info('Sending account confirmation email',
+                [
+                    'email' => $email,
+                    'token' => $token,
+                    'sent' => $sent,
+                ]
+            );
+        }
     }
 }
