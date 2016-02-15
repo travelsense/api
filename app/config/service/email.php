@@ -6,11 +6,15 @@
 
 
 // Swift Mailer
-$app['swiftmailer.transport'] = 'Swift_SendmailTransport';
 $app->register(new Silex\Provider\SwiftmailerServiceProvider());
+$app['swiftmailer.transport'] = $app->share(function($app) {
+    return Swift_SendmailTransport::newInstance();
+});
 
 // MailerService
-$app['email.mailer'] = $app->share(function($app) {
-    return new \Service\Mailer\MailerService($app['mailer'], $app['twig'], $app['config']['email']);
+$app['email.service'] = $app->share(function($app) {
+    $mailer = new \Service\Mailer\MailerService($app['mailer'], $app['twig'], $app['translator'], $app['config']['email']);
+    $mailer->setLogger($app['monolog']);
+    return $mailer;
 });
 

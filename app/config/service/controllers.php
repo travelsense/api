@@ -11,7 +11,7 @@ $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app['controller.api.user'] = $app->share(function($app) {
     $controller = new Controller\Api\UserController(
         $app['mapper.db.user'],
-        $app['email.mailer'],
+        $app['email.service'],
         $app['storage.expirable_storage'],
         $app['password_generator']
     );
@@ -51,7 +51,7 @@ $app['controller.api.wego'] = $app->share(function($app) {
 $app['controller.user'] = $app->share(function($app) {
     $controller = new Controller\UserController(
         $app['mapper.db.user'],
-        $app['email.mailer'],
+        $app['email.service'],
         $app['storage.expirable_storage'],
         $app['password_generator']
     );
