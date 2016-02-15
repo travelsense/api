@@ -1,12 +1,1 @@
-# API
-We are using JSON RESTful(ish) API.
-
-* [Authentication](doc/api/auth.md)
-* [Accounts](doc/api/accounts.md)
-* [Travels](doc/api/travels.md)
-
-# [Production deployment](doc/deploy.md)
-
-# [Development environment setup](doc/dev_setup.md)
- 
-# [Branching model](http://nvie.com/posts/a-successful-git-branching-model/) 
+# See the [Wiki page](https://github.com/travelsense/api/wiki)
