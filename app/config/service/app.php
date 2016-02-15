@@ -79,6 +79,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), [
 // Monolog
 $app->register(new Silex\Provider\MonologServiceProvider(), [
     'monolog.logfile' => $app['config']['log']['main'],
+    'monolog.name' => 'vaca',
 ]);
 
 // Pimple dumper

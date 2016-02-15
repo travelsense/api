@@ -2,12 +2,15 @@
 
 namespace Service\Mailer;
 
+use Psr\Log\LoggerAwareTrait;
 use Swift_Mailer;
 use Swift_Message;
 use Twig_Environment;
 
 class MailerService
 {
+    use LoggerAwareTrait;
+
     /**
      * @var Swift_Mailer
      */
@@ -43,11 +46,20 @@ class MailerService
      */
     public function sendAccountConfirmationMessage($email, $token)
     {
-        $message = Swift_Message::newInstance()
-            ->setSubject($this->twig->render('email/acct_confirmation_subj.twig'))
+        if ($this->logger) {
+            $this->logger->info('Sending account confirmation email',
+                [
+                    'email' => $email,
+                    'token' => $token,
+                    'config' => $this->conf,
+                ]
+            );
+        }
+        $subj = $this->twig->render('email/acct_confirmation_subj.twig');
+        $body = $this->twig->render('email/acct_confirmation_body.twig', ['token' => $token]);
+        $message = Swift_Message::newInstance($subj, $body)
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
-            ->setTo($email)
-            ->setBody($this->twig->render('email/acct_confirmation_body.twig', ['token' => $token]));
+            ->setTo($email);
 
         $this->mailer->send($message);
 
