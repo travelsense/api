@@ -1,5 +1,5 @@
 <?php
-namespace Controller\Api;
+namespace Controller;
 
 use Exception\ApiException;
 use JSON\FormatException;
@@ -108,7 +108,7 @@ class UserControllerTest extends ControllerTestCase
             $this->assertEquals(Response::HTTP_FORBIDDEN, $e->getHttpCode());
         }
 
-        $this->assertEquals([], $this->controller->createUser($request));
+        $this->assertEquals(new Response(), $this->controller->createUser($request));
     }
 
     public function testCreateUserValidation()

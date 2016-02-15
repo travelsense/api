@@ -128,15 +128,15 @@ SQL;
     }
 
     /**
-     * @param $id
+     * @param $email
      * @param $password
      * @return User|null
      */
-    public function updatePasswordById($id, $password)
+    public function updatePasswordByEmail($email, $password)
     {
-        $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE id= :id');
+        $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE email= :email');
         return $update->execute([
-            ':id'    => $id,
+            ':email' => $email,
             ':password' => $this->getPasswordHash($password)
         ]);
     }

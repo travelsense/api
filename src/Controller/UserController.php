@@ -1,8 +1,10 @@
 <?php
-
 namespace Controller;
 
+use Exception\ApiException;
 use ExpirableStorage;
+use JSON\DataObject;
+use JSON\FormatException;
 use Mapper\DB\UserMapper;
 use Model\User;
 use Psr\Log\LoggerAwareTrait;
@@ -11,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * User Web controller
+ * User API controller
  */
 class UserController
 {
@@ -50,8 +52,73 @@ class UserController
     }
 
     /**
+     * @param User $user
+     * @return array
+     */
+    public function getUser(User $user)
+    {
+        return [
+            'email' => $user->getEmail(),
+            'picture' => $user->getPicture(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+        ];
+    }
+
+    /**
+     * Start email-based registration. Send a confirmation email.
+     * @param Request $request
+     * @return array
+     * @throws ApiException
+     */
+    public function createUser(Request $request)
+    {
+        $json = new DataObject($request->getContent());
+
+        $user = new User();
+        try {
+            $user
+                ->setEmail($json->getString('email'))
+                ->setPassword($json->getString('password'))
+                ->setFirstName($json->getString('firstName'))
+                ->setLastName($json->getString('lastName'))
+                ->setPicture($json->has('picture') ? $json->getString('picture') : '');
+        } catch (FormatException $e) {
+            throw new ApiException($e->getMessage(), ApiException::VALIDATION, $e, Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($this->userMapper->emailExists($user->getEmail())) {
+            throw ApiException::create(ApiException::USER_EXISTS);
+        }
+        $this->userMapper->insert($user);
+        $token = $this->storage->store($user->getEmail());
+        if ($this->logger) {
+            $this->logger->info('Expirable token created', ['token' => $token]);
+        }
+        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
+        return new Response();
+    }
+
+    /**
+     * Send password reset link
+     * @param string $email
+     * @return Response
+     * @throws ApiException
+     */
+    public function sendPasswordResetLink($email)
+    {
+        if (false === $this->userMapper->emailExists($email)) {
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        $token = $this->storage->store($email);
+        $this->mailer->sendPasswordResetLink($email, $token);
+        return new Response();
+    }
+
+    /**
      * @param string $token
      * @return Response
+     * @throws ApiException
      */
     public function confirmEmail($token)
     {
@@ -61,22 +128,41 @@ class UserController
             if ($this->logger) {
                 $this->logger->warning('Expired token', ['token' => $token]);
             }
-            return new Response('Invalid token.');
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
-        if ($this->userMapper->emailExists($email)) {
-            $this->userMapper->confirmEmail($email);
-        } else {
+        if (false === $this->userMapper->emailExists($email)) {
             if ($this->logger) {
                 $this->logger->error('Email not found', ['token' => $token, 'email' => $email]);
             }
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
-        return new Response('Account has been created.');
+        $this->userMapper->confirmEmail($email);
+        return new Response();
     }
 
-
-
-    public function showPasswordChangeForm(Request $request)
+    /**
+     * @param string $token
+     * @return Response
+     * @throws ApiException
+     */
+    public function resetPassword($token, Request $request)
     {
-        return 'hello';
+        /** @var User $user */
+        $email = $this->storage->get($token);
+        if ($email === null) {
+            if ($this->logger) {
+                $this->logger->warning('Expired token', ['token' => $token]);
+            }
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        if (false === $this->userMapper->emailExists($email)) {
+            if ($this->logger) {
+                $this->logger->error('Email not found', ['token' => $token, 'email' => $email]);
+            }
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        $password = json_decode($request->getContent());
+        $this->userMapper->updatePasswordByEmail($email, $password);
+        return new Response();
     }
 }

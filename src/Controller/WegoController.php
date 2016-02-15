@@ -1,5 +1,5 @@
 <?php
-namespace Controller\Api;
+namespace Controller;
 
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;

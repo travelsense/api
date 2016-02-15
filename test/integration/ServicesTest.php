@@ -1,15 +1,15 @@
 <?php
 
-class IntegrationTest extends PHPUnit_Framework_TestCase
+class ServicesTest extends PHPUnit_Framework_TestCase
 {
     public function servicesToTest()
     {
         return [
-            ['controller.api.user'],
-            ['controller.api.auth'],
-            ['controller.api.travel'],
-            ['controller.api.uber'],
-            ['controller.api.wego'],
+            ['controller.user'],
+            ['controller.auth'],
+            ['controller.travel'],
+            ['controller.uber'],
+            ['controller.wego'],
         ];
     }
 

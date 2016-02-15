@@ -1,5 +1,5 @@
 <?php
-namespace Controller\Api;
+namespace Controller;
 
 use F3\SimpleUber\Uber;
 
