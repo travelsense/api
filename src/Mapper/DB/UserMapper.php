@@ -126,4 +126,18 @@ SQL;
             ->setLastName($row['last_name'])
             ->setPicture($row['picture']);
     }
+
+    /**
+     * @param $id
+     * @param $password
+     * @return User|null
+     */
+    public function updatePasswordById($id, $password)
+    {
+        $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE id= :id');
+        return $update->execute([
+            ':id'    => $id,
+            ':password' => $this->getPasswordHash($password)
+        ]);
+    }
 }
