@@ -9,6 +9,7 @@ use Mapper\DB\UserMapper;
 use Model\User;
 use Psr\Log\LoggerAwareTrait;
 use Service\Mailer\MailerService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -96,7 +97,7 @@ class UserController
             $this->logger->info('Expirable token created', ['token' => $token]);
         }
         $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
-        return new Response();
+        return new JsonResponse();
     }
 
     /**
@@ -112,7 +113,7 @@ class UserController
         }
         $token = $this->storage->store($email);
         $this->mailer->sendPasswordResetLink($email, $token);
-        return new Response();
+        return new JsonResponse();
     }
 
     /**
@@ -137,7 +138,7 @@ class UserController
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
         $this->userMapper->confirmEmail($email);
-        return new Response();
+        return new JsonResponse();
     }
 
     /**
@@ -163,6 +164,6 @@ class UserController
         }
         $password = json_decode($request->getContent());
         $this->userMapper->updatePasswordByEmail($email, $password);
-        return new Response();
+        return new JsonResponse();
     }
 }
