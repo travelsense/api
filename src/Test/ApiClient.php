@@ -63,7 +63,7 @@ class ApiClient
     public function authByEmail($email, $password)
     {
         $json = $this->http
-            ->post('/token/by-email/'.urldecode($email), ['json' => $password])
+            ->post('/token/by-email/'.urlencode($email), ['json' => $password])
             ->getBody()->getContents();
         return json_decode($json);
     }
@@ -71,7 +71,7 @@ class ApiClient
     public function confirmEmail($email)
     {
         $json = $this->http
-            ->post('/email/confirm/'.urldecode($email))
+            ->post('/email/confirm/'.urlencode($email))
             ->getBody()->getContents();
         return json_decode($json);
     }
@@ -79,7 +79,7 @@ class ApiClient
     public function requestPasswordReset($email)
     {
         $json = $this->http
-            ->post('/password/link/'.urldecode($email))
+            ->post('/password/link/'.urlencode($email))
             ->getBody()->getContents();
         return json_decode($json);
     }
@@ -87,7 +87,7 @@ class ApiClient
     public function updatePassword($token, $password)
     {
         $json = $this->http
-            ->post('/password/reset/'.urldecode($token), ['json' => $password])
+            ->post('/password/reset/'.urlencode($token), ['json' => $password])
             ->getBody()->getContents();
         return json_decode($json);
     }
