@@ -5,14 +5,10 @@
  * @var $app Application
  */
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ArrayCache;
 use Exception\ApiException;
 use Exception\ValidationException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Validation;
+use Symfony\Component\HttpFoundation\Response;
 
 $app['debug'] = $app['config']['debug'];
 $app['resolver'] = $app->share(function () use ($app) {
@@ -69,6 +65,10 @@ $app->before(function (Request $request) {
 // JSON Response
 $app->view(function(array $response) use ($app) {
     return $app->json($response);
+});
+
+$app->after(function(Request $request, Response $response) {
+    $response->headers->set('Access-Control-Allow-Origin', '*');
 });
 
 // Twig

@@ -29,7 +29,6 @@ return [
         'from_address' => 'robot@travelsen.se',
         'from_name' => 'Travelsen.se',
         'base_url' => 'https://travelnsen.se',
-        ''
     ],
     'security' => [
         'enabled' => true,

@@ -2,9 +2,9 @@
 namespace Controller;
 
 use Exception\ApiException;
-use JSON\FormatException;
 use Model\User;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Test\ControllerTestCase;
 
 class UserControllerTest extends ControllerTestCase
@@ -108,7 +108,7 @@ class UserControllerTest extends ControllerTestCase
             $this->assertEquals(Response::HTTP_FORBIDDEN, $e->getHttpCode());
         }
 
-        $this->assertEquals(new Response(), $this->controller->createUser($request));
+        $this->assertEquals(new JsonResponse(), $this->controller->createUser($request));
     }
 
     public function testCreateUserValidation()
