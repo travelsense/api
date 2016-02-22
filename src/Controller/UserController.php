@@ -37,16 +37,17 @@ class UserController
 
     /**
      * UserController constructor.
-     * @param UserMapper $userMapper
-     * @param MailerService $mailer
+     *
+     * @param UserMapper       $userMapper
+     * @param MailerService    $mailer
      * @param ExpirableStorage $storage
      */
     public function __construct(
         UserMapper $userMapper,
         MailerService $mailer,
         ExpirableStorage $storage
-    )
-    {
+    ) {
+    
         $this->userMapper = $userMapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
@@ -68,7 +69,8 @@ class UserController
 
     /**
      * Start email-based registration. Send a confirmation email.
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return array
      * @throws ApiException
      */
@@ -102,7 +104,8 @@ class UserController
 
     /**
      * Send password reset link
-     * @param string $email
+     *
+     * @param  string $email
      * @return Response
      * @throws ApiException
      */
@@ -123,7 +126,9 @@ class UserController
      */
     public function confirmEmail($token)
     {
-        /** @var User $user */
+        /**
+ * @var User $user 
+*/
         $email = $this->storage->get($token);
         if ($email === null) {
             if ($this->logger) {
@@ -148,7 +153,9 @@ class UserController
      */
     public function resetPassword($token, Request $request)
     {
-        /** @var User $user */
+        /**
+ * @var User $user 
+*/
         $email = $this->storage->get($token);
         if ($email === null) {
             if ($this->logger) {

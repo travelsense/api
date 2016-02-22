@@ -19,15 +19,18 @@ class TravelMapper extends AbstractPDOMapper
 
     /**
      * Insert into DB, update id
+     *
      * @param Travel $travel
      */
     public function insert(Travel $travel)
     {
         $insert = $this->prepare('INSERT INTO travels (title, description) VALUES (:title, :description) RETURNING id');
-        $insert->execute([
+        $insert->execute(
+            [
             ':title' => $travel->getTitle(),
             ':description' => $travel->getDescription(),
-        ]);
+            ]
+        );
         $id = $insert->fetchColumn();
         $travel->setId($id);
     }

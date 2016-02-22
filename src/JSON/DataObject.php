@@ -4,6 +4,7 @@ namespace JSON;
 /**
  * JSON Data Object
  * Class DataObject
+ *
  * @package Mapper\JSON
  */
 class DataObject
@@ -15,6 +16,7 @@ class DataObject
 
     /**
      * DataObject constructor.
+     *
      * @param string $json
      */
     public function __construct($json)
@@ -33,7 +35,7 @@ class DataObject
 
     /**
      * @param $property
-     * @param string|array $types List of expected types (@see gettype() function)
+     * @param string|array    $types      List of expected types (@see gettype() function)
      * @param string|callable $constraint Regexp (preg_match) or a callable (should return error message or false)
      * @return mixed
      * @throws FormatException
@@ -47,12 +49,14 @@ class DataObject
         $value = $this->data->$property;
 
         if (null !== $types && false === in_array(gettype($value), (array) $types)) {
-            throw new FormatException(sprintf(
-                'Property %s is a %s, expected: %s',
-                $property,
-                gettype($property),
-                implode(', ', (array) $types)
-            ));
+            throw new FormatException(
+                sprintf(
+                    'Property %s is a %s, expected: %s',
+                    $property,
+                    gettype($property),
+                    implode(', ', (array) $types)
+                )
+            );
         }
 
         if (null !== $constraint) {
@@ -69,7 +73,7 @@ class DataObject
     }
 
     /**
-     * @param string $property
+     * @param string          $property
      * @param string|callable $constraint
      * @return string
      * @throws FormatException

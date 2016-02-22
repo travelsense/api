@@ -17,15 +17,18 @@ class ApiClient
 
     /**
      * ApiClient constructor.
+     *
      * @param string $apiUrl
-     * @param float $timeout
+     * @param float  $timeout
      */
     public function __construct($apiUrl, $timeout = 5.0)
     {
-        $this->http = new HttpClient([
+        $this->http = new HttpClient(
+            [
             'base_uri' => $apiUrl,
             'timeout' => $timeout,
-        ]);
+            ]
+        );
     }
 
     /**
@@ -38,7 +41,8 @@ class ApiClient
 
     /**
      * Register new user
-     * @param array $user (firstName, lastName, email, password, picture)
+     *
+     * @param  array $user (firstName, lastName, email, password, picture)
      * @return object
      *
      * Example: $client->registerUser([
@@ -94,6 +98,7 @@ class ApiClient
 
     /**
      * Get current user info
+     *
      * @return object
      */
     public function getCurrentUser()
@@ -114,10 +119,11 @@ class ApiClient
 
     /**
      * start search
-     * @param int $location wego location id
-     * @param string $in yyyy-mm-dd
-     * @param string $out yyyy-mm-dd
-     * @param int $rooms
+     *
+     * @param  int    $location wego location id
+     * @param  string $in       yyyy-mm-dd
+     * @param  string $out      yyyy-mm-dd
+     * @param  int    $rooms
      * @return int wego search id
      */
     public function startHotelSearch($location, $in, $out, $rooms)
@@ -130,8 +136,9 @@ class ApiClient
 
     /**
      * get search results
-     * @param int $id wego search id
-     * @param int $page page number
+     *
+     * @param  int $id   wego search id
+     * @param  int $page page number
      * @return array
      */
     public function getHotelSearchResults($id, $page = 1)

@@ -15,6 +15,7 @@ class SessionManager
 
     /**
      * SessionManager constructor.
+     *
      * @param SessionMapper $sessionMapper
      */
     public function __construct(SessionMapper $sessionMapper)
@@ -24,8 +25,9 @@ class SessionManager
 
     /**
      * Create a new session token
-     * @param string $userId
-     * @param Request $request
+     *
+     * @param  string  $userId
+     * @param  Request $request
      * @return string session token
      */
     public function createSession($userId, Request $request)
@@ -38,7 +40,8 @@ class SessionManager
 
     /**
      * Get user id by session token
-     * @param string $token
+     *
+     * @param  string $token
      * @return string|null
      */
     public function getUserId($token)

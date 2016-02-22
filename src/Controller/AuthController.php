@@ -40,9 +40,10 @@ class AuthController
 
     /**
      * UserSessionController constructor.
-     * @param UserMapper $userMapper
-     * @param SessionManager $sessionManager
-     * @param Facebook $facebook
+     *
+     * @param UserMapper                 $userMapper
+     * @param SessionManager             $sessionManager
+     * @param Facebook                   $facebook
      * @param PasswordGeneratorInterface $pwdGenerator
      */
     public function __construct(
@@ -50,8 +51,8 @@ class AuthController
         SessionManager $sessionManager,
         Facebook $facebook,
         PasswordGeneratorInterface $pwdGenerator
-    )
-    {
+    ) {
+    
         $this->userMapper = $userMapper;
         $this->sessionManager = $sessionManager;
         $this->facebook = $facebook;
@@ -59,7 +60,7 @@ class AuthController
     }
 
     /**
-     * @param string $email
+     * @param string  $email
      * @param Request $request
      * @return JsonResponse
      * @throws ApiException

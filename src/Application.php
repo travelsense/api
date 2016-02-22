@@ -16,7 +16,8 @@ class Application extends Silex\Application
         if ($secureConfig && file_exists($secureConfig)) {
             $config = array_replace_recursive(
                 $config,
-                json_decode(file_get_contents($secureConfig), true));
+                json_decode(file_get_contents($secureConfig), true)
+            );
         }
 
         parent::__construct(['config' => $config]);
@@ -24,7 +25,7 @@ class Application extends Silex\Application
         //load service
         $app = $this; // used in includes
         foreach ($config['service'] as $serviceLoader) {
-            require $serviceLoader;
+            include $serviceLoader;
         }
     }
 
@@ -34,6 +35,6 @@ class Application extends Silex\Application
      */
     static public function createByEnvironment($env)
     {
-        return new self(require sprintf(__DIR__.'/../app/config/%s.php', $env));
+        return new self(include sprintf(__DIR__.'/../app/config/%s.php', $env));
     }
 }

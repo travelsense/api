@@ -42,6 +42,7 @@ class UserMapper extends AbstractPDOMapper
 
     /**
      * Insert into DB, update id
+     *
      * @param User $user
      */
     public function insert(User $user)
@@ -54,13 +55,15 @@ VALUES
 RETURNING id
 SQL;
         $insert = $this->prepare($sql);
-        $insert->execute([
+        $insert->execute(
+            [
             ':email' => $user->getEmail(),
             ':password' => $this->getPasswordHash($user->getPassword()),
             ':first_name' => $user->getFirstName(),
             ':last_name' => $user->getLastName(),
             ':picture' => $user->getPicture(),
-        ]);
+            ]
+        );
         $id = $insert->fetchColumn();
         $user->setId($id);
     }
@@ -74,10 +77,12 @@ SQL;
     {
         $select = $this->prepare('SELECT * FROM users WHERE email = :email AND "password" = :password');
 
-        $select->execute([
+        $select->execute(
+            [
             ':email' => $email,
             ':password' => $this->getPasswordHash($password),
-        ]);
+            ]
+        );
         return $this->fetch($select);
     }
 
@@ -88,9 +93,11 @@ SQL;
     public function fetchById($id)
     {
         $select = $this->prepare('SELECT * FROM users WHERE "id" = :id');
-        $select->execute([
+        $select->execute(
+            [
             ':id' => $id,
-        ]);
+            ]
+        );
         return $this->fetch($select);
     }
 
@@ -101,9 +108,11 @@ SQL;
     public function fetchByEmail($email)
     {
         $select = $this->prepare('SELECT * FROM users WHERE "email" = :email');
-        $select->execute([
+        $select->execute(
+            [
             ':email' => $email,
-        ]);
+            ]
+        );
         return $this->fetch($select);
     }
 
@@ -135,9 +144,11 @@ SQL;
     public function updatePasswordByEmail($email, $password)
     {
         $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE email= :email');
-        return $update->execute([
+        return $update->execute(
+            [
             ':email' => $email,
             ':password' => $this->getPasswordHash($password)
-        ]);
+            ]
+        );
     }
 }

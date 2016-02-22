@@ -16,20 +16,23 @@ class AuthenticationProvider implements ServiceProviderInterface
      *
      * This method should only be used to configure services and parameters.
      * It should not get services.
+     *
      * @param Application $app
      */
     public function register(Application $app)
     {
         $app['auth.credentials'] = new Credentials();
-        $app['auth.authenticator'] = $app->share(function($app) {
-            $auth = new UserAuthenticator(
-                $app['auth.credentials'],
-                $app['security.session_manager'],
-                $app['auth.unsecured_routes']
-            );
-            $auth->setLogger($app['monolog']);
-            return $auth;
-        });
+        $app['auth.authenticator'] = $app->share(
+            function ($app) {
+                $auth = new UserAuthenticator(
+                    $app['auth.credentials'],
+                    $app['security.session_manager'],
+                    $app['auth.unsecured_routes']
+                );
+                $auth->setLogger($app['monolog']);
+                return $auth;
+            }
+        );
     }
 
     /**
@@ -38,6 +41,7 @@ class AuthenticationProvider implements ServiceProviderInterface
      * This method is called after all services are registered
      * and should be used for "dynamic" configuration (whenever
      * a service must be requested).
+     *
      * @param Application $app
      */
     public function boot(Application $app)

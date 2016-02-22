@@ -19,6 +19,7 @@ class TravelController
 
     /**
      * TravelController constructor.
+     *
      * @param TravelMapper $travelMapper
      */
     public function __construct(TravelMapper $travelMapper)
