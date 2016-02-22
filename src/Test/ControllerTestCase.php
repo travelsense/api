@@ -1,7 +1,6 @@
 <?php
 namespace Test;
 
-
 class ControllerTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -20,5 +19,4 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
         $user->method('getId')->willReturn(1);
         return $user;
     }
-
 }

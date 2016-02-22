@@ -1,6 +1,7 @@
 <?php
 
 namespace Mapper\DB;
+
 use AbstractPDOMapper;
 use Model\User;
 

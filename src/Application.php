@@ -33,7 +33,7 @@ class Application extends Silex\Application
      * @param string $env
      * @return Application
      */
-    static public function createByEnvironment($env)
+    public static function createByEnvironment($env)
     {
         return new self(include sprintf(__DIR__.'/../app/config/%s.php', $env));
     }

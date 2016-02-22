@@ -36,5 +36,4 @@ class UberController
             'price_estimate' => $price,
         ];
     }
-
 }

@@ -61,7 +61,7 @@ class DataObject
 
         if (null !== $constraint) {
             if (is_callable($constraint)) {
-                if(false !== $error = $constraint($value)) {
+                if (false !== $error = $constraint($value)) {
                     throw new FormatException(sprintf('Property %s is invalid: %s', $property, $error));
                 }
             } elseif (0 === preg_match($constraint, $value)) {
@@ -82,5 +82,4 @@ class DataObject
     {
         return $this->get($property, 'string', $constraint);
     }
-
 }

@@ -127,7 +127,7 @@ class UserController
     public function confirmEmail($token)
     {
         /**
- * @var User $user 
+ * @var User $user
 */
         $email = $this->storage->get($token);
         if ($email === null) {
@@ -154,7 +154,7 @@ class UserController
     public function resetPassword($token, Request $request)
     {
         /**
- * @var User $user 
+ * @var User $user
 */
         $email = $this->storage->get($token);
         if ($email === null) {

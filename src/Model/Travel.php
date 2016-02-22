@@ -73,5 +73,4 @@ class Travel
         $this->title = $title;
         return $this;
     }
-
 }

@@ -34,5 +34,4 @@ class ValidationException extends ApiException
     {
         return $this->violations;
     }
-
 }

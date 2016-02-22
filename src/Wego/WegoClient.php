@@ -74,7 +74,8 @@ class WegoClient
         $country = 'US'
     ) {
         $response = $this->call(
-            '/hotels/api/search/new', [
+            '/hotels/api/search/new',
+            [
             'location_id' => $location,
             'check_in' => $checkIn->format(self::DATE_FORMAT),
             'check_out' => $checkOut->format(self::DATE_FORMAT),
@@ -107,7 +108,8 @@ class WegoClient
         $query = strtolower($query);
 
         return $this->call(
-            '/hotels/api/locations/search', [
+            '/hotels/api/locations/search',
+            [
             'q' => $query,
             'lang' => $lang,
             'page' => (int)$page,
@@ -144,7 +146,8 @@ class WegoClient
         $perPage = 20
     ) {
         return $this->call(
-            '/hotels/api/search/' . urlencode($id), [
+            '/hotels/api/search/' . urlencode($id),
+            [
             'refresh' => $refresh,
             'currency_code' => $currency,
             'sort' => $sort ? 'true' : 'false',
@@ -171,7 +174,8 @@ class WegoClient
     public function getDetails($searchID, $hotelID, $currency = 'USD', $lang = 'en')
     {
         return $this->call(
-            '/hotels/api/search/show', [
+            '/hotels/api/search/show',
+            [
             'search_id' => $searchID,
             'hotel_id' => $hotelID,
             'currency' => $currency,

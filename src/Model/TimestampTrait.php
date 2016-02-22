@@ -50,5 +50,4 @@ trait TimestampTrait
         $this->updated = $updated;
         return $this;
     }
-
 }
