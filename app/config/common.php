@@ -22,6 +22,7 @@ return [
     ],
     'error_message_mapping' => [
         404 => 'Resource not found',
+        405 => 'Method not allowed',
         500 => 'Internal server error',
         'default' => 'Cthulhu fhtagn!',
     ],
