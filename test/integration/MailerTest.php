@@ -1,4 +1,8 @@
 <?php
+namespace Api;
+
+use PHPUnit_Framework_TestCase;
+use Swift_Message;
 
 class MailerTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +24,7 @@ class MailerTest extends PHPUnit_Framework_TestCase
     public function testConfirmation()
     {
         $test = $this;
-        $this->mailer->method('send')->willReturnCallback(function( Swift_Message $msg) use ($test) {
+        $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
             $test->assertEquals(
                 "Please follow the link to confirm your account: https://travelsen.se/#confirm/xxx\n",
                 $msg->getBody()
@@ -37,7 +41,7 @@ class MailerTest extends PHPUnit_Framework_TestCase
     public function testPasswordReset()
     {
         $test = $this;
-        $this->mailer->method('send')->willReturnCallback(function( Swift_Message $msg) use ($test) {
+        $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
             $test->assertEquals(
                 "Please follow the link to reset your password: https://travelsen.se/#reset/xxx\n",
                 $msg->getBody()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Service\Mailer;
+namespace Api\Service\Mailer;
 
 use Psr\Log\LoggerAwareTrait;
 use Silex\Translator;
@@ -29,9 +29,10 @@ class MailerService
 
     /**
      * MailerService constructor.
-     * @param Swift_Mailer $mailer
+     *
+     * @param Swift_Mailer     $mailer
      * @param Twig_Environment $twig
-     * @param array $conf
+     * @param array            $conf
      */
     public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, array $conf)
     {
@@ -58,7 +59,8 @@ class MailerService
 
         $sent = $this->mailer->send($message);
         if ($this->logger) {
-            $this->logger->info('Sending account confirmation email',
+            $this->logger->info(
+                'Sending account confirmation email',
                 [
                     'email' => $email,
                     'token' => $token,
@@ -85,7 +87,8 @@ class MailerService
 
         $sent = $this->mailer->send($message);
         if ($this->logger) {
-            $this->logger->info('Sending password reset link',
+            $this->logger->info(
+                'Sending password reset link',
                 [
                     'email' => $email,
                     'token' => $token,

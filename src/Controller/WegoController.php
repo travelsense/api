@@ -1,9 +1,9 @@
 <?php
-namespace Controller;
+namespace Api\Controller;
 
+use Api\Wego\WegoClient;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Wego\WegoClient;
 
 class WegoController
 {
@@ -14,6 +14,7 @@ class WegoController
 
     /**
      * WegoController constructor.
+     *
      * @param WegoClient $wego
      */
     public function __construct(WegoClient $wego)
@@ -23,10 +24,11 @@ class WegoController
 
     /**
      * Start hotels search
-     * @param string $location Location ID
-     * @param DateTime $in
-     * @param DateTime $out
-     * @param int $rooms
+     *
+     * @param  string   $location Location ID
+     * @param  DateTime $in
+     * @param  DateTime $out
+     * @param  int      $rooms
      * @return JsonResponse
      */
     public function startSearch($location, DateTime $in, DateTime $out, $rooms)
@@ -36,8 +38,9 @@ class WegoController
 
     /**
      * Hotel search results
-     * @param $id
-     * @param int $page
+     *
+     * @param  $id
+     * @param  int $page
      * @return array
      */
     public function getSearchResults($id, $page)

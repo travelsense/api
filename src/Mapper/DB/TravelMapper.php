@@ -1,8 +1,8 @@
 <?php
-namespace Mapper\DB;
+namespace Api\Mapper\DB;
 
-use AbstractPDOMapper;
-use Model\Travel;
+use Api\AbstractPDOMapper;
+use Api\Model\Travel;
 
 class TravelMapper extends AbstractPDOMapper
 {
@@ -19,15 +19,18 @@ class TravelMapper extends AbstractPDOMapper
 
     /**
      * Insert into DB, update id
+     *
      * @param Travel $travel
      */
     public function insert(Travel $travel)
     {
         $insert = $this->prepare('INSERT INTO travels (title, description) VALUES (:title, :description) RETURNING id');
-        $insert->execute([
+        $insert->execute(
+            [
             ':title' => $travel->getTitle(),
             ':description' => $travel->getDescription(),
-        ]);
+            ]
+        );
         $id = $insert->fetchColumn();
         $travel->setId($id);
     }

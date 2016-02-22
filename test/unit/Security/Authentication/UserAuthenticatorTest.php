@@ -1,10 +1,11 @@
 <?php
-namespace Security\Authentication;
+namespace Api\Security\Authentication;
 
+use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserAuthenticatorTest extends \PHPUnit_Framework_TestCase
+class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 {
     private $credentials;
     private $sessionManager;
@@ -15,8 +16,8 @@ class UserAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->credentials = $this->getMock('Security\\Authentication\\Credentials');
-        $this->sessionManager = $this->getMockBuilder('Security\\SessionManager')
+        $this->credentials = $this->getMock('\\Api\\Security\\Authentication\\Credentials');
+        $this->sessionManager = $this->getMockBuilder('\\Api\\Security\\SessionManager')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -24,7 +25,7 @@ class UserAuthenticatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Exception\ApiException
+     * @expectedException \Api\Exception\ApiException
      * @expectedExceptionMessage Invalid or expired auth token
      * @expectedExceptionCode 202
      */
@@ -42,5 +43,4 @@ class UserAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->authenticator->onRequest($event);
 
     }
-
 }

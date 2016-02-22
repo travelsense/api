@@ -1,5 +1,5 @@
 <?php
-namespace Model;
+namespace Api\Model;
 
 class Travel
 {
@@ -73,5 +73,4 @@ class Travel
         $this->title = $title;
         return $this;
     }
-
 }

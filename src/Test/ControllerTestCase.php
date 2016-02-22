@@ -1,8 +1,9 @@
 <?php
-namespace Test;
+namespace Api\Test;
 
+use PHPUnit_Framework_TestCase;
 
-class ControllerTestCase extends \PHPUnit_Framework_TestCase
+class ControllerTestCase extends PHPUnit_Framework_TestCase
 {
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
@@ -10,7 +11,7 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
     protected function buildUser()
     {
         $user = $this->getMock(
-            'Model\\User',
+            'Api\\Model\\User',
             ['getEmail', 'getPicture', 'getFirstName', 'getLastName', 'getId']
         );
         $user->method('getEmail')->willReturn('user1@example.com');
@@ -20,5 +21,4 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
         $user->method('getId')->willReturn(1);
         return $user;
     }
-
 }

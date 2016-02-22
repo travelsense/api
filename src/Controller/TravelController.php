@@ -1,8 +1,8 @@
 <?php
-namespace Controller;
+namespace Api\Controller;
 
-use Exception\ApiException;
-use Mapper\DB\TravelMapper;
+use Api\Exception\ApiException;
+use Api\Mapper\DB\TravelMapper;
 use Psr\Log\LoggerAwareTrait;
 
 /**
@@ -19,6 +19,7 @@ class TravelController
 
     /**
      * TravelController constructor.
+     *
      * @param TravelMapper $travelMapper
      */
     public function __construct(TravelMapper $travelMapper)

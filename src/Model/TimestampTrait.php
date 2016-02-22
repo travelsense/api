@@ -1,5 +1,5 @@
 <?php
-namespace Model;
+namespace Api\Model;
 
 use DateTime;
 
@@ -50,5 +50,4 @@ trait TimestampTrait
         $this->updated = $updated;
         return $this;
     }
-
 }

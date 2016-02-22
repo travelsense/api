@@ -1,9 +1,10 @@
 <?php
-namespace JSON;
+namespace Api\JSON;
 
 /**
  * JSON Data Object
  * Class DataObject
+ *
  * @package Mapper\JSON
  */
 class DataObject
@@ -15,6 +16,7 @@ class DataObject
 
     /**
      * DataObject constructor.
+     *
      * @param string $json
      */
     public function __construct($json)
@@ -33,7 +35,7 @@ class DataObject
 
     /**
      * @param $property
-     * @param string|array $types List of expected types (@see gettype() function)
+     * @param string|array    $types      List of expected types (@see gettype() function)
      * @param string|callable $constraint Regexp (preg_match) or a callable (should return error message or false)
      * @return mixed
      * @throws FormatException
@@ -47,17 +49,19 @@ class DataObject
         $value = $this->data->$property;
 
         if (null !== $types && false === in_array(gettype($value), (array) $types)) {
-            throw new FormatException(sprintf(
-                'Property %s is a %s, expected: %s',
-                $property,
-                gettype($property),
-                implode(', ', (array) $types)
-            ));
+            throw new FormatException(
+                sprintf(
+                    'Property %s is a %s, expected: %s',
+                    $property,
+                    gettype($property),
+                    implode(', ', (array) $types)
+                )
+            );
         }
 
         if (null !== $constraint) {
             if (is_callable($constraint)) {
-                if(false !== $error = $constraint($value)) {
+                if (false !== $error = $constraint($value)) {
                     throw new FormatException(sprintf('Property %s is invalid: %s', $property, $error));
                 }
             } elseif (0 === preg_match($constraint, $value)) {
@@ -69,7 +73,7 @@ class DataObject
     }
 
     /**
-     * @param string $property
+     * @param string          $property
      * @param string|callable $constraint
      * @return string
      * @throws FormatException
@@ -78,5 +82,4 @@ class DataObject
     {
         return $this->get($property, 'string', $constraint);
     }
-
 }

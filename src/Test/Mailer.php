@@ -1,10 +1,11 @@
 <?php
-namespace Test;
+namespace Api\Test;
 
 use Swift_Mime_Message;
 
 /**
  * Mail dumper
+ *
  * @package Test
  */
 class Mailer extends \Swift_Mailer
@@ -13,6 +14,7 @@ class Mailer extends \Swift_Mailer
 
     /**
      * Mailer constructor.
+     *
      * @param string $log
      */
     public function __construct($log)

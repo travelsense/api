@@ -1,5 +1,5 @@
 <?php
-namespace Security;
+namespace Api\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -10,7 +10,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mapper = $this->getMockBuilder('Mapper\\DB\\SessionMapper')
+        $this->mapper = $this->getMockBuilder('Api\\Mapper\\DB\\SessionMapper')
             ->disableOriginalConstructor()
             ->setMethods(['createSession', 'getUserId'])
             ->getMock();

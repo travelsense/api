@@ -6,7 +6,7 @@
  * Time: 7:18 PM
  */
 
-namespace Exception;
+namespace Api\Exception;
 
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -34,5 +34,4 @@ class ValidationException extends ApiException
     {
         return $this->violations;
     }
-
 }

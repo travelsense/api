@@ -1,13 +1,13 @@
 <?php
-namespace Controller;
+namespace Api\Controller;
 
-use Exception\ApiException;
+use Api\Exception\ApiException;
+use Api\Mapper\DB\UserMapper;
+use Api\Model\User;
+use Api\Security\SessionManager;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
-use Mapper\DB\UserMapper;
-use Model\User;
 use Psr\Log\LoggerAwareTrait;
-use Security\SessionManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -40,9 +40,10 @@ class AuthController
 
     /**
      * UserSessionController constructor.
-     * @param UserMapper $userMapper
-     * @param SessionManager $sessionManager
-     * @param Facebook $facebook
+     *
+     * @param UserMapper                 $userMapper
+     * @param SessionManager             $sessionManager
+     * @param Facebook                   $facebook
      * @param PasswordGeneratorInterface $pwdGenerator
      */
     public function __construct(
@@ -50,8 +51,7 @@ class AuthController
         SessionManager $sessionManager,
         Facebook $facebook,
         PasswordGeneratorInterface $pwdGenerator
-    )
-    {
+    ) {
         $this->userMapper = $userMapper;
         $this->sessionManager = $sessionManager;
         $this->facebook = $facebook;
@@ -59,7 +59,7 @@ class AuthController
     }
 
     /**
-     * @param string $email
+     * @param string  $email
      * @param Request $request
      * @return JsonResponse
      * @throws ApiException

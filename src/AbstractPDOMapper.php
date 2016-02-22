@@ -1,4 +1,8 @@
 <?php
+namespace Api;
+
+use PDO;
+use PDOStatement;
 
 abstract class AbstractPDOMapper
 {
@@ -14,6 +18,7 @@ abstract class AbstractPDOMapper
 
     /**
      * AbstractMapper constructor.
+     *
      * @param PDO $pdo
      */
     public function __construct(PDO $pdo)
@@ -32,7 +37,8 @@ abstract class AbstractPDOMapper
 
     /**
      * Fetch an object
-     * @param PDOStatement $stmt
+     *
+     * @param  PDOStatement $stmt
      * @return mixed|null
      */
     public function fetch(PDOStatement $stmt)
@@ -43,8 +49,9 @@ abstract class AbstractPDOMapper
 
     /**
      * Create an object from a joined table
-     * @param array $row
-     * @param string $prefix
+     *
+     * @param  array  $row
+     * @param  string $prefix
      * @return mixed
      */
     public function createJoined(array $row, $prefix)
@@ -60,7 +67,8 @@ abstract class AbstractPDOMapper
 
     /**
      * Create object by a DB row
-     * @param array $row
+     *
+     * @param  array $row
      * @return mixed
      */
     abstract public function create(array $row);

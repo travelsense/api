@@ -1,5 +1,5 @@
 <?php
-namespace Controller;
+namespace Api\Controller;
 
 use F3\SimpleUber\Uber;
 
@@ -12,6 +12,7 @@ class UberController
 
     /**
      * UberController constructor.
+     *
      * @param Uber $uber
      */
     public function __construct(Uber $uber)
@@ -31,9 +32,8 @@ class UberController
         $response = $this->uber->getPriceEstimates($lat1, $lon1, $lat2, $lon2);
         $prices = $response->prices;
         $price = isset($prices[0]) ? $prices[0]->estimate : null;
-        return 	[
+        return     [
             'price_estimate' => $price,
         ];
     }
-
 }

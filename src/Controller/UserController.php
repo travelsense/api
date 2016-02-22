@@ -1,14 +1,14 @@
 <?php
-namespace Controller;
+namespace Api\Controller;
 
-use Exception\ApiException;
-use ExpirableStorage;
-use JSON\DataObject;
-use JSON\FormatException;
-use Mapper\DB\UserMapper;
-use Model\User;
+use Api\Exception\ApiException;
+use Api\ExpirableStorage;
+use Api\JSON\DataObject;
+use Api\JSON\FormatException;
+use Api\Mapper\DB\UserMapper;
+use Api\Model\User;
 use Psr\Log\LoggerAwareTrait;
-use Service\Mailer\MailerService;
+use Api\Service\Mailer\MailerService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,16 +37,16 @@ class UserController
 
     /**
      * UserController constructor.
-     * @param UserMapper $userMapper
-     * @param MailerService $mailer
+     *
+     * @param UserMapper       $userMapper
+     * @param MailerService    $mailer
      * @param ExpirableStorage $storage
      */
     public function __construct(
         UserMapper $userMapper,
         MailerService $mailer,
         ExpirableStorage $storage
-    )
-    {
+    ) {
         $this->userMapper = $userMapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
@@ -68,7 +68,8 @@ class UserController
 
     /**
      * Start email-based registration. Send a confirmation email.
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return array
      * @throws ApiException
      */
@@ -102,7 +103,8 @@ class UserController
 
     /**
      * Send password reset link
-     * @param string $email
+     *
+     * @param  string $email
      * @return Response
      * @throws ApiException
      */
@@ -123,7 +125,7 @@ class UserController
      */
     public function confirmEmail($token)
     {
-        /** @var User $user */
+        /* @var User $user */
         $email = $this->storage->get($token);
         if ($email === null) {
             if ($this->logger) {
@@ -143,12 +145,13 @@ class UserController
 
     /**
      * @param string $token
+     * @param Request $request
      * @return Response
      * @throws ApiException
      */
     public function resetPassword($token, Request $request)
     {
-        /** @var User $user */
+        /* @var User $user */
         $email = $this->storage->get($token);
         if ($email === null) {
             if ($this->logger) {

@@ -4,12 +4,18 @@
  * @var $app Application
  */
 
+use Api\Controller\AuthController;
+use Api\Controller\TravelController;
+use Api\Controller\UberController;
+use Api\Controller\UserController;
+use Api\Controller\WegoController;
+
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
 // API
 
 $app['controller.user'] = $app->share(function($app) {
-    $controller = new Controller\UserController(
+    $controller = new UserController(
         $app['mapper.db.user'],
         $app['email.service'],
         $app['storage.expirable_storage'],
@@ -20,7 +26,7 @@ $app['controller.user'] = $app->share(function($app) {
 });
 
 $app['controller.auth'] = $app->share(function($app) {
-    $controller = new Controller\AuthController(
+    $controller = new AuthController(
         $app['mapper.db.user'],
         $app['security.session_manager'],
         $app['facebook'],
@@ -31,7 +37,7 @@ $app['controller.auth'] = $app->share(function($app) {
 });
 
 $app['controller.travel'] = $app->share(function($app) {
-    $controller = new Controller\TravelController(
+    $controller = new TravelController(
         $app['mapper.db.travel']
     );
     $controller->setLogger($app['monolog']);
@@ -39,9 +45,9 @@ $app['controller.travel'] = $app->share(function($app) {
 });
 
 $app['controller.uber'] = $app->share(function($app) {
-    return new Controller\UberController($app['uber']);
+    return new UberController($app['uber']);
 });
 
 $app['controller.wego'] = $app->share(function($app) {
-    return new Controller\WegoController($app['wego']);
+    return new WegoController($app['wego']);
 });

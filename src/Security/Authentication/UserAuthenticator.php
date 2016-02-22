@@ -1,9 +1,9 @@
 <?php
-namespace Security\Authentication;
+namespace Api\Security\Authentication;
 
-use Exception\ApiException;
+use Api\Exception\ApiException;
+use Api\Security\SessionManager;
 use Psr\Log\LoggerAwareTrait;
-use Security\SessionManager;
 use Silex\Application;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
