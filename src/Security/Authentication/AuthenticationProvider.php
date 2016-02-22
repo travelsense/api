@@ -1,5 +1,5 @@
 <?php
-namespace Security\Authentication;
+namespace Api\Security\Authentication;
 
 use Security\SessionManager;
 use Silex\Application;

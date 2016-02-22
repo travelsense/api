@@ -1,5 +1,5 @@
 <?php
-namespace Test;
+namespace Api\Test;
 
 use Swift_Mime_Message;
 

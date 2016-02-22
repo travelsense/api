@@ -1,7 +1,7 @@
 <?php
-namespace Mapper\DB;
+namespace Api\Mapper\DB;
 
-use AbstractPDOMapper;
+use Api\AbstractPDOMapper;
 use BadMethodCallException;
 
 class SessionMapper extends AbstractPDOMapper

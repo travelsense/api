@@ -1,6 +1,6 @@
 <?php
 
-namespace Service\Mailer;
+namespace Api\Service\Mailer;
 
 use Psr\Log\LoggerAwareTrait;
 use Silex\Translator;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Mapper\DB;
+namespace Api\Mapper\DB;
 
-use AbstractPDOMapper;
-use Model\User;
+use Api\AbstractPDOMapper;
+use Api\Model\User;
 
 class UserMapper extends AbstractPDOMapper
 {

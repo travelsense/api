@@ -1,9 +1,9 @@
 <?php
-namespace Controller;
+namespace Api\Controller;
 
-use Exception\ApiException;
-use Model\User;
-use Test\ControllerTestCase;
+use Api\Exception\ApiException;
+use Api\Model\User;
+use Api\Test\ControllerTestCase;
 
 class AuthControllerTest extends ControllerTestCase
 {
@@ -20,7 +20,7 @@ class AuthControllerTest extends ControllerTestCase
 
     public function setUp()
     {
-        $this->userMapper = $this->getMockBuilder('Mapper\\DB\\UserMapper')
+        $this->userMapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
             ->setMethods(['fetchByEmailAndPassword', 'insert','fetchByEmail'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -31,7 +31,7 @@ class AuthControllerTest extends ControllerTestCase
                 ['notfound@example.com', '123', null],
             ]);
 
-        $this->sessionManager = $this->getMockBuilder('Security\\SessionManager')
+        $this->sessionManager = $this->getMockBuilder('Api\\Security\\SessionManager')
             ->setMethods(['createSession'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -48,14 +48,12 @@ class AuthControllerTest extends ControllerTestCase
             'Facebook\\GraphNodes\\GraphUser',
             ['getFirstName', 'getLastName', 'getPicture', 'getEmail']
         );
-        foreach(
-            [
+        foreach ([
                 'getEmail' => 'sasha@pushkin.ru',
                 'getFirstName' => 'Alexander',
                 'getLastName' => 'Pushkin',
             ]
-            as $method => $value
-        ) {
+        as $method => $value) {
             $fbUser->method($method)->willReturn($value);
         }
 

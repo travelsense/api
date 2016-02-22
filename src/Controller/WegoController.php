@@ -1,9 +1,9 @@
 <?php
-namespace Controller;
+namespace Api\Controller;
 
+use Api\Wego\WegoClient;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Wego\WegoClient;
 
 class WegoController
 {

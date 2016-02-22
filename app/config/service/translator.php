@@ -4,4 +4,6 @@
  * @var $app Application
  */
 
-$app->register(new \Silex\Provider\TranslationServiceProvider());
+use Silex\Provider\TranslationServiceProvider;
+
+$app->register(new TranslationServiceProvider());

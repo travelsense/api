@@ -1,4 +1,5 @@
 <?php
+namespace Api;
 
 /**
  * Created by PhpStorm.
@@ -6,7 +7,7 @@
  * Date: 10/25/15
  * Time: 4:01 PM
  */
-class ApplicationTest extends PHPUnit_Framework_TestCase
+class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfig()
     {
@@ -15,7 +16,8 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
             'foo' => [
                 'bar' => 'baz',
             ],
-        ]);
+            ]
+        );
         $this->assertEquals('baz', $app['config']['foo']['bar']);
 
     }

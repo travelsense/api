@@ -1,4 +1,8 @@
 <?php
+namespace Api;
+
+use PDO;
+use PDOStatement;
 
 abstract class AbstractPDOMapper
 {

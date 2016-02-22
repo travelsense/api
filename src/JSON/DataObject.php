@@ -1,5 +1,5 @@
 <?php
-namespace JSON;
+namespace Api\JSON;
 
 /**
  * JSON Data Object

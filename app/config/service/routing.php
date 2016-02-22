@@ -4,7 +4,9 @@
  * @var $app Application
  */
 
-$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
+use Silex\Provider\UrlGeneratorServiceProvider;
+
+$app->register(new UrlGeneratorServiceProvider());
 
 // Parameter converters
 

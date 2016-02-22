@@ -1,4 +1,8 @@
 <?php
+namespace Api;
+
+use DateTime;
+use PDO;
 
 class ExpirableStorage
 {

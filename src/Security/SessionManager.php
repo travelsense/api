@@ -1,7 +1,7 @@
 <?php
-namespace Security;
+namespace Api\Security;
 
-use Mapper\DB\SessionMapper;
+use Api\Mapper\DB\SessionMapper;
 use Symfony\Component\HttpFoundation\Request;
 
 class SessionManager

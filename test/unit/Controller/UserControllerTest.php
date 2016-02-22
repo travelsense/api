@@ -1,11 +1,11 @@
 <?php
-namespace Controller;
+namespace Api\Controller;
 
-use Exception\ApiException;
-use Model\User;
-use Symfony\Component\HttpFoundation\Response;
+use Api\Exception\ApiException;
+use Api\Model\User;
+use Api\Test\ControllerTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Test\ControllerTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends ControllerTestCase
 {
@@ -22,17 +22,17 @@ class UserControllerTest extends ControllerTestCase
 
     public function setUp()
     {
-        $this->userMapper = $this->getMockBuilder('Mapper\\DB\\UserMapper')
+        $this->userMapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
             ->setMethods(['insert', 'emailExists'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->mailer = $this->getMockBuilder('Service\\Mailer\\MailerService')
+        $this->mailer = $this->getMockBuilder('Api\\Service\\Mailer\\MailerService')
             ->setMethods(['sendAccountConfirmationMessage'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->expStorage = $this->getMockBuilder('ExpirableStorage')
+        $this->expStorage = $this->getMockBuilder('Api\\ExpirableStorage')
             ->setMethods(['store'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -84,7 +84,7 @@ class UserControllerTest extends ControllerTestCase
 
         $this->userMapper->expects($this->once())
             ->method('insert')
-            ->with($this->callback(function(User $u) {
+            ->with($this->callback(function (User $u) {
                 return $u->getEmail() === 'test@example.com'
                     && $u->getFirstName() === 'Simple'
                     && $u->getLastName() === 'Tester'

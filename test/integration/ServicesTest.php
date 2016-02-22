@@ -1,4 +1,7 @@
 <?php
+namespace Api;
+
+use PHPUnit_Framework_TestCase;
 
 class ServicesTest extends PHPUnit_Framework_TestCase
 {
@@ -24,5 +27,4 @@ class ServicesTest extends PHPUnit_Framework_TestCase
 
         $this->assertNotEmpty($app[$service]);
     }
-
 }

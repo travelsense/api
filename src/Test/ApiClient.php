@@ -1,5 +1,5 @@
 <?php
-namespace Test;
+namespace Api\Test;
 
 use GuzzleHttp\Client as HttpClient;
 

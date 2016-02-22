@@ -1,5 +1,7 @@
 <?php
-class Application extends Silex\Application
+namespace Api;
+
+class Application extends \Silex\Application
 {
     public function __construct(array $config = [])
     {

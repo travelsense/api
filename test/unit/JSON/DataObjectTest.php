@@ -1,8 +1,9 @@
 <?php
-namespace JSON;
+namespace Api\JSON;
 
+use PHPUnit_Framework_TestCase;
 
-class DataObjectTest extends \PHPUnit_Framework_TestCase
+class DataObjectTest extends PHPUnit_Framework_TestCase
 {
     public function testExists()
     {
@@ -15,7 +16,7 @@ class DataObjectTest extends \PHPUnit_Framework_TestCase
     public function getPositiveTestData()
     {
         $test = $this;
-        $cb = function($val) use ($test) {
+        $cb = function ($val) use ($test) {
             $test->assertEquals('b', $val);
             return false;
         };
@@ -32,7 +33,7 @@ class DataObjectTest extends \PHPUnit_Framework_TestCase
     public function getNegativeTestData()
     {
         $test = $this;
-        $cb = function($val) use ($test) {
+        $cb = function ($val) use ($test) {
             $test->assertEquals('b', $val);
             return 'OMG!';
         };
@@ -81,7 +82,7 @@ class DataObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testGetString()
     {
-        $data = $this->getMock('JSON\\DataObject', ['get'], ['']);
+        $data = $this->getMock('Api\\JSON\\DataObject', ['get'], ['']);
         $data->method('get')
             ->with('foo', 'string', '/x/')
             ->willReturn('bar');
@@ -89,5 +90,4 @@ class DataObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $data->getString('foo', '/x/'));
 
     }
-
 }

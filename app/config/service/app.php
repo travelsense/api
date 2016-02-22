@@ -5,8 +5,12 @@
  * @var $app Application
  */
 
-use Exception\ApiException;
-use Exception\ValidationException;
+use Api\ControllerResolver;
+use Api\Exception\ApiException;
+use Api\Exception\ValidationException;
+use Silex\Provider\MonologServiceProvider;
+use Silex\Provider\TwigServiceProvider;
+use Sorien\Provider\PimpleDumpProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -72,15 +76,15 @@ $app->after(function(Request $request, Response $response) {
 });
 
 // Twig
-$app->register(new Silex\Provider\TwigServiceProvider(), [
+$app->register(new TwigServiceProvider , [
     'twig.path' => __DIR__.'/../../view',
 ]);
 
 // Monolog
-$app->register(new Silex\Provider\MonologServiceProvider(), [
+$app->register(new MonologServiceProvider, [
     'monolog.logfile' => $app['config']['log']['main'],
     'monolog.name' => 'vaca',
 ]);
 
 // Pimple dumper
-$app->register(new Sorien\Provider\PimpleDumpProvider());
+$app->register(new PimpleDumpProvider());

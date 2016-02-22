@@ -1,8 +1,8 @@
 <?php
-namespace Mapper\DB;
+namespace Api\Mapper\DB;
 
-use AbstractPDOMapper;
-use Model\Travel;
+use Api\AbstractPDOMapper;
+use Api\Model\Travel;
 
 class TravelMapper extends AbstractPDOMapper
 {

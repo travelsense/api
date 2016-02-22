@@ -1,7 +1,6 @@
 <?php
-namespace JSON;
+namespace Api\JSON;
 
 class FormatException extends \InvalidArgumentException
 {
-
 }

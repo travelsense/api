@@ -1,5 +1,5 @@
 <?php
-namespace Wego;
+namespace Api\Wego;
 
 use DateTime;
 use PHPCurl\CurlHttp\HttpClient;

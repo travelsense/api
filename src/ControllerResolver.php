@@ -1,4 +1,6 @@
 <?php
+namespace Api;
+
 use Symfony\Component\HttpFoundation\Request;
 
 class ControllerResolver extends Silex\ControllerResolver

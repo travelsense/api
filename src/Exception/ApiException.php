@@ -3,7 +3,7 @@
  * Exception visible to an API user. To be converted to a JSON response..
  */
 
-namespace Exception;
+namespace Api\Exception;
 
 use Exception;
 use LogicException;
