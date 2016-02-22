@@ -35,8 +35,19 @@ class ApiException extends Exception
 
     private $httpCode;
 
-    public function __construct($message, $code, Exception $previous = null, $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR)
-    {
+    /**
+     * ApiException constructor.
+     * @param string $message
+     * @param int $code
+     * @param Exception|null $previous
+     * @param int $httpCode
+     */
+    public function __construct(
+        $message,
+        $code,
+        Exception $previous = null,
+        $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR
+    ) {
         parent::__construct($message, $code, $previous);
         $this->httpCode = $httpCode;
     }

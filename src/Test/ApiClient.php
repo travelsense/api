@@ -112,8 +112,10 @@ class ApiClient
     public function getCabEstimates($lat1, $lon1, $lat2, $lon2)
     {
         $json = $this->http
-            ->get("/cab/$lat1/$lon1/$lat2/$lon2", ['headers' => ['Authorization' => 'Token '.$this->authToken]])
-            ->getBody()->getContents();
+            ->get(
+                "/cab/$lat1/$lon1/$lat2/$lon2",
+                ['headers' => ['Authorization' => 'Token ' . $this->authToken]]
+            )->getBody()->getContents();
         return json_decode($json, true);
     }
 
@@ -129,8 +131,10 @@ class ApiClient
     public function startHotelSearch($location, $in, $out, $rooms)
     {
         $json = $this->http
-            ->post("/hotel/search/$location/$in/$out/$rooms", ['headers' => ['Authorization' => 'Token '.$this->authToken]])
-            ->getBody()->getContents();
+            ->post(
+                "/hotel/search/$location/$in/$out/$rooms",
+                ['headers' => ['Authorization' => 'Token '.$this->authToken]]
+            )->getBody()->getContents();
         return json_decode($json, true);
     }
 
@@ -144,8 +148,10 @@ class ApiClient
     public function getHotelSearchResults($id, $page = 1)
     {
         $json = $this->http
-            ->get("/hotel/search-results/$id/$page", ['headers' => ['Authorization' => 'Token '.$this->authToken]])
-            ->getBody()->getContents();
+            ->get(
+                "/hotel/search-results/$id/$page",
+                ['headers' => ['Authorization' => 'Token '.$this->authToken]]
+            )->getBody()->getContents();
         return json_decode($json, true);
     }
 }

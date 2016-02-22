@@ -14,7 +14,15 @@ class SessionMapper extends AbstractPDOMapper
      */
     public function createSession($userId, $token, $device)
     {
-        $insert = $this->prepare('INSERT INTO sessions (user_id, token, device) VALUES (:user_id, :token, :device) RETURNING id');
+        $sql = <<<SQL
+INSERT INTO
+  sessions (user_id, token, device)
+VALUES
+  (:user_id, :token, :device)
+  RETURNING id
+SQL;
+
+        $insert = $this->prepare($sql);
         $insert->execute(
             [
             ':user_id' => $userId,

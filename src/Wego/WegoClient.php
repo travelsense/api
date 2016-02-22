@@ -59,8 +59,10 @@ class WegoClient
      * @param DateTime $checkOut Check-out date
      * @param int      $rooms    Number of hotel rooms required. Defaults to 1
      * @param int      $guests   Number of guests staying. Defaults to 2
-     * @param string   $ip       The IP address of the end user who is performing the search (not your backend server). We require this to display room rates that are valid for the user's country.
-     * @param string   $country  Country code of the user. We require this to display room rates that are valid for the user's country.
+     * @param string   $ip       The IP address of the end user who is performing the search (not your backend server).
+     *                              We require this to display room rates that are valid for the user's country.
+     * @param string   $country  Country code of the user. We require this to display room rates
+     *                              that are valid for the user's country.
      *
      * @return string Search ID
      */
