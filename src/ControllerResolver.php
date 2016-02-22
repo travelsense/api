@@ -1,17 +1,16 @@
 <?php
 namespace Api;
 
+use ReflectionParameter;
 use Symfony\Component\HttpFoundation\Request;
 
-class ControllerResolver extends Silex\ControllerResolver
+class ControllerResolver extends \Silex\ControllerResolver
 {
     protected function doGetArguments(Request $request, $controller, array $parameters)
     {
-        /**
- * @var ReflectionParameter $param
-*/
+        /* @var ReflectionParameter $param */
         foreach ($parameters as $param) {
-            if ($param->getClass() && $param->getClass()->getName() === 'Model\\User') {
+            if ($param->getClass() && $param->getClass()->getName() === 'Api\\Model\\User') {
                 $request->attributes->set($param->getName(), $this->app['user']);
                 break;
             }
