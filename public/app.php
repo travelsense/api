@@ -5,5 +5,5 @@ if (preg_match('/\.(?:html|js|png|jpg|jpeg|gif|ico|css|woff|svg|eot)$/', $_SERVE
 require_once __DIR__.'/../vendor/autoload.php';
 Symfony\Component\Debug\ErrorHandler::register(); //converts errors to exceptions
 $env = getenv('APP_ENV') ?: 'prod';
-$app = Application::createByEnvironment($env);
+$app = Api\Application::createByEnvironment($env);
 $app->run();
