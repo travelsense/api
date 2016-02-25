@@ -60,9 +60,9 @@ class DataObject
         if (null !== $types && false === in_array(gettype($value), (array) $types)) {
             throw new FormatException(
                 sprintf(
-                    'Property %s is a %s, expected: %s',
+                    'Property %s is of type %s, expected type(s): %s',
                     $property,
-                    gettype($property),
+                    gettype($value),
                     implode(', ', (array) $types)
                 )
             );

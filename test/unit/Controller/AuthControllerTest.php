@@ -134,7 +134,7 @@ class AuthControllerTest extends ControllerTestCase
         $this->request
             ->method('getContent')
             ->willReturn(json_encode([
-                'facebook_token' => 'test_fb_access_token',
+                'fbToken' => 'test_fb_access_token',
             ]));
 
         $response = $this->controller->create($this->request);
@@ -168,7 +168,7 @@ class AuthControllerTest extends ControllerTestCase
         $this->request
             ->method('getContent')
             ->willReturn(json_encode([
-                'facebook_token' => 'test_fb_access_token',
+                'fbToken' => 'test_fb_access_token',
             ]));
 
         $response = $this->controller->create($this->request);
