@@ -52,10 +52,12 @@ class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->server->stop();
-        $this->app['storage.main.pdo']
-            ->exec(file_get_contents(__DIR__.'/../../schema/main.uninstall.sql'));
-        chdir($this->dir);
+        if ($this->server) {
+            $this->server->stop();
+            $this->app['storage.main.pdo']
+                ->exec(file_get_contents(__DIR__.'/../../schema/main.uninstall.sql'));
+            chdir($this->dir);
+        }
         parent::tearDown();
     }
 
