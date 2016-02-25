@@ -8,6 +8,7 @@
 use Api\ControllerResolver;
 use Api\Exception\ApiException;
 use Api\Exception\ValidationException;
+use Api\JSON\FormatException;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
@@ -20,23 +21,19 @@ $app['resolver'] = $app->share(function () use ($app) {
     return new ControllerResolver($app, $app['logger']);
 });
 
+$app->error(function(FormatException $e, $code) use ($app) {
+    throw new ApiException($e->getMessage(), ApiException::VALIDATION, $e);
+});
+
+$app->error(function(ApiException $e, $code) use ($app) {
+    $response = [
+        'error' => $e->getMessage(),
+        'code' => $e->getCode(),
+    ];
+    return $app->json($response, $e->getHttpCode());
+});
+
 $app->error(function(Exception $e, $code) use ($app) {
-    if ($e instanceof ApiException) {
-        $response = [
-            'error' => $e->getMessage(),
-            'code' => $e->getCode(),
-        ];
-        if ($e instanceof ValidationException) {
-            foreach ($e->getViolations() as $violation) {
-                $response['violations'][] = [
-                    'message' => $violation->getMessage(),
-                    'code' => $violation->getCode(),
-                    'property' => $violation->getPropertyPath(),
-                ];
-            }
-        }
-        return $app->json($response, $e->getHttpCode());
-    }
     if ($app['debug']) {
         error_log($e);
         return null; // let the internal handler show the exception
