@@ -70,8 +70,8 @@ class AuthController
         if ($this->logger) {
             $this->logger->debug('New token requested', ['request' => $json->getRawData()]);
         }
-        if ($json->has('facebook_token')) {
-            $user = $this->getUserByFacebookToken($json->getString('facebook_token'));
+        if ($json->has('fbToken')) {
+            $user = $this->getUserByFacebookToken($json->getString('fbToken'));
         } else {
             $email = $json->getEmail('email');
             $password = $json->getString('password');

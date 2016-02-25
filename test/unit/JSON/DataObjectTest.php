@@ -39,11 +39,11 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
         };
         return [
             ['{"a":"b"}', 'a', ['boolean', 'string'], '/x/', 'Property a does not match /x/',],
-            ['{"a":"b"}', 'a', 'boolean', null, 'Property a is a string, expected: boolean',],
-            ['{"a":"b"}', 'a', ['int', 'float'], '/x/', 'Property a is a string, expected: int, float',],
+            ['{"a":"b"}', 'a', 'boolean', null, 'Property a is of type string, expected type(s): boolean',],
+            ['{"a":"b"}', 'a', ['int', 'float'], '/x/', 'Property a is of type string, expected type(s): int, float',],
+            ['{"a":42}', 'a', 'string', '/x/', 'Property a is of type integer, expected type(s): string',],
             ['{"a":"b"}', 'a', ['boolean', 'string'], $cb, 'Property a is invalid: OMG!'],
             ['{"a":"b"}', 'foo', ['boolean', 'string'], null, 'Property does not exist: foo'],
-
         ];
     }
 
