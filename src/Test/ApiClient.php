@@ -64,7 +64,7 @@ class ApiClient
      * @param string $password
      * @return string Auth token
      */
-    public function authByEmail($email, $password)
+    public function getTokenByEmail($email, $password)
     {
         $json = $this->http
             ->post('/token', ['json' => ['email' => $email, 'password' => $password]])
