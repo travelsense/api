@@ -23,6 +23,11 @@ class FunctionalTestCase extends \PHPUnit_Framework_TestCase
     protected $app;
 
     /**
+     * @var int
+     */
+    private $port = 8888;
+
+    /**
      * @var ApiClient
      */
     protected $apiClient;
@@ -43,11 +48,11 @@ class FunctionalTestCase extends \PHPUnit_Framework_TestCase
         $this->dir = getcwd();
         chdir(__DIR__ . '/../../public');
 
-        $this->server = new HttpServer('localhost', 8080, 'app_test.php');
+        $this->server = new HttpServer('localhost', $this->port, 'app_test.php');
         $this->server->disableOutput();
         $this->server->start();
 
-        $this->apiClient = new ApiClient('localhost:8080');
+        $this->apiClient = new ApiClient("localhost:{$this->port}");
     }
 
     public function tearDown()
