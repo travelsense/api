@@ -14,6 +14,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^5.1",
+    "weew/php-http-server": "^1.0",
     "guzzlehttp/guzzle": "~6.0",
     "squizlabs/php_codesniffer": "~2.5",
     "fabpot/php-cs-fixer": "^1.11"

@@ -32,15 +32,8 @@ $app->post('/password/reset/{token}', 'controller.user:resetPassword')
 $app->post('/password/link/{email}', 'controller.user:sendPasswordResetLink')
     ->bind('send-password-reset-link');
 
-$app->post('/token/by-email/{email}', 'controller.auth:createTokenByEmail')
-    ->bind('login-by-email');
-
-$app->post('/token/by-facebook/{fbToken}', 'controller.auth:createTokenByFacebook')
-    ->assert('fbToken', '.*') // to allow any characters
-    ->convert('fbToken', function ($val) {
-        return urldecode($val);
-    }) // to convert "+" to " "
-    ->bind('login-by-facebook');
+$app->post('/token', 'controller.auth:create')
+    ->bind('create-token');
 
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEstimate');
 

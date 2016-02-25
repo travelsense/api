@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c52f31debc6bf67e8715c52951791091",
-    "content-hash": "984aed4e6ad66569d75dac39157203af",
+    "hash": "b76dda25c446f0629ee4483fa741286f",
+    "content-hash": "470ccbe49dc743addb4b3588ab76f3cc",
     "packages": [
         {
             "name": "f3ath/lazypdo",
@@ -2933,6 +2933,162 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2016-02-02 13:44:19"
+        },
+        {
+            "name": "weew/php-helpers-array",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/weew/php-helpers-array.git",
+                "reference": "f2efa309c9e7ddefa888ef0b6b252051c527b0fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/weew/php-helpers-array/zipball/f2efa309c9e7ddefa888ef0b6b252051c527b0fc",
+                "reference": "f2efa309c9e7ddefa888ef0b6b252051c527b0fc",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.7",
+                "satooshi/php-coveralls": "^0.6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/array.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maxim Kott",
+                    "email": "maximkott@gmail.com"
+                }
+            ],
+            "description": "Useful collection of php array helpers.",
+            "time": "2015-11-13 08:23:17"
+        },
+        {
+            "name": "weew/php-helpers-string",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/weew/php-helpers-string.git",
+                "reference": "e93cfefba9988a58d4eb08222f8f6b53e5243803"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/weew/php-helpers-string/zipball/e93cfefba9988a58d4eb08222f8f6b53e5243803",
+                "reference": "e93cfefba9988a58d4eb08222f8f6b53e5243803",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.7",
+                "satooshi/php-coveralls": "^0.6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/string.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maxim Kott",
+                    "email": "maximkott@gmail.com"
+                }
+            ],
+            "description": "Collection of useful php string helpers.",
+            "time": "2016-01-19 10:44:48"
+        },
+        {
+            "name": "weew/php-http-server",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/weew/php-http-server.git",
+                "reference": "f3773a50aa5c329b5397706dd1b1776dc62392bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/weew/php-http-server/zipball/f3773a50aa5c329b5397706dd1b1776dc62392bd",
+                "reference": "f3773a50aa5c329b5397706dd1b1776dc62392bd",
+                "shasum": ""
+            },
+            "require": {
+                "weew/php-helpers-array": "^1.0.0",
+                "weew/php-helpers-string": "^1.0.0",
+                "weew/php-timer": "^1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.7",
+                "satooshi/php-coveralls": "^0.6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maxim Kott",
+                    "email": "maximkott@gmail.com"
+                }
+            ],
+            "description": "Simple wrapper for the php's built in http server.",
+            "time": "2015-11-16 06:07:34"
+        },
+        {
+            "name": "weew/php-timer",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/weew/php-timer.git",
+                "reference": "91108fa02e39f896be20f30797dc2d166279a3e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/weew/php-timer/zipball/91108fa02e39f896be20f30797dc2d166279a3e5",
+                "reference": "91108fa02e39f896be20f30797dc2d166279a3e5",
+                "shasum": ""
+            },
+            "require": {
+                "weew/php-helpers-array": "^1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.7",
+                "satooshi/php-coveralls": "^0.6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maxim Kott",
+                    "email": "maximkott@gmail.com"
+                }
+            ],
+            "description": "Simple timer.",
+            "time": "2015-11-16 05:59:37"
         }
     ],
     "aliases": [],

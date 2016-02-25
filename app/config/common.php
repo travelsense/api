@@ -36,8 +36,7 @@ return [
         'unsecured_routes' => [
             'create-user',
             'confirm-email',
-            'login-by-email',
-            'login-by-facebook',
+            'create-token',
             'change-password',
             'send-password-reset-link',
             'reset-password',

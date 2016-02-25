@@ -73,7 +73,6 @@ class AuthControllerTest extends ControllerTestCase
             ->getMockForAbstractClass();
 
         $this->request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
-        $this->request->method('getContent')->willReturn(json_encode('123'));
 
         $this->controller = new AuthController(
             $this->userMapper,
@@ -83,16 +82,33 @@ class AuthControllerTest extends ControllerTestCase
         );
     }
 
-    public function testCreateTokenByEmail()
+    public function testCreateByEmailSuccess()
     {
         $this->sessionManager->method('createSession')
             ->with(1, $this->request)
             ->willReturn('token1');
-        $response = $this->controller->createTokenByEmail('user1@example.com', $this->request);
-        $this->assertEquals('"token1"', $response->getContent());
+        $this->request
+            ->method('getContent')
+            ->willReturn(json_encode([
+                'email' => 'user1@example.com',
+                'password' => '123',
+            ]));
 
+        $response = $this->controller->create($this->request);
+        $this->assertEquals('{"token":"token1"}', $response->getContent());
+
+    }
+
+    public function testCreateByEmail404()
+    {
+        $this->request
+            ->method('getContent')
+            ->willReturn(json_encode([
+                'email' => 'notfound@example.com',
+                'password' => '123',
+            ]));
         try {
-            $this->controller->createTokenByEmail('notfound@example.com', $this->request);
+            $this->controller->create($this->request);
             $this->fail();
         } catch (ApiException $e) {
             $this->assertEquals(ApiException::INVALID_EMAIL_PASSWORD, $e->getCode());
@@ -101,7 +117,7 @@ class AuthControllerTest extends ControllerTestCase
     }
 
 
-    public function testCreateTokenByFacebookForExistingUser()
+    public function testCreateByFacebookForExistingUser()
     {
         $this->userMapper->method('fetchByEmail')
             ->with('sasha@pushkin.ru')
@@ -115,8 +131,14 @@ class AuthControllerTest extends ControllerTestCase
             ->method('setDefaultAccessToken')
             ->with('test_fb_access_token');
 
-        $response = $this->controller->createTokenByFacebook('test_fb_access_token', $this->request);
-        $this->assertEquals('"token1"', $response->getContent());
+        $this->request
+            ->method('getContent')
+            ->willReturn(json_encode([
+                'facebook_token' => 'test_fb_access_token',
+            ]));
+
+        $response = $this->controller->create($this->request);
+        $this->assertEquals('{"token":"token1"}', $response->getContent());
     }
 
     public function testCreateTokenByFacebookForNewUser()
@@ -143,7 +165,13 @@ class AuthControllerTest extends ControllerTestCase
             ->method('setDefaultAccessToken')
             ->with('test_fb_access_token');
 
-        $response = $this->controller->createTokenByFacebook('test_fb_access_token', $this->request);
-        $this->assertEquals('"token42"', $response->getContent());
+        $this->request
+            ->method('getContent')
+            ->willReturn(json_encode([
+                'facebook_token' => 'test_fb_access_token',
+            ]));
+
+        $response = $this->controller->create($this->request);
+        $this->assertEquals('{"token":"token42"}', $response->getContent());
     }
 }
