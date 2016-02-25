@@ -68,7 +68,7 @@ class AuthController
     {
         $json = new DataObject($request->getContent());
         if ($this->logger) {
-            $this->logger->debug('New token requested', $json->getRawData());
+            $this->logger->debug('New token requested', ['request' => $json->getRawData()]);
         }
         if ($json->has('facebook_token')) {
             $user = $this->getUserByFacebookToken($json->getString('facebook_token'));
