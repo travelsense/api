@@ -25,6 +25,15 @@ class DataObject
     }
 
     /**
+     * Get raw decoded json object
+     * @return mixed
+     */
+    public function getRawData()
+    {
+        return $this->data;
+    }
+
+    /**
      * @param string $property
      * @return bool
      */
@@ -35,7 +44,7 @@ class DataObject
 
     /**
      * @param $property
-     * @param string|array    $types      List of expected types (@see gettype() function)
+     * @param string|array $types List of expected types (@see gettype() function)
      * @param string|callable $constraint Regexp (preg_match) or a callable (should return error message or false)
      * @return mixed
      * @throws FormatException
@@ -73,7 +82,8 @@ class DataObject
     }
 
     /**
-     * @param string          $property
+     * Get string
+     * @param string $property
      * @param string|callable $constraint
      * @return string
      * @throws FormatException
@@ -81,5 +91,19 @@ class DataObject
     public function getString($property, $constraint = null)
     {
         return $this->get($property, 'string', $constraint);
+    }
+
+    /**
+     * Get email
+     * @param string $property
+     * @return string
+     */
+    public function getEmail($property)
+    {
+        $email = $this->getString($property);
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $email;
+        }
+        throw new FormatException(sprintf('Not a valid email: %s', $email));
     }
 }
