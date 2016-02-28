@@ -34,12 +34,13 @@ return [
     'security' => [
         'enabled' => true,
         'unsecured_routes' => [
-            'create-user',
+            'change-password',
             'confirm-email',
             'create-token',
-            'change-password',
-            'send-password-reset-link',
+            'create-user',
+            'health-check',
             'reset-password',
+            'send-password-reset-link',
             'travels-by-id',
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',

@@ -9,6 +9,7 @@ use Api\Controller\TravelController;
 use Api\Controller\UberController;
 use Api\Controller\UserController;
 use Api\Controller\WegoController;
+use Api\Controller\HealthCheckController;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
@@ -50,4 +51,8 @@ $app['controller.uber'] = $app->share(function($app) {
 
 $app['controller.wego'] = $app->share(function($app) {
     return new WegoController($app['wego']);
+});
+
+$app['controller.health'] = $app->share(function($app) {
+    return new HealthCheckController();
 });
