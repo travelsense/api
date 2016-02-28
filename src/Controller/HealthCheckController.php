@@ -13,5 +13,4 @@ class HealthCheckController
             'requestHeaders' => $request->headers->all()
         ]);
     }
-
 }
