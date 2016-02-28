@@ -18,6 +18,9 @@ $toInt = function ($val) {
     return intval($val);
 };
 
+$app->get('/healthCheck', 'controller.health:healthCheck')
+    ->bind('health-check');
+
 $app->post('/user', 'controller.user:createUser')
     ->bind('create-user');
 
