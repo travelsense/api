@@ -23,3 +23,32 @@ server {
         fastcgi_index index.php;
     }
 }
+
+server {
+        listen 8080;
+        server_name 172.16.0.101;
+
+        root /srv;
+        index index.php index.html index.htm;
+
+        location / {
+		autoindex on;
+                try_files $uri $uri/ /index.html;
+        }
+
+        error_page 404 /404.html;
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+              root /usr/share/nginx/www;
+        }
+
+        # pass the PHP scripts to FastCGI server listening on /var/run/php5-fpm.sock
+        location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_pass unix:/var/run/php5-fpm.sock;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+        }
+}
