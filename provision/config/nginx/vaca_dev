@@ -1,3 +1,4 @@
+# API host
 server {
     listen 80;
     server_name api.vacarious-dev.com vacarious-dev.com 172.16.0.101;
@@ -24,6 +25,7 @@ server {
     }
 }
 
+# PhpPgAdmin
 server {
     listen 8080;
     server_name 172.16.0.101;
