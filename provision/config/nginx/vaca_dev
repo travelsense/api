@@ -26,12 +26,10 @@ server {
 
 server {
         listen 8080;
-
+        server_name 172.16.0.101;
 
         root /srv;
         index index.php index.html index.htm;
-
-        server_name 172.16.0.101;
 
         location / {
 		autoindex on;
@@ -52,7 +50,5 @@ server {
                 fastcgi_index index.php;
                 fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                 include fastcgi_params;
-
         }
-
 }
