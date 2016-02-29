@@ -44,4 +44,5 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->assertEquals('my service', $app['my.service']);
     }
+    
 }
