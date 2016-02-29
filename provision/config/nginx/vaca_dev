@@ -25,7 +25,7 @@ server {
     }
 }
 
-# PhpPgAdmin
+# PhpPgAdmin test
 server {
     listen 8080;
     server_name 172.16.0.101;
