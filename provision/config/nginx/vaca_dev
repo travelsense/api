@@ -28,7 +28,7 @@ server {
         listen 8080;
         server_name 172.16.0.101;
 
-        root /srv;
+        root /srv/phppgadmin-REL_5-1-0;
         index index.php index.html index.htm;
 
         location / {
