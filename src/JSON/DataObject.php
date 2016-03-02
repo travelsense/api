@@ -17,11 +17,21 @@ class DataObject
     /**
      * DataObject constructor.
      *
-     * @param string $json
+     * @param object $data
      */
-    public function __construct($json)
+    public function __construct($data)
     {
-        $this->data = json_decode($json, false);
+        $this->data = $data;
+    }
+
+    /**
+     * Create object $json from string $json
+     * @param string $json
+     * @return object
+     */
+    public static function createFromString($json)
+    {
+        return new self(json_decode($json));
     }
 
     /**

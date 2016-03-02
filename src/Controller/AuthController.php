@@ -66,7 +66,7 @@ class AuthController
      */
     public function create(Request $request)
     {
-        $json = new DataObject($request->getContent());
+        $json = DataObject::createFromString($request->getContent());
         if ($this->logger) {
             $this->logger->debug('New token requested', ['request' => $json->getRootObject()]);
         }

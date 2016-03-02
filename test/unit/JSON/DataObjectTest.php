@@ -7,16 +7,17 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 {
     public function testExists()
     {
-        $json = new DataObject('{"a": "b"}');
-
+        $data = (object)['a' => 'b'];
+        $json = new DataObject($data);
         $this->assertTrue($json->has('a'));
         $this->assertFalse($json->has('x'));
     }
 
     public function testGetRootObject()
     {
-        $json = new DataObject('{"a": "b"}');
-        $this->assertInternalType('object', $json->getRootObject());
+        $data = (object)['a' => 'b'];
+        $json = new DataObject($data);
+        $this->assertEquals($data, $json->getRootObject());
     }
 
     public function getPositiveTestData()
@@ -27,12 +28,12 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
             return false;
         };
         return [
-            ['{"a":"b"}', 'a', null, null, 'b'],
-            ['{"a":"b"}', 'a', 'string', null, 'b'],
-            ['{"a":"b"}', 'a', ['boolean', 'string'], null, 'b'],
-            ['{"a":true}', 'a', ['boolean', 'string'], null, true],
-            ['{"a":"b"}', 'a', ['boolean', 'string'], '/a|b/', 'b'],
-            ['{"a":"b"}', 'a', ['boolean', 'string'], $cb, 'b'],
+            [['a' => 'b'], 'a', null, null, 'b'],
+            [['a' => 'b'], 'a', 'string', null, 'b'],
+            [['a' => 'b'], 'a', ['boolean', 'string'], null, 'b'],
+            [['a' => true], 'a', ['boolean', 'string'], null, true],
+            [['a' => 'b'], 'a', ['boolean', 'string'], '/a|b/', 'b'],
+            [['a' => 'b'], 'a', ['boolean', 'string'], $cb, 'b'],
         ];
     }
 
@@ -44,12 +45,12 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
             return 'OMG!';
         };
         return [
-            ['{"a":"b"}', 'a', ['boolean', 'string'], '/x/', 'Property a does not match /x/',],
-            ['{"a":"b"}', 'a', 'boolean', null, 'Property a is of type string, expected type(s): boolean',],
-            ['{"a":"b"}', 'a', ['int', 'float'], '/x/', 'Property a is of type string, expected type(s): int, float',],
-            ['{"a":42}', 'a', 'string', '/x/', 'Property a is of type integer, expected type(s): string',],
-            ['{"a":"b"}', 'a', ['boolean', 'string'], $cb, 'Property a is invalid: OMG!'],
-            ['{"a":"b"}', 'foo', ['boolean', 'string'], null, 'Property does not exist: foo'],
+            [['a' => 'b'], 'a', ['boolean', 'string'], '/x/', 'Property a does not match /x/',],
+            [['a' => 'b'], 'a', 'boolean', null, 'Property a is of type string, expected type(s): boolean',],
+            [['a' => 'b'], 'a', ['int', 'float'], '/x/', 'Property a is of type string, expected type(s): int, float',],
+            [['a' => 42], 'a', 'string', '/x/', 'Property a is of type integer, expected type(s): string',],
+            [['a' => 'b'], 'a', ['boolean', 'string'], $cb, 'Property a is invalid: OMG!'],
+            [['a' => 'b'], 'foo', ['boolean', 'string'], null, 'Property does not exist: foo'],
         ];
     }
 
@@ -63,7 +64,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
      */
     public function testGetWithPositive($json, $property, $type, $constraint, $result)
     {
-        $data = new DataObject($json);
+        $data = new DataObject((object)$json);
         $this->assertEquals($result, $data->get($property, $type, $constraint));
     }
 
@@ -77,7 +78,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
      */
     public function testGetWithException($json, $property, $type, $constraint, $exception)
     {
-        $data= new DataObject($json);
+        $data= new DataObject((object)$json);
         try {
             $data->get($property, $type, $constraint);
             $this->fail('Exception expected');
