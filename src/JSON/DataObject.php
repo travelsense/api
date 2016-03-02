@@ -28,7 +28,7 @@ class DataObject
      * Get raw decoded json object
      * @return mixed
      */
-    public function getRawData()
+    public function getRootObject()
     {
         return $this->data;
     }

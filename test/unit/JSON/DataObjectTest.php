@@ -13,6 +13,12 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($json->has('x'));
     }
 
+    public function testGetRootObject()
+    {
+        $json = new DataObject('{"a": "b"}');
+        $this->assertInternalType('object', $json->getRootObject());
+    }
+
     public function getPositiveTestData()
     {
         $test = $this;
