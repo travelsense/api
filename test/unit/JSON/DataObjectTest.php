@@ -17,7 +17,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
     {
         $data = (object)['a' => 'b'];
         $json = new DataObject($data);
-        $this->assertInternalType($data, $json->getRootObject());
+        $this->assertEquals($data, $json->getRootObject());
     }
 
     public function getPositiveTestData()
@@ -64,7 +64,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
      */
     public function testGetWithPositive($json, $property, $type, $constraint, $result)
     {
-        $data = new DataObject($json);
+        $data = new DataObject((object)$json);
         $this->assertEquals($result, $data->get($property, $type, $constraint));
     }
 
@@ -78,7 +78,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
      */
     public function testGetWithException($json, $property, $type, $constraint, $exception)
     {
-        $data= new DataObject($json);
+        $data= new DataObject((object)$json);
         try {
             $data->get($property, $type, $constraint);
             $this->fail('Exception expected');

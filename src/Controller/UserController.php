@@ -75,7 +75,7 @@ class UserController
      */
     public function createUser(Request $request)
     {
-        $json = new DataObject($request->getContent());
+        $json = DataObject::createFromString($request->getContent());
 
         $user = new User();
         try {
