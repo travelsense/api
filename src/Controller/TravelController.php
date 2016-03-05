@@ -30,21 +30,25 @@ class TravelController
     public function getTravel($id)
     {
         $led = [
+            'id' => 0,
             'iata' => 'LED',
             'name' => 'Pulkovo',
             'geo' => [59.800278, 30.2625]
         ];
         $svo = [
+            'id' => 0,
             'iata' => 'SVO',
             'name' => 'Sheremetievo',
             'geo' => [55.972778, 37.414722],
         ];
         $dme = [
+            'id' => 0,
             'iata' => 'DME',
             'name' => 'Domodedovo',
             'geo' => [55.408611, 37.906111],
         ];
         $cosmos = [
+            'id' => 0,
             'name' => 'Cosmos',
             'images' => [
                 'http://www.gostinica-kocmoc.ru/images/zdanie_gostinicy_kosmos_v_moskve-full8.jpg',
@@ -76,8 +80,13 @@ class TravelController
 
         return [
             'id' => 0,
+            'favorite' => true,
             'title' => 'Example travel',
             'description' => 'This is a mock travel object to help us understand what we need',
+            'images' => [
+                'http://www.provancewine.ru/assets/shop/images/vodka01.jpg',
+                'http://s00.yaplakal.com/pics/pics_original/9/0/3/609309.jpg',
+            ],
             'allowedDates' => [
                 [
                     'first' => '2016-06-01',
