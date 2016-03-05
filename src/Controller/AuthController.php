@@ -66,9 +66,9 @@ class AuthController
      */
     public function create(Request $request)
     {
-        $json = new DataObject($request->getContent());
+        $json = DataObject::createFromString($request->getContent());
         if ($this->logger) {
-            $this->logger->debug('New token requested', ['request' => $json->getRawData()]);
+            $this->logger->debug('New token requested', ['request' => $json->getRootObject()]);
         }
         if ($json->has('fbToken')) {
             $user = $this->getUserByFacebookToken($json->getString('fbToken'));

@@ -49,11 +49,10 @@ class AuthControllerTest extends ControllerTestCase
             ['getFirstName', 'getLastName', 'getPicture', 'getEmail']
         );
         foreach ([
-                'getEmail' => 'sasha@pushkin.ru',
-                'getFirstName' => 'Alexander',
-                'getLastName' => 'Pushkin',
-            ]
-        as $method => $value) {
+                     'getEmail' => 'sasha@pushkin.ru',
+                     'getFirstName' => 'Alexander',
+                     'getLastName' => 'Pushkin',
+                 ] as $method => $value) {
             $fbUser->method($method)->willReturn($value);
         }
 

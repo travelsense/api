@@ -31,5 +31,4 @@ class AuthWorkflowTest extends FunctionalTestCase
         );
 
     }
-
 }
