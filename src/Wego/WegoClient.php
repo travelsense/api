@@ -83,8 +83,8 @@ class WegoClient
             'check_out' => $checkOut->format(self::DATE_FORMAT),
             'user_ip' => $ip,
             'country_code_for_site' => $country,
-            'rooms' => (int)$rooms,
-            'quests' => (int)$guests,
+            'rooms' => (int) $rooms,
+            'quests' => (int) $guests,
             ]
         );
 
@@ -114,8 +114,8 @@ class WegoClient
             [
             'q' => $query,
             'lang' => $lang,
-            'page' => (int)$page,
-            'per_page' => (int)$perPage,
+            'page' => (int) $page,
+            'per_page' => (int) $perPage,
             ]
         );
     }
