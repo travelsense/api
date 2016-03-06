@@ -247,11 +247,13 @@ class WegoClient
      * @param int       $infantsCount     Number of infants (0 - 2)
      * @param string    $cabin             Can be 'economy', 'business', 'first'
      * @param DateTime  $outboundDate     Travel date from departure_code to arrival_code in departure time zone
-     * @param DateTime  $inboundDate      Return date from arrival_code to departure_code in arrival time zone (NULL for one-way trip)
+     * @param DateTime  $inboundDate      Return date from arrival_code to departure_code in arrival time zone
+     *                                        (NULL for one-way trip)
      * @param string    $userCountryCode
      * @param string    $countrySiteCode  Country code of the user and site (use both parameters together).
-     *                                        Some of our providers only support users from certain countries due to legal issues
-     *                                        with default value 'XX' certain content might be unavailable
+     *                                        Some of our providers only support users from certain countries
+     *                                        due to legal issues, with default value 'XX' certain content
+     *                                        might be unavailable
      * @param string    $lang             query locale
      *
      * @return array
@@ -266,7 +268,7 @@ class WegoClient
         $infantsCount,
         $cabin,
         DateTime $outboundDate,
-        DateTime $inboundDate = NULL,
+        DateTime $inboundDate = null,
         $userCountryCode = 'US',
         $countrySiteCode = 'US',
         $lang = 'en'
@@ -289,7 +291,7 @@ class WegoClient
             'country_site_code' => $countrySiteCode,
             'locale' => $lang
         ];
-        if($inboundDate !== NULL) {
+        if ($inboundDate !== null) {
             $query['trips']['inbound_date'] = $inboundDate->format(self::DATE_FORMAT);
         }
         $response = $this->httpGet(
@@ -309,8 +311,8 @@ class WegoClient
      */
     protected function setFlightFilterArray($name, $value)
     {
-        if(is_array($value)) {
-            if(!empty($value)) {
+        if (is_array($value)) {
+            if (!empty($value)) {
                 $this->flightFilters[$name] = $value;
             }
         } else {
@@ -330,10 +332,10 @@ class WegoClient
      */
     protected function setFlightFilterMinMax($fromName, $toName, $fromValue, $toValue)
     {
-        if($fromValue > 0 && ($toValue == 0 || $toValue >= $fromValue)) {
+        if ($fromValue > 0 && ($toValue == 0 || $toValue >= $fromValue)) {
             $this->flightFilters[$fromName] = $fromValue;
         }
-        if($toValue > 0 && ($fromValue == 0 || $fromValue <= $toValue)) {
+        if ($toValue > 0 && ($fromValue == 0 || $fromValue <= $toValue)) {
             $this->flightFilters[$toName] = $toValue;
         }
     }
@@ -363,9 +365,15 @@ class WegoClient
     public function setFlightFilterStops($none, $one, $twoPlus)
     {
         $types = [];
-        if($none) $types[] = 'none';
-        if($one) $types[] = 'one';
-        if($twoPlus) $types[] = 'two_plus';
+        if ($none) {
+            $types[] = 'none';
+        }
+        if ($one) {
+            $types[] = 'one';
+        }
+        if ($twoPlus) {
+            $types[] = 'two_plus';
+        }
         $this->setFlightFilterArray('stop_types', $types);
     }
 
@@ -382,12 +390,12 @@ class WegoClient
      * @return void
      */
     public function setFlightFilterOffers(
-        $airlines = array(),
-        $providers = array(),
-        $designators = array(),
-        $departureAirports = array(),
-        $arrivalAirports = array(),
-        $stopoverAirports = array()
+        array $airlines = [],
+        array $providers = [],
+        array $designators = [],
+        array $departureAirports = [],
+        array $arrivalAirports = [],
+        array $stopoverAirports = []
     ) {
         $this->setFlightFilterArray('airline_codes', $airlines);
         $this->setFlightFilterArray('provider_codes', $providers);
@@ -407,9 +415,20 @@ class WegoClient
      *
      * @return void
      */
-    public function setFlightFilterDurations($min = 0, $max = 0, $stopoverMin = 0, $stopoverMax = 0) {
-        $this->setFlightFilterMinMax('duration_min', 'duration_max', (int)$min, (int)$max);
-        $this->setFlightFilterMinMax('stopover_duration_min', 'stopover_duration_max', (int)$stopoverMin, (int)$stopoverMax);
+    public function setFlightFilterDurations($min = 0, $max = 0, $stopoverMin = 0, $stopoverMax = 0)
+    {
+        $this->setFlightFilterMinMax(
+            'duration_min',
+            'duration_max',
+            (int)$min,
+            (int)$max
+        );
+        $this->setFlightFilterMinMax(
+            'stopover_duration_min',
+            'stopover_duration_max',
+            (int)$stopoverMin,
+            (int)$stopoverMax
+        );
     }
 
     /**
@@ -424,8 +443,18 @@ class WegoClient
      */
     public function setFlightFilterTimes($outboundMin = 0, $outboundMax = 0, $inboundMin = 0, $inboundMax = 0)
     {
-        $this->setFlightFilterMinMax('outbound_departure_day_time_min', 'outbound_departure_day_time_max', (int)$outboundMin, (int)$outboundMax);
-        $this->setFlightFilterMinMax('inbound_departure_day_time_min', 'inbound_departure_day_time_max', (int)$inboundMin, (int)$inboundMax);
+        $this->setFlightFilterMinMax(
+            'outbound_departure_day_time_min',
+            'outbound_departure_day_time_max',
+            (int)$outboundMin,
+            (int)$outboundMax
+        );
+        $this->setFlightFilterMinMax(
+            'inbound_departure_day_time_min',
+            'inbound_departure_day_time_max',
+            (int)$inboundMin,
+            (int)$inboundMax
+        );
         $this->flightFilters['departure_day_time_filter_type'] = 'separate';
     }
 
@@ -434,13 +463,13 @@ class WegoClient
      *
      * @see http://support.wan.travel/hc/en-us/articles/200191669-Wego-Flights-API#fares-get-results-of-a-search
      *
-     * @param string $searchId    Search id you get when the search is created
-     * @param string $tripId      Trip id you get when the search is created
-     * @param string $sort        price|duration|outbound_departure_time|inbound_departure_time
-     * @param string $order       asc|desc
-     * @param string $currency    Currency to display prices in - use ISO 4217 3-letter currency codes. Defaults to USD
-     * @param int    $page        Page of results to return
-     * @param int    $perPage     Number of results to return per page
+     * @param string $searchId  Search id you get when the search is created
+     * @param string $tripId    Trip id you get when the search is created
+     * @param string $sort      price|duration|outbound_departure_time|inbound_departure_time
+     * @param string $order     asc|desc
+     * @param string $currency  Currency to display prices in - use ISO 4217 3-letter currency codes. Defaults to USD
+     * @param int    $page      Page of results to return
+     * @param int    $perPage   Number of results to return per page
      *
      * @return object
      */
@@ -481,7 +510,8 @@ class WegoClient
      * @param string $searchId    Search id you get when the search is created
      * @param string $tripId      Trip id you get when the search is created
      * @param string $fareId      Fare id of the fare you want to deeplink
-     * @param string $route       A combination of fare.departure_airport_code and fare.arrival_airport_code, e.g. SIN-HAN
+     * @param string $route       A combination of fare.departure_airport_code and fare.arrival_airport_code,
+     *                                e.g. SIN-HAN
      *
      * @return object
      */
@@ -523,6 +553,6 @@ class WegoClient
             '/flights/api/k/2/currencies',
             []
         );
-        return $response['currencies'] ?: [];
+        return $response['currencies'];
     }
 }

@@ -76,7 +76,7 @@ class WegoController
         $infantsCount,
         $cabin,
         DateTime $outboundDate,
-        DateTime $inboundDate = NULL,
+        DateTime $inboundDate = null,
         $userCountryCode = 'US',
         $countrySiteCode = 'US'
     ) {
@@ -136,14 +136,21 @@ class WegoController
      * @return void
      */
     public function setFlightFilterOffers(
-        $airlines = array(),
-        $providers = array(),
-        $designators = array(),
-        $departureAirports = array(),
-        $arrivalAirports = array(),
-        $stopoverAirports = array()
+        array $airlines = [],
+        array $providers = [],
+        array $designators = [],
+        array $departureAirports = [],
+        array $arrivalAirports = [],
+        array $stopoverAirports = []
     ) {
-        $this->wego->setFlightFilterOffers($airlines, $providers, $designators, $departureAirports, $arrivalAirports, $stopoverAirports);
+        $this->wego->setFlightFilterOffers(
+            $airlines,
+            $providers,
+            $designators,
+            $departureAirports,
+            $arrivalAirports,
+            $stopoverAirports
+        );
     }
 
     /**
@@ -156,7 +163,8 @@ class WegoController
      *
      * @return void
      */
-    public function setFlightFilterDurations($min = 0, $max = 0, $stopoverMin = 0, $stopoverMax = 0) {
+    public function setFlightFilterDurations($min = 0, $max = 0, $stopoverMin = 0, $stopoverMax = 0)
+    {
         $this->wego->setFlightFilterDurations($min, $max, $stopoverMin, $stopoverMax);
     }
 
