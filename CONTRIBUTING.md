@@ -1,7 +1,8 @@
 #Before submitting a pull request
 
-## Check the style
-We are using [PSR-2](http://www.php-fig.org/psr/psr-2/) . To test the style use 
+## Refer the [style guide](/../../wiki/Code-style) 
+
+Check PSR-2 styling with
 ```
 vendor/bin/phpcs --standard=PSR2 src/ test/
 ```
