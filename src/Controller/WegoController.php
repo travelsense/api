@@ -75,10 +75,10 @@ class WegoController
         $childrenCount,
         $infantsCount,
         $cabin,
-        $outboundDate,
-        $inboundDate,
-        $userCountryCode,
-        $countrySiteCode
+        DateTime $outboundDate,
+        DateTime $inboundDate = NULL,
+        $userCountryCode = 'US',
+        $countrySiteCode = 'US'
     ) {
         return new JsonResponse($this->wego->startFlightSearch(
             $departureCode,
@@ -186,7 +186,7 @@ class WegoController
      * @param int    $page        Page of results to return
      * @param int    $perPage     Number of results to return per page
      *
-     * @return mixed
+     * @return object
      */
     public function getFlightSearchResults(
         $searchId,
@@ -198,5 +198,15 @@ class WegoController
         $perPage = 20
     ) {
         return $this->wego->getFlightSearchResults($searchId, $tripId, $sort, $order, $currency, $page, $perPage);
+    }
+
+    /**
+     * Get currencies available for flight search
+     *
+     * @return array
+     */
+    public function getFlightCurrencies()
+    {
+        return $this->wego->getFlightCurrencies();
     }
 }

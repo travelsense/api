@@ -252,8 +252,9 @@ class WegoClient
      * @param string    $countrySiteCode  Country code of the user and site (use both parameters together).
      *                                        Some of our providers only support users from certain countries due to legal issues
      *                                        with default value 'XX' certain content might be unavailable
+     * @param string    $lang             query locale
      *
-     * @return mixed
+     * @return array
      */
     public function startFlightSearch(
         $departureCode,
@@ -266,8 +267,9 @@ class WegoClient
         $cabin,
         DateTime $outboundDate,
         DateTime $inboundDate = NULL,
-        $userCountryCode,
-        $countrySiteCode
+        $userCountryCode = 'US',
+        $countrySiteCode = 'US',
+        $lang = 'en'
     ) {
         $query = [
             "trips" => [
@@ -284,7 +286,8 @@ class WegoClient
             'infants_count' => (int)$infantsCount,
             'cabin' => $cabin,
             'user_country_code' => $userCountryCode,
-            'country_site_code' => $countrySiteCode
+            'country_site_code' => $countrySiteCode,
+            'locale' => $lang
         ];
         if($inboundDate !== NULL) {
             $query['trips']['inbound_date'] = $inboundDate->format(self::DATE_FORMAT);
@@ -293,11 +296,7 @@ class WegoClient
             '/flights/api/k/2/searches',
             $query
         );
-        $trips = [];
-        foreach($response['trips'] as $trip) {
-            $trips[] = $trip['id'];
-        }
-        return ['search_id' => $response["id"], 'trips' => $trips];
+        return ['search_id' => $response["id"], 'trip_id' => $response['trips'][0]['id']];
     }
 
     /**
@@ -443,7 +442,7 @@ class WegoClient
      * @param int    $page        Page of results to return
      * @param int    $perPage     Number of results to return per page
      *
-     * @return mixed
+     * @return object
      */
     public function getFlightSearchResults(
         $searchId,
@@ -484,7 +483,7 @@ class WegoClient
      * @param string $fareId      Fare id of the fare you want to deeplink
      * @param string $route       A combination of fare.departure_airport_code and fare.arrival_airport_code, e.g. SIN-HAN
      *
-     * @return mixed
+     * @return object
      */
     public function getFlightDeeplink($searchId, $tripId, $fareId, $route)
     {
@@ -504,7 +503,19 @@ class WegoClient
      *
      * @see http://support.wan.travel/hc/en-us/articles/200191669-Wego-Flights-API#currencies
      *
-     * @return mixed
+     * @return array
+     *
+     * Answer example:
+     * [
+     * "code" => "USD",
+     * "symbol" => "US$",
+     * "exchange_rate" => 1.0
+     * ],
+     * [
+     * "code" => "SGD",
+     * "symbol" => "S$",
+     * "exchange_rate" => 1.2703
+     * ]
      */
     public function getFlightCurrencies()
     {
@@ -512,6 +523,6 @@ class WegoClient
             '/flights/api/k/2/currencies',
             []
         );
-        return $response['currencies'];
+        return $response['currencies'] ?: [];
     }
 }
