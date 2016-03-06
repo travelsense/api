@@ -10,9 +10,9 @@ use PHPCurl\CurlHttp\HttpClient;
  * @see http://support.wan.travel/hc/en-us
  */
 
-class WegoClient
+class WegoFlightClient
 {
-    const DATE_FORMAT = 'Ymd';
+    const DATE_FORMAT = 'Y-m-d';
 
     /**
      * @var HttpClient
@@ -57,142 +57,6 @@ class WegoClient
     }
 
     /**
-     * Start a new hotel search
-     *
-     * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_search_new
-     *
-     * @param string   $location The location ID of the location to search for.
-     * @param DateTime $checkIn  Check-in date
-     * @param DateTime $checkOut Check-out date
-     * @param int      $rooms    Number of hotel rooms required. Defaults to 1
-     * @param int      $guests   Number of guests staying. Defaults to 2
-     * @param string   $ip       The IP address of the end user who is performing the search (not your backend server).
-     *                              We require this to display room rates that are valid for the user's country.
-     * @param string   $country  Country code of the user. We require this to display room rates
-     *                              that are valid for the user's country.
-     *
-     * @return string Search ID
-     */
-    public function startHotelSearch(
-        $location,
-        DateTime $checkIn,
-        DateTime $checkOut,
-        $rooms = 1,
-        $guests = 2,
-        $ip = 'direct',
-        $country = 'US'
-    ) {
-        $response = $this->httpGet(
-            '/hotels/api/search/new',
-            [
-            'location_id' => $location,
-            'check_in' => $checkIn->format(self::DATE_FORMAT),
-            'check_out' => $checkOut->format(self::DATE_FORMAT),
-            'user_ip' => $ip,
-            'country_code_for_site' => $country,
-            'rooms' => (int)$rooms,
-            'quests' => (int)$guests,
-            ]
-        );
-
-        return $response["search_id"];
-    }
-
-    /**
-     * Search for a Wego Hotels location
-     *
-     * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_locations_search
-     *
-     * @param $query
-     *
-     * @param  string $lang    Language of results
-     * @param  int    $page    Page of results to return. Use this together with per_page
-     * @param  int    $perPage Number of results to return per page. Use this together with page. Defaults to 10
-     * @return mixed
-     */
-    public function getHotelLocations($query, $lang = 'en', $page = 1, $perPage = 10)
-    {
-        $query = preg_replace('/[^a-z0-9]/i', ' ', $query);
-        $query = implode('_', preg_split('/ /', $query, -1, PREG_SPLIT_NO_EMPTY));
-        $query = strtolower($query);
-
-        return $this->httpGet(
-            '/hotels/api/locations/search',
-            [
-            'q' => $query,
-            'lang' => $lang,
-            'page' => (int)$page,
-            'per_page' => (int)$perPage,
-            ]
-        );
-    }
-
-    /**
-     * Get results of a hotel search
-     *
-     * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_search_search_id
-     *
-     * @param string $id          ID of search for retrieving "live" prices together with the hotel
-     * @param bool   $refresh     Whether to refresh the results with any new results since the last request.
-     * @param string $currency    Currency to display prices in - use ISO 4217 3-letter currency codes. Defaults to USD
-     * @param string $sort        popularity|name|price|satisfaction|stars
-     * @param string $order       asc|desc
-     * @param string $popularWith 2-character country code
-     * @param int    $page        Page of results to return
-     * @param int    $perPage     Number of results to return per page
-     *
-     * @return mixed
-     */
-    public function getHotelSearchResults(
-        $id,
-        $refresh = false,
-        $currency = 'USD',
-        $sort = 'popularity',
-        $order = 'asc',
-        $popularWith = 'XX',
-        $page = 1,
-        $perPage = 20
-    ) {
-        return $this->httpGet(
-            '/hotels/api/search/' . urlencode($id),
-            [
-            'refresh' => $refresh,
-            'currency_code' => $currency,
-            'sort' => $sort ? 'true' : 'false',
-            'order' => $order,
-            'popular_with' => $popularWith,
-            'page' => $page,
-            'per_page' => $perPage,
-            ]
-        );
-    }
-
-    /**
-     * Get details of a hotel (live search)
-     *
-     * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_show_hotel_id
-     *
-     * @param string $searchID ID of search for retrieving "live" prices together with the hotel.
-     * @param string $hotelID  ID of the hotel.
-     * @param string $currency Currency to display prices in - use ISO 4217 3-letter currency codes. Defaults to USD.
-     * @param string $lang     Language of results. Defaults to en.
-     *
-     * @return mixed
-     */
-    public function getHotelDetails($searchID, $hotelID, $currency = 'USD', $lang = 'en')
-    {
-        return $this->httpGet(
-            '/hotels/api/search/show',
-            [
-            'search_id' => $searchID,
-            'hotel_id' => $hotelID,
-            'currency' => $currency,
-            'lang' => $lang,
-            ]
-        );
-    }
-
-    /**
      * Do HTTP GET
      *
      * @param  string $uri
@@ -201,7 +65,7 @@ class WegoClient
      */
     public function httpGet($uri, array $query)
     {
-        $query['key'] = $this->key;
+        $query['api_key'] = $this->key;
         $query['ts_code'] = $this->tsCode;
         $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
         $response = $this->http->get($fullUrl);
@@ -221,16 +85,14 @@ class WegoClient
      */
     public function httpPost($uri, array $query)
     {
-        $query['key'] = $this->key;
-        $query['ts_code'] = $this->tsCode;
-        $fullUrl = $this->apiUrl . $uri;
-        $preparedQuery = http_build_query($query);
+        $fullUrl = $this->apiUrl . $uri . '?api_key=' . $this->key . '&ts_code=' . $this->tsCode;
+        $preparedQuery = json_encode($query);
         $response = $this->http->post($fullUrl, $preparedQuery);
         $json = json_decode($response->getBody(), true);
         if ($response->getCode() === 200) {
             return $json;
         }
-        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error', $response->getCode());
+        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error with code ' . $response->getCode(), $response->getCode());
     }
 
     /**
@@ -258,7 +120,7 @@ class WegoClient
      *
      * @return array
      */
-    public function startFlightSearch(
+    public function startSearch(
         $departureCode,
         $departureCity,
         $arrivalCode,
@@ -292,9 +154,9 @@ class WegoClient
             'locale' => $lang
         ];
         if ($inboundDate !== null) {
-            $query['trips']['inbound_date'] = $inboundDate->format(self::DATE_FORMAT);
+            $query['trips'][0]['inbound_date'] = $inboundDate->format(self::DATE_FORMAT);
         }
-        $response = $this->httpGet(
+        $response = $this->httpPost(
             '/flights/api/k/2/searches',
             $query
         );
@@ -309,14 +171,14 @@ class WegoClient
      *
      * @return void
      */
-    protected function setFlightFilterArray($name, $value)
+    protected function setFilterArray($name, $value)
     {
         if (is_array($value)) {
             if (!empty($value)) {
                 $this->flightFilters[$name] = $value;
             }
         } else {
-            throw new WegoApiException('Flight filters error', $name);
+            throw new WegoApiException('Flight filters error: ' . $name, 0);
         }
     }
 
@@ -330,7 +192,7 @@ class WegoClient
      *
      * @return void
      */
-    protected function setFlightFilterMinMax($fromName, $toName, $fromValue, $toValue)
+    protected function setFilterMinMax($fromName, $toName, $fromValue, $toValue)
     {
         if ($fromValue > 0 && ($toValue == 0 || $toValue >= $fromValue)) {
             $this->flightFilters[$fromName] = $fromValue;
@@ -348,9 +210,9 @@ class WegoClient
      *
      * @return void
      */
-    public function setFlightFilterPrice($priceFrom, $priceTo)
+    public function setFilterPrice($priceFrom, $priceTo)
     {
-        $this->setFlightFilterMinMax('price_min_usd', 'price_max_usd', (int)$priceFrom, (int)$priceTo);
+        $this->setFilterMinMax('price_min_usd', 'price_max_usd', (int)$priceFrom, (int)$priceTo);
     }
 
     /**
@@ -362,7 +224,7 @@ class WegoClient
      *
      * @return void
      */
-    public function setFlightFilterStops($none, $one, $twoPlus)
+    public function setFilterStops($none, $one, $twoPlus)
     {
         $types = [];
         if ($none) {
@@ -374,7 +236,7 @@ class WegoClient
         if ($twoPlus) {
             $types[] = 'two_plus';
         }
-        $this->setFlightFilterArray('stop_types', $types);
+        $this->setFilterArray('stop_types', $types);
     }
 
     /**
@@ -389,7 +251,7 @@ class WegoClient
      *
      * @return void
      */
-    public function setFlightFilterOffers(
+    public function setFilterOffers(
         array $airlines = [],
         array $providers = [],
         array $designators = [],
@@ -397,12 +259,12 @@ class WegoClient
         array $arrivalAirports = [],
         array $stopoverAirports = []
     ) {
-        $this->setFlightFilterArray('airline_codes', $airlines);
-        $this->setFlightFilterArray('provider_codes', $providers);
-        $this->setFlightFilterArray('designator_codes', $designators);
-        $this->setFlightFilterArray('departure_airport_codes', $departureAirports);
-        $this->setFlightFilterArray('arrival_airport_codes', $arrivalAirports);
-        $this->setFlightFilterArray('stopover_airport_codes', $stopoverAirports);
+        $this->setFilterArray('airline_codes', $airlines);
+        $this->setFilterArray('provider_codes', $providers);
+        $this->setFilterArray('designator_codes', $designators);
+        $this->setFilterArray('departure_airport_codes', $departureAirports);
+        $this->setFilterArray('arrival_airport_codes', $arrivalAirports);
+        $this->setFilterArray('stopover_airport_codes', $stopoverAirports);
     }
 
     /**
@@ -415,15 +277,15 @@ class WegoClient
      *
      * @return void
      */
-    public function setFlightFilterDurations($min = 0, $max = 0, $stopoverMin = 0, $stopoverMax = 0)
+    public function setFilterDurations($min = 0, $max = 0, $stopoverMin = 0, $stopoverMax = 0)
     {
-        $this->setFlightFilterMinMax(
+        $this->setFilterMinMax(
             'duration_min',
             'duration_max',
             (int)$min,
             (int)$max
         );
-        $this->setFlightFilterMinMax(
+        $this->setFilterMinMax(
             'stopover_duration_min',
             'stopover_duration_max',
             (int)$stopoverMin,
@@ -441,15 +303,15 @@ class WegoClient
      *
      * @return void
      */
-    public function setFlightFilterTimes($outboundMin = 0, $outboundMax = 0, $inboundMin = 0, $inboundMax = 0)
+    public function setFilterTimes($outboundMin = 0, $outboundMax = 0, $inboundMin = 0, $inboundMax = 0)
     {
-        $this->setFlightFilterMinMax(
+        $this->setFilterMinMax(
             'outbound_departure_day_time_min',
             'outbound_departure_day_time_max',
             (int)$outboundMin,
             (int)$outboundMax
         );
-        $this->setFlightFilterMinMax(
+        $this->setFilterMinMax(
             'inbound_departure_day_time_min',
             'inbound_departure_day_time_max',
             (int)$inboundMin,
@@ -473,7 +335,7 @@ class WegoClient
      *
      * @return object
      */
-    public function getFlightSearchResults(
+    public function getSearchResults(
         $searchId,
         $tripId,
         $sort = 'price',
@@ -496,6 +358,8 @@ class WegoClient
             ],
             $this->flightFilters
         );
+        //var_dump($query);
+        //return null;
         return $this->httpPost(
             '/flights/api/k/2/fares',
             $query
@@ -507,24 +371,15 @@ class WegoClient
      *
      * @see http://support.wan.travel/hc/en-us/articles/200191669-Wego-Flights-API#customized-handoff-page
      *
-     * @param string $searchId    Search id you get when the search is created
-     * @param string $tripId      Trip id you get when the search is created
-     * @param string $fareId      Fare id of the fare you want to deeplink
-     * @param string $route       A combination of fare.departure_airport_code and fare.arrival_airport_code,
-     *                                e.g. SIN-HAN
+     * @param string $deeplinkParams   All fare.deeplink_params of the fare you want to deeplink
      *
      * @return object
      */
-    public function getFlightDeeplink($searchId, $tripId, $fareId, $route)
+    public function getDeeplink($deeplinkParams)
     {
         return $this->httpGet(
             '/flights/api/k/providers/2/deeplinks',
-            [
-                'search_id' => $searchId,
-                'trip_id' => $tripId,
-                'fare_id' => $fareId,
-                'route' => $route
-            ]
+            $deeplinkParams
         );
     }
 
@@ -547,12 +402,12 @@ class WegoClient
      * "exchange_rate" => 1.2703
      * ]
      */
-    public function getFlightCurrencies()
+    public function getCurrencies()
     {
         $response = $this->httpGet(
             '/flights/api/k/2/currencies',
             []
         );
-        return $response['currencies'];
+        return $response['currencies']['currencies'];
     }
 }

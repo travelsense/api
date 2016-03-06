@@ -40,10 +40,10 @@ $app->post('/token', 'controller.auth:create')
 
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEstimate');
 
-$app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:startHotelSearch')
+$app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:startSearch')
     ->convert('in', $toDate)
     ->convert('out', $toDate)
     ->convert('rooms', $toInt);
 
-$app->get('/hotel/search-results/{id}/{page}', 'controller.wego:getHotelSearchResults')
+$app->get('/hotel/search-results/{id}/{page}', 'controller.wego:getSearchResults')
     ->convert('page', $toInt);
