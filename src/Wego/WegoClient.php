@@ -35,6 +35,11 @@ class WegoClient
     private $tsCode;
 
     /**
+     * @var string
+     */
+    private $locale;
+
+    /**
      * @var array
      */
     private $flightFilters;
@@ -47,12 +52,13 @@ class WegoClient
      * @param string     $apiUrl
      * @param HttpClient $http
      */
-    public function __construct($key, $tsCode, $apiUrl = 'http://api.wego.com', HttpClient $http = null)
+    public function __construct($key, $tsCode, $apiUrl = 'http://api.wego.com', HttpClient $http = null, $locale = 'en')
     {
         $this->key = $key;
         $this->tsCode = $tsCode;
         $this->apiUrl = $apiUrl;
         $this->http = $http ?: new HttpClient();
+        $this->locale = $locale;
         $this->flightFilters = [];
     }
 
@@ -223,6 +229,7 @@ class WegoClient
     {
         $query['key'] = $this->key;
         $query['ts_code'] = $this->tsCode;
+        $query['locale'] = $this->locale;
         $fullUrl = $this->apiUrl . $uri;
         $preparedQuery = http_build_query($query);
         $response = $this->http->post($fullUrl, $preparedQuery);
@@ -253,7 +260,7 @@ class WegoClient
      *                                        Some of our providers only support users from certain countries due to legal issues
      *                                        with default value 'XX' certain content might be unavailable
      *
-     * @return mixed
+     * @return array
      */
     public function startFlightSearch(
         $departureCode,
@@ -266,8 +273,8 @@ class WegoClient
         $cabin,
         DateTime $outboundDate,
         DateTime $inboundDate = NULL,
-        $userCountryCode,
-        $countrySiteCode
+        $userCountryCode = 'US',
+        $countrySiteCode = 'US'
     ) {
         $query = [
             "trips" => [
@@ -293,11 +300,7 @@ class WegoClient
             '/flights/api/k/2/searches',
             $query
         );
-        $trips = [];
-        foreach($response['trips'] as $trip) {
-            $trips[] = $trip['id'];
-        }
-        return ['search_id' => $response["id"], 'trips' => $trips];
+        return ['search_id' => $response["id"], 'trip_id' => $response['trips'][0]['id']];
     }
 
     /**
@@ -443,7 +446,7 @@ class WegoClient
      * @param int    $page        Page of results to return
      * @param int    $perPage     Number of results to return per page
      *
-     * @return mixed
+     * @return object
      */
     public function getFlightSearchResults(
         $searchId,
@@ -484,7 +487,7 @@ class WegoClient
      * @param string $fareId      Fare id of the fare you want to deeplink
      * @param string $route       A combination of fare.departure_airport_code and fare.arrival_airport_code, e.g. SIN-HAN
      *
-     * @return mixed
+     * @return object
      */
     public function getFlightDeeplink($searchId, $tripId, $fareId, $route)
     {
@@ -504,7 +507,19 @@ class WegoClient
      *
      * @see http://support.wan.travel/hc/en-us/articles/200191669-Wego-Flights-API#currencies
      *
-     * @return mixed
+     * @return array
+     *
+     * Answer example:
+     * [
+     * "code" => "USD",
+     * "symbol" => "US$",
+     * "exchange_rate" => 1.0
+     * ],
+     * [
+     * "code" => "SGD",
+     * "symbol" => "S$",
+     * "exchange_rate" => 1.2703
+     * ]
      */
     public function getFlightCurrencies()
     {
@@ -512,6 +527,6 @@ class WegoClient
             '/flights/api/k/2/currencies',
             []
         );
-        return $response['currencies'];
+        return $response['currencies'] ?: [];
     }
 }
