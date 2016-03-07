@@ -120,3 +120,15 @@ CREATE TABLE iata_countries
   currency_code TEXT,
   CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2}$')
 );
+
+CREATE TABLE iata_states (
+  code         TEXT NOT NULL,
+  country_code TEXT NOT NULL,
+  name         TEXT NOT NULL,
+  PRIMARY KEY (code, country_code),
+  CONSTRAINT country_fk FOREIGN KEY (country_code)
+  REFERENCES iata_countries (code) MATCH SIMPLE
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION,
+  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2,3}$')
+);
