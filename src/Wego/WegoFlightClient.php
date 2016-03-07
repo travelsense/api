@@ -80,19 +80,23 @@ class WegoFlightClient
      * Do HTTP POST
      *
      * @param  string $uri
-     * @param  array  $query
+     * @param  array  $request
+     *
      * @return mixed Parsed JSON response
      */
-    public function httpPost($uri, array $query)
+    public function httpPost($uri, array $request)
     {
-        $fullUrl = $this->apiUrl . $uri . '?api_key=' . $this->key . '&ts_code=' . $this->tsCode;
-        $preparedQuery = json_encode($query);
-        $response = $this->http->post($fullUrl, $preparedQuery);
+        $query = [
+            'api_key' => $this->key,
+            'ts_code' => $this->tsCode
+        ];
+        $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
+        $response = $this->http->post($fullUrl, json_encode($request));
         $json = json_decode($response->getBody(), true);
         if ($response->getCode() === 200) {
             return $json;
         }
-        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error with code ' . $response->getCode(), $response->getCode());
+        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error', $response->getCode());
     }
 
     /**
@@ -145,9 +149,9 @@ class WegoFlightClient
                 'arrival_city' => $arrivalCity
                 ]
             ],
-            'adults_count' => (int)$adultsCount,
-            'children_count' => (int)$childrenCount,
-            'infants_count' => (int)$infantsCount,
+            'adults_count' => (int) $adultsCount,
+            'children_count' => (int) $childrenCount,
+            'infants_count' => (int) $infantsCount,
             'cabin' => $cabin,
             'user_country_code' => $userCountryCode,
             'country_site_code' => $countrySiteCode,
@@ -172,7 +176,7 @@ class WegoFlightClient
      */
     protected function setFilterArray($name, array $value)
     {
-        if (!empty($value)) {
+        if ($value) {
             $this->flightFilters[$name] = $value;
         }
     }
@@ -189,6 +193,12 @@ class WegoFlightClient
      */
     protected function setFilterMinMax($fromName, $toName, $fromValue, $toValue)
     {
+        if ($fromValue <= 0) {
+            throw new \OutOfRangeException($fromName);
+        }
+        if ($toValue <= 0) {
+            throw new \OutOfRangeException($toName);
+        }
         if ($fromValue > 0 && ($toValue == 0 || $toValue >= $fromValue)) {
             $this->flightFilters[$fromName] = $fromValue;
         }
@@ -207,7 +217,7 @@ class WegoFlightClient
      */
     public function setFilterPrice($priceFrom, $priceTo)
     {
-        $this->setFilterMinMax('price_min_usd', 'price_max_usd', (int)$priceFrom, (int)$priceTo);
+        $this->setFilterMinMax('price_min_usd', 'price_max_usd', (int) $priceFrom, (int) $priceTo);
     }
 
     /**
@@ -277,14 +287,14 @@ class WegoFlightClient
         $this->setFilterMinMax(
             'duration_min',
             'duration_max',
-            (int)$min,
-            (int)$max
+            (int) $min,
+            (int) $max
         );
         $this->setFilterMinMax(
             'stopover_duration_min',
             'stopover_duration_max',
-            (int)$stopoverMin,
-            (int)$stopoverMax
+            (int) $stopoverMin,
+            (int) $stopoverMax
         );
     }
 
@@ -303,14 +313,14 @@ class WegoFlightClient
         $this->setFilterMinMax(
             'outbound_departure_day_time_min',
             'outbound_departure_day_time_max',
-            (int)$outboundMin,
-            (int)$outboundMax
+            (int) $outboundMin,
+            (int) $outboundMax
         );
         $this->setFilterMinMax(
             'inbound_departure_day_time_min',
             'inbound_departure_day_time_max',
-            (int)$inboundMin,
-            (int)$inboundMax
+            (int) $inboundMin,
+            (int) $inboundMax
         );
         $this->flightFilters['departure_day_time_filter_type'] = 'separate';
     }
@@ -347,14 +357,12 @@ class WegoFlightClient
                 'trip_id' => $tripId,
                 'sort' => $sort,
                 'order' => $order,
-                'page' => (int)$page,
-                'per_page' => (int)$perPage,
+                'page' => (int) $page,
+                'per_page' => (int) $perPage,
                 'currency_code' => $currency
             ],
             $this->flightFilters
         );
-        //var_dump($query);
-        //return null;
         return $this->httpPost(
             '/flights/api/k/2/fares',
             $query
@@ -385,7 +393,7 @@ class WegoFlightClient
      *
      * @return array
      *
-     * Answer example:
+     * Response contains a lot of additional info, currencies list is at ['currencies']['currencies']:
      * [
      * "code" => "USD",
      * "symbol" => "US$",
@@ -399,10 +407,9 @@ class WegoFlightClient
      */
     public function getCurrencies()
     {
-        $response = $this->httpGet(
+        return $this->httpGet(
             '/flights/api/k/2/currencies',
             []
         );
-        return $response['currencies']['currencies'];
     }
 }
