@@ -98,7 +98,8 @@ ON travel_comments FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 
 
--- IATA Carrier
+
+-- IATA
 
 
 CREATE TABLE iata_carriers

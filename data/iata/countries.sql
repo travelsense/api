@@ -1,11 +1,6 @@
-INSERT INTO iata_countries (code, phone, currency_code) VALUES ('JP', 81, null);
-INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KP', 850, null);
-INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KR', 82, null);
-INSERT INTO iata_countries (code, phone, currency_code) VALUES ('SR', 597, null);
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('AD', 376, 'EUR');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('AE', 971, 'AED');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('AF', 93, 'AFN');
-INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CM', 237, 'XAF');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('AG', 1268, 'XCD');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('AI', 1264, 'XCD');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('AL', 355, 'ALL');
@@ -45,6 +40,7 @@ INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CH', 41, 'CHF')
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CI', 225, 'XOF');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CK', 682, 'NZD');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CL', 56, 'CLP');
+INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CM', 237, 'XAF');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CN', 86, 'CNY');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CO', 57, 'COP');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('CR', 506, 'CRC');
@@ -102,12 +98,15 @@ INSERT INTO iata_countries (code, phone, currency_code) VALUES ('IS', 354, 'ISK'
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('IT', 39, 'EUR');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('JM', 1876, 'JMD');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('JO', 962, 'JOD');
+INSERT INTO iata_countries (code, phone, currency_code) VALUES ('JP', 81, null);
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KE', 254, 'KES');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KG', 996, 'KGS');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KH', 855, 'KHR');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KI', 686, 'AUD');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KM', 269, 'KMF');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KN', 1869, 'XCD');
+INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KP', 850, null);
+INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KR', 82, null);
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KW', 965, 'KWD');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KY', 1345, 'KYD');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('KZ', 7, 'KZT');
@@ -186,6 +185,7 @@ INSERT INTO iata_countries (code, phone, currency_code) VALUES ('SL', 232, 'SLL'
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('SM', 378, 'EUR');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('SN', 221, 'XOF');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('SO', 252, 'DOP');
+INSERT INTO iata_countries (code, phone, currency_code) VALUES ('SR', 597, null);
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('ST', 239, 'DOP');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('SV', 503, 'USD');
 INSERT INTO iata_countries (code, phone, currency_code) VALUES ('SY', 963, 'SYP');
