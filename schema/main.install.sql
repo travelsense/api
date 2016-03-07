@@ -138,11 +138,12 @@ CREATE TABLE iata_cities
   code TEXT NOT NULL PRIMARY KEY ,
   country_code TEXT NOT NULL,
   state_code TEXT,
-  lat DOUBLE PRECISION NOT NULL,
-  lon DOUBLE PRECISION NOT NULL,
+  lat FLOAT4 NOT NULL,
+  lon FLOAT4 NOT NULL,
   capital BOOLEAN DEFAULT false NOT NULL,
   name TEXT NOT NULL,
   utc TEXT,
+  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{3}$'),
 
   CONSTRAINT country_fk FOREIGN KEY (country_code)
   REFERENCES iata_countries (code)
@@ -154,4 +155,23 @@ CREATE TABLE iata_cities
   ON UPDATE NO ACTION
   ON DELETE NO ACTION
 
+);
+
+CREATE TABLE iata_tp
+(
+  code TEXT PRIMARY KEY NOT NULL,
+  city_code TEXT NOT NULL,
+  name TEXT,
+  lat FLOAT4 NOT NULL,
+  lon FLOAT4 NOT NULL,
+  type TEXT NOT NULL,
+
+
+  CONSTRAINT city_fk FOREIGN KEY (city_code)
+  REFERENCES iata_cities (code)
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION,
+
+  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{3}$'),
+  CONSTRAINT type_regex CHECK (type ~* '^airport|bus|helicopter|railway|seaport$')
 );
