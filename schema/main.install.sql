@@ -157,7 +157,7 @@ CREATE TABLE iata_cities
 
 );
 
-CREATE TABLE iata_tp
+CREATE TABLE iata_ports
 (
   code TEXT PRIMARY KEY NOT NULL,
   city_code TEXT NOT NULL,
