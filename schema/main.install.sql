@@ -127,8 +127,31 @@ CREATE TABLE iata_states (
   name         TEXT NOT NULL,
   PRIMARY KEY (code, country_code),
   CONSTRAINT country_fk FOREIGN KEY (country_code)
-  REFERENCES iata_countries (code) MATCH SIMPLE
+  REFERENCES iata_countries (code)
   ON UPDATE NO ACTION
   ON DELETE NO ACTION,
   CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2,3}$')
+);
+
+CREATE TABLE iata_cities
+(
+  code TEXT NOT NULL PRIMARY KEY ,
+  country_code TEXT NOT NULL,
+  state_code TEXT,
+  lat DOUBLE PRECISION NOT NULL,
+  lon DOUBLE PRECISION NOT NULL,
+  capital BOOLEAN DEFAULT false NOT NULL,
+  name TEXT NOT NULL,
+  utc TEXT,
+
+  CONSTRAINT country_fk FOREIGN KEY (country_code)
+  REFERENCES iata_countries (code)
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION,
+
+  CONSTRAINT state_fk FOREIGN KEY (country_code, state_code)
+  REFERENCES iata_states (country_code, code) MATCH SIMPLE
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION
+
 );
