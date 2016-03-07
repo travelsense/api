@@ -41,7 +41,7 @@ return [
             'health-check',
             'reset-password',
             'send-password-reset-link',
-            'travels-by-id',
+            'travel-by-id',
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],
