@@ -96,3 +96,26 @@ CREATE TABLE travel_comments
 CREATE TRIGGER travel_comments_before_update BEFORE UPDATE
 ON travel_comments FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
+
+
+-- IATA Carrier
+
+
+CREATE TABLE iata_carriers
+(
+  code TEXT NOT NULL PRIMARY KEY,
+  type TEXT NOT NULL,
+  name TEXT NOT NULL,
+  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2}$'),
+  CONSTRAINT type_regex CHECK (type ~* '^aircraft|bus|railway|vendor$')
+
+);
+
+CREATE TABLE iata_countries
+(
+  code TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone INTEGER,
+  currency_code TEXT,
+  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2}$')
+);
