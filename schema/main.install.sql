@@ -110,3 +110,12 @@ CREATE TABLE iata_carriers
   CONSTRAINT type_regex CHECK (type ~* '^aircraft|bus|railway|vendor$')
 
 );
+
+CREATE TABLE iata_countries
+(
+  code TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone INTEGER,
+  currency_code TEXT,
+  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2}$')
+);

@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS "iata_carriers" CASCADE;
+DROP TABLE IF EXISTS "iata_countries" CASCADE;
 
 DROP TABLE IF EXISTS "travel_comments" CASCADE;
 DROP TABLE IF EXISTS "travels" CASCADE;
