@@ -70,6 +70,25 @@ SQL;
     }
 
     /**
+     * @param User $user
+     * @return void
+     */
+    public function update(User $user)
+    {
+        $update = $this->prepare('UPDATE users SET email = :email, firstname = :firstname,'
+                . ' lastname = :lastname, email_confirmed = :emailConfirmed WHERE id = :id');
+        $update->execute(
+            [
+                ':email' => $user->getEmail(),
+		':firstname' => $user->getFirstName(),
+                ':lastname' => $user->getLastName(),
+		':emailConfirmed' => $user->getEmailConfirmed(),
+                ':id' => $user->getId(),
+            ]
+        );
+    }
+
+    /**
      * @param $email
      * @param $password
      * @return User|null

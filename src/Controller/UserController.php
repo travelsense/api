@@ -169,4 +169,32 @@ class UserController
         $this->userMapper->updatePasswordByEmail($email, $password);
         return new JsonResponse();
     }
+
+    /**
+     * Update User data by id
+     *
+     * @param User $user
+     * @param Request $request
+     */
+    public function update(User $user, Request $request)
+    {
+        $lastEmail = $user->getEmail();
+        $json = DataObject::createFromString($request->getContent());
+        $user
+             ->setEmail($json->getString('email'))
+             ->setFirstName($json->getString('firstName'))
+             ->setLastName($json->getString('lastName'));
+        if ($lastEmail !== $user->getEmail())
+        {
+            $user->setEmailConfirmed('false');
+        } else {
+            $user->setEmailConfirmed('true');
+        }
+        $this->userMapper->update($user);
+        if (!$user->getEmailConfirmed())
+        {
+            $token = $this->storage->store($user->getEmail());
+            $this->confirmEmail($token);
+        }
+    }
 }
