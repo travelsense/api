@@ -14,7 +14,7 @@ class User
      *
      * @var bool
      */
-    private $emailConfirmed;
+    private $emailConfirmed = false;
 
     /**
      * @var string

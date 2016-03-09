@@ -67,6 +67,19 @@ class UserController
     }
 
     /**
+     *
+     * @param User $user
+     */
+    public function sendConfirmationLink(User $user)
+    {
+        $token = $this->storage->store($user->getEmail());
+        if ($this->logger) {
+            $this->logger->info('Expirable token created', ['token' => $token]);
+        }
+        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
+    }
+
+    /**
      * Start email-based registration. Send a confirmation email.
      *
      * @param  Request $request
@@ -93,11 +106,7 @@ class UserController
             throw ApiException::create(ApiException::USER_EXISTS);
         }
         $this->userMapper->insert($user);
-        $token = $this->storage->store($user->getEmail());
-        if ($this->logger) {
-            $this->logger->info('Expirable token created', ['token' => $token]);
-        }
-        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
+        $this->sendConfirmationLink($user);
         return new JsonResponse();
     }
 
@@ -178,23 +187,22 @@ class UserController
      */
     public function update(User $user, Request $request)
     {
-        $lastEmail = $user->getEmail();
+//        $lastEmail = $user->getEmail();
         $json = DataObject::createFromString($request->getContent());
+        $email = $json->getString('email');
+        $emailUpdate = ($user->getEmail() !== $email);
         $user
              ->setEmail($json->getString('email'))
              ->setFirstName($json->getString('firstName'))
              ->setLastName($json->getString('lastName'));
-        if ($lastEmail !== $user->getEmail())
+        if ($emailUpdate)
         {
-            $user->setEmailConfirmed('false');
-        } else {
-            $user->setEmailConfirmed('true');
+            $user->setEmailConfirmed(false);
         }
         $this->userMapper->update($user);
         if (!$user->getEmailConfirmed())
         {
-            $token = $this->storage->store($user->getEmail());
-            $this->confirmEmail($token);
+            $this->sendConfirmationLink($user);
         }
     }
 }

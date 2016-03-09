@@ -75,14 +75,13 @@ SQL;
      */
     public function update(User $user)
     {
-        $update = $this->prepare('UPDATE users SET email = :email, firstname = :firstname,'
-                . ' lastname = :lastname, email_confirmed = :emailConfirmed WHERE id = :id');
+        $update = $this->prepare('UPDATE users SET email = :email, firstname = :firstname, lastname = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
         $update->execute(
             [
                 ':email' => $user->getEmail(),
 		':firstname' => $user->getFirstName(),
                 ':lastname' => $user->getLastName(),
-		':emailConfirmed' => $user->getEmailConfirmed(),
+		':email_confirmed' => $user->getEmailConfirmed(),
                 ':id' => $user->getId(),
             ]
         );
@@ -153,7 +152,8 @@ SQL;
             ->setEmail($row['email'])
             ->setFirstName($row['first_name'])
             ->setLastName($row['last_name'])
-            ->setPicture($row['picture']);
+            ->setPicture($row['picture'])
+            ->setEmailConfirmed($row['email_confirmed']);
     }
 
     /**
