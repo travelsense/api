@@ -50,7 +50,7 @@ return [
         'app_secret' => 'xxx',
         'default_graph_version' => 'v2.5',
     ],
-    'storage' => [
+    'db' => [
         'main' => [
             'driver' => 'pgsql',
             'host' => 'localhost',
