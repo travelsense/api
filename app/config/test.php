@@ -6,7 +6,7 @@ return array_replace_recursive(
         'log' => [
             'main' => '/tmp/vaca_test.log',
         ],
-        'storage' => [
+        'db' => [
             'main' => [
                 'user' => 'vaca_test',
                 'database' => 'vaca_test',

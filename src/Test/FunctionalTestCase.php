@@ -38,7 +38,7 @@ class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 
         $this->app = Application::createByEnvironment('test');
         try {
-            $this->app['storage.main.pdo']
+            $this->app['db.main.pdo']
                 ->exec(file_get_contents(__DIR__ . '/../../schema/main.install.sql'));
         } catch (PDOException $e) {
             $this->markTestSkipped($e->getMessage());
@@ -59,7 +59,7 @@ class FunctionalTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($this->server) {
             $this->server->stop();
-            $this->app['storage.main.pdo']
+            $this->app['db.main.pdo']
                 ->exec(file_get_contents(__DIR__ . '/../../schema/main.uninstall.sql'));
             chdir($this->dir);
         }

@@ -7,7 +7,7 @@ return array_replace_recursive(
             'main' => '/tmp/vaca_dev.log',
         ],
         'secure_json' => __DIR__ . '/local.json',
-        'storage' => [
+        'db' => [
             'main' => [
                 'user' => 'vaca_dev',
                 'database' => 'vaca_dev',
