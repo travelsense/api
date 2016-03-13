@@ -62,6 +62,7 @@ return [
             ],
         ],
     ],
+    'migrations' => __DIR__ . '/../../db',
     'uber' => [
         'server_token' => 'xxx',
     ],
