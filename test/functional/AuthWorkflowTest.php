@@ -21,7 +21,7 @@ class AuthWorkflowTest extends FunctionalTestCase
         $user = $this->apiClient->getCurrentUser();
 
         $this->assertEquals(
-            [
+            (object) [
                 'firstName' => 'Alexander',
                 'lastName' => 'Pushkin',
                 'email' => 'sasha@pushkin.ru',

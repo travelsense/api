@@ -30,7 +30,7 @@ class FunctionalTestCase extends \PHPUnit_Framework_TestCase
         }
         foreach ($this->app['config']['db'] as $name => $db) {
             $pdo = new PDO(
-                'pgsql:dbname=postgres',
+                "pgsql:dbname=postgres;host={$db['host']}",
                 $db['user'],
                 $db['password'],
                 [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]

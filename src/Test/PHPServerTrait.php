@@ -7,11 +7,6 @@ use Weew\HttpServer\HttpServer;
 trait PHPServerTrait
 {
     /**
-     * @var string
-     */
-    private $dir;
-
-    /**
      * @var HttpServer
      */
     private $server;
@@ -20,6 +15,11 @@ trait PHPServerTrait
      * @var int
      */
     protected $port = 8888;
+
+    /**
+     * @var float
+     */
+    protected $wait = 1;
 
     /**
      * @var string
@@ -32,13 +32,17 @@ trait PHPServerTrait
     public function startServer()
     {
         if (!$this->server) {
-            $this->server = new HttpServer($this->host, $this->port, 'app.php');
+            $this->server = new HttpServer(
+                $this->host,
+                $this->port,
+                __DIR__ . '/../../public/app.php',
+                __DIR__ . '/../../public/',
+                $this->wait
+            );
         }
         if ($this->server->isRunning()) {
             throw new LogicException('Server is already running');
         }
-        $this->dir = getcwd();
-        chdir(__DIR__ . '/../../public');
         $this->server->disableOutput();
         $this->server->start();
     }
@@ -50,7 +54,6 @@ trait PHPServerTrait
     {
         if ($this->server && $this->server->isRunning()) {
             $this->server->stop();
-            chdir($this->dir);
         } else {
             throw new LogicException('Server is not running');
         }

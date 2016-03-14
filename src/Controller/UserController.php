@@ -165,7 +165,8 @@ class UserController
             }
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
-        $password = json_decode($request->getContent());
+        $json = DataObject::createFromString($request->getContent());
+        $password = $json->getString('password');
         $this->userMapper->updatePasswordByEmail($email, $password);
         return new JsonResponse();
     }
