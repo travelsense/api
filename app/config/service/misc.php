@@ -2,7 +2,7 @@
 /**
  * @var $app Application
  */
-use Api\Wego\WegoClient;
+use Api\Wego\WegoHotelClient;
 use F3\SimpleUber\Uber;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
@@ -27,5 +27,5 @@ $app['uber'] = $app->share(function ($app) {
 });
 
 $app['wego'] = $app->share(function ($app) {
-    return new WegoClient($app['config']['wego']['key'], $app['config']['wego']['ts_code']);
+    return new WegoHotelClient($app['config']['wego']['key'], $app['config']['wego']['ts_code']);
 });
