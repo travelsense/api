@@ -1,5 +1,3 @@
--- Database: main
-
 -- Automatically change "updated" column
 CREATE OR REPLACE FUNCTION process_updated_column()
   RETURNS TRIGGER AS $$
@@ -13,7 +11,7 @@ $$ LANGUAGE 'plpgsql';
 -- Expirable Storage
 
 
-CREATE TABLE expirable_storage
+CREATE TABLE IF NOT EXISTS expirable_storage
 (
   id SERIAL NOT NULL PRIMARY KEY ,
   serialized_object TEXT NOT NULL,
@@ -26,7 +24,7 @@ CREATE TABLE expirable_storage
 -- Users
 
 
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
   id SERIAL NOT NULL PRIMARY KEY ,
   email TEXT NOT NULL UNIQUE,
@@ -47,7 +45,7 @@ ON users FOR EACH ROW EXECUTE PROCEDURE
 -- Sessions
 
 
-CREATE TABLE sessions
+CREATE TABLE IF NOT EXISTS sessions
 (
   id SERIAL NOT NULL PRIMARY KEY ,
   user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -65,10 +63,10 @@ ON sessions FOR EACH ROW EXECUTE PROCEDURE
 -- Travels
 
 
-CREATE TABLE travels
+CREATE TABLE IF NOT EXISTS travels
 (
   id SERIAL NOT NULL PRIMARY KEY ,
-  user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
+  author_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   created TIMESTAMP DEFAULT now(),
@@ -83,7 +81,7 @@ ON travels FOR EACH ROW EXECUTE PROCEDURE
 -- Travel comments
 
 
-CREATE TABLE travel_comments
+CREATE TABLE IF NOT EXISTS travel_comments
 (
   id SERIAL NOT NULL PRIMARY KEY ,
   author_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
@@ -102,7 +100,7 @@ ON travel_comments FOR EACH ROW EXECUTE PROCEDURE
 -- IATA
 
 
-CREATE TABLE iata_carriers
+CREATE TABLE IF NOT EXISTS iata_carriers
 (
   code TEXT NOT NULL PRIMARY KEY,
   type TEXT NOT NULL,
@@ -112,7 +110,7 @@ CREATE TABLE iata_carriers
 
 );
 
-CREATE TABLE iata_countries
+CREATE TABLE IF NOT EXISTS iata_countries
 (
   code TEXT NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
@@ -121,7 +119,7 @@ CREATE TABLE iata_countries
   CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2}$')
 );
 
-CREATE TABLE iata_states (
+CREATE TABLE IF NOT EXISTS iata_states (
   code         TEXT NOT NULL,
   country_code TEXT NOT NULL,
   name         TEXT NOT NULL,
@@ -133,7 +131,7 @@ CREATE TABLE iata_states (
   CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2,3}$')
 );
 
-CREATE TABLE iata_cities
+CREATE TABLE IF NOT EXISTS iata_cities
 (
   code TEXT NOT NULL PRIMARY KEY ,
   country_code TEXT NOT NULL,
@@ -157,7 +155,7 @@ CREATE TABLE iata_cities
 
 );
 
-CREATE TABLE iata_ports
+CREATE TABLE IF NOT EXISTS iata_ports
 (
   code TEXT PRIMARY KEY NOT NULL,
   city_code TEXT NOT NULL,

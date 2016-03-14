@@ -27,7 +27,7 @@ class DataObject
     /**
      * Create object $json from string $json
      * @param string $json
-     * @return object
+     * @return DataObject
      */
     public static function createFromString($json)
     {
