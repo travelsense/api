@@ -37,7 +37,7 @@ trait PHPServerTrait
             $this->server = new HttpServer(
                 $this->host,
                 $this->port,
-                __DIR__ . '/../../public/app.php'
+                __DIR__ . '/../../public/app_test.php'
             );
         }
         if ($this->server->isRunning()) {
