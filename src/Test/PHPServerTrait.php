@@ -31,6 +31,8 @@ trait PHPServerTrait
      */
     public function startServer()
     {
+        $dir = getcwd();
+        chdir(__DIR__ . '/../../public/');
         if (!$this->server) {
             $this->server = new HttpServer(
                 $this->host,
@@ -42,10 +44,7 @@ trait PHPServerTrait
             throw new LogicException('Server is already running');
         }
         $this->server->enableOutput();
-        $dir = getcwd();
-        chdir(__DIR__ . '/../../public/');
         $this->server->start();
-        sleep(3);
         chdir($dir);
     }
 
