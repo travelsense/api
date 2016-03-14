@@ -36,14 +36,14 @@ trait PHPServerTrait
                 $this->host,
                 $this->port,
                 __DIR__ . '/../../public/app.php',
-                __DIR__ . '/../../public/',
+                null,
                 $this->wait
             );
         }
         if ($this->server->isRunning()) {
             throw new LogicException('Server is already running');
         }
-        $this->server->disableOutput();
+        //$this->server->disableOutput();
         $dir = getcwd();
         chdir(__DIR__ . '/../../public/');
         $this->server->start();
