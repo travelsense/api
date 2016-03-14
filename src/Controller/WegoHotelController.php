@@ -1,23 +1,23 @@
 <?php
 namespace Api\Controller;
 
-use Api\Wego\WegoClient;
+use Api\Wego\WegoHotelClient;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class WegoController
+class WegoHotelController
 {
     /**
-     * @var WegoClient
+     * @var WegoHotelClient
      */
     private $wego;
 
     /**
-     * WegoController constructor.
+     * WegoHotelController constructor.
      *
-     * @param WegoClient $wego
+     * @param WegoHotelClient $wego
      */
-    public function __construct(WegoClient $wego)
+    public function __construct(WegoHotelClient $wego)
     {
         $this->wego = $wego;
     }
