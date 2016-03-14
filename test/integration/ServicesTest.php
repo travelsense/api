@@ -23,8 +23,9 @@ class ServicesTest extends PHPUnit_Framework_TestCase
      */
     public function testServices($service)
     {
-        $app = Application::createByEnvironment('test');
-
-        $this->assertNotEmpty($app[$service]);
+        foreach (['prod', 'dev', 'test'] as $env) {
+            $app = Application::createByEnvironment($env);
+            $this->assertNotEmpty($app[$service]);
+        }
     }
 }

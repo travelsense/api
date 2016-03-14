@@ -2,13 +2,17 @@
 namespace Api\Controller;
 
 use Api\Exception\ApiException;
+use Api\JSON\DataObject;
 use Api\Mapper\DB\TravelMapper;
+use Api\Model\Travel\Travel;
+use Api\Model\User;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Travel API controller
  */
-class TravelController
+class TravelController extends ApiController
 {
     use LoggerAwareTrait;
 
@@ -27,7 +31,54 @@ class TravelController
         $this->travelMapper = $travelMapper;
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
+    public function createTravel(Request $request, User $user)
+    {
+        $json = DataObject::createFromString($request->getContent());
+
+        $travel = new Travel();
+        $travel->setAuthor($user);
+        $travel->setTitle($json->getString('title'));
+        $travel->setDescription($json->getString('description'));
+        $this->travelMapper->insert($travel);
+
+        return ['id' => $travel->getId()];
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @throws ApiException
+     */
     public function getTravel($id)
+    {
+        if ($id === 0) {
+            return $this->getTravelMock();
+        }
+        $travel = $this->travelMapper->fetchById($id);
+        if (!$travel) {
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        $author = $travel->getAuthor();
+        return [
+            'id' => $travel->getId(),
+            'title' => $travel->getTitle(),
+            'description' => $travel->getDescription(),
+            'created' => $travel->getCreated()->format(self::DATETIME_FORMAT),
+            'author' => [
+                'id' => $author->getId(),
+                'firstName' => $author->getFirstName(),
+                'lastName' => $author->getLastName(),
+                'picture' => $author->getPicture(),
+            ]
+        ];
+    }
+
+    public function getTravelMock()
     {
         $led = [
             'id' => 0,

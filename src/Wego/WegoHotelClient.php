@@ -9,7 +9,8 @@ use PHPCurl\CurlHttp\HttpClient;
  *
  * @see http://support.wan.travel/hc/en-us
  */
-class WegoClient
+
+class WegoHotelClient
 {
     const DATE_FORMAT = 'Ymd';
 
@@ -75,7 +76,7 @@ class WegoClient
         $ip = 'direct',
         $country = 'US'
     ) {
-        $response = $this->call(
+        $response = $this->httpGet(
             '/hotels/api/search/new',
             [
             'location_id' => $location,
@@ -109,7 +110,7 @@ class WegoClient
         $query = implode('_', preg_split('/ /', $query, -1, PREG_SPLIT_NO_EMPTY));
         $query = strtolower($query);
 
-        return $this->call(
+        return $this->httpGet(
             '/hotels/api/locations/search',
             [
             'q' => $query,
@@ -120,9 +121,8 @@ class WegoClient
         );
     }
 
-
     /**
-     * Get results of a search
+     * Get results of a hotel search
      *
      * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_search_search_id
      *
@@ -147,7 +147,7 @@ class WegoClient
         $page = 1,
         $perPage = 20
     ) {
-        return $this->call(
+        return $this->httpGet(
             '/hotels/api/search/' . urlencode($id),
             [
             'refresh' => $refresh,
@@ -175,7 +175,7 @@ class WegoClient
      */
     public function getDetails($searchID, $hotelID, $currency = 'USD', $lang = 'en')
     {
-        return $this->call(
+        return $this->httpGet(
             '/hotels/api/search/show',
             [
             'search_id' => $searchID,
@@ -193,7 +193,7 @@ class WegoClient
      * @param  array  $query
      * @return mixed Parsed JSON response
      */
-    public function call($uri, array $query)
+    public function httpGet($uri, array $query)
     {
         $query['key'] = $this->key;
         $query['ts_code'] = $this->tsCode;

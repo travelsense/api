@@ -18,6 +18,8 @@ $toInt = function ($val) {
     return intval($val);
 };
 
+$iataType = '^country|city|port|carrier$';
+
 $app->get('/healthCheck', 'controller.health:healthCheck')
     ->bind('health-check');
 
@@ -43,8 +45,19 @@ $app->post('/token', 'controller.auth:create')
 
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEstimate');
 
+$app->post('/travel', 'controller.travel:createTravel');
+
 $app->get('/travel/{id}', 'controller.travel:getTravel')
+    ->convert('id', $toInt)
     ->bind('travel-by-id');
+
+$app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
+    ->assert('type', $iataType)
+    ->bind('iata-by-code');
+
+$app->get('/iata/{type}/all', 'controller.iata:getAll')
+    ->assert('type', $iataType)
+    ->bind('iata-all');
 
 $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:startSearch')
     ->convert('in', $toDate)

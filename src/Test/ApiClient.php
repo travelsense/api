@@ -92,6 +92,12 @@ class ApiClient
         return $this->get('/user');
     }
 
+    /**
+     * Update user data
+     *
+     * @param array $request
+     * @return object
+     */
     public function updateUser(array $request)
     {
         return  $this->put('/user', $request);
