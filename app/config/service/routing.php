@@ -26,6 +26,9 @@ $app->post('/user', 'controller.user:createUser')
 
 $app->get('/user', 'controller.user:getUser');
 
+$app->put('/user', 'controller.user:update')
+    ->bind('update');
+
 $app->post('/email/confirm/{token}', 'controller.user:confirmEmail')
     ->bind('confirm-email');
 

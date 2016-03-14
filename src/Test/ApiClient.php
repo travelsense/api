@@ -1,34 +1,33 @@
 <?php
 namespace Api\Test;
 
-use GuzzleHttp\Client as HttpClient;
+use PHPCurl\CurlHttp\HttpClient;
+use PHPCurl\CurlHttp\HttpResponse;
 
 class ApiClient
 {
-    /**
-     * @var HttpClient
-     */
-    private $http;
-
     /**
      * @var string
      */
     private $authToken;
 
     /**
+     * @var string
+     */
+    private $host;
+
+    private $http;
+
+    /**
      * ApiClient constructor.
      *
-     * @param string $apiUrl
-     * @param float  $timeout
+     * @param string $host
+     * @param HttpClient $http
      */
-    public function __construct($apiUrl, $timeout = 5.0)
+    public function __construct($host, HttpClient $http = null)
     {
-        $this->http = new HttpClient(
-            [
-            'base_uri' => $apiUrl,
-            'timeout' => $timeout,
-            ]
-        );
+        $this->http = $http ?: new HttpClient();
+        $this->host = $host;
     }
 
     /**
@@ -54,9 +53,7 @@ class ApiClient
      */
     public function registerUser(array $user)
     {
-        $json = $this->http->post('/user', ['json' => $user])
-            ->getBody()->getContents();
-        return json_decode($json);
+        return  $this->post('/user', $user);
     }
 
     /**
@@ -66,42 +63,23 @@ class ApiClient
      */
     public function getTokenByEmail($email, $password)
     {
-        $json = $this->http
-            ->post('/token', ['json' => ['email' => $email, 'password' => $password]])
-            ->getBody()->getContents();
-        return json_decode($json)->token;
+        return $this->post('/token', ['email' => $email, 'password' => $password])
+            ->token;
     }
 
     public function confirmEmail($email)
     {
-        $json = $this->http
-            ->post('/email/confirm/'.urlencode($email))
-            ->getBody()->getContents();
-        return json_decode($json);
+        return $this->post('/email/confirm/'.urlencode($email));
     }
 
     public function requestPasswordReset($email)
     {
-        $json = $this->http
-            ->post('/password/link/'.urlencode($email))
-            ->getBody()->getContents();
-        return json_decode($json);
+        return $this->post('/password/link/'.urlencode($email));
     }
 
     public function updatePassword($token, $password)
     {
-        $json = $this->http
-            ->post('/password/reset/'.urlencode($token), ['json' => $password])
-            ->getBody()->getContents();
-        return json_decode($json);
-    }
-
-    public function updateUser(array $request)
-    {
-        $json = $this->http
-            ->put('/user',  ['json' => $request, 'headers' => ['Authorization' => 'Token '.$this->authToken,],])
-            ->getBody()->getContents();
-        return json_decode($json);
+        return $this->post('/password/reset/'.urlencode($token), ['password' => $password]);
     }
 
     /**
@@ -111,20 +89,17 @@ class ApiClient
      */
     public function getCurrentUser()
     {
-        $json = $this->http
-            ->get('/user', ['headers' => ['Authorization' => 'Token '.$this->authToken]])
-            ->getBody()->getContents();
-        return json_decode($json, true);
+        return $this->get('/user');
+    }
+
+    public function updateUser(array $request)
+    {
+        return  $this->put('/user', $request);
     }
 
     public function getCabEstimates($lat1, $lon1, $lat2, $lon2)
     {
-        $json = $this->http
-            ->get(
-                "/cab/$lat1/$lon1/$lat2/$lon2",
-                ['headers' => ['Authorization' => 'Token ' . $this->authToken]]
-            )->getBody()->getContents();
-        return json_decode($json, true);
+        return $this->get("/cab/$lat1/$lon1/$lat2/$lon2");
     }
 
     /**
@@ -138,12 +113,7 @@ class ApiClient
      */
     public function startHotelSearch($location, $in, $out, $rooms)
     {
-        $json = $this->http
-            ->post(
-                "/hotel/search/$location/$in/$out/$rooms",
-                ['headers' => ['Authorization' => 'Token '.$this->authToken]]
-            )->getBody()->getContents();
-        return json_decode($json, true);
+        return $this->post("/hotel/search/$location/$in/$out/$rooms");
     }
 
     /**
@@ -155,11 +125,71 @@ class ApiClient
      */
     public function getHotelSearchResults($id, $page = 1)
     {
-        $json = $this->http
-            ->get(
-                "/hotel/search-results/$id/$page",
-                ['headers' => ['Authorization' => 'Token '.$this->authToken]]
-            )->getBody()->getContents();
-        return json_decode($json, true);
+        return $this->get("/hotel/search-results/$id/$page");
+    }
+
+    /**
+     * Create a new Travel
+     * @param string $title
+     * @param string $description
+     * @return int
+     */
+    public function createTravel($title, $description)
+    {
+        return $this->post('/travel', [
+            'title' => $title,
+            'description' => $description,
+        ])->id;
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getTravel($id)
+    {
+        return $this->get('/travel/' . urlencode($id));
+    }
+
+    private function addAuth(array $headers)
+    {
+        $headers[] = 'Authorization: Token ' . $this->authToken;
+        return $headers;
+    }
+
+    /**
+     * @param HttpResponse $response
+     * @return mixed
+     */
+    private function parse(HttpResponse $response)
+    {
+        if ($response->getCode() !== 200) {
+            $message = "HTTP ERROR {$response->getCode()}\n"
+                . implode("\n", $response->getHeaders())
+                . "\n\n" . $response->getBody();
+            throw new \RuntimeException($message, $response->getCode());
+        }
+        return json_decode($response->getBody());
+    }
+
+    private function get($url, array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $body = $this->http->get($this->host . $url, $headers);
+        return $this->parse($body);
+    }
+
+    private function post($url, array $body = [], array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $body = $this->http->post($this->host . $url, json_encode($body), $headers);
+        return $this->parse($body);
+    }
+
+    private function put($url, array $body = [], array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $body = $this->http->put($this->host . $url, json_encode($body), $headers);
+        return $this->parse($body);
     }
 }
