@@ -96,6 +96,14 @@ class ApiClient
         return json_decode($json);
     }
 
+    public function updateUser(array $request)
+    {
+        $json = $this->http
+            ->put('/user', ['json' => $request])
+            ->getBody()->getContents();
+        return json_decode($json);
+    }
+
     /**
      * Get current user info
      *

@@ -187,7 +187,6 @@ class UserController
      */
     public function update(User $user, Request $request)
     {
-//        $lastEmail = $user->getEmail();
         $json = DataObject::createFromString($request->getContent());
         $email = $json->getString('email');
         $emailUpdate = ($user->getEmail() !== $email);
@@ -195,13 +194,11 @@ class UserController
              ->setEmail($json->getString('email'))
              ->setFirstName($json->getString('firstName'))
              ->setLastName($json->getString('lastName'));
-        if ($emailUpdate)
-        {
+        if ($emailUpdate) {
             $user->setEmailConfirmed(false);
         }
         $this->userMapper->update($user);
-        if (!$user->getEmailConfirmed())
-        {
+        if ($emailUpdate) {
             $this->sendConfirmationLink($user);
         }
     }

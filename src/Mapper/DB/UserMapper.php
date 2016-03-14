@@ -78,11 +78,11 @@ SQL;
         $update = $this->prepare('UPDATE users SET email = :email, firstname = :firstname, lastname = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
         $update->execute(
             [
-                ':email' => $user->getEmail(),
-		':firstname' => $user->getFirstName(),
-                ':lastname' => $user->getLastName(),
-		':email_confirmed' => $user->getEmailConfirmed(),
-                ':id' => $user->getId(),
+            ':email' => $user->getEmail(),
+            ':firstname' => $user->getFirstName(),
+            ':lastname' => $user->getLastName(),
+            ':email_confirmed' => $user->getEmailConfirmed(),
+            ':id' => $user->getId(),
             ]
         );
     }

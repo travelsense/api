@@ -50,3 +50,5 @@ $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:start
 
 $app->get('/hotel/search-results/{id}/{page}', 'controller.wego:getSearchResults')
     ->convert('page', $toInt);
+
+$app->put('/user', 'controller.user:update');
