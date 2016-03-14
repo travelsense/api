@@ -201,5 +201,6 @@ class UserController
         if ($emailUpdate) {
             $this->sendConfirmationLink($user);
         }
+        return new JsonResponse();
     }
 }

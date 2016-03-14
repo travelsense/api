@@ -4,6 +4,7 @@ namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
 use Api\Model\User;
+use PDO;
 
 class UserMapper extends AbstractPDOMapper
 {
@@ -75,16 +76,18 @@ SQL;
      */
     public function update(User $user)
     {
-        $update = $this->prepare('UPDATE users SET email = :email, firstname = :firstname, lastname = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
-        $update->execute(
-            [
-            ':email' => $user->getEmail(),
-            ':firstname' => $user->getFirstName(),
-            ':lastname' => $user->getLastName(),
-            ':email_confirmed' => $user->getEmailConfirmed(),
-            ':id' => $user->getId(),
-            ]
-        );
+        $email = $user->getEmail();
+        $firstname = $user->getFirstName();
+        $lastname = $user->getLastName();
+        $email_confirmed = $user->getEmailConfirmed();
+        $id = $user->getId();
+        $update = $this->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
+        $update->bindValue(':email', $email);
+        $update->bindValue(':firstname', $firstname);
+        $update->bindValue(':lastname', $lastname);
+        $update->bindValue(':email_confirmed', $email_confirmed, PDO::PARAM_BOOL);
+        $update->bindValue(':id', $id);
+        $update->execute();
     }
 
     /**

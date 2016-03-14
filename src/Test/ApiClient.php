@@ -99,7 +99,7 @@ class ApiClient
     public function updateUser(array $request)
     {
         $json = $this->http
-            ->put('/user', ['json' => $request])
+            ->put('/user',  ['json' => $request, 'headers' => ['Authorization' => 'Token '.$this->authToken,],])
             ->getBody()->getContents();
         return json_decode($json);
     }
