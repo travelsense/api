@@ -19,7 +19,7 @@ trait PHPServerTrait
     /**
      * @var float
      */
-    protected $wait = 5.0;
+    protected $wait = 2.0;
 
     /**
      * @var string
@@ -31,20 +31,20 @@ trait PHPServerTrait
      */
     public function startServer()
     {
-        $dir = getcwd();
-        chdir(__DIR__ . '/../../public/');
-
         if (!$this->server) {
             $this->server = new HttpServer(
                 $this->host,
                 $this->port,
-                'app_test.php'
+                'app_test.php',
+                $this->wait
             );
         }
         if ($this->server->isRunning()) {
             throw new LogicException('Server is already running');
         }
-        $this->server->enableOutput();
+        $this->server->disableOutput();
+        $dir = getcwd();
+        chdir(__DIR__ . '/../../public/');
         $this->server->start();
         chdir($dir);
     }
