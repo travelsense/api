@@ -163,6 +163,10 @@ SQL;
         );
     }
 
+    /**
+     * @param array $row
+     * @return User
+     */
     public function create(array $row)
     {
         $user = new User();
