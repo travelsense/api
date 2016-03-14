@@ -33,11 +33,12 @@ trait PHPServerTrait
     {
         $dir = getcwd();
         chdir(__DIR__ . '/../../public/');
+
         if (!$this->server) {
             $this->server = new HttpServer(
                 $this->host,
                 $this->port,
-                __DIR__ . '/../../public/app_test.php'
+                'app_test.php'
             );
         }
         if ($this->server->isRunning()) {
