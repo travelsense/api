@@ -5,6 +5,7 @@
  */
 
 use Api\Controller\AuthController;
+use Api\Controller\IataController;
 use Api\Controller\TravelController;
 use Api\Controller\UberController;
 use Api\Controller\UserController;
@@ -55,4 +56,8 @@ $app['controller.wego'] = $app->share(function($app) {
 
 $app['controller.health'] = $app->share(function($app) {
     return new HealthCheckController();
+});
+
+$app['controller.iata'] = $app->share(function($app) {
+    return new IataController($app['mapper.db.iata']);
 });

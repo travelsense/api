@@ -43,6 +43,8 @@ return [
             'reset-password',
             'send-password-reset-link',
             'travel-by-id',
+            'iata-by-code',
+            'iata-all',
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],

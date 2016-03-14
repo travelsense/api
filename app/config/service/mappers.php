@@ -5,6 +5,7 @@
  */
 
 use Api\ExpirableStorage;
+use Api\Mapper\DB\IATAMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\UserMapper;
@@ -19,6 +20,10 @@ $app['mapper.db.sessions'] = $app->share(function($app) {
     return new SessionMapper($app['db.main.pdo']);
 });
 
+$app['mapper.db.iata'] = $app->share(function($app) {
+    return new IATAMapper($app['db.main.pdo']);
+});
+
 $app['mapper.db.expirable_storage'] = $app->share(function($app) {
     return new ExpirableStorage($app['db.main.pdo']);
 });
@@ -28,3 +33,4 @@ $app['mapper.db.travel'] = $app->share(function($app) {
     $mapper->setUserMapper($app['mapper.db.user']);
     return $mapper;
 });
+
