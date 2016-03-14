@@ -44,7 +44,10 @@ trait PHPServerTrait
             throw new LogicException('Server is already running');
         }
         $this->server->disableOutput();
+        $dir = getcwd();
+        chdir(__DIR__ . '/../../public/');
         $this->server->start();
+        chdir($dir);
     }
 
     /**
