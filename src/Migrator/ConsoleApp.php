@@ -1,7 +1,6 @@
 <?php
 namespace Api\Migrator;
 
-
 use Api\Application;
 use Api\Migrator\Command\Status;
 use Api\Migrator\Command\Update;
@@ -28,7 +27,7 @@ class ConsoleApp extends \Symfony\Component\Console\Application
     public function getMigrator($name)
     {
         /** @var Migrator $migrator */
-        $migrator =  $this->app["db.$name.migrator"];
+        $migrator = $this->app["db.$name.migrator"];
         return $migrator;
     }
 }

@@ -47,5 +47,4 @@ class Update extends AbstractCommand
         $migrator->upgrade($target);
         $this->printStatus($output, $name, $migrator->getVersion());
     }
-
 }

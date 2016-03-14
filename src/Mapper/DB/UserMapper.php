@@ -126,17 +126,6 @@ SQL;
         return sha1($password . $this->salt);
     }
 
-    public function create(array $row)
-    {
-        $user = new User();
-        return $user
-            ->setId($row['id'])
-            ->setEmail($row['email'])
-            ->setFirstName($row['first_name'])
-            ->setLastName($row['last_name'])
-            ->setPicture($row['picture']);
-    }
-
     /**
      * @param $email
      * @param $password
@@ -147,9 +136,24 @@ SQL;
         $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE email= :email');
         return $update->execute(
             [
-            ':email' => $email,
-            ':password' => $this->getPasswordHash($password)
+                ':email' => $email,
+                ':password' => $this->getPasswordHash($password)
             ]
         );
+    }
+
+    /**
+     * @param array $row
+     * @return User
+     */
+    protected function create(array $row)
+    {
+        $user = new User();
+        return $user
+            ->setId($row['id'])
+            ->setEmail($row['email'])
+            ->setFirstName($row['first_name'])
+            ->setLastName($row['last_name'])
+            ->setPicture($row['picture']);
     }
 }

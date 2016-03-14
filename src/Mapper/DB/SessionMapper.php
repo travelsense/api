@@ -53,7 +53,7 @@ SQL;
     /**
      * @inheritdoc
      */
-    public function create(array $row)
+    protected function create(array $row)
     {
         throw new BadMethodCallException;
     }

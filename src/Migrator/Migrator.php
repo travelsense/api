@@ -59,9 +59,9 @@ class Migrator
      */
     public function getVersion()
     {
-        $select  = $this->pdo->prepare("SELECT version FROM {$this->table} ORDER BY  id DESC LIMIT 1");
+        $select = $this->pdo->prepare("SELECT version FROM {$this->table} ORDER BY  id DESC LIMIT 1");
         $select->execute();
-        return (int) $select->fetchColumn();
+        return (int)$select->fetchColumn();
     }
 
 
@@ -75,7 +75,7 @@ class Migrator
         $this->pdo->beginTransaction();
         $current = $this->getVersion();
         try {
-            foreach($this->upgrades as $version => $file) {
+            foreach ($this->upgrades as $version => $file) {
                 if ($current >= $version) {
                     continue;
                 }
@@ -99,7 +99,7 @@ class Migrator
     {
         $current = $this->getVersion();
         $upgrades = [];
-        foreach($this->upgrades as $version => $file) {
+        foreach ($this->upgrades as $version => $file) {
             if ($current >= $version) {
                 continue;
             }
@@ -163,5 +163,4 @@ class Migrator
 
         $this->pdo->exec($create);
     }
-
 }

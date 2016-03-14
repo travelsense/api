@@ -19,7 +19,7 @@ trait PHPServerTrait
     /**
      * @var float
      */
-    protected $wait = 2.0;
+    protected $wait = 1.0;
 
     /**
      * @var string
@@ -35,7 +35,7 @@ trait PHPServerTrait
             $this->server = new HttpServer(
                 $this->host,
                 $this->port,
-                'app_test.php',
+                'app.php',
                 $this->wait
             );
         }

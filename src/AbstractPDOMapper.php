@@ -51,14 +51,15 @@ abstract class AbstractPDOMapper
      * Create an object from a joined table
      *
      * @param  array  $row
-     * @param  string $prefix
+     * @param  string $alias
      * @return mixed
      */
-    public function createJoined(array $row, $prefix)
+    public function createFromAlias(array $row, $alias)
     {
-        $prefixLen = mb_strlen($prefix);
+        $alias = $alias . '.';
+        $prefixLen = mb_strlen($alias);
         foreach ($row as $key => $item) {
-            if (0 === mb_strpos($key, $prefix) && mb_strlen($key) > $prefixLen) {
+            if (0 === mb_strpos($key, $alias) && mb_strlen($key) > $prefixLen) {
                 $row[mb_substr($key, $prefixLen)] = $item;
             }
         }
@@ -71,5 +72,5 @@ abstract class AbstractPDOMapper
      * @param  array $row
      * @return mixed
      */
-    abstract public function create(array $row);
+    abstract protected function create(array $row);
 }

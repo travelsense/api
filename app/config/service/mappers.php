@@ -24,5 +24,7 @@ $app['mapper.db.expirable_storage'] = $app->share(function($app) {
 });
 
 $app['mapper.db.travel'] = $app->share(function($app) {
-    return new TravelMapper($app['db.main.pdo']);
+    $mapper = new TravelMapper($app['db.main.pdo']);
+    $mapper->setUserMapper($app['mapper.db.user']);
+    return $mapper;
 });

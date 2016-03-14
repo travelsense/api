@@ -1,5 +1,8 @@
 <?php
-namespace Api\Model;
+namespace Api\Model\Travel;
+
+use Api\Model\TimestampTrait;
+use Api\Model\User;
 
 class Travel
 {
@@ -19,6 +22,11 @@ class Travel
      * @var string
      */
     private $title;
+
+    /**
+     * @var User
+     */
+    private $author;
 
     /**
      * @return int
@@ -71,6 +79,24 @@ class Travel
     public function setTitle($title)
     {
         $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param User $author
+     * @return Travel
+     */
+    public function setAuthor(User $author)
+    {
+        $this->author = $author;
         return $this;
     }
 }

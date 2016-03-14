@@ -1,7 +1,6 @@
 <?php
 namespace Api\Test;
 
-
 use PHPCurl\CurlHttp\HttpClient;
 use PHPCurl\CurlHttp\HttpResponse;
 
@@ -124,6 +123,30 @@ class ApiClient
         return $this->get("/hotel/search-results/$id/$page");
     }
 
+    /**
+     * Create a new Travel
+     * @param string $title
+     * @param string $description
+     * @return int
+     */
+    public function createTravel($title, $description)
+    {
+        return $this->post('/travel', [
+            'title' => $title,
+            'description' => $description,
+        ])->id;
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getTravel($id)
+    {
+        return $this->get('/travel/' . urlencode($id));
+    }
+
+
     private function addAuth(array $headers)
     {
         $headers[] = 'Authorization: Token ' . $this->authToken;
@@ -137,8 +160,10 @@ class ApiClient
     private function parse(HttpResponse $response)
     {
         if ($response->getCode() !== 200) {
-            var_dump($response);
-            throw new \RuntimeException($response->getBody(), $response->getCode());
+            $message = "HTTP ERROR {$response->getCode()}\n"
+                . implode("\n", $response->getHeaders())
+                . "\n\n" . $response->getBody();
+            throw new \RuntimeException($message, $response->getCode());
         }
         return json_decode($response->getBody());
     }
