@@ -19,7 +19,7 @@ trait PHPServerTrait
     /**
      * @var float
      */
-    protected $wait = 3;
+    protected $wait = 5.0;
 
     /**
      * @var string
