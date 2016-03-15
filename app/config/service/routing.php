@@ -28,8 +28,7 @@ $app->post('/user', 'controller.user:createUser')
 
 $app->get('/user', 'controller.user:getUser');
 
-$app->put('/user', 'controller.user:update')
-    ->bind('update');
+$app->put('/user', 'controller.user:updateUser');
 
 $app->post('/email/confirm/{token}', 'controller.user:confirmEmail')
     ->bind('confirm-email');
@@ -66,5 +65,3 @@ $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:start
 
 $app->get('/hotel/search-results/{id}/{page}', 'controller.wego:getSearchResults')
     ->convert('page', $toInt);
-
-$app->put('/user', 'controller.user:update');

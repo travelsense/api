@@ -74,18 +74,18 @@ SQL;
      * @param User $user
      * @return void
      */
-    public function update(User $user)
+    public function updateUser(User $user)
     {
         $email = $user->getEmail();
         $firstname = $user->getFirstName();
         $lastname = $user->getLastName();
-        $email_confirmed = $user->getEmailConfirmed();
+        $emailConfirmed = $user->getEmailConfirmed();
         $id = $user->getId();
         $update = $this->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
         $update->bindValue(':email', $email);
         $update->bindValue(':firstname', $firstname);
         $update->bindValue(':lastname', $lastname);
-        $update->bindValue(':email_confirmed', $email_confirmed, PDO::PARAM_BOOL);
+        $update->bindValue(':email_confirmed', $emailConfirmed, PDO::PARAM_BOOL);
         $update->bindValue(':id', $id);
         $update->execute();
     }
