@@ -77,14 +77,14 @@ SQL;
     public function updateUser(User $user)
     {
         $email = $user->getEmail();
-        $firstname = $user->getFirstName();
-        $lastname = $user->getLastName();
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
         $emailConfirmed = $user->getEmailConfirmed();
         $id = $user->getId();
         $update = $this->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
         $update->bindValue(':email', $email);
-        $update->bindValue(':firstname', $firstname);
-        $update->bindValue(':lastname', $lastname);
+        $update->bindValue(':firstname', $firstName);
+        $update->bindValue(':lastname', $lastName);
         $update->bindValue(':email_confirmed', $emailConfirmed, PDO::PARAM_BOOL);
         $update->bindValue(':id', $id);
         $update->execute();

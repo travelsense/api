@@ -186,7 +186,7 @@ class UserController
      * @param User $user
      * @param Request $request
      */
-    public function update(User $user, Request $request)
+    public function updateUser(User $user, Request $request)
     {
         $json = DataObject::createFromString($request->getContent());
         $email = $json->getString('email');
@@ -198,7 +198,7 @@ class UserController
         if ($emailUpdate) {
             $user->setEmailConfirmed(false);
         }
-        $this->userMapper->update($user);
+        $this->userMapper->updateUser($user);
         if ($emailUpdate) {
             $this->sendConfirmationLink($user);
         }
