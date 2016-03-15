@@ -11,6 +11,12 @@ class User
     private $email;
 
     /**
+     *
+     * @var bool
+     */
+    private $emailConfirmed = false;
+
+    /**
      * @var string
      */
     private $firstName;
@@ -68,6 +74,26 @@ class User
     public function setEmail($email)
     {
         $this->email = $email;
+        return $this;
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function getEmailConfirmed()
+    {
+        return $this->emailConfirmed;
+    }
+
+    /**
+     *
+     * @param bool $emailConfirmed
+     * @return User
+     */
+    public function setEmailConfirmed($emailConfirmed)
+    {
+        $this->emailConfirmed = $emailConfirmed;
         return $this;
     }
 

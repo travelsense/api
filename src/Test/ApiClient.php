@@ -92,6 +92,17 @@ class ApiClient
         return $this->get('/user');
     }
 
+    /**
+     * Update user data
+     *
+     * @param array $request
+     * @return object
+     */
+    public function updateUser(array $request)
+    {
+        return  $this->put('/user', $request);
+    }
+
     public function getCabEstimates($lat1, $lon1, $lat2, $lon2)
     {
         return $this->get("/cab/$lat1/$lon1/$lat2/$lon2");
@@ -146,7 +157,6 @@ class ApiClient
         return $this->get('/travel/' . urlencode($id));
     }
 
-
     private function addAuth(array $headers)
     {
         $headers[] = 'Authorization: Token ' . $this->authToken;
@@ -179,6 +189,13 @@ class ApiClient
     {
         $headers = $this->addAuth($headers);
         $body = $this->http->post($this->host . $url, json_encode($body), $headers);
+        return $this->parse($body);
+    }
+
+    private function put($url, array $body = [], array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $body = $this->http->put($this->host . $url, json_encode($body), $headers);
         return $this->parse($body);
     }
 }

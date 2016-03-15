@@ -4,6 +4,7 @@ namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
 use Api\Model\User;
+use PDO;
 
 class UserMapper extends AbstractPDOMapper
 {
@@ -67,6 +68,26 @@ SQL;
         );
         $id = $insert->fetchColumn();
         $user->setId($id);
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function updateUser(User $user)
+    {
+        $email = $user->getEmail();
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $emailConfirmed = $user->getEmailConfirmed();
+        $id = $user->getId();
+        $update = $this->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
+        $update->bindValue(':email', $email);
+        $update->bindValue(':firstname', $firstName);
+        $update->bindValue(':lastname', $lastName);
+        $update->bindValue(':email_confirmed', $emailConfirmed, PDO::PARAM_BOOL);
+        $update->bindValue(':id', $id);
+        $update->execute();
     }
 
     /**
@@ -146,7 +167,7 @@ SQL;
      * @param array $row
      * @return User
      */
-    protected function create(array $row)
+    public function create(array $row)
     {
         $user = new User();
         return $user
@@ -154,6 +175,7 @@ SQL;
             ->setEmail($row['email'])
             ->setFirstName($row['first_name'])
             ->setLastName($row['last_name'])
-            ->setPicture($row['picture']);
+            ->setPicture($row['picture'])
+            ->setEmailConfirmed($row['email_confirmed']);
     }
 }
