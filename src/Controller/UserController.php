@@ -67,6 +67,19 @@ class UserController
     }
 
     /**
+     *
+     * @param User $user
+     */
+    public function sendConfirmationLink(User $user)
+    {
+        $token = $this->storage->store($user->getEmail());
+        if ($this->logger) {
+            $this->logger->info('Expirable token created', ['token' => $token]);
+        }
+        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
+    }
+
+    /**
      * Start email-based registration. Send a confirmation email.
      *
      * @param  Request $request
@@ -93,11 +106,7 @@ class UserController
             throw ApiException::create(ApiException::USER_EXISTS);
         }
         $this->userMapper->insert($user);
-        $token = $this->storage->store($user->getEmail());
-        if ($this->logger) {
-            $this->logger->info('Expirable token created', ['token' => $token]);
-        }
-        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
+        $this->sendConfirmationLink($user);
         return new JsonResponse();
     }
 
@@ -165,8 +174,34 @@ class UserController
             }
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
-        $password = json_decode($request->getContent());
+        $json = DataObject::createFromString($request->getContent());
+        $password = $json->getString('password');
         $this->userMapper->updatePasswordByEmail($email, $password);
+        return new JsonResponse();
+    }
+
+    /**
+     * Update User data by id
+     *
+     * @param User $user
+     * @param Request $request
+     */
+    public function updateUser(User $user, Request $request)
+    {
+        $json = DataObject::createFromString($request->getContent());
+        $email = $json->getString('email');
+        $emailUpdate = ($user->getEmail() !== $email);
+        $user
+             ->setEmail($json->getString('email'))
+             ->setFirstName($json->getString('firstName'))
+             ->setLastName($json->getString('lastName'));
+        if ($emailUpdate) {
+            $user->setEmailConfirmed(false);
+        }
+        $this->userMapper->updateUser($user);
+        if ($emailUpdate) {
+            $this->sendConfirmationLink($user);
+        }
         return new JsonResponse();
     }
 }

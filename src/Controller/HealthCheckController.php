@@ -10,7 +10,8 @@ class HealthCheckController
     {
         return JsonResponse::create([
             'check' => 'OK',
-            'requestHeaders' => $request->headers->all()
+            'requestHeaders' => $request->headers->all(),
+            'env' => getenv('APP_ENV'),
         ]);
     }
 }

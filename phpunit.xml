@@ -18,9 +18,6 @@
         <testsuite name="integration">
             <directory>test/integration/</directory>
         </testsuite>
-        <testsuite name="functional">
-            <directory>test/functional/</directory>
-        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

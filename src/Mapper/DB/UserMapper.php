@@ -4,6 +4,7 @@ namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
 use Api\Model\User;
+use PDO;
 
 class UserMapper extends AbstractPDOMapper
 {
@@ -70,6 +71,26 @@ SQL;
     }
 
     /**
+     * @param User $user
+     * @return void
+     */
+    public function updateUser(User $user)
+    {
+        $email = $user->getEmail();
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $emailConfirmed = $user->getEmailConfirmed();
+        $id = $user->getId();
+        $update = $this->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
+        $update->bindValue(':email', $email);
+        $update->bindValue(':firstname', $firstName);
+        $update->bindValue(':lastname', $lastName);
+        $update->bindValue(':email_confirmed', $emailConfirmed, PDO::PARAM_BOOL);
+        $update->bindValue(':id', $id);
+        $update->execute();
+    }
+
+    /**
      * @param $email
      * @param $password
      * @return User|null
@@ -126,17 +147,6 @@ SQL;
         return sha1($password . $this->salt);
     }
 
-    public function create(array $row)
-    {
-        $user = new User();
-        return $user
-            ->setId($row['id'])
-            ->setEmail($row['email'])
-            ->setFirstName($row['first_name'])
-            ->setLastName($row['last_name'])
-            ->setPicture($row['picture']);
-    }
-
     /**
      * @param $email
      * @param $password
@@ -147,9 +157,25 @@ SQL;
         $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE email= :email');
         return $update->execute(
             [
-            ':email' => $email,
-            ':password' => $this->getPasswordHash($password)
+                ':email' => $email,
+                ':password' => $this->getPasswordHash($password)
             ]
         );
+    }
+
+    /**
+     * @param array $row
+     * @return User
+     */
+    public function create(array $row)
+    {
+        $user = new User();
+        return $user
+            ->setId($row['id'])
+            ->setEmail($row['email'])
+            ->setFirstName($row['first_name'])
+            ->setLastName($row['last_name'])
+            ->setPicture($row['picture'])
+            ->setEmailConfirmed($row['email_confirmed']);
     }
 }
