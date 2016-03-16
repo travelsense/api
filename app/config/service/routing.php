@@ -50,6 +50,12 @@ $app->get('/travel/{id}', 'controller.travel:getTravel')
     ->convert('id', $toInt)
     ->bind('travel-by-id');
 
+$app->put('/travel/{id}', 'controller.travel:updateTravel')
+    ->convert('id', $toInt);
+
+$app->delete('/travel/{id}', 'controller.travel:deleteTravel')
+    ->convert('id', $toInt);
+
 $app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
     ->assert('type', $iataType)
     ->bind('iata-by-code');

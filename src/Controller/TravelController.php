@@ -227,4 +227,34 @@ class TravelController extends ApiController
             ]
         ];
     }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
+    public function updateTravel($id, Request $request, User $user)
+    {
+        $travel = $this->getTravel($id);
+        if ($user->getId() === $travel['author']['id']) {
+            $json = DataObject::createFromString($request->getContent());
+            $this->travelMapper->update($id, $json->getString('title'), $json->getString('description'));
+        }
+        return [];
+    }
+
+    /**
+     * @param $id
+     * @param User $user
+     * @return array
+     */
+    public function deleteTravel($id, User $user)
+    {
+        $travel = $this->getTravel($id);
+        if ($user->getId() === $travel['author']['id']) {
+            $this->travelMapper->delete($id);
+        }
+        return [];
+    }
 }

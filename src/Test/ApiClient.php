@@ -157,6 +157,29 @@ class ApiClient
         return $this->get('/travel/' . urlencode($id));
     }
 
+    /**
+     * @param $id
+     * @param string $title
+     * @param string $description
+     * @return void
+     */
+    public function updateTravel($id, $title, $description)
+    {
+        $this->put('/travel/' . urlencode($id), [
+            'title' => $title,
+            'description' => $description,
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return void
+     */
+    public function deleteTravel($id)
+    {
+        $this->delete('/travel/' . urlencode($id));
+    }
+
     private function addAuth(array $headers)
     {
         $headers[] = 'Authorization: Token ' . $this->authToken;
@@ -196,6 +219,13 @@ class ApiClient
     {
         $headers = $this->addAuth($headers);
         $body = $this->http->put($this->host . $url, json_encode($body), $headers);
+        return $this->parse($body);
+    }
+
+    private function delete($url, array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $body = $this->http->delete($this->host . $url, $headers);
         return $this->parse($body);
     }
 }

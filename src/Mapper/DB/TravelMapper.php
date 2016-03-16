@@ -52,7 +52,8 @@ class TravelMapper extends AbstractPDOMapper
             'INSERT INTO travels '
             . '(title, description, author_id)'
             . ' VALUES '
-            . '(:title, :description, :author_id) RETURNING id');
+            . '(:title, :description, :author_id) RETURNING id'
+        );
         $insert->execute([
             ':title'       => $travel->getTitle(),
             ':description' => $travel->getDescription(),
@@ -71,5 +72,29 @@ class TravelMapper extends AbstractPDOMapper
             ->setTitle($row['title'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
+    }
+
+    public function update($travel_id, $title, $description)
+    {
+        $update = $this->prepare(
+            'UPDATE travels SET '
+            . 'title=:title, '
+            . 'description=:description, '
+            . 'updated=current_timestamp '
+            . 'WHERE id=:id'
+        );
+        $update->execute([
+            ':title'       => $title,
+            ':description' => $description,
+            ':id'          => $travel_id,
+        ]);
+    }
+
+    public function delete($travel_id)
+    {
+        $deleteDep = $this->prepare('DELETE FROM travel_comments WHERE travel_id=:travel_id');
+        $deleteDep->execute([':travel_id' => $travel_id]);
+        $deleteMain = $this->prepare("DELETE FROM travels WHERE id=:travel_id");
+        $deleteMain->execute([':travel_id' => $travel_id]);
     }
 }

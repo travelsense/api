@@ -20,5 +20,18 @@ class TravelCRUDTest extends FunctionalTestCase
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
             $this->assertObjectHasAttribute($attr, $author);
         }
+
+        $this->apiClient->updateTravel($id, 'Two Towers', 'Before the Return of the King');
+        $travelUpdated = $this->apiClient->getTravel($id);
+        $this->assertEquals('Two Towers', $travelUpdated->title);
+        $this->assertEquals('Before the Return of the King', $travelUpdated->description);
+
+        $this->apiClient->deleteTravel($id);
+        try {
+            $this->apiClient->getTravel($id);
+            $this->fail("travel record still exists after deleteTravel()");
+        } catch (\Exception $e) {
+            //Exception is expected because of getting non-exist record
+        }
     }
 }
