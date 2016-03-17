@@ -23,6 +23,7 @@ class ApiException extends Exception
     const VALIDATION = 300; // Input data validation errors
 
     const RESOURCE_NOT_FOUND = 400;
+    const ACCESS_DENIED = 403;
 
     // Mapping to HTTP code and message
     private static $map = [
@@ -31,6 +32,7 @@ class ApiException extends Exception
         self::INVALID_EMAIL_PASSWORD => [Response::HTTP_UNAUTHORIZED, 'Invalid email or password'],
         self::INVALID_TOKEN => [Response::HTTP_UNAUTHORIZED, 'Invalid or expired auth token'],
         self::RESOURCE_NOT_FOUND => [Response::HTTP_NOT_FOUND, 'Resource not found'],
+        self::ACCESS_DENIED => [Response::HTTP_FORBIDDEN, 'Access denied'],
     ];
 
     private $httpCode;

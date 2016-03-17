@@ -31,7 +31,9 @@ class TravelCRUDTest extends FunctionalTestCase
             $this->apiClient->getTravel($id);
             $this->fail("travel record still exists after deleteTravel()");
         } catch (\Exception $e) {
-            //Exception is expected because of getting non-exist record
+            if ($e->getCode() !== 404) {
+                $this->fail("Wrong error code for getting deleted travel: " . $e->getMessage());
+            }
         }
     }
 }
