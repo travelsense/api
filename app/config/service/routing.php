@@ -50,6 +50,13 @@ $app->get('/travel/{id}', 'controller.travel:getTravel')
     ->convert('id', $toInt)
     ->bind('travel-by-id');
 
+$app->post('/travel', 'controller.travel:addFavorite');
+
+$app->post('/travel', 'controller.travel:removeFavorite');
+
+$app->get('/travel/{userId}', 'controller.travel:getFavorite')
+    ->convert('userId', $toInt);
+
 $app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
     ->assert('type', $iataType)
     ->bind('iata-by-code');

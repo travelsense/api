@@ -78,6 +78,44 @@ class TravelController extends ApiController
         ];
     }
 
+    public function addFavorite(User $user, Travel $travel)
+    {
+        $userId = $user->getId();
+        $travelId = $travel->getId();
+        $this->travelMapper->addFavorite($userId, $travelId);
+    }
+
+    public function removeFavorite(User $user, Travel $travel)
+    {
+        $userId = $user->getId();
+        $travelId = $travel->getId();
+        $this->travelMapper->removeFavorite($userId, $travelId);
+    }
+
+    public function getFavorite($userId)
+    {
+        if ($userId === 0) {
+            return $this->getTravelMock();
+        }
+        $favoriteTravel = $this->travelMapper->getFavorite($userId);
+        if (!$favoriteTravel) {
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        $author = $favoriteTravel->getAuthor();
+        return [
+            'id' => $favoriteTravel->getId(),
+            'title' => $favoriteTravel->getTitle(),
+            'description' => $favoriteTravel->getDescription(),
+            'created' => $favoriteTravel->getCreated()->format(self::DATETIME_FORMAT),
+            'author' => [
+                'id' => $author->getId(),
+                'firstName' => $author->getFirstName(),
+                'lastName' => $author->getLastName(),
+                'picture' => $author->getPicture(),
+            ]
+        ];
+    }
+
     public function getTravelMock()
     {
         $led = [

@@ -72,4 +72,49 @@ class TravelMapper extends AbstractPDOMapper
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
     }
+
+    /**
+     * @param $userId
+     * @param $travelId
+     */
+    public function addFavorite($userId, $travelId)
+    {
+        $add = $this->prepare(
+            'INSERT INTO favorite_travels '
+            . '("user_id", "travel_id") '
+            . 'VALUES '
+            . '(:user_id, :travel_id)');
+        $add->execute([
+            ':user_id' => $userId,
+            ':travel_id' => $travelId,
+        ]);
+    }
+
+    /**
+     * @param $userId
+     * @param $travelId
+     */
+    public function removeFavorite($userId, $travelId)
+    {
+        $remove = $this->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id');
+        $remove->execute([
+            ':user_id' => $userId,
+            ':travel_id' => $travelId,
+        ]);
+    }
+
+    /**
+     * @param $userId
+     * @return Travel|null
+     */
+    public function getFavorite($userId)
+    {
+        $get = $this->prepare('SELECT * FROM travels t JOIN favorite_travels ft ON t.author_id = ft.user_id WHERE ft.user_id = :user_id');
+        $get->execute([':user_id' => $userId]);
+        $row = $get->fetch(PDO::FETCH_ASSOC);
+        $favoriteTravel = $this->createFromAlias($row, 't');
+        $author = $this->userMapper->createFromAlias($row, 'ft');
+        $favoriteTravel->setAuthor($author);
+        return $favoriteTravel;
+    }
 }
