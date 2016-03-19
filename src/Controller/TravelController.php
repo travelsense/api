@@ -7,6 +7,7 @@ use Api\Mapper\DB\TravelMapper;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -78,42 +79,25 @@ class TravelController extends ApiController
         ];
     }
 
-    public function addFavorite(User $user, Travel $travel)
+    public function addFavorite($id, User $user)
     {
         $userId = $user->getId();
-        $travelId = $travel->getId();
-        $this->travelMapper->addFavorite($userId, $travelId);
+        $travelId = $id;
+        $this->travelMapper->addFavorite($travelId, $userId);
+        return new JsonResponse();
     }
 
-    public function removeFavorite(User $user, Travel $travel)
+    public function removeFavorite($id, User $user)
     {
         $userId = $user->getId();
-        $travelId = $travel->getId();
-        $this->travelMapper->removeFavorite($userId, $travelId);
+        $travelId = $id;
+        $this->travelMapper->removeFavorite($travelId, $userId);
+        return new JsonResponse();
     }
 
-    public function getFavorite($userId)
+    public function getFavorite(User $user)
     {
-        if ($userId === 0) {
-            return $this->getTravelMock();
-        }
-        $favoriteTravel = $this->travelMapper->getFavorite($userId);
-        if (!$favoriteTravel) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
-        }
-        $author = $favoriteTravel->getAuthor();
-        return [
-            'id' => $favoriteTravel->getId(),
-            'title' => $favoriteTravel->getTitle(),
-            'description' => $favoriteTravel->getDescription(),
-            'created' => $favoriteTravel->getCreated()->format(self::DATETIME_FORMAT),
-            'author' => [
-                'id' => $author->getId(),
-                'firstName' => $author->getFirstName(),
-                'lastName' => $author->getLastName(),
-                'picture' => $author->getPicture(),
-            ]
-        ];
+
     }
 
     public function getTravelMock()

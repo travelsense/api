@@ -157,6 +157,21 @@ class ApiClient
         return $this->get('/travel/' . urlencode($id));
     }
 
+    public function addFavorite($id)
+    {
+        return $this->post('/travel/favorite/add/' . urlencode($id));
+    }
+
+    public function removeFavorite($id)
+    {
+        return $this->get('/travel/favorite/remove/' . urlencode($id));
+    }
+
+    public function getFavorite()
+    {
+        return $this->post('/travel/favorite/user');
+    }
+
     private function addAuth(array $headers)
     {
         $headers[] = 'Authorization: Token ' . $this->authToken;
