@@ -157,17 +157,28 @@ class ApiClient
         return $this->get('/travel/' . urlencode($id));
     }
 
-    public function addFavorite($id)
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function addTravelToFavorites($id)
     {
         return $this->post('/travel/favorite/' . urlencode($id));
     }
 
-    public function removeFavorite($id)
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function removeTravelFromFavorite($id)
     {
         return $this->delete('/travel/favorite/' . urlencode($id));
     }
 
-    public function getFavorite()
+    /**
+     * @return mixed
+     */
+    public function getAllFavorite()
     {
         return $this->get('/travel/getfavorite');
     }

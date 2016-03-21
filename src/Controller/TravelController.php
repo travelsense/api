@@ -51,20 +51,12 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param $id
+     * @param object $travel
+     * @param object $author
      * @return array
-     * @throws ApiException
      */
-    public function getTravel($id)
+    public function buildTravelView($travel, $author)
     {
-        if ($id === 0) {
-            return $this->getTravelMock();
-        }
-        $travel = $this->travelMapper->fetchById($id);
-        if (!$travel) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
-        }
-        $author = $travel->getAuthor();
         return [
             'id' => $travel->getId(),
             'title' => $travel->getTitle(),
@@ -79,47 +71,61 @@ class TravelController extends ApiController
         ];
     }
 
-    public function addFavorite($id, User $user)
+    /**
+     * @param $id
+     * @return array
+     * @throws ApiException
+     */
+    public function getTravel($id)
     {
-        $userId = $user->getId();
-        $travelId = $id;
-        $this->travelMapper->addFavorite($travelId, $userId);
-        return new JsonResponse();
-    }
-
-    public function removeFavorite($id, User $user)
-    {
-        $userId = $user->getId();
-        $travelId = $id;
-        $this->travelMapper->removeFavorite($travelId, $userId);
-        return new JsonResponse();
-    }
-
-    public function getFavorite(User $user)
-    {
-        $userId = $user->getId();
-        if ($userId === 0) {
+        if ($id === 0) {
             return $this->getTravelMock();
         }
-        $travels = $this->travelMapper->getFavorite($userId);
+        $travel = $this->travelMapper->fetchById($id);
+        if (!$travel) {
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        $author = $travel->getAuthor();
+        return $this->buildTravelView($travel, $author);
+    }
+
+    /**
+     * @param int $id
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function addFavorite($id, User $user)
+    {
+        $this->travelMapper->addFavorite($id, $user->getId());
+        return new JsonResponse();
+    }
+
+    /**
+     * @param int $id
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function removeFavorite($id, User $user)
+    {
+        $this->travelMapper->removeFavorite($id, $user->getId());
+        return new JsonResponse();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     * @throws ApiException
+     */
+    public function getFavorite(User $user)
+    {
+        $travels = $this->travelMapper->getFavorite($user->getId());
         if (!$travels) {
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
-        $ftravel = array();
+        $ftravel = [];
         foreach ($travels as $travel) {
             $author = $travel->getAuthor();
-            $ftravel[] = [
-                'id' => $travel->getId(),
-                'title' => $travel->getTitle(),
-                'description' => $travel->getDescription(),
-                'created' => $travel->getCreated()->format(self::DATETIME_FORMAT),
-                'author' => [
-                    'id' => $author->getId(),
-                    'firstName' => $author->getFirstName(),
-                    'lastName' => $author->getLastName(),
-                    'picture' => $author->getPicture(),
-                ]
-            ];
+            $ftravel[] = $this->buildTravelView($travel, $author);
         }
         return $ftravel;
     }
