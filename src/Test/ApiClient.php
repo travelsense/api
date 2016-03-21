@@ -159,17 +159,17 @@ class ApiClient
 
     public function addFavorite($id)
     {
-        return $this->post('/travel/favorite/add/' . urlencode($id));
+        return $this->post('/travel/favorite/' . urlencode($id));
     }
 
     public function removeFavorite($id)
     {
-        return $this->get('/travel/favorite/remove/' . urlencode($id));
+        return $this->delete('/travel/favorite/' . urlencode($id));
     }
 
     public function getFavorite()
     {
-        return $this->post('/travel/favorite/user');
+        return $this->get('/travel/favorite');
     }
 
     private function addAuth(array $headers)
@@ -211,6 +211,13 @@ class ApiClient
     {
         $headers = $this->addAuth($headers);
         $body = $this->http->put($this->host . $url, json_encode($body), $headers);
+        return $this->parse($body);
+    }
+
+    private function delete($url, array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $body = $this->http->delete($this->host . $url, $headers);
         return $this->parse($body);
     }
 }

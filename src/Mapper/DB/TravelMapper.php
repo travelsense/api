@@ -109,6 +109,24 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function getFavorite($userId)
     {
- 
+        $get = $this->prepare(
+                'SELECT t.*, u.* FROM  favorite_travels ft
+                JOIN travels t ON ft.travel_id = t.id
+                JOIN users u ON ft.user_id = u.id
+                WHERE ft.user_id = :user_id');
+        $get->execute(['user_id' => $userId]);
+//        $rows = $get->fetchAll(PDO::FETCH_ASSOC);
+//        return $get->fetchAll(PDO::FETCH_OBJ);
+        $rows = array();
+        while ($row = $get->fetchObject()){
+            $rows[] = $row;
+        }
+        $travels = array();
+        foreach ($rows as $row) {
+            $travel = $this->createFromAlias($row, 't');
+            $author = $this->userMapper->createFromAlias($row, 'u');
+            $travels[] = $travel->setAuthor($author);
+        }
+        return $travels;
     }
 }
