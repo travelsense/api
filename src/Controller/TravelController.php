@@ -101,25 +101,26 @@ class TravelController extends ApiController
         if ($userId === 0) {
             return $this->getTravelMock();
         }
-        $travels = $this->travelMapper->removeFavorite($userId);
-        if (!$travel) {
+        $travels = $this->travelMapper->getFavorite($userId);
+        if (!$travels) {
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
         $ftravel = array();
-        foreach ($travels as $travel){
-        $author = $travel->getAuthor();
-         $ftravel[] = [
-            'id' => $travel->getId(),
-            'title' => $travel->getTitle(),
-            'description' => $travel->getDescription(),
-            'created' => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'author' => [
-                'id' => $author->getId(),
-                'firstName' => $author->getFirstName(),
-                'lastName' => $author->getLastName(),
-                'picture' => $author->getPicture(),
-            ]
-        ];}
+        foreach ($travels as $travel) {
+            $author = $travel->getAuthor();
+            $ftravel[] = [
+                'id' => $travel->getId(),
+                'title' => $travel->getTitle(),
+                'description' => $travel->getDescription(),
+                'created' => $travel->getCreated()->format(self::DATETIME_FORMAT),
+                'author' => [
+                    'id' => $author->getId(),
+                    'firstName' => $author->getFirstName(),
+                    'lastName' => $author->getLastName(),
+                    'picture' => $author->getPicture(),
+                ]
+            ];
+        }
         return $ftravel;
     }
 

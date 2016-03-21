@@ -169,7 +169,7 @@ class ApiClient
 
     public function getFavorite()
     {
-        return $this->get('/travel/favorite');
+        return $this->get('/travel/getfavorite');
     }
 
     private function addAuth(array $headers)

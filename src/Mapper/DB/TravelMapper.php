@@ -115,17 +115,12 @@ class TravelMapper extends AbstractPDOMapper
                 JOIN users u ON ft.user_id = u.id
                 WHERE ft.user_id = :user_id');
         $get->execute(['user_id' => $userId]);
-//        $rows = $get->fetchAll(PDO::FETCH_ASSOC);
-//        return $get->fetchAll(PDO::FETCH_OBJ);
-        $rows = array();
-        while ($row = $get->fetchObject()){
-            $rows[] = $row;
-        }
         $travels = array();
-        foreach ($rows as $row) {
+        while ($row = $get->fetch(PDO::FETCH_ASSOC)){
             $travel = $this->createFromAlias($row, 't');
             $author = $this->userMapper->createFromAlias($row, 'u');
-            $travels[] = $travel->setAuthor($author);
+            $travel->setAuthor($author);
+            $travels[] = $travel;
         }
         return $travels;
     }
