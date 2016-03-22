@@ -13,7 +13,6 @@ class TravelFavoriteTest extends FunctionalTestCase
         $favoriteTravels = $this->apiClient->getAllFavorite();
         $this->assertEquals(1, count($favoriteTravels));
         $travel = $favoriteTravels[0];
-//        $response = reset($response);
         $this->assertEquals('Hobbit', $travel->title);
         $this->assertEquals('There and back again', $travel->description);
         $this->apiClient->removeTravelFromFavorite($id);
