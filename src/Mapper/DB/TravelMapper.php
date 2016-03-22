@@ -107,7 +107,7 @@ class TravelMapper extends AbstractPDOMapper
      * @param int $userId
      * @return Travel[]
      */
-    public function getFavorite($userId)
+    public function getFavorites($userId)
     {
         $select = $this->prepare(
                 'SELECT t.*, u.* FROM  favorite_travels ft

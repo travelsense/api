@@ -9,14 +9,14 @@ class TravelFavoriteTest extends FunctionalTestCase
     {
         $this->createAndLoginUser();
         $id = $this->apiClient->createTravel('Hobbit', 'There and back again');
-        $this->apiClient->addTravelToFavorite($id);
-        $favoriteTravels = $this->apiClient->getAllFavorite();
+        $this->apiClient->addTravelToFavorites($id);
+        $favoriteTravels = $this->apiClient->getFavoriteTravels();
         $this->assertEquals(1, count($favoriteTravels));
         $travel = $favoriteTravels[0];
         $this->assertEquals('Hobbit', $travel->title);
         $this->assertEquals('There and back again', $travel->description);
-        $this->apiClient->removeTravelFromFavorite($id);
-        $favoriteTravels = $this->apiClient->getAllFavorite();
+        $this->apiClient->removeTravelFromFavorites($id);
+        $favoriteTravels = $this->apiClient->getFavoriteTravels();
         $this->assertEmpty($favoriteTravels);
     }
 }

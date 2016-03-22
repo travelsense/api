@@ -161,7 +161,7 @@ class ApiClient
      * @param int $id
      * @return object
      */
-    public function addTravelToFavorite($id)
+    public function addTravelToFavorites($id)
     {
         return $this->post('/travel/favorite/' . urlencode($id));
     }
@@ -170,7 +170,7 @@ class ApiClient
      * @param int $id
      * @return object
      */
-    public function removeTravelFromFavorite($id)
+    public function removeTravelFromFavorites($id)
     {
         return $this->delete('/travel/favorite/' . urlencode($id));
     }
@@ -178,7 +178,7 @@ class ApiClient
     /**
      * @return array
      */
-    public function getAllFavorite()
+    public function getFavoriteTravels()
     {
         return $this->get('/travel/favorite');
     }

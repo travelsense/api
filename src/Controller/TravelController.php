@@ -114,9 +114,9 @@ class TravelController extends ApiController
      * @param User $user
      * @return array
      */
-    public function getFavorite(User $user)
+    public function getFavorites(User $user)
     {
-        $travels = $this->travelMapper->getFavorite($user->getId());
+        $travels = $this->travelMapper->getFavorites($user->getId());
         $response = [];
         foreach ($travels as $travel) {
             $response[] = $this->buildTravelView($travel);
