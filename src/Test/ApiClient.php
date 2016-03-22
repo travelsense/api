@@ -161,7 +161,7 @@ class ApiClient
      * @param int $id
      * @return object
      */
-    public function addTravelToFavorites($id)
+    public function addTravelToFavorite($id)
     {
         return $this->post('/travel/favorite/' . urlencode($id));
     }
@@ -180,7 +180,7 @@ class ApiClient
      */
     public function getAllFavorite()
     {
-        return $this->get('/travel/getfavorite');
+        return $this->get('/travel/favorite');
     }
 
     private function addAuth(array $headers)

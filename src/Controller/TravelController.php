@@ -51,12 +51,13 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param object $travel
+     * @param Travel $travel
      * @param object $author
      * @return array
      */
-    public function buildTravelView($travel, $author)
+    public function buildTravelView($travel)
     {
+        $author = $travel->getAuthor();
         return [
             'id' => $travel->getId(),
             'title' => $travel->getTitle(),
@@ -85,8 +86,7 @@ class TravelController extends ApiController
         if (!$travel) {
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
-        $author = $travel->getAuthor();
-        return $this->buildTravelView($travel, $author);
+        return $this->buildTravelView($travel);
     }
 
     /**
@@ -114,20 +114,15 @@ class TravelController extends ApiController
     /**
      * @param User $user
      * @return array
-     * @throws ApiException
      */
     public function getFavorite(User $user)
     {
         $travels = $this->travelMapper->getFavorite($user->getId());
-        if (!$travels) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
-        }
-        $ftravel = [];
+        $response = [];
         foreach ($travels as $travel) {
-            $author = $travel->getAuthor();
-            $ftravel[] = $this->buildTravelView($travel, $author);
+            $response[] = $this->buildTravelView($travel);
         }
-        return $ftravel;
+        return $response;
     }
 
     public function getTravelMock()

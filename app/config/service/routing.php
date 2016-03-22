@@ -46,7 +46,7 @@ $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEs
 
 $app->post('/travel', 'controller.travel:createTravel');
 
-$app->get('/travel/getfavorite', 'controller.travel:getFavorite');
+$app->get('/travel/favorite', 'controller.travel:getFavorite');
 
 $app->get('/travel/{id}', 'controller.travel:getTravel')
     ->convert('id', $toInt)
