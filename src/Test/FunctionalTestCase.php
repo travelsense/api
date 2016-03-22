@@ -5,7 +5,7 @@ use Api\Application;
 use Api\Model\User;
 use PDO;
 
-class FunctionalTestCase extends \PHPUnit_Framework_TestCase
+abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 {
     use PHPServerTrait;
 

@@ -61,7 +61,7 @@ class Migrator
     {
         $select = $this->pdo->prepare("SELECT version FROM {$this->table} ORDER BY  id DESC LIMIT 1");
         $select->execute();
-        return (int)$select->fetchColumn();
+        return (int) $select->fetchColumn();
     }
 
 
@@ -136,7 +136,7 @@ class Migrator
         $pattern = "/^{$this->name}\\.(\\d+)\\.(up|dn)\\..*\$/";
         foreach (new \DirectoryIterator($this->dir) as $file) {
             if (preg_match($pattern, $file->getFilename(), $matches)) {
-                $ver = $matches[1];
+                $ver = (int) $matches[1];
                 $dir = $matches[2];
                 if ($dir === self::DIR_UP) {
                     $this->upgrades[$ver] = $matches[0];
