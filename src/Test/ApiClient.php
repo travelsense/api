@@ -176,7 +176,7 @@ class ApiClient
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getAllFavorite()
     {
