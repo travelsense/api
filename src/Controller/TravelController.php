@@ -52,7 +52,6 @@ class TravelController extends ApiController
 
     /**
      * @param Travel $travel
-     * @param object $author
      * @return array
      */
     public function buildTravelView($travel)
