@@ -196,7 +196,7 @@ class ApiClient
             $message = "HTTP ERROR {$response->getCode()}\n"
                 . implode("\n", $response->getHeaders())
                 . "\n\n" . $response->getBody();
-            throw new \RuntimeException($message, $response->getCode());
+            throw new ApiClientException($message, $response->getCode());
         }
         return json_decode($response->getBody());
     }

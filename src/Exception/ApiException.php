@@ -24,7 +24,6 @@ class ApiException extends Exception
 
     // Not found
     const RESOURCE_NOT_FOUND = 400;
-    const ACCESS_DENIED = 403;
 
     // Access violation
     const ACCESS_DENIED = 500;
