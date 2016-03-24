@@ -44,11 +44,19 @@ $app->post('/token', 'controller.auth:create')
 
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEstimate');
 
-$app->post('/travel', 'controller.travel:createTravel');
+$app->get('/travel/favorite', 'controller.travel:getFavorites');
+
+$app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
+    ->convert('id', $toInt);
+
+$app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite')
+    ->convert('id', $toInt);
 
 $app->get('/travel/{id}', 'controller.travel:getTravel')
     ->convert('id', $toInt)
     ->bind('travel-by-id');
+
+$app->post('/travel', 'controller.travel:createTravel');
 
 $app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
     ->assert('type', $iataType)

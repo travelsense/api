@@ -157,6 +157,32 @@ class ApiClient
         return $this->get('/travel/' . urlencode($id));
     }
 
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function addTravelToFavorites($id)
+    {
+        return $this->post('/travel/favorite/' . urlencode($id));
+    }
+
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function removeTravelFromFavorites($id)
+    {
+        return $this->delete('/travel/favorite/' . urlencode($id));
+    }
+
+    /**
+     * @return array
+     */
+    public function getFavoriteTravels()
+    {
+        return $this->get('/travel/favorite');
+    }
+
     private function addAuth(array $headers)
     {
         $headers[] = 'Authorization: Token ' . $this->authToken;
@@ -196,6 +222,13 @@ class ApiClient
     {
         $headers = $this->addAuth($headers);
         $body = $this->http->put($this->host . $url, json_encode($body), $headers);
+        return $this->parse($body);
+    }
+
+    private function delete($url, array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $body = $this->http->delete($this->host . $url, $headers);
         return $this->parse($body);
     }
 }
