@@ -22,8 +22,12 @@ class ApiException extends Exception
     // Validation
     const VALIDATION = 300; // Input data validation errors
 
+    // Not found
     const RESOURCE_NOT_FOUND = 400;
     const ACCESS_DENIED = 403;
+
+    // Access violation
+    const ACCESS_DENIED = 500;
 
     // Mapping to HTTP code and message
     private static $map = [
