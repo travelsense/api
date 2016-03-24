@@ -7,6 +7,7 @@ use Api\Mapper\DB\TravelMapper;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -50,19 +51,11 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param $id
+     * @param Travel $travel
      * @return array
-     * @throws ApiException
      */
-    public function getTravel($id)
+    public function buildTravelView($travel)
     {
-        if ($id === 0) {
-            return $this->getTravelMock();
-        }
-        $travel = $this->travelMapper->fetchById($id);
-        if (!$travel) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
-        }
         $author = $travel->getAuthor();
         return [
             'id' => $travel->getId(),
@@ -76,6 +69,59 @@ class TravelController extends ApiController
                 'picture' => $author->getPicture(),
             ]
         ];
+    }
+
+    /**
+     * @param $id
+     * @return array
+     * @throws ApiException
+     */
+    public function getTravel($id)
+    {
+        if ($id === 0) {
+            return $this->getTravelMock();
+        }
+        $travel = $this->travelMapper->fetchById($id);
+        if (!$travel) {
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        return $this->buildTravelView($travel);
+    }
+
+    /**
+     * @param int $id
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function addFavorite($id, User $user)
+    {
+        $this->travelMapper->addFavorite($id, $user->getId());
+        return new JsonResponse();
+    }
+
+    /**
+     * @param int $id
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function removeFavorite($id, User $user)
+    {
+        $this->travelMapper->removeFavorite($id, $user->getId());
+        return new JsonResponse();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function getFavorites(User $user)
+    {
+        $travels = $this->travelMapper->getFavorites($user->getId());
+        $response = [];
+        foreach ($travels as $travel) {
+            $response[] = $this->buildTravelView($travel);
+        }
+        return $response;
     }
 
     public function getTravelMock()

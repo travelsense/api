@@ -5,7 +5,7 @@ apt-get update
 apt-get upgrade -y
 
 ### PHP
-apt-get install php5-common php5-dev php5-cli php5-fpm curl php5-curl php5-pgsql -y
+apt-get install php5-common php5-dev php5-cli php5-fpm curl php5-curl php5-pgsql php5-xdebug -y
 for SAPI in cli fpm;
  do
     cp "/vagrant/provision/config/php/$SAPI/php.ini" "/etc/php5/$SAPI/php.ini"

@@ -106,4 +106,56 @@ class TravelMapper extends AbstractPDOMapper
         $deleteMain = $this->prepare("DELETE FROM travels WHERE id = :id");
         $deleteMain->execute([':id' => $id]);
     }
+
+    /**
+     * @param int $travelId
+     * @param int $userId
+     */
+    public function addFavorite($travelId, $userId)
+    {
+        $insert = $this->prepare(
+            'INSERT INTO favorite_travels '
+            . '(user_id, travel_id) '
+            . 'VALUES '
+            . '(:user_id, :travel_id)');
+        $insert->execute([
+            ':user_id' => $userId,
+            ':travel_id' => $travelId,
+        ]);
+    }
+
+    /**
+     * @param int $travelId
+     * @param int $userId
+     */
+    public function removeFavorite($travelId, $userId)
+    {
+        $delete = $this->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id');
+        $delete->execute([
+            ':user_id' => $userId,
+            ':travel_id' => $travelId,
+        ]);
+    }
+
+    /**
+     * @param int $userId
+     * @return Travel[]
+     */
+    public function getFavorites($userId)
+    {
+        $select = $this->prepare(
+                'SELECT t.*, u.* FROM  favorite_travels ft
+                JOIN travels t ON ft.travel_id = t.id
+                JOIN users u ON ft.user_id = u.id
+                WHERE ft.user_id = :user_id');
+        $select->execute(['user_id' => $userId]);
+        $travels = [];
+        while ($row = $select->fetch(PDO::FETCH_ASSOC)){
+            $travel = $this->createFromAlias($row, 't');
+            $author = $this->userMapper->createFromAlias($row, 'u');
+            $travel->setAuthor($author);
+            $travels[] = $travel;
+        }
+        return $travels;
+    }
 }

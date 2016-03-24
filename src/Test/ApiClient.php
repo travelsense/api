@@ -180,6 +180,32 @@ class ApiClient
         $this->delete('/travel/' . urlencode($id));
     }
 
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function addTravelToFavorites($id)
+    {
+        return $this->post('/travel/favorite/' . urlencode($id));
+    }
+
+    /**
+     * @param int $id
+     * @return object
+     */
+    public function removeTravelFromFavorites($id)
+    {
+        return $this->delete('/travel/favorite/' . urlencode($id));
+    }
+
+    /**
+     * @return array
+     */
+    public function getFavoriteTravels()
+    {
+        return $this->get('/travel/favorite');
+    }
+
     private function addAuth(array $headers)
     {
         $headers[] = 'Authorization: Token ' . $this->authToken;
