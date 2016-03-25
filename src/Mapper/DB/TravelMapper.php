@@ -124,4 +124,28 @@ class TravelMapper extends AbstractPDOMapper
         }
         return $travels;
     }
+
+    public function getTravelsByCategory($name, $limit, $offset)
+    {
+        $select = $this->prepare(
+                'SELECT t.*, u.* FROM travel_category ct
+                JOIN travels t ON ct.travel_id = t.id
+                JOIN categories c ON ct.category_id = c.id
+                JOIN users u ON u.id = t.author_id
+                WHERE c.name = :name
+                LIMIT :limit OFFSET :offset');
+        $select->execute([
+            'name' => $name,
+            ':limit' => $limit,
+            ':offset' => $offset
+        ]);
+        $travels = [];
+        while($row = $select->fetch(PDO::FETCH_ASSOC)){
+            $travel = $this->createFromAlias($row, 't');
+            $author = $this->userMapper->createFromAlias($row, 'u');
+            $travel->setAuthor($author);
+            $travels[] = $travel;
+        }
+        return $travels;
+    }
 }
