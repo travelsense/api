@@ -159,6 +159,12 @@ class TravelMapper extends AbstractPDOMapper
         return $travels;
     }
 
+    /**
+     * @param string $name
+     * @param int $limit
+     * @param int $offset
+     * @return Travel[]
+     */
     public function getTravelsByCategory($name, $limit, $offset)
     {
         $select = $this->prepare(

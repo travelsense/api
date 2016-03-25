@@ -89,6 +89,12 @@ class TravelController extends ApiController
         return $this->buildTravelView($travel);
     }
 
+    /**
+     * @param string $name
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
     public function getTravelsByCategory($name, $limit = 10, $offset = 0)
     {
         $travels = $this->travelMapper->getTravelsByCategory($name, $limit, $offset);

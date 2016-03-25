@@ -157,6 +157,10 @@ class ApiClient
         return $this->get('/travel/' . urlencode($id));
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getTravelsByCategory($name)
     {
         return $this->get('/travel/by-category/' . urlencode($name));
