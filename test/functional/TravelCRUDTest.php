@@ -1,6 +1,7 @@
 <?php
 namespace Test;
 
+use Api\Test\ApiClientException;
 use Api\Test\FunctionalTestCase;
 
 class TravelCRUDTest extends FunctionalTestCase
@@ -19,6 +20,21 @@ class TravelCRUDTest extends FunctionalTestCase
 
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
             $this->assertObjectHasAttribute($attr, $author);
+        }
+
+        $this->apiClient->updateTravel($id, 'Two Towers', 'Before the Return of the King');
+        $travelUpdated = $this->apiClient->getTravel($id);
+        $this->assertEquals('Two Towers', $travelUpdated->title);
+        $this->assertEquals('Before the Return of the King', $travelUpdated->description);
+
+        $this->apiClient->deleteTravel($id);
+        try {
+            $this->apiClient->getTravel($id);
+            $this->fail("travel record still exists after deleteTravel()");
+        } catch (ApiClientException $e) {
+            if ($e->getCode() !== 404) {
+                $this->fail("Wrong error code for getting deleted travel: " . $e->getMessage());
+            }
         }
     }
 }
