@@ -35,6 +35,9 @@ class TravelMapper extends AbstractPDOMapper
         $select = $this->prepare('SELECT * FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id');
         $select->execute(['id' => $id]);
         $row = $select->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
         $travel = $this->createFromAlias($row, 't');
         $author = $this->userMapper->createFromAlias($row, 'u');
         $travel->setAuthor($author);
@@ -52,7 +55,8 @@ class TravelMapper extends AbstractPDOMapper
             'INSERT INTO travels '
             . '(title, description, author_id)'
             . ' VALUES '
-            . '(:title, :description, :author_id) RETURNING id');
+            . '(:title, :description, :author_id) RETURNING id'
+        );
         $insert->execute([
             ':title'       => $travel->getTitle(),
             ':description' => $travel->getDescription(),
@@ -62,6 +66,10 @@ class TravelMapper extends AbstractPDOMapper
         $travel->setId($id);
     }
 
+    /**
+     * @param array $row
+     * @return Travel
+     */
     protected function create(array $row)
     {
         $travel = new Travel();
@@ -71,6 +79,32 @@ class TravelMapper extends AbstractPDOMapper
             ->setTitle($row['title'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
+    }
+
+    /**
+     * Update title and description in DB
+     *
+     * @param Travel $travel
+     */
+    public function update(Travel $travel)
+    {
+        $update = $this->prepare(
+            'UPDATE travels SET '
+            . 'title = :title, '
+            . 'description = :description '
+            . 'WHERE id = :id'
+        );
+        $update->execute([
+            ':title'       => $travel->getTitle(),
+            ':description' => $travel->getDescription(),
+            ':id'          => $travel->getId(),
+        ]);
+    }
+
+    public function delete($id)
+    {
+        $deleteMain = $this->prepare("DELETE FROM travels WHERE id = :id");
+        $deleteMain->execute([':id' => $id]);
     }
 
     /**

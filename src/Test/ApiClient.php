@@ -158,6 +158,29 @@ class ApiClient
     }
 
     /**
+     * @param $id
+     * @param string $title
+     * @param string $description
+     * @return void
+     */
+    public function updateTravel($id, $title, $description)
+    {
+        $this->put('/travel/' . urlencode($id), [
+            'title' => $title,
+            'description' => $description,
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return void
+     */
+    public function deleteTravel($id)
+    {
+        $this->delete('/travel/' . urlencode($id));
+    }
+
+    /**
      * @param int $id
      * @return object
      */
@@ -199,7 +222,7 @@ class ApiClient
             $message = "HTTP ERROR {$response->getCode()}\n"
                 . implode("\n", $response->getHeaders())
                 . "\n\n" . $response->getBody();
-            throw new \RuntimeException($message, $response->getCode());
+            throw new ApiClientException($message, $response->getCode());
         }
         return json_decode($response->getBody());
     }

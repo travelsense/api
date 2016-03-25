@@ -273,4 +273,50 @@ class TravelController extends ApiController
             ]
         ];
     }
+
+    /**
+     * @param $id
+     * @param User $user
+     * @return Travel
+     * @throws ApiException
+     */
+    private function getOwnedTravel($id, User $user)
+    {
+        $travel = $this->travelMapper->fetchById($id);
+        if (!$travel) {
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        if ($travel->getAuthor()->getId() !== $user->getId()) {
+            throw ApiException::create(ApiException::ACCESS_DENIED);
+        }
+        return $travel;
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
+    public function updateTravel($id, Request $request, User $user)
+    {
+        $travel = $this->getOwnedTravel($id, $user);
+        $json = DataObject::createFromString($request->getContent());
+        $travel->setTitle($json->getString('title'));
+        $travel->setDescription($json->getString('description'));
+        $this->travelMapper->update($travel);
+        return [];
+    }
+
+    /**
+     * @param $id
+     * @param User $user
+     * @return array
+     */
+    public function deleteTravel($id, User $user)
+    {
+        $travel = $this->getOwnedTravel($id, $user);
+        $this->travelMapper->delete($travel->getId());
+        return [];
+    }
 }
