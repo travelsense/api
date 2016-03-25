@@ -1,4 +1,5 @@
 <?php
+
 namespace Api\Controller;
 
 use Api\Exception\ApiException;
@@ -86,6 +87,22 @@ class TravelController extends ApiController
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
         return $this->buildTravelView($travel);
+    }
+
+    /**
+     * @param string $name
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTravelsByCategory($name, $limit = 10, $offset = 0)
+    {
+        $travels = $this->travelMapper->getTravelsByCategory($name, $limit, $offset);
+        $response = [];
+        foreach ($travels as $travel) {
+            $response[] = $this->buildTravelView($travel);
+        }
+        return $response;
     }
 
     /**
@@ -210,7 +227,6 @@ class TravelController extends ApiController
                 [
                     'offset' => 0,
                     'offsetUnit' => 'minute',
-
                     'type' => 'flight',
                     'segments' => [
                         [

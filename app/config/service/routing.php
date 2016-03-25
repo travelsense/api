@@ -44,6 +44,8 @@ $app->post('/token', 'controller.auth:create')
 
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEstimate');
 
+$app->get('/travel/by-category/{name}', 'controller.travel:getTravelsByCategory');
+
 $app->get('/travel/favorite', 'controller.travel:getFavorites');
 
 $app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
