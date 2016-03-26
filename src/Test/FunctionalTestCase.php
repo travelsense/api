@@ -41,7 +41,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
             $pdo->exec("CREATE DATABASE {$db['database']} OWNER={$db['user']}");
             $this->app["db.$name.migrator"]->upgrade();
         }
-        $this->startServer(true);
+        $this->startServer(false);
         $this->apiClient = new ApiClient("$this->host:$this->port");
     }
 

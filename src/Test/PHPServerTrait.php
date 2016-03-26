@@ -28,9 +28,9 @@ trait PHPServerTrait
 
     /**
      * start the php dev server
-     * @param bool $outpt
+     * @param bool $output
      */
-    public function startServer($outpt = false)
+    public function startServer($output = false)
     {
         if (!$this->server) {
             $this->server = new HttpServer(
@@ -43,7 +43,7 @@ trait PHPServerTrait
         if ($this->server->isRunning()) {
             throw new LogicException('Server is already running');
         }
-        if ($outpt) {
+        if ($output) {
             $this->server->enableOutput();
         } else {
             $this->server->disableOutput();
