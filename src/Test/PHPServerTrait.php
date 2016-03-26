@@ -28,8 +28,9 @@ trait PHPServerTrait
 
     /**
      * start the php dev server
+     * @param bool $output
      */
-    public function startServer()
+    public function startServer($output = false)
     {
         if (!$this->server) {
             $this->server = new HttpServer(
@@ -42,7 +43,11 @@ trait PHPServerTrait
         if ($this->server->isRunning()) {
             throw new LogicException('Server is already running');
         }
-        $this->server->disableOutput();
+        if ($output) {
+            $this->server->enableOutput();
+        } else {
+            $this->server->disableOutput();
+        }
         $dir = getcwd();
         chdir(__DIR__ . '/../../public/');
         $this->server->start();
