@@ -138,13 +138,15 @@ class ApiClient
      * Create a new Travel
      * @param string $title
      * @param string $description
+     * @param object|array $content
      * @return int
      */
-    public function createTravel($title, $description)
+    public function createTravel($title, $description, $content = [])
     {
         return $this->post('/travel', [
             'title' => $title,
             'description' => $description,
+            'content' => $content,
         ])->id;
     }
 
@@ -170,13 +172,14 @@ class ApiClient
      * @param $id
      * @param string $title
      * @param string $description
-     * @return void
+     * @param object|array $content
      */
-    public function updateTravel($id, $title, $description)
+    public function updateTravel($id, $title, $description, $content)
     {
         $this->put('/travel/' . urlencode($id), [
             'title' => $title,
             'description' => $description,
+            'content' => $content
         ]);
     }
 

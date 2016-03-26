@@ -46,6 +46,7 @@ class TravelController extends ApiController
         $travel->setAuthor($user);
         $travel->setTitle($json->getString('title'));
         $travel->setDescription($json->getString('description'));
+        $travel->setContent($json->get('content'));
         $this->travelMapper->insert($travel);
 
         return ['id' => $travel->getId()];
@@ -62,6 +63,7 @@ class TravelController extends ApiController
             'id' => $travel->getId(),
             'title' => $travel->getTitle(),
             'description' => $travel->getDescription(),
+            'content' => $travel->getContent(),
             'created' => $travel->getCreated()->format(self::DATETIME_FORMAT),
             'author' => [
                 'id' => $author->getId(),
@@ -320,6 +322,7 @@ class TravelController extends ApiController
         $json = DataObject::createFromString($request->getContent());
         $travel->setTitle($json->getString('title'));
         $travel->setDescription($json->getString('description'));
+        $travel->setContent($json->get('content'));
         $this->travelMapper->update($travel);
         return [];
     }

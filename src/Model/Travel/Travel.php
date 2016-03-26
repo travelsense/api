@@ -29,6 +29,11 @@ class Travel
     private $author;
 
     /**
+     * @var object|array
+     */
+    private $content;
+
+    /**
      * @return int
      */
     public function getId()
@@ -99,4 +104,23 @@ class Travel
         $this->author = $author;
         return $this;
     }
+
+    /**
+     * @return array|object
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param array|object $content
+     * @return Travel
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+        return $this;
+    }
+    
 }
