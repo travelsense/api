@@ -1,22 +1,22 @@
 <?php
 /**
  * Mail service config
- * @var $app Application
+ * @var $app Api\Application
  */
 
 use Api\Service\Mailer\MailerService;
-use Silex\Provider\SwiftmailerServiceProvider;
 
-// Swift Mailer
-$app->register(new SwiftmailerServiceProvider());
-$app['swiftmailer.transport'] = $app->share(function($app) {
-    return Swift_SendmailTransport::newInstance();
+$app['mailer'] = $app->share(function($app) {
+        $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+        ->setUsername($app['config']['email']['smtp_user'])
+        ->setPassword($app['config']['email']['smtp_password']);
+    return Swift_Mailer::newInstance($transport);
 });
 
 // MailerService
 $app['email.service'] = $app->share(function($app) {
-    $mailer = new MailerService($app['mailer'], $app['twig'], $app['config']['email']);
-    $mailer->setLogger($app['monolog']);
-    return $mailer;
+    $service = new MailerService($app['mailer'], $app['twig'], $app['config']['email']);
+    $service->setLogger($app['monolog']);
+    return $service;
 });
 

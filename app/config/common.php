@@ -25,11 +25,11 @@ return [
         'default' => 'Cthulhu fhtagn!',
     ],
     'email' => [
-        'smtp_user' => 'smtp_user',
-        'smtp_password' => 'smtp_password',
-        'from_address' => 'robot@hoptrip',
+        'smtp_user' => 'noreply@hoptrip.us',
+        'smtp_password' => 'xxx',
+        'from_address' => 'noreply@hoptrip.us',
         'from_name' => 'Hoptrip',
-        'base_url' => 'https://hoptrip.com',
+        'base_url' => 'https://hoptrip.us',
         'message_log' => '/tmp/email.log', // used in Api\Test\Mailer
     ],
     'security' => [
