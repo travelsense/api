@@ -51,6 +51,7 @@ trait PHPServerTrait
         $dir = getcwd();
         chdir(__DIR__ . '/../../public/');
         $this->server->start();
+        sleep(1); // Warming up for too long. See Issue #66
         chdir($dir);
     }
 
