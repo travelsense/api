@@ -1,1 +1,0 @@
-ALTER TABLE travels ADD COLUMN content JSON NOT NULL DEFAULT '[]' :: JSON;

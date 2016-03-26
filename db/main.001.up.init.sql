@@ -9,8 +9,6 @@ $$ LANGUAGE 'plpgsql';
 
 
 -- Expirable Storage
-
-
 CREATE TABLE IF NOT EXISTS expirable_storage
 (
   id SERIAL NOT NULL PRIMARY KEY ,
@@ -22,8 +20,6 @@ CREATE TABLE IF NOT EXISTS expirable_storage
 
 
 -- Users
-
-
 CREATE TABLE IF NOT EXISTS users
 (
   id SERIAL NOT NULL PRIMARY KEY ,
@@ -43,8 +39,6 @@ ON users FOR EACH ROW EXECUTE PROCEDURE
 
 
 -- Sessions
-
-
 CREATE TABLE IF NOT EXISTS sessions
 (
   id SERIAL NOT NULL PRIMARY KEY ,
@@ -61,14 +55,13 @@ ON sessions FOR EACH ROW EXECUTE PROCEDURE
 
 
 -- Travels
-
-
 CREATE TABLE IF NOT EXISTS travels
 (
   id SERIAL NOT NULL PRIMARY KEY ,
   author_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
+  content JSON NOT NULL DEFAULT '[]' :: JSON,
   created TIMESTAMP DEFAULT now(),
   updated TIMESTAMP
 );
@@ -79,8 +72,6 @@ ON travels FOR EACH ROW EXECUTE PROCEDURE
 
 
 -- Travel comments
-
-
 CREATE TABLE IF NOT EXISTS travel_comments
 (
   id SERIAL NOT NULL PRIMARY KEY ,
@@ -96,10 +87,31 @@ ON travel_comments FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 
 
+-- Favorite travels
+CREATE TABLE IF NOT EXISTS favorite_travels
+(
+  user_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  travel_id INTEGER REFERENCES travels (id) ON UPDATE CASCADE ON DELETE SET NULL,
+  CONSTRAINT favorite_travels_pkey PRIMARY KEY (user_id, travel_id)
+);
+
+-- Categories of travels
+CREATE TABLE IF NOT EXISTS categories
+(
+  id SERIAL NOT NULL PRIMARY KEY ,
+  name TEXT NOT NULL
+);
+
+-- Category and Travel
+CREATE TABLE IF NOT EXISTS travel_category
+(
+  travel_id INTEGER REFERENCES travels (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  category_id INTEGER REFERENCES categories (id) ON UPDATE CASCADE ON DELETE SET NULL,
+  CONSTRAINT travel_category_pkey PRIMARY KEY (travel_id, category_id)
+);
+
 
 -- IATA
-
-
 CREATE TABLE IF NOT EXISTS iata_carriers
 (
   code TEXT NOT NULL PRIMARY KEY,
