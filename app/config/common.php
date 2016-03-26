@@ -1,8 +1,6 @@
 <?php
 /**
  * Main application config.
- *
- * WARNING! Mind the internal keys in Silex\Application
  */
 return [
     'secure_json' => false,
@@ -18,7 +16,7 @@ return [
     ],
     'debug' => false,
     'log' => [
-        'main' => '/var/log/vaca.log',
+        'main' => '/var/log/api.log',
     ],
     'error_message_mapping' => [
         404 => 'Resource not found',
@@ -27,9 +25,11 @@ return [
         'default' => 'Cthulhu fhtagn!',
     ],
     'email' => [
-        'from_address' => 'robot@travelsen.se',
-        'from_name' => 'Travelsen.se',
-        'base_url' => 'https://travelnsen.se',
+        'smtp_user' => 'smtp_user',
+        'smtp_password' => 'smtp_password',
+        'from_address' => 'robot@hoptrip',
+        'from_name' => 'Hoptrip',
+        'base_url' => 'https://hoptrip.com',
         'message_log' => '/tmp/email.log', // used in Api\Test\Mailer
     ],
     'security' => [
