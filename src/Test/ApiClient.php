@@ -67,6 +67,16 @@ class ApiClient
             ->token;
     }
 
+    /**
+     * @param string $fbToken
+     * @return string Auth token
+     */
+    public function getTokenByFacebook($fbToken)
+    {
+        return $this->post('/token', ['fbToken' => $fbToken])
+            ->token;
+    }
+
     public function confirmEmail($email)
     {
         return $this->post('/email/confirm/'.urlencode($email));
