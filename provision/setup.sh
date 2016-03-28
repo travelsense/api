@@ -1,10 +1,10 @@
 #!/bin/bash
 ### Packages and repos
-echo deb http://packages.dotdeb.org jessie all >> /etc/apt/sources.list
-echo deb-src http://packages.dotdeb.org jessie all >> /etc/apt/sources.list 
-wget https://www.dotdeb.org/dotdeb.gpg
-sudo apt-key add dotdeb.gpg
-apt-get update
+echo deb http://packages.dotdeb.org jessie all >> /etc/apt/sources.list.d/dotdeb.list
+echo deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main >> /etc/apt/sources.list.d/postgresql.list 
+wget -qO - https://www.dotdeb.org/dotdeb.gpg | apt-key add -
+wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc |  apt-key add -
+apt-get update && apt-get upgrade -y
 
 ### PHP
 apt-get install php7.0-common php7.0-dev php7.0-cli php7.0-fpm curl php7.0-curl php7.0-pgsql php7.0-xdebug -y
@@ -20,10 +20,7 @@ cd /vagrant
 composer install
 
 ### PostgreSQL
-wget -quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add –
-echo deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main >> /etc/apt/sources.list
-apt-get update && apt-get upgrade
-apt-get install postgresql-9.5 postgresql-contrib-9.5 --yes --force-yes
+apt-get install postgresql-9.5 postgresql-contrib-9.5 --yes
 cp /vagrant/provision/config/postgres/* /etc/postgresql/9.5/main/
 service postgresql restart
 sudo -u postgres psql -f /vagrant/provision/db_setup.sql
