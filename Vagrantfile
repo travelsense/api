@@ -55,7 +55,7 @@ Vagrant.configure(2) do |config|
   # end
   #
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "Vacarious Dev"
+    vb.name = "API Dev"
     vb.memory = "1024"
   end
 
