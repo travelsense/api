@@ -1,10 +1,11 @@
 #!/bin/bash
 ### Packages and repos
-echo deb http://packages.dotdeb.org jessie all >> /etc/apt/sources.list.d/dotdeb.list
-echo deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main >> /etc/apt/sources.list.d/postgresql.list 
+echo deb http://packages.dotdeb.org jessie all > /etc/apt/sources.list.d/dotdeb.list
+echo deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main > /etc/apt/sources.list.d/postgresql.list 
 wget -qO - https://www.dotdeb.org/dotdeb.gpg | apt-key add -
 wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc |  apt-key add -
-apt-get update && apt-get upgrade -y
+apt-get update
+apt-get upgrade -y
 
 ### PHP
 apt-get install php7.0-common php7.0-dev php7.0-cli php7.0-fpm curl php7.0-curl php7.0-pgsql php7.0-xdebug -y
