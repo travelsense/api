@@ -51,7 +51,7 @@ $app['controller.uber'] = $app->share(function($app) {
 });
 
 $app['controller.wego'] = $app->share(function($app) {
-    return new WegoHotelController($app['wego']);
+    return new WegoHotelController($app['wego'], $app['db.main.pdo']);
 });
 
 $app['controller.health'] = $app->share(function($app) {
