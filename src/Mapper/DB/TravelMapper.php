@@ -53,13 +53,14 @@ class TravelMapper extends AbstractPDOMapper
     {
         $insert = $this->prepare(
             'INSERT INTO travels '
-            . '(title, description, author_id)'
+            . '(title, description, content, author_id)'
             . ' VALUES '
-            . '(:title, :description, :author_id) RETURNING id'
+            . '(:title, :description, :content::JSON, :author_id) RETURNING id'
         );
         $insert->execute([
             ':title'       => $travel->getTitle(),
             ':description' => $travel->getDescription(),
+            ':content'     => json_encode($travel->getContent()),
             ':author_id'   => $travel->getAuthor()->getId(),
         ]);
         $id = $insert->fetchColumn();
@@ -77,6 +78,7 @@ class TravelMapper extends AbstractPDOMapper
             ->setId($row['id'])
             ->setDescription($row['description'])
             ->setTitle($row['title'])
+            ->setContent(json_decode($row['content']))
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
     }
@@ -91,12 +93,14 @@ class TravelMapper extends AbstractPDOMapper
         $update = $this->prepare(
             'UPDATE travels SET '
             . 'title = :title, '
-            . 'description = :description '
+            . 'description = :description, '
+            . 'content = :content::JSON '
             . 'WHERE id = :id'
         );
         $update->execute([
             ':title'       => $travel->getTitle(),
             ':description' => $travel->getDescription(),
+            ':content'     => json_encode($travel->getContent()),
             ':id'          => $travel->getId(),
         ]);
     }

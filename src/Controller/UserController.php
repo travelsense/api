@@ -185,6 +185,7 @@ class UserController
      *
      * @param User $user
      * @param Request $request
+     * @return JsonResponse
      */
     public function updateUser(User $user, Request $request)
     {

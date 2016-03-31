@@ -1,14 +1,17 @@
 #!/bin/bash
 ### Packages and repos
-add-apt-repository ppa:ondrej/php5-5.6 -y
+echo deb http://packages.dotdeb.org jessie all > /etc/apt/sources.list.d/dotdeb.list
+echo deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main > /etc/apt/sources.list.d/postgresql.list 
+wget -qO - https://www.dotdeb.org/dotdeb.gpg | apt-key add -
+wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc |  apt-key add -
 apt-get update
 apt-get upgrade -y
 
 ### PHP
-apt-get install php5-common php5-dev php5-cli php5-fpm curl php5-curl php5-pgsql php5-xdebug -y
-for SAPI in cli fpm;
- do
-    cp "/vagrant/provision/config/php/$SAPI/php.ini" "/etc/php5/$SAPI/php.ini"
+apt-get purge php5-common -y
+apt-get install php7.0-common php7.0-dev php7.0-cli php7.0-fpm curl php7.0-curl php7.0-pgsql php7.0-xdebug -y
+for SAPI in cli fpm; do
+    cp "/vagrant/provision/config/php/$SAPI/php.ini" "/etc/php/7.0/$SAPI/php.ini"
 done
 
 
@@ -18,8 +21,8 @@ cd /vagrant
 composer install
 
 ### PostgreSQL
-apt-get install postgresql-9.3 postgresql-contrib-9.3 -y
-cp /vagrant/provision/config/postgres/* /etc/postgresql/9.3/main/
+apt-get install postgresql-9.5 postgresql-contrib-9.5 --yes
+cp /vagrant/provision/config/postgres/* /etc/postgresql/9.5/main/
 service postgresql restart
 sudo -u postgres psql -f /vagrant/provision/db_setup.sql
 apt-get install phppgadmin
@@ -31,5 +34,6 @@ cp /vagrant/provision/config/nginx/vaca_dev /etc/nginx/sites-available/vaca_dev
 ln -sf /etc/nginx/sites-available/vaca_dev /etc/nginx/sites-enabled/vaca_dev
 service nginx restart
 
+apt-get autoremove -y
 ### Application set up
 APP_ENV=dev php bin/db.php up

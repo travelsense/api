@@ -67,6 +67,16 @@ class ApiClient
             ->token;
     }
 
+    /**
+     * @param string $fbToken
+     * @return string Auth token
+     */
+    public function getTokenByFacebook($fbToken)
+    {
+        return $this->post('/token', ['fbToken' => $fbToken])
+            ->token;
+    }
+
     public function confirmEmail($email)
     {
         return $this->post('/email/confirm/'.urlencode($email));
@@ -138,13 +148,15 @@ class ApiClient
      * Create a new Travel
      * @param string $title
      * @param string $description
+     * @param object|array $content
      * @return int
      */
-    public function createTravel($title, $description)
+    public function createTravel($title, $description, $content = [])
     {
         return $this->post('/travel', [
             'title' => $title,
             'description' => $description,
+            'content' => $content,
         ])->id;
     }
 
@@ -170,13 +182,14 @@ class ApiClient
      * @param $id
      * @param string $title
      * @param string $description
-     * @return void
+     * @param object|array $content
      */
-    public function updateTravel($id, $title, $description)
+    public function updateTravel($id, $title, $description, $content)
     {
         $this->put('/travel/' . urlencode($id), [
             'title' => $title,
             'description' => $description,
+            'content' => $content
         ]);
     }
 
@@ -239,28 +252,28 @@ class ApiClient
     private function get($url, array $headers = [])
     {
         $headers = $this->addAuth($headers);
-        $body = $this->http->get($this->host . $url, $headers);
-        return $this->parse($body);
+        $response = $this->http->get($this->host . $url, $headers);
+        return $this->parse($response);
     }
 
     private function post($url, array $body = [], array $headers = [])
     {
         $headers = $this->addAuth($headers);
-        $body = $this->http->post($this->host . $url, json_encode($body), $headers);
-        return $this->parse($body);
+        $response = $this->http->post($this->host . $url, json_encode($body), $headers);
+        return $this->parse($response);
     }
 
     private function put($url, array $body = [], array $headers = [])
     {
         $headers = $this->addAuth($headers);
-        $body = $this->http->put($this->host . $url, json_encode($body), $headers);
-        return $this->parse($body);
+        $response = $this->http->put($this->host . $url, json_encode($body), $headers);
+        return $this->parse($response);
     }
 
     private function delete($url, array $headers = [])
     {
         $headers = $this->addAuth($headers);
-        $body = $this->http->delete($this->host . $url, $headers);
-        return $this->parse($body);
+        $response = $this->http->delete($this->host . $url, $headers);
+        return $this->parse($response);
     }
 }

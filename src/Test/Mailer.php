@@ -1,6 +1,7 @@
 <?php
 namespace Api\Test;
 
+use Swift_Mailer;
 use Swift_Mime_Message;
 
 /**
@@ -8,7 +9,7 @@ use Swift_Mime_Message;
  *
  * @package Test
  */
-class Mailer extends \Swift_Mailer
+class Mailer extends Swift_Mailer
 {
     private $log;
 
