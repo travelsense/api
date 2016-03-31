@@ -2,8 +2,6 @@
 namespace Api\Model\TravelComment;
 
 use Api\Model\TimestampTrait;
-use Api\Model\User;
-use Api\Model\Travel;
 
 class TravelComment
 {
@@ -57,7 +55,7 @@ class TravelComment
 
     /**
      * @param int $authorId
-     * @return User
+     * @return TravelComment
      */
     public function setAuthorId($authorId)
     {
@@ -75,7 +73,7 @@ class TravelComment
 
     /**
      * @param int $travelId
-     * @return Travel
+     * @return TravelComment
      */
     public function setTravelId($travelId)
     {
