@@ -110,6 +110,27 @@ CREATE TABLE IF NOT EXISTS travel_category
   CONSTRAINT travel_category_pkey PRIMARY KEY (travel_id, category_id)
 );
 
+-- Hotels
+CREATE TABLE IF NOT EXISTS hotels
+(
+  id SERIAL NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  location text NOT NULL,
+  address TEXT NOT NULL,
+  lat FLOAT4 NOT NULL,
+  lon FLOAT4 NOT NULL,
+  description TEXT ,
+  stars INTEGER
+);
+
+-- Self and Wego hotels
+CREATE TABLE IF NOT EXISTS self_wego_hotel
+(
+  hotels_id INTEGER REFERENCES hotels (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  wego_hotel_id INTEGER,
+  CONSTRAINT self_wego_hotel_pkey PRIMARY KEY (hotels_id, wego_hotel_id)
+);
+
 
 -- IATA
 CREATE TABLE IF NOT EXISTS iata_carriers
