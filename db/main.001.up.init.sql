@@ -212,3 +212,5 @@ CREATE TABLE IF NOT EXISTS iata_ports
   CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{3}$'),
   CONSTRAINT type_regex CHECK (type ~* '^airport|bus|helicopter|railway|seaport$')
 );
+
+CREATE INDEX iata_ports_geo_index ON iata_ports (ST_setSRID(ST_Point(lon, lat), 4326));
