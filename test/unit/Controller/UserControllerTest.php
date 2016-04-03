@@ -108,7 +108,7 @@ class UserControllerTest extends ControllerTestCase
             $this->assertEquals(Response::HTTP_FORBIDDEN, $e->getHttpCode());
         }
 
-        $this->assertEquals(new JsonResponse(), $this->controller->createUser($request));
+        $this->assertEquals([], $this->controller->createUser($request));
     }
 
     public function testCreateUserValidation()

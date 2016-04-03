@@ -27,12 +27,12 @@ class UberController
      * @param float $lon2
      * @return array
      */
-    public function getPriceEstimate($lat1, $lon1, $lat2, $lon2)
+    public function getPriceEstimate(float $lat1, float $lon1, float $lat2, float $lon2): array
     {
         $response = $this->uber->getPriceEstimates($lat1, $lon1, $lat2, $lon2);
         $prices = $response->prices;
         $price = isset($prices[0]) ? $prices[0]->estimate : null;
-        return     [
+        return [
             'price_estimate' => $price,
         ];
     }

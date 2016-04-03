@@ -61,10 +61,10 @@ class AuthController
 
     /**
      * @param Request $request ['email' => 'a@b.com', 'password => '123'] or ['facebook_token' => '123']
-     * @return JsonResponse ['token' => $token]
+     * @return array  ['token' => $token]
      * @throws ApiException
      */
-    public function create(Request $request)
+    public function create(Request $request): array 
     {
         $json = DataObject::createFromString($request->getContent());
         if ($this->logger) {
@@ -78,7 +78,7 @@ class AuthController
             $user = $this->getUserByEmailPassword($email, $password);
         }
         $token = $this->sessionManager->createSession($user->getId(), $request);
-        return new JsonResponse(['token' => $token]);
+        return ['token' => $token];
     }
 
     /**
@@ -87,7 +87,7 @@ class AuthController
      * @return User
      * @throws ApiException
      */
-    protected function getUserByEmailPassword($email, $password)
+    protected function getUserByEmailPassword(string $email, string $password): User
     {
         $user = $this->userMapper->fetchByEmailAndPassword($email, $password);
         if (null === $user) {
@@ -100,7 +100,7 @@ class AuthController
      * @param string $fbToken
      * @return User
      */
-    protected function getUserByFacebookToken($fbToken)
+    protected function getUserByFacebookToken(string $fbToken): User
     {
         $this->facebook->setDefaultAccessToken($fbToken);
         $fbUser = $this->facebook

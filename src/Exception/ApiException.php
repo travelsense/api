@@ -38,6 +38,9 @@ class ApiException extends Exception
         self::ACCESS_DENIED => [Response::HTTP_FORBIDDEN, 'Access denied'],
     ];
 
+    /**
+     * @var int
+     */
     private $httpCode;
 
     /**
@@ -48,10 +51,10 @@ class ApiException extends Exception
      * @param int $httpCode
      */
     public function __construct(
-        $message,
-        $code,
+        string $message,
+        int $code,
         Exception $previous = null,
-        $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR
+        int $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR
     ) {
         parent::__construct($message, $code, $previous);
         $this->httpCode = $httpCode;
@@ -60,7 +63,7 @@ class ApiException extends Exception
     /**
      * @return int
      */
-    public function getHttpCode()
+    public function getHttpCode(): int
     {
         return $this->httpCode;
     }
@@ -70,7 +73,7 @@ class ApiException extends Exception
      * @return ApiException
      * @throws LogicException
      */
-    public static function create($code)
+    public static function create(int $code): self
     {
         if (isset(self::$map[$code])) {
             list($httpCode, $message) = self::$map[$code];

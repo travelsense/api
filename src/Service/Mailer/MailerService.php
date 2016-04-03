@@ -46,7 +46,7 @@ class MailerService
      * @param string $email
      * @param string $token
      */
-    public function sendAccountConfirmationMessage($email, $token)
+    public function sendAccountConfirmationMessage(string $email, string $token)
     {
         $emailTpl = $this->twig->loadTemplate('email/confirmation.twig');
 
@@ -74,7 +74,7 @@ class MailerService
      * @param $email
      * @param $token
      */
-    public function sendPasswordResetLink($email, $token)
+    public function sendPasswordResetLink(string $email, string $token)
     {
         $emailTpl = $this->twig->loadTemplate('email/reset.twig');
 

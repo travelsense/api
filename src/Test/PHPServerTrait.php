@@ -28,9 +28,9 @@ trait PHPServerTrait
 
     /**
      * start the php dev server
-     * @param bool $output
+     * @param string $log
      */
-    public function startServer($output = false)
+    public function startServer(string $log = '/dev/null')
     {
         if (!$this->server) {
             $this->server = new HttpServer(
@@ -43,11 +43,7 @@ trait PHPServerTrait
         if ($this->server->isRunning()) {
             throw new LogicException('Server is already running');
         }
-        if ($output) {
-            $this->server->enableOutput();
-        } else {
-            $this->server->disableOutput();
-        }
+        $this->server->setLogFile($log);
         $dir = getcwd();
         chdir(__DIR__ . '/../../public/');
         $this->server->start();

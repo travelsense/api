@@ -26,11 +26,11 @@ class SessionManager
     /**
      * Create a new session token
      *
-     * @param  string  $userId
-     * @param  Request $request
+     * @param int $userId
+     * @param Request $request
      * @return string session token
      */
-    public function createSession($userId, Request $request)
+    public function createSession(int $userId, Request $request)
     {
         $token = sha1(mt_rand() . $userId);
         $device = $request->headers->get('User-Agent');
@@ -44,7 +44,7 @@ class SessionManager
      * @param  string $token
      * @return string|null
      */
-    public function getUserId($token)
+    public function getUserId(string $token)
     {
         if (strlen($token) <= self::SHA1_LENGTH) {
             return null;

@@ -33,7 +33,7 @@ class ExpirableStorage
      * @param  DateTime|null $expireOn
      * @return string
      */
-    public function store($object, DateTime $expireOn = null)
+    public function store($object, DateTime $expireOn = null): string
     {
         $serialized = serialize($object);
         $token = sha1(mt_rand() . $serialized);

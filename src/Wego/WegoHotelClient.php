@@ -150,13 +150,13 @@ class WegoHotelClient
         return $this->httpGet(
             '/hotels/api/search/' . urlencode($id),
             [
-            'refresh' => $refresh,
-            'currency_code' => $currency,
-            'sort' => $sort ? 'true' : 'false',
-            'order' => $order,
-            'popular_with' => $popularWith,
-            'page' => $page,
-            'per_page' => $perPage,
+                'refresh' => $refresh,
+                'currency_code' => $currency,
+                'sort' => $sort ? 'true' : 'false',
+                'order' => $order,
+                'popular_with' => $popularWith,
+                'page' => $page,
+                'per_page' => $perPage,
             ]
         );
     }
@@ -191,9 +191,9 @@ class WegoHotelClient
      *
      * @param  string $uri
      * @param  array  $query
-     * @return mixed Parsed JSON response
+     * @return array Parsed JSON response
      */
-    public function httpGet($uri, array $query)
+    public function httpGet($uri, array $query): array 
     {
         $query['key'] = $this->key;
         $query['ts_code'] = $this->tsCode;

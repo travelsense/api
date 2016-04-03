@@ -20,7 +20,7 @@ class IATAMapper extends AbstractPDOMapper
      * @param string $code
      * @return false|array
      */
-    public function fetchOne($type, $code)
+    public function fetchOne(string $type, string $code)
     {
         $select = $this->prepare("SELECT * FROM {$this->table[$type]} WHERE code = :code");
         $select->execute([
@@ -35,7 +35,7 @@ class IATAMapper extends AbstractPDOMapper
      * @param int $limit
      * @return array
      */
-    public function fetchAll($type, $limit, $offset)
+    public function fetchAll(string $type, int $limit, int $offset)
     {
         $select = $this->prepare("SELECT * FROM {$this->table[$type]} ORDER BY code ASC LIMIT :limit OFFSET :offset");
         $select->execute([

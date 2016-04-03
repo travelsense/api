@@ -244,6 +244,8 @@ class ApiClient
             $message = "HTTP ERROR {$response->getCode()}\n"
                 . implode("\n", $response->getHeaders())
                 . "\n\n" . $response->getBody();
+            file_put_contents('segfault', $response->getBody());
+
             throw new ApiClientException($message, $response->getCode());
         }
         return json_decode($response->getBody());

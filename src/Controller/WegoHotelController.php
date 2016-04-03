@@ -37,40 +37,42 @@ class WegoHotelController
      * @param  DateTime $in
      * @param  DateTime $out
      * @param  int      $rooms
-     * @return JsonResponse
+     * @return array
      */
-    public function startSearch($location, DateTime $in, DateTime $out, $rooms)
+    public function startSearch($location, DateTime $in, DateTime $out, int $rooms): array
     {
-        return new JsonResponse($this->wego->startSearch($location, $in, $out, $rooms));
+        return [
+            'search_id' => $this->wego->startSearch($location, $in, $out, $rooms)
+        ];
     }
 
     /**
      * Hotel search results
      *
-     * @param  int $id
+     * @param  string $id
      * @param  int $page
      * @return array
      */
-    public function getSearchResults($id, $page)
+    public function getSearchResults(string $id, int $page): array
     {
         $response = $this->wego->getSearchResults($id, false, 'USD', 'popularity', 'desc', 'XX', $page, 10);
-        $this->getHotelsFromWego($response);
+        $this->updateLocalHotelCache($response);
         return $response;
     }
 
     /**
      * @param array $response
      */
-    protected function getHotelsFromWego($response)
+    private function updateLocalHotelCache(array $response)
     {
         $location = $response['location'];
         $hotels = $response['hotels'];
         foreach ($hotels as $hotel) {
             $hotelId  = $this->getHotelIdByWegoId($hotel['id']);
-            if ($hotelId != false){
+            if ($hotelId !== false) {
                 $this->updateHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars'], $hotelId);
             } else{
-                $hotelId = $this->addHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars']);
+                $hotelId = $this->insertHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars']);
                 $this->addWegoIdForHotelId($hotelId, $hotel['id']);
             }
         }
@@ -86,7 +88,7 @@ class WegoHotelController
      * @param int $stars
      * @return int
      */
-    public function addHotelData($location, $name, $address, $lat, $lon, $desc, $stars)
+    private function insertHotelData(string $location, string $name, string $address, float $lat, float $lon, string $desc, int $stars): int
     {
         $insert = $this->pdo->prepare(
             'INSERT INTO hotels
@@ -115,15 +117,15 @@ class WegoHotelController
      * @param float $lon
      * @param string $desc
      * @param int $stars
-     * @return int
+     * @param int $hotelId
      */
-    public function updateHotelData($location, $name, $address, $lat, $lon, $desc, $stars, $hotelId)
+    private function updateHotelData(string $location, string $name, string $address, float $lat, float $lon, string $desc, int $stars, int $hotelId)
     {
         $insert = $this->pdo->prepare(
             'UPDATE hotels SET
              name = :name, location = :location, address = :address,
              lat = :lat, lon = :lon, description = :description, stars = :stars
-             WHERE id = :id RETURNING id'
+             WHERE id = :id'
         );
         $insert->execute([
             ':name' => $name,
@@ -135,33 +137,32 @@ class WegoHotelController
             ':stars' => $stars,
             ':id' => $hotelId
         ]);
-        return $insert->fetchColumn();
     }
 
     /**
      * @param int $hotelId
      * @param int $wegoId
      */
-    public function addWegoIdForHotelId($hotelId, $wegoId)
+    private function addWegoIdForHotelId(int $hotelId, int $wegoId)
     {
         $insert = $this->pdo->prepare(
-            'INSERT INTO self_wego_hotel
-            (hotels_id, wego_hotel_id)
-             VALUES (:hotels_id, :wego_hotel_id)'
+            'INSERT INTO wego_hotels
+            (hotel_id, wego_hotel_id)
+             VALUES (:id, :wego_hotel_id)'
         );
         $insert->execute([
-            ':hotels_id' => $hotelId,
+            ':id' => $hotelId,
             ':wego_hotel_id' => $wegoId
         ]);
     }
 
     /**
      * @param int $wegoId
-     * @return int
+     * @return int|false
      */
-    public function getHotelIdByWegoId($wegoId)
+    private function getHotelIdByWegoId(int $wegoId)
     {
-        $select = $this->pdo->prepare('SELECT hotels_id FROM self_wego_hotel WHERE wego_hotel_id = :wego_hotel_id');
+        $select = $this->pdo->prepare('SELECT hotel_id FROM wego_hotels WHERE wego_hotel_id = :wego_hotel_id');
         $select->execute([':wego_hotel_id' => $wegoId]);
         return $select->fetchColumn();
     }

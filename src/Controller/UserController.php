@@ -67,7 +67,7 @@ class UserController
     }
 
     /**
-     *
+     * Send account confirmation link
      * @param User $user
      */
     public function sendConfirmationLink(User $user)
@@ -86,7 +86,7 @@ class UserController
      * @return array
      * @throws ApiException
      */
-    public function createUser(Request $request)
+    public function createUser(Request $request): array
     {
         $json = DataObject::createFromString($request->getContent());
 
@@ -107,32 +107,32 @@ class UserController
         }
         $this->userMapper->insert($user);
         $this->sendConfirmationLink($user);
-        return new JsonResponse();
+        return [];
     }
 
     /**
      * Send password reset link
      *
      * @param  string $email
-     * @return Response
+     * @return array
      * @throws ApiException
      */
-    public function sendPasswordResetLink($email)
+    public function sendPasswordResetLink(string $email): array 
     {
         if (false === $this->userMapper->emailExists($email)) {
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
         $token = $this->storage->store($email);
         $this->mailer->sendPasswordResetLink($email, $token);
-        return new JsonResponse();
+        return [];
     }
 
     /**
      * @param string $token
-     * @return Response
+     * @return array
      * @throws ApiException
      */
-    public function confirmEmail($token)
+    public function confirmEmail(string $token): array
     {
         /* @var User $user */
         $email = $this->storage->get($token);
@@ -149,16 +149,16 @@ class UserController
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
         $this->userMapper->confirmEmail($email);
-        return new JsonResponse();
+        return [];
     }
 
     /**
      * @param string $token
      * @param Request $request
-     * @return Response
+     * @return array
      * @throws ApiException
      */
-    public function resetPassword($token, Request $request)
+    public function resetPassword(string $token, Request $request): array
     {
         /* @var User $user */
         $email = $this->storage->get($token);
@@ -177,7 +177,7 @@ class UserController
         $json = DataObject::createFromString($request->getContent());
         $password = $json->getString('password');
         $this->userMapper->updatePasswordByEmail($email, $password);
-        return new JsonResponse();
+        return [];
     }
 
     /**
@@ -185,9 +185,9 @@ class UserController
      *
      * @param User $user
      * @param Request $request
-     * @return JsonResponse
+     * @return array
      */
-    public function updateUser(User $user, Request $request)
+    public function updateUser(User $user, Request $request): array
     {
         $json = DataObject::createFromString($request->getContent());
         $email = $json->getString('email');
@@ -203,6 +203,6 @@ class UserController
         if ($emailUpdate) {
             $this->sendConfirmationLink($user);
         }
-        return new JsonResponse();
+        return [];
     }
 }

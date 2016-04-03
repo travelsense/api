@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS expirable_storage
 (
   id SERIAL NOT NULL PRIMARY KEY ,
   serialized_object TEXT NOT NULL,
-  token TEXT NOT NULL ,
+  token TEXT NOT NULL,
   expires TIMESTAMP,
   created TIMESTAMP DEFAULT now()
 );
@@ -120,15 +120,21 @@ CREATE TABLE IF NOT EXISTS hotels
   lat FLOAT4 NOT NULL,
   lon FLOAT4 NOT NULL,
   description TEXT ,
-  stars INTEGER
+  stars INTEGER,
+  created TIMESTAMP DEFAULT now(),
+  updated TIMESTAMP
 );
 
+CREATE TRIGGER hotels_before_update BEFORE UPDATE
+ON hotels FOR EACH ROW EXECUTE PROCEDURE
+  process_updated_column();
+
 -- Self and Wego hotels
-CREATE TABLE IF NOT EXISTS self_wego_hotel
+CREATE TABLE IF NOT EXISTS wego_hotels
 (
-  hotels_id INTEGER REFERENCES hotels (id) ON UPDATE CASCADE ON DELETE CASCADE,
+  hotel_id INTEGER REFERENCES hotels (id) ON UPDATE CASCADE ON DELETE CASCADE,
   wego_hotel_id INTEGER,
-  CONSTRAINT self_wego_hotel_pkey PRIMARY KEY (hotels_id, wego_hotel_id)
+  CONSTRAINT self_wego_hotel_pkey PRIMARY KEY (hotel_id, wego_hotel_id)
 );
 
 

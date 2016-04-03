@@ -22,12 +22,12 @@ class IataController extends ApiController
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @param string $code
-     * @return false|object
+     * @return array
      * @throws ApiException
      */
-    public function getOne($type, $code)
+    public function getOne(string $type, string $code): array
     {
         $object = $this->iataMapper->fetchOne($type, $code);
         if ($object) {
@@ -38,12 +38,12 @@ class IataController extends ApiController
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @param int $limit
      * @param int $offset
      * @return array
      */
-    public function getAll($type, $limit = 10, $offset = 0)
+    public function getAll(string $type, int $limit = 10, int $offset = 0): array
     {
         return $this->iataMapper->fetchAll($type, $limit, $offset);
     }

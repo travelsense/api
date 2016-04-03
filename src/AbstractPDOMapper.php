@@ -30,7 +30,7 @@ abstract class AbstractPDOMapper
      * @param string $sql
      * @return PDOStatement
      */
-    public function prepare($sql)
+    public function prepare(string $sql): PDOStatement
     {
         return $this->pdo->prepare($sql, $this->driverOptions);
     }
@@ -54,7 +54,7 @@ abstract class AbstractPDOMapper
      * @param  string $alias
      * @return mixed
      */
-    public function createFromAlias(array $row, $alias)
+    public function createFromAlias(array $row, string $alias)
     {
         $alias = $alias . '.';
         $prefixLen = mb_strlen($alias);

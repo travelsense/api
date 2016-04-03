@@ -23,13 +23,13 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
         $this->mapper
             ->method('createSession')
             ->with(
-                'test_user',
+                123,
                 $this->anything(),
                 'test_device'
             )
             ->willReturn(42);
         $request = new Request([], [], [], [], [], ['HTTP_USER_AGENT' => 'test_device']);
-        $this->assertRegExp('/^[0-9a-f]{40}42$/', $this->sessionManager->createSession('test_user', $request));
+        $this->assertRegExp('/^[0-9a-f]{40}42$/', $this->sessionManager->createSession(123, $request));
     }
 
     public function testShortKey()

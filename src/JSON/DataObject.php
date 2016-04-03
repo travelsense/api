@@ -1,5 +1,6 @@
 <?php
 namespace Api\JSON;
+use stdClass;
 
 /**
  * JSON Data Object
@@ -10,16 +11,16 @@ namespace Api\JSON;
 class DataObject
 {
     /**
-     * @var mixed
+     * @var stdClass
      */
     private $data;
 
     /**
      * DataObject constructor.
      *
-     * @param object $data
+     * @param stdClass $data
      */
-    public function __construct($data)
+    public function __construct(stdClass $data)
     {
         $this->data = $data;
     }
@@ -29,7 +30,7 @@ class DataObject
      * @param string $json
      * @return DataObject
      */
-    public static function createFromString($json)
+    public static function createFromString(string $json): self
     {
         return new self(json_decode($json));
     }
@@ -47,7 +48,7 @@ class DataObject
      * @param string $property
      * @return bool
      */
-    public function has($property)
+    public function has($property): bool 
     {
         return isset($this->data->$property);
     }
@@ -59,7 +60,7 @@ class DataObject
      * @return mixed
      * @throws FormatException
      */
-    public function get($property, $types = null, $constraint = null)
+    public function get(string $property, $types = null, $constraint = null)
     {
         if (false === isset($this->data->$property)) {
             throw new FormatException(sprintf('Property does not exist: %s', $property));
@@ -98,7 +99,7 @@ class DataObject
      * @return string
      * @throws FormatException
      */
-    public function getString($property, $constraint = null)
+    public function getString(string $property, $constraint = null)
     {
         return $this->get($property, 'string', $constraint);
     }
@@ -108,7 +109,7 @@ class DataObject
      * @param string $property
      * @return string
      */
-    public function getEmail($property)
+    public function getEmail(string $property): string 
     {
         $email = $this->getString($property);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {

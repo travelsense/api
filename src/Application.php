@@ -35,7 +35,7 @@ class Application extends \Silex\Application
      * @param string $env
      * @return Application
      */
-    public static function createByEnvironment($env = null)
+    public static function createByEnvironment(string $env = null): self
     {
         if ($env === null) {
             $env = getenv('APP_ENV') ?: 'prod';

@@ -7,12 +7,12 @@ use BadMethodCallException;
 class SessionMapper extends AbstractPDOMapper
 {
     /**
-     * @param string $userId
+     * @param int $userId
      * @param string $token
      * @param string $device
-     * @return string session id
+     * @return int session id
      */
-    public function createSession($userId, $token, $device)
+    public function createSession(int $userId, string $token, string $device = null): int
     {
         $sql = <<<SQL
 INSERT INTO
@@ -34,19 +34,17 @@ SQL;
     }
 
     /**
-     * @param $id
-     * @param $token
-     * @return string|null
+     * @param int $id
+     * @param string $token
+     * @return int|null
      */
-    public function getUserId($id, $token)
+    public function getUserId(int $id, string $token)
     {
         $select = $this->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
-        $select->execute(
-            [
+        $select->execute([
             ':id' => $id,
             ':token' => $token,
-            ]
-        );
+        ]);
         return $select->fetchColumn(0) ?: null;
     }
 

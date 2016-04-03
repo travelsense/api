@@ -89,12 +89,9 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 
     public function testGetString()
     {
-        $data = $this->getMock('Api\\JSON\\DataObject', ['get'], ['']);
-        $data->method('get')
-            ->with('foo', 'string', '/x/')
-            ->willReturn('bar');
+        $data = new DataObject((object) ['foo' => 'barx']);
 
-        $this->assertEquals('bar', $data->getString('foo', '/x/'));
+        $this->assertEquals('barx', $data->getString('foo', '/x/'));
 
     }
 }

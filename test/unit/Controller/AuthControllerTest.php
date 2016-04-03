@@ -94,7 +94,7 @@ class AuthControllerTest extends ControllerTestCase
             ]));
 
         $response = $this->controller->create($this->request);
-        $this->assertEquals('{"token":"token1"}', $response->getContent());
+        $this->assertEquals(["token" => "token1"], $response);
 
     }
 
@@ -137,7 +137,7 @@ class AuthControllerTest extends ControllerTestCase
             ]));
 
         $response = $this->controller->create($this->request);
-        $this->assertEquals('{"token":"token1"}', $response->getContent());
+        $this->assertEquals(["token" => "token1"], $response);
     }
 
     public function testCreateTokenByFacebookForNewUser()
@@ -171,6 +171,6 @@ class AuthControllerTest extends ControllerTestCase
             ]));
 
         $response = $this->controller->create($this->request);
-        $this->assertEquals('{"token":"token42"}', $response->getContent());
+        $this->assertEquals(["token" => "token42"], $response);
     }
 }

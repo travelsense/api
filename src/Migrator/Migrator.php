@@ -137,8 +137,8 @@ class Migrator
         foreach (new \DirectoryIterator($this->dir) as $file) {
             if (preg_match($pattern, $file->getFilename(), $matches)) {
                 $ver = (int) $matches[1];
-                $dir = $matches[2];
-                if ($dir === self::DIR_UP) {
+                $direction = $matches[2];
+                if ($direction === self::DIR_UP) {
                     $this->upgrades[$ver] = $matches[0];
                 } else {
                     $this->downgrades[$ver] = $matches[0];

@@ -38,7 +38,7 @@ class TravelController extends ApiController
      * @param User $user
      * @return array
      */
-    public function createTravel(Request $request, User $user)
+    public function createTravel(Request $request, User $user): array
     {
         $json = DataObject::createFromString($request->getContent());
 
@@ -56,7 +56,7 @@ class TravelController extends ApiController
      * @param Travel $travel
      * @return array
      */
-    public function buildTravelView($travel)
+    public function buildTravelView(Travel $travel): array
     {
         $author = $travel->getAuthor();
         return [
@@ -79,7 +79,7 @@ class TravelController extends ApiController
      * @return array
      * @throws ApiException
      */
-    public function getTravel($id)
+    public function getTravel(int $id): array
     {
         if ($id === 0) {
             return $this->getTravelMock();
@@ -97,7 +97,7 @@ class TravelController extends ApiController
      * @param int $offset
      * @return array
      */
-    public function getTravelsByCategory($name, $limit = 10, $offset = 0)
+    public function getTravelsByCategory(string $name, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travelMapper->getTravelsByCategory($name, $limit, $offset);
         $response = [];
@@ -110,30 +110,30 @@ class TravelController extends ApiController
     /**
      * @param int $id
      * @param User $user
-     * @return JsonResponse
+     * @return array
      */
-    public function addFavorite($id, User $user)
+    public function addFavorite(int $id, User $user): array
     {
         $this->travelMapper->addFavorite($id, $user->getId());
-        return new JsonResponse();
+        return [];
     }
 
     /**
      * @param int $id
      * @param User $user
-     * @return JsonResponse
+     * @return array
      */
-    public function removeFavorite($id, User $user)
+    public function removeFavorite(int $id, User $user): array
     {
         $this->travelMapper->removeFavorite($id, $user->getId());
-        return new JsonResponse();
+        return [];
     }
 
     /**
      * @param User $user
      * @return array
      */
-    public function getFavorites(User $user)
+    public function getFavorites(User $user): array
     {
         $travels = $this->travelMapper->getFavorites($user->getId());
         $response = [];
@@ -143,7 +143,54 @@ class TravelController extends ApiController
         return $response;
     }
 
-    public function getTravelMock()
+    /**
+     * @param $id
+     * @param User $user
+     * @return Travel
+     * @throws ApiException
+     */
+    private function getOwnedTravel(int $id, User $user): Travel
+    {
+        $travel = $this->travelMapper->fetchById($id);
+        if (!$travel) {
+            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+        }
+        if ($travel->getAuthor()->getId() !== $user->getId()) {
+            throw ApiException::create(ApiException::ACCESS_DENIED);
+        }
+        return $travel;
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
+    public function updateTravel(int $id, Request $request, User $user): array 
+    {
+        $travel = $this->getOwnedTravel($id, $user);
+        $json = DataObject::createFromString($request->getContent());
+        $travel->setTitle($json->getString('title'));
+        $travel->setDescription($json->getString('description'));
+        $travel->setContent($json->get('content'));
+        $this->travelMapper->update($travel);
+        return [];
+    }
+
+    /**
+     * @param $id
+     * @param User $user
+     * @return array
+     */
+    public function deleteTravel(int $id, User $user): array 
+    {
+        $travel = $this->getOwnedTravel($id, $user);
+        $this->travelMapper->delete($travel->getId());
+        return [];
+    }
+    
+    public function getTravelMock(): array
     {
         $led = [
             'id' => 0,
@@ -290,52 +337,5 @@ class TravelController extends ApiController
                 ],
             ]
         ];
-    }
-
-    /**
-     * @param $id
-     * @param User $user
-     * @return Travel
-     * @throws ApiException
-     */
-    private function getOwnedTravel($id, User $user)
-    {
-        $travel = $this->travelMapper->fetchById($id);
-        if (!$travel) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
-        }
-        if ($travel->getAuthor()->getId() !== $user->getId()) {
-            throw ApiException::create(ApiException::ACCESS_DENIED);
-        }
-        return $travel;
-    }
-
-    /**
-     * @param $id
-     * @param Request $request
-     * @param User $user
-     * @return array
-     */
-    public function updateTravel($id, Request $request, User $user)
-    {
-        $travel = $this->getOwnedTravel($id, $user);
-        $json = DataObject::createFromString($request->getContent());
-        $travel->setTitle($json->getString('title'));
-        $travel->setDescription($json->getString('description'));
-        $travel->setContent($json->get('content'));
-        $this->travelMapper->update($travel);
-        return [];
-    }
-
-    /**
-     * @param $id
-     * @param User $user
-     * @return array
-     */
-    public function deleteTravel($id, User $user)
-    {
-        $travel = $this->getOwnedTravel($id, $user);
-        $this->travelMapper->delete($travel->getId());
-        return [];
     }
 }

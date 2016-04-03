@@ -6,12 +6,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 class HealthCheckController
 {
-    public function healthCheck(Request $request)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function healthCheck(Request $request): array
     {
-        return JsonResponse::create([
+        return [
             'check' => 'OK',
             'requestHeaders' => $request->headers->all(),
             'env' => getenv('APP_ENV'),
-        ]);
+        ];
     }
 }
