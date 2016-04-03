@@ -13,6 +13,7 @@ return [
         'routing'     => __DIR__ . '/service/routing.php',
         'security'    => __DIR__ . '/service/security.php',
         'storages'    => __DIR__ . '/service/storages.php',
+        'wego'        => __DIR__ . '/service/wego.php',
     ],
     'debug' => false,
     'log' => [

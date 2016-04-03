@@ -1,6 +1,8 @@
 <?php
 namespace Api\Wego;
 
-class WegoApiException extends \RuntimeException
+use RuntimeException;
+
+class WegoApiException extends RuntimeException
 {
 }

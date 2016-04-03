@@ -2,7 +2,7 @@
 namespace Api\Wego;
 
 use DateTime;
-use PHPCurl\CurlHttp\HttpClient;
+use OutOfRangeException;
 
 /**
  * WAN.travel API client
@@ -10,94 +10,30 @@ use PHPCurl\CurlHttp\HttpClient;
  * @see http://support.wan.travel/hc/en-us
  */
 
-class WegoFlightClient
+class WegoFlights
 {
     const DATE_FORMAT = 'Y-m-d';
 
     /**
-     * @var HttpClient
+     * @var WegoHttpClient
      */
     private $http;
 
     /**
-     * @var string
-     */
-    private $apiUrl;
-
-    /**
-     * @var string
-     */
-    private $key;
-
-    /**
-     * @var string
-     */
-    private $tsCode;
-
-    /**
      * @var array
      */
-    private $flightFilters;
+    private $flightFilters = [];
 
     /**
      * Client constructor.
      *
-     * @param string     $key
-     * @param string     $tsCode
-     * @param string     $apiUrl
-     * @param HttpClient $http
+     * @param WegoHttpClient $http
      */
-    public function __construct($key, $tsCode, $apiUrl = 'http://api.wego.com', HttpClient $http = null)
+    public function __construct(WegoHttpClient $http)
     {
-        $this->key = $key;
-        $this->tsCode = $tsCode;
-        $this->apiUrl = $apiUrl;
-        $this->http = $http ?: new HttpClient();
-        $this->flightFilters = [];
+        $this->http = $http;
     }
 
-    /**
-     * Do HTTP GET
-     *
-     * @param  string $uri
-     * @param  array  $query
-     * @return mixed Parsed JSON response
-     */
-    public function httpGet($uri, array $query)
-    {
-        $query['api_key'] = $this->key;
-        $query['ts_code'] = $this->tsCode;
-        $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
-        $response = $this->http->get($fullUrl);
-        $json = json_decode($response->getBody(), true);
-        if ($response->getCode() === 200) {
-            return $json;
-        }
-        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error', $response->getCode());
-    }
-
-    /**
-     * Do HTTP POST
-     *
-     * @param  string $uri
-     * @param  array  $request
-     *
-     * @return mixed Parsed JSON response
-     */
-    public function httpPost($uri, array $request)
-    {
-        $query = [
-            'api_key' => $this->key,
-            'ts_code' => $this->tsCode
-        ];
-        $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
-        $response = $this->http->post($fullUrl, json_encode($request));
-        $json = json_decode($response->getBody(), true);
-        if ($response->getCode() === 200) {
-            return $json;
-        }
-        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error', $response->getCode());
-    }
 
     /**
      * Start a new flight search
@@ -160,7 +96,7 @@ class WegoFlightClient
         if ($inboundDate !== null) {
             $query['trips'][0]['inbound_date'] = $inboundDate->format(self::DATE_FORMAT);
         }
-        return $this->httpPost(
+        return $this->http->post(
             '/flights/api/k/2/searches',
             $query
         );
@@ -194,10 +130,10 @@ class WegoFlightClient
     protected function setFilterMinMax($fromName, $toName, $fromValue, $toValue)
     {
         if ($fromValue <= 0) {
-            throw new \OutOfRangeException($fromName);
+            throw new OutOfRangeException($fromName);
         }
         if ($toValue <= 0) {
-            throw new \OutOfRangeException($toName);
+            throw new OutOfRangeException($toName);
         }
         if ($fromValue > 0 && ($toValue == 0 || $toValue >= $fromValue)) {
             $this->flightFilters[$fromName] = $fromValue;
@@ -363,7 +299,7 @@ class WegoFlightClient
             ],
             $this->flightFilters
         );
-        return $this->httpPost(
+        return $this->http->post(
             '/flights/api/k/2/fares',
             $query
         );
@@ -380,7 +316,7 @@ class WegoFlightClient
      */
     public function getDeeplink($deeplinkParams)
     {
-        return $this->httpGet(
+        return $this->http->get(
             '/flights/api/k/providers/2/deeplinks',
             $deeplinkParams
         );
@@ -407,7 +343,7 @@ class WegoFlightClient
      */
     public function getCurrencies()
     {
-        return $this->httpGet(
+        return $this->http->get(
             '/flights/api/k/2/currencies',
             []
         );

@@ -2,7 +2,6 @@
 namespace Api\Wego;
 
 use DateTime;
-use PHPCurl\CurlHttp\HttpClient;
 
 /**
  * WAN.travel API client
@@ -10,44 +9,23 @@ use PHPCurl\CurlHttp\HttpClient;
  * @see http://support.wan.travel/hc/en-us
  */
 
-class WegoHotelClient
+class WegoHotels
 {
     const DATE_FORMAT = 'Ymd';
 
     /**
-     * @var HttpClient
+     * @var WegoHttpClient
      */
     private $http;
 
     /**
-     * @var string
-     */
-    private $apiUrl;
-
-    /**
-     * @var string
-     */
-    private $key;
-
-    /**
-     * @var string
-     */
-    private $tsCode;
-
-    /**
      * Client constructor.
      *
-     * @param string     $key
-     * @param string     $tsCode
-     * @param string     $apiUrl
-     * @param HttpClient $http
+     * @param WegoHttpClient $http
      */
-    public function __construct($key, $tsCode, $apiUrl = 'http://api.wego.com', HttpClient $http = null)
+    public function __construct(WegoHttpClient $http)
     {
-        $this->key = $key;
-        $this->tsCode = $tsCode;
-        $this->apiUrl = $apiUrl;
-        $this->http = $http ?: new HttpClient();
+        $this->http = $http;
     }
 
     /**
@@ -76,7 +54,7 @@ class WegoHotelClient
         $ip = 'direct',
         $country = 'US'
     ) {
-        $response = $this->httpGet(
+        $response = $this->http->get(
             '/hotels/api/search/new',
             [
             'location_id' => $location,
@@ -110,7 +88,7 @@ class WegoHotelClient
         $query = implode('_', preg_split('/ /', $query, -1, PREG_SPLIT_NO_EMPTY));
         $query = strtolower($query);
 
-        return $this->httpGet(
+        return $this->http->get(
             '/hotels/api/locations/search',
             [
             'q' => $query,
@@ -147,7 +125,7 @@ class WegoHotelClient
         $page = 1,
         $perPage = 20
     ) {
-        return $this->httpGet(
+        return $this->http->get(
             '/hotels/api/search/' . urlencode($id),
             [
                 'refresh' => $refresh,
@@ -175,7 +153,7 @@ class WegoHotelClient
      */
     public function getDetails($searchID, $hotelID, $currency = 'USD', $lang = 'en')
     {
-        return $this->httpGet(
+        return $this->http->get(
             '/hotels/api/search/show',
             [
             'search_id' => $searchID,
@@ -184,25 +162,5 @@ class WegoHotelClient
             'lang' => $lang,
             ]
         );
-    }
-
-    /**
-     * Do HTTP GET
-     *
-     * @param  string $uri
-     * @param  array  $query
-     * @return array Parsed JSON response
-     */
-    public function httpGet($uri, array $query): array 
-    {
-        $query['key'] = $this->key;
-        $query['ts_code'] = $this->tsCode;
-        $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
-        $response = $this->http->get($fullUrl);
-        $json = json_decode($response->getBody(), true);
-        if ($response->getCode() === 200) {
-            return $json;
-        }
-        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error', $response->getCode());
     }
 }
