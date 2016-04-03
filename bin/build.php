@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-require_once 'cli.php';
 $tag = $argc > 1 ? $argv[1] : 'master';
 $build = date('YmdHis') . '-' . strtr($tag, '/', '-');
 $tmp = '/tmp';
@@ -31,3 +30,18 @@ $switchCmd = "sudo ln -sfT /www/release/$build /www/current";
 echo "DONE: $archive\n\n";
 echo "DEPLOY: $deployCmd\n\n";
 echo "SWITCH: $switchCmd\n\n";
+exit(0);
+
+function terminate(string $msg, int $code)
+{
+    echo $msg;
+    exit($code);
+}
+
+function run(string $cmd)
+{
+    passthru($cmd, $ret);
+    if ($ret !== 0) {
+        terminate("[COMMAND FAILED WITH EXIT CODE $ret]\n", 1);
+    }
+}

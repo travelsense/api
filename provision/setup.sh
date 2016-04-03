@@ -21,10 +21,11 @@ cd /vagrant
 composer install
 
 ### PostgreSQL
-apt-get install postgresql-9.5 postgresql-contrib-9.5 --yes
+apt-get install postgresql-9.5 postgresql-contrib-9.5 postgresql-9.5-postgis-2.2 -y
 cp /vagrant/provision/config/postgres/* /etc/postgresql/9.5/main/
 service postgresql restart
 sudo -u postgres psql -f /vagrant/provision/db_setup.sql
+sudo -u postgres psql -f /vagrant/db/ext/postgis.sql vaca_dev
 apt-get install phppgadmin
 
 ### NGiNX
