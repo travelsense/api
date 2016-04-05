@@ -172,7 +172,7 @@ class TravelMapper extends AbstractPDOMapper
     public function getTravelsByCategory($name, $limit, $offset)
     {
         $select = $this->prepare(
-                'SELECT t.*, u.* FROM travel_category ct
+                'SELECT t.*, u.* FROM travel_categories ct
                 JOIN travels t ON ct.travel_id = t.id
                 JOIN categories c ON ct.category_id = c.id
                 JOIN users u ON u.id = t.author_id

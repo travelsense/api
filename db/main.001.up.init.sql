@@ -103,11 +103,11 @@ CREATE TABLE IF NOT EXISTS categories
 );
 
 -- Category and Travel
-CREATE TABLE IF NOT EXISTS travel_category
+CREATE TABLE IF NOT EXISTS travel_categories
 (
   travel_id INTEGER REFERENCES travels (id) ON UPDATE CASCADE ON DELETE CASCADE,
   category_id INTEGER REFERENCES categories (id) ON UPDATE CASCADE ON DELETE SET NULL,
-  CONSTRAINT travel_category_pkey PRIMARY KEY (travel_id, category_id)
+  CONSTRAINT travel_categories_pkey PRIMARY KEY (travel_id, category_id)
 );
 
 -- Hotels
@@ -212,3 +212,5 @@ CREATE TABLE IF NOT EXISTS iata_ports
   CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{3}$'),
   CONSTRAINT type_regex CHECK (type ~* '^airport|bus|helicopter|railway|seaport$')
 );
+
+CREATE INDEX iata_ports_geo_index ON iata_ports (ST_setSRID(ST_Point(lon, lat), 4326));

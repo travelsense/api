@@ -46,6 +46,8 @@ $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEs
 
 $app->get('/travel/by-category/{name}', 'controller.travel:getTravelsByCategory');
 
+$app->get('/travel/featured', 'controller.travel:getFeatured');
+
 $app->get('/travel/favorite', 'controller.travel:getFavorites');
 
 $app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
@@ -58,13 +60,13 @@ $app->get('/travel/{id}', 'controller.travel:getTravel')
     ->convert('id', $toInt)
     ->bind('travel-by-id');
 
-$app->post('/travel', 'controller.travel:createTravel');
-
 $app->put('/travel/{id}', 'controller.travel:updateTravel')
     ->convert('id', $toInt);
 
 $app->delete('/travel/{id}', 'controller.travel:deleteTravel')
     ->convert('id', $toInt);
+
+$app->post('/travel', 'controller.travel:createTravel');
 
 $app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
     ->assert('type', $iataType)
