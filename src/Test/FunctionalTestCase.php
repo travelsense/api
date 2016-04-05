@@ -21,8 +21,6 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        parent::setUp();
-
         $this->app = Application::createByEnvironment();
         $env = $this->app['env'];
         if ($env !== 'test') {
@@ -38,6 +36,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
             $pdo->exec("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '{$db['database']}'");
             $pdo->exec("DROP DATABASE IF EXISTS {$db['database']}");
             $pdo->exec("CREATE DATABASE {$db['database']} OWNER={$db['user']}");
+            $this->app["db.$name.pdo"]->exec(file_get_contents(__DIR__ . '/../../db/ext/postgis.sql'));
             $this->app["db.$name.migrator"]->upgrade();
         }
         $this->startServer();
@@ -46,7 +45,6 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        parent::tearDown();
         $this->stopServer();
         unset($this->app);
     }

@@ -103,11 +103,11 @@ CREATE TABLE IF NOT EXISTS categories
 );
 
 -- Category and Travel
-CREATE TABLE IF NOT EXISTS travel_category
+CREATE TABLE IF NOT EXISTS travel_categories
 (
   travel_id INTEGER REFERENCES travels (id) ON UPDATE CASCADE ON DELETE CASCADE,
   category_id INTEGER REFERENCES categories (id) ON UPDATE CASCADE ON DELETE SET NULL,
-  CONSTRAINT travel_category_pkey PRIMARY KEY (travel_id, category_id)
+  CONSTRAINT travel_categories_pkey PRIMARY KEY (travel_id, category_id)
 );
 
 -- Hotels
