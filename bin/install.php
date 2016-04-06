@@ -5,7 +5,7 @@ $build = date('YmdHis') . '-' . strtr($tag, '/', '-');
 $tmp = '/tmp';
 $archive = "$tmp/$build.tar.gz";
 run('git checkout '.$tag);
-run('git pull');
+run('git pull origin '.$tag);
 run('git checkout master');
 $release = sprintf(
         "%s by %s@%s (%s) (php %s)\n",
