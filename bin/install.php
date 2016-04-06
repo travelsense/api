@@ -36,7 +36,7 @@ run($deployCmd);
 echo "SWITCH: $switchCmd\n\n";
 run($switchCmd);
 echo "Restart: $restartCmd\n\n";
-run($restartCmd)
+run($restartCmd);
 exit(0);
 
 function terminate(string $msg, int $code)
