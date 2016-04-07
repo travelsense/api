@@ -1,9 +1,9 @@
 <?php
-namespace Api\Model\TravelComment;
+namespace Api\Model\Travel;
 
 use Api\Model\TimestampTrait;
 
-class TravelComment
+class Comment
 {
     use TimestampTrait;
 
@@ -37,7 +37,7 @@ class TravelComment
 
     /**
      * @param int $id
-     * @return TravelComment
+     * @return Comment
      */
     public function setId($id)
     {
@@ -55,7 +55,7 @@ class TravelComment
 
     /**
      * @param int $authorId
-     * @return TravelComment
+     * @return Comment
      */
     public function setAuthorId($authorId)
     {
@@ -73,7 +73,7 @@ class TravelComment
 
     /**
      * @param int $travelId
-     * @return TravelComment
+     * @return Comment
      */
     public function setTravelId($travelId)
     {
@@ -91,7 +91,7 @@ class TravelComment
 
     /**
      * @param string $text
-     * @return TravelComment
+     * @return Comment
      */
     public function setText($text)
     {

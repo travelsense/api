@@ -161,6 +161,21 @@ class ApiClient
     }
 
     /**
+     * Create a new Comment
+     *
+     * @param int $id
+     * @param string $text
+     * @return int
+     */
+    public function createTravelComment($id, $text)
+    {
+        return $this->post(sprintf('/travel/%s/comment', urlencode($id)), [
+            'travel_id' => $id,
+            'text' => $text,
+        ])->id;
+    }
+
+    /**
      * @param $id
      * @return mixed
      */

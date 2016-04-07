@@ -68,6 +68,9 @@ $app->delete('/travel/{id}', 'controller.travel:deleteTravel')
 
 $app->post('/travel', 'controller.travel:createTravel');
 
+$app->post('/travel/{id}/comment', 'controller.comment:createTravelComment')
+    ->convert('id', $toInt);
+
 $app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
     ->assert('type', $iataType)
     ->bind('iata-by-code');

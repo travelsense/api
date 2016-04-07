@@ -8,6 +8,7 @@ use Api\ExpirableStorage;
 use Api\Mapper\DB\IATAMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\TravelMapper;
+use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\UserMapper;
 
 $app['mapper.db.user'] = $app->share(function($app) {
@@ -34,3 +35,8 @@ $app['mapper.db.travel'] = $app->share(function($app) {
     return $mapper;
 });
 
+$app['mapper.db.comment'] = $app->share(function($app) {
+    $mapper = new CommentMapper($app['db.main.pdo']);
+    $mapper->setUserMapper($app['mapper.db.user']);
+    return $mapper;
+});
