@@ -22,11 +22,11 @@ class IATAMapper extends AbstractPDOMapper
      */
     public function fetchOne(string $type, string $code)
     {
-        $select = $this->prepare("SELECT * FROM {$this->table[$type]} WHERE code = :code");
+        $select = $this->pdo->prepare("SELECT * FROM {$this->table[$type]} WHERE code = :code");
         $select->execute([
             ':code' => $code,
         ]);
-        return $select->fetch(PDO::FETCH_ASSOC);
+        return $select->fetch(PDO::FETCH_NAMED);
     }
 
     /**
@@ -37,12 +37,12 @@ class IATAMapper extends AbstractPDOMapper
      */
     public function fetchAll(string $type, int $limit, int $offset)
     {
-        $select = $this->prepare("SELECT * FROM {$this->table[$type]} ORDER BY code ASC LIMIT :limit OFFSET :offset");
+        $select = $this->pdo->prepare("SELECT * FROM {$this->table[$type]} ORDER BY code ASC LIMIT :limit OFFSET :offset");
         $select->execute([
             ':limit' => $limit,
             ':offset' => $offset,
         ]);
-        return $select->fetchAll(PDO::FETCH_ASSOC);
+        return $select->fetchAll(PDO::FETCH_NAMED);
     }
 
     /**

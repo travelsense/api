@@ -22,7 +22,7 @@ VALUES
   RETURNING id
 SQL;
 
-        $insert = $this->prepare($sql);
+        $insert = $this->pdo->prepare($sql);
         $insert->execute(
             [
             ':user_id' => $userId,
@@ -40,7 +40,7 @@ SQL;
      */
     public function getUserId(int $id, string $token)
     {
-        $select = $this->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
+        $select = $this->pdo->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
         $select->execute([
             ':id' => $id,
             ':token' => $token,

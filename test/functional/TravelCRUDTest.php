@@ -9,8 +9,10 @@ class TravelCRUDTest extends FunctionalTestCase
     public function testTravelCreationAndRetrieval()
     {
         $this->createAndLoginUser();
+        $id = $this->apiClient->createTravel('First Travel', 'To make sure ids work properly', ['foo' => 'bar']);
+        $this->assertEquals(1, $id);
         $id = $this->apiClient->createTravel('Hobbit', 'There and back again', ['foo' => 'bar']);
-        $this->assertGreaterThan(0, $id);
+        $this->assertEquals(2, $id);
         $travel = $this->apiClient->getTravel($id);
         $author = $travel->author;
         $this->assertEquals('Hobbit', $travel->title);

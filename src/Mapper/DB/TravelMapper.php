@@ -9,7 +9,6 @@ use PDO;
 /**
  * Class TravelMapper
  * @package Api\Mapper\DB
- * @method Travel createFromAlias(array $row, $alias)
  */
 class TravelMapper extends AbstractPDOMapper
 {
@@ -32,14 +31,13 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchById($id)
     {
-        $select = $this->prepare('SELECT * FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id');
+        $select = $this->pdo->prepare('SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id');
         $select->execute(['id' => $id]);
-        $row = $select->fetch(PDO::FETCH_ASSOC);
+        $row = $select->fetch(PDO::FETCH_NAMED);
         if (!$row) {
             return null;
         }
-        $travel = $this->createFromAlias($row, 't');
-        $author = $this->userMapper->createFromAlias($row, 'u');
+        list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
         $travel->setAuthor($author);
         return $travel;
     }
@@ -51,7 +49,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function insert(Travel $travel)
     {
-        $insert = $this->prepare(
+        $insert = $this->pdo->prepare(
             'INSERT INTO travels '
             . '(title, description, content, author_id)'
             . ' VALUES '
@@ -90,7 +88,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function update(Travel $travel)
     {
-        $update = $this->prepare(
+        $update = $this->pdo->prepare(
             'UPDATE travels SET '
             . 'title = :title, '
             . 'description = :description, '
@@ -107,7 +105,7 @@ class TravelMapper extends AbstractPDOMapper
 
     public function delete($id)
     {
-        $deleteMain = $this->prepare("DELETE FROM travels WHERE id = :id");
+        $deleteMain = $this->pdo->prepare("DELETE FROM travels WHERE id = :id");
         $deleteMain->execute([':id' => $id]);
     }
 
@@ -117,7 +115,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function addFavorite($travelId, $userId)
     {
-        $insert = $this->prepare(
+        $insert = $this->pdo->prepare(
             'INSERT INTO favorite_travels '
             . '(user_id, travel_id) '
             . 'VALUES '
@@ -134,7 +132,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function removeFavorite($travelId, $userId)
     {
-        $delete = $this->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id');
+        $delete = $this->pdo->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id');
         $delete->execute([
             ':user_id' => $userId,
             ':travel_id' => $travelId,
@@ -147,16 +145,15 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function getFavorites($userId)
     {
-        $select = $this->prepare(
+        $select = $this->pdo->prepare(
                 'SELECT t.*, u.* FROM  favorite_travels ft
                 JOIN travels t ON ft.travel_id = t.id
                 JOIN users u ON ft.user_id = u.id
                 WHERE ft.user_id = :user_id');
         $select->execute(['user_id' => $userId]);
         $travels = [];
-        while ($row = $select->fetch(PDO::FETCH_ASSOC)){
-            $travel = $this->createFromAlias($row, 't');
-            $author = $this->userMapper->createFromAlias($row, 'u');
+        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
+            list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
             $travel->setAuthor($author);
             $travels[] = $travel;
         }
@@ -171,7 +168,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function getTravelsByCategory($name, $limit, $offset)
     {
-        $select = $this->prepare(
+        $select = $this->pdo->prepare(
                 'SELECT t.*, u.* FROM travel_categories ct
                 JOIN travels t ON ct.travel_id = t.id
                 JOIN categories c ON ct.category_id = c.id
@@ -184,7 +181,7 @@ class TravelMapper extends AbstractPDOMapper
             ':offset' => $offset
         ]);
         $travels = [];
-        while($row = $select->fetch(PDO::FETCH_ASSOC)){
+        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
             $travel = $this->createFromAlias($row, 't');
             $author = $this->userMapper->createFromAlias($row, 'u');
             $travel->setAuthor($author);

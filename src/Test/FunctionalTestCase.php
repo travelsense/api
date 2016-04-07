@@ -39,7 +39,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
             $this->app["db.$name.pdo"]->exec(file_get_contents(__DIR__ . '/../../db/ext/postgis.sql'));
             $this->app["db.$name.migrator"]->upgrade();
         }
-        $this->startServer();
+        $this->startServer('/tmp/php-server.log');
         $this->apiClient = new ApiClient("$this->host:$this->port");
     }
 

@@ -2,7 +2,6 @@
 namespace Api;
 
 use PDO;
-use PDOStatement;
 
 abstract class AbstractPDOMapper
 {
@@ -27,50 +26,43 @@ abstract class AbstractPDOMapper
     }
 
     /**
-     * @param string $sql
-     * @return PDOStatement
-     */
-    public function prepare(string $sql): PDOStatement
-    {
-        return $this->pdo->prepare($sql, $this->driverOptions);
-    }
-
-    /**
-     * Fetch an object
-     *
-     * @param  PDOStatement $stmt
-     * @return mixed|null
-     */
-    public function fetch(PDOStatement $stmt)
-    {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ? $this->create($row) : null;
-    }
-
-    /**
-     * Create an object from a joined table
-     *
-     * @param  array  $row
-     * @param  string $alias
-     * @return mixed
-     */
-    public function createFromAlias(array $row, string $alias)
-    {
-        $alias = $alias . '.';
-        $prefixLen = mb_strlen($alias);
-        foreach ($row as $key => $item) {
-            if (0 === mb_strpos($key, $alias) && mb_strlen($key) > $prefixLen) {
-                $row[mb_substr($key, $prefixLen)] = $item;
-            }
-        }
-        return $this->create($row);
-    }
-
-    /**
      * Create object by a DB row
      *
      * @param  array $row
      * @return mixed
      */
     abstract protected function create(array $row);
+
+    /**
+     * Create an object from a joined table.
+     * If the SQL result contains multiple columns with the same name
+     *
+     * @param array $row Result set fetched using PDO::FETCH_NAMED method
+     * @param AbstractPDOMapper[] $mappers Variadic list of mappers
+     * @return array Array of created objects
+     */
+    protected function createFromJoined(array $row, self ...$mappers): array
+    {
+        $objects = [];
+        foreach ($mappers as $index => $mapper) {
+            $objects[] = $mapper->create($this->normalize($row, $index));
+        }
+        return $objects;
+    }
+
+    /**
+     * Replace keys which are arrays with their $index-th elements
+     * @param array $row
+     * @param int $index
+     * @return array
+     */
+    private function normalize(array $row, int $index): array
+    {
+        foreach ($row as $key => $item) {
+            if (is_array($item)) {
+                $row[$key] = $item[$index];
+            }
+        }
+        return $row;
+    }
 }
