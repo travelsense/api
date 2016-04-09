@@ -30,6 +30,8 @@ $app->get('/user', 'controller.user:getUser');
 
 $app->put('/user', 'controller.user:updateUser');
 
+$app->get('/travel/by-user', 'controller.travel:getUserTravels');
+
 $app->post('/email/confirm/{token}', 'controller.user:confirmEmail')
     ->bind('confirm-email');
 
@@ -45,6 +47,8 @@ $app->post('/token', 'controller.auth:create')
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEstimate');
 
 $app->get('/travel/by-category/{name}', 'controller.travel:getTravelsByCategory');
+
+$app->get('/categories', 'controller.categories:getCategories');
 
 $app->get('/travel/featured', 'controller.travel:getFeatured');
 

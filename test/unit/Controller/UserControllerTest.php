@@ -53,6 +53,7 @@ class UserControllerTest extends ControllerTestCase
     {
         $this->assertEquals(
             [
+                'id' => 1,
                 'email' => 'user1@example.com',
                 'picture' => 'http://example.com/user1.jpg',
                 'firstName' => 'User1',

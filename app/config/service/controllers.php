@@ -7,6 +7,7 @@
 use Api\Controller\AuthController;
 use Api\Controller\IataController;
 use Api\Controller\TravelController;
+use Api\Controller\CategoriesController;
 use Api\Controller\CommentController;
 use Api\Controller\UberController;
 use Api\Controller\UserController;
@@ -41,7 +42,16 @@ $app['controller.auth'] = $app->share(function($app) {
 
 $app['controller.travel'] = $app->share(function($app) {
     $controller = new TravelController(
-        $app['mapper.db.travel']
+        $app['mapper.db.travel'],
+        $app['mapper.db.category']
+    );
+    $controller->setLogger($app['monolog']);
+    return $controller;
+});
+
+$app['controller.categories'] = $app->share(function($app) {
+    $controller = new CategoriesController(
+        $app['mapper.db.category']
     );
     $controller->setLogger($app['monolog']);
     return $controller;

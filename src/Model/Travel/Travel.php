@@ -34,6 +34,11 @@ class Travel
     private $content;
 
     /**
+     * @var int
+     */
+    private $categoryId;
+
+    /**
      * @return int
      */
     public function getId()
@@ -122,5 +127,22 @@ class Travel
         $this->content = $content;
         return $this;
     }
-    
+
+    /**
+     * @return int
+     */
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @param $categoryId
+     * @return Travel
+     */
+    public function setCategoryId($categoryId)
+    {
+        $this->categoryId = $categoryId;
+        return $this;
+    }
 }

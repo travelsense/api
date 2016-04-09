@@ -4,11 +4,11 @@ namespace Api\Controller;
 
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
+use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,13 +24,20 @@ class TravelController extends ApiController
     private $travelMapper;
 
     /**
+     * @var CategoryMapper
+     */
+    private $categoryMapper;
+
+    /**
      * TravelController constructor.
      *
      * @param TravelMapper $travelMapper
+     * @param CategoryMapper $categoryMapper
      */
-    public function __construct(TravelMapper $travelMapper)
+    public function __construct(TravelMapper $travelMapper, CategoryMapper $categoryMapper)
     {
         $this->travelMapper = $travelMapper;
+        $this->categoryMapper = $categoryMapper;
     }
 
     /**
@@ -48,30 +55,12 @@ class TravelController extends ApiController
         $travel->setDescription($json->getString('description'));
         $travel->setContent($json->get('content'));
         $this->travelMapper->insert($travel);
+        $categoryId = $json->get('category_id');
+        if ($categoryId) {
+            $this->categoryMapper->addTravelToCategory($travel->getId(), $categoryId);
+        }
 
         return ['id' => $travel->getId()];
-    }
-
-    /**
-     * @param Travel $travel
-     * @return array
-     */
-    public function buildTravelView(Travel $travel): array
-    {
-        $author = $travel->getAuthor();
-        return [
-            'id' => $travel->getId(),
-            'title' => $travel->getTitle(),
-            'description' => $travel->getDescription(),
-            'content' => $travel->getContent(),
-            'created' => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'author' => [
-                'id' => $author->getId(),
-                'firstName' => $author->getFirstName(),
-                'lastName' => $author->getLastName(),
-                'picture' => $author->getPicture(),
-            ]
-        ];
     }
 
     /**
@@ -81,10 +70,12 @@ class TravelController extends ApiController
      */
     public function getTravel(int $id): array
     {
-        if ($id === 0) {
-            return $this->getTravelMock();
-        }
         $travel = $this->travelMapper->fetchById($id);
+        $categories = $this->categoryMapper->getTravelCategories($id);
+        if (count($categories)) { // TODO move this logic to TravelMapper
+            $category = $categories[0];
+            $travel->setCategoryId($category->getId());
+        }
         if (!$travel) {
             throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
         }
@@ -92,14 +83,40 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param string $name
+     * @param Travel $travel
+     * @return array
+     */
+    public function buildTravelView(Travel $travel): array
+    {
+        $author = $travel->getAuthor();
+        $view = [
+            'id' => $travel->getId(),
+            'title' => $travel->getTitle(),
+            'description' => $travel->getDescription(),
+            'content' => $travel->getContent(),
+            'created' => $travel->getCreated()->format(self::DATETIME_FORMAT),
+            'category' => $travel->getCategoryId()];
+
+        if ($author) {
+            $view['author'] = [
+                'id' => $author->getId(),
+                'firstName' => $author->getFirstName(),
+                'lastName' => $author->getLastName(),
+                'picture' => $author->getPicture()
+            ];
+        }
+        return $view;
+    }
+
+    /**
+     * @param User $user
      * @param int $limit
      * @param int $offset
      * @return array
      */
-    public function getTravelsByCategory(string $name, int $limit = 10, int $offset = 0): array
+    public function getUserTravels(User $user, int $limit = 10, int $offset = 0): array
     {
-        $travels = $this->travelMapper->getTravelsByCategory($name, $limit, $offset);
+        $travels = $this->travelMapper->geTravelsByUserId($user->getId(), $limit, $offset);
         $response = [];
         foreach ($travels as $travel) {
             $response[] = $this->buildTravelView($travel);
@@ -145,26 +162,77 @@ class TravelController extends ApiController
 
     public function getFeatured(): array
     {
-        return [
-            [
-                'title' => 'Hawaii',
-                'subtitle' => 'Popular Destinations',
-                'image' => 'http://www.astonhotels.com/assets/slides/690x380-Hawaii-Sunset.jpg',
-                'category' => 'Hawaii',
-            ],
-            [
-                'title' => 'Mexico',
-                'subtitle' => 'Authentic experience',
-                'image' => 'http://image1.masterfile.com/em_w/02/93/35/625-02933564em.jpg',
-                'category' => 'Mexico',
-            ],
-            [
-                'title' => 'California',
-                'subtitle' => 'Explore local experiences',
-                'image' => 'http://cdn.sheknows.com/articles/2012/02/southern-california-beach-horiz.jpg',
-                'category' => 'California',
-            ],
+        $result = [
+            'banners' => [
+                [
+                    'title' => 'Hawaii',
+                    'subtitle' => 'Popular Destinations',
+                    'image' => 'http://www.astonhotels.com/assets/slides/690x380-Hawaii-Sunset.jpg',
+                    'category' => 'Hawaii',
+                ],
+                [
+                    'title' => 'Mexico',
+                    'subtitle' => 'Authentic experience',
+                    'image' => 'http://image1.masterfile.com/em_w/02/93/35/625-02933564em.jpg',
+                    'category' => 'Mexico',
+                ],
+                [
+                    'title' => 'California',
+                    'subtitle' => 'Explore local experiences',
+                    'image' => 'http://cdn.sheknows.com/articles/2012/02/southern-california-beach-horiz.jpg',
+                    'category' => 'California',
+                ]
+            ]
         ];
+        $featuredCategoryNames = ['Featured', 'Romantic', 'Sports'];
+        $featuredCategories = array();
+        for ($i = 0; $i < count($featuredCategoryNames); ++$i) {
+            $name = $featuredCategoryNames[$i];
+            $featuredCategories[] = [
+                'title' => $name,
+                'travels' => $this->getTravelsByCategory($name, 5, 0)
+            ];
+        }
+        $result['categories'] = $featuredCategories;
+        return $result;
+    }
+
+    /**
+     * @param string $name
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTravelsByCategory(string $name, int $limit = 10, int $offset = 0): array
+    {
+        $travels = $this->travelMapper->getTravelsByCategory($name, $limit, $offset);
+        $response = [];
+        foreach ($travels as $travel) {
+            $response[] = $this->buildTravelView($travel);
+        }
+        return $response;
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
+    public function updateTravel(int $id, Request $request, User $user): array
+    {
+        $travel = $this->getOwnedTravel($id, $user);
+        $json = DataObject::createFromString($request->getContent());
+        $travel->setTitle($json->getString('title'));
+        $travel->setDescription($json->getString('description'));
+        $travel->setContent($json->get('content'));
+        $categoryId = $json->get('category_id');
+        if ($categoryId) {
+            $this->categoryMapper->addTravelToCategory($id, $categoryId);
+        }
+        $this->travelMapper->update($travel);
+
+        return [];
     }
 
     /**
@@ -187,179 +255,13 @@ class TravelController extends ApiController
 
     /**
      * @param $id
-     * @param Request $request
      * @param User $user
      * @return array
      */
-    public function updateTravel(int $id, Request $request, User $user): array 
-    {
-        $travel = $this->getOwnedTravel($id, $user);
-        $json = DataObject::createFromString($request->getContent());
-        $travel->setTitle($json->getString('title'));
-        $travel->setDescription($json->getString('description'));
-        $travel->setContent($json->get('content'));
-        $this->travelMapper->update($travel);
-        return [];
-    }
-
-    /**
-     * @param $id
-     * @param User $user
-     * @return array
-     */
-    public function deleteTravel(int $id, User $user): array 
+    public function deleteTravel(int $id, User $user): array
     {
         $travel = $this->getOwnedTravel($id, $user);
         $this->travelMapper->delete($travel->getId());
         return [];
-    }
-    
-    public function getTravelMock(): array
-    {
-        $led = [
-            'id' => 0,
-            'iata' => 'LED',
-            'name' => 'Pulkovo',
-            'geo' => [59.800278, 30.2625]
-        ];
-        $svo = [
-            'id' => 0,
-            'iata' => 'SVO',
-            'name' => 'Sheremetievo',
-            'geo' => [55.972778, 37.414722],
-        ];
-        $dme = [
-            'id' => 0,
-            'iata' => 'DME',
-            'name' => 'Domodedovo',
-            'geo' => [55.408611, 37.906111],
-        ];
-        $cosmos = [
-            'id' => 0,
-            'name' => 'Cosmos',
-            'images' => [
-                'http://www.gostinica-kocmoc.ru/images/zdanie_gostinicy_kosmos_v_moskve-full8.jpg',
-                'http://static.tonkosti.ru/images/b/b3/%D0%9A%D0%BE%D1%81%D0%BC%D0%BE%D1%81_%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0.jpg'
-            ],
-            'geo' => [55.8222, 37.6472],
-            'address' => [
-                'country' => 'RU',
-                'city' => 'Moscow',
-                'street' => 'pr-t. Mira, 150',
-                'zip' => 129366,
-            ],
-        ];
-        $redSquare = [
-            'name' => 'The Red Square',
-            'images' => [
-                'http://strana.ru/media/images/uploaded/gallery_promo21092359.jpg',
-                'http://olgazhdan.com/wp-content/uploads/MY_KREMLIN/IMG_3111.jpg'
-            ],
-            'geo' => [55.754194, 37.620139],
-            'address' => [
-                'country' => 'RU',
-                'city' => 'Moscow',
-                'street' => 'Red Square',
-                'zip' => 109012,
-            ],
-        ];
-
-
-        return [
-            'id' => 0,
-            'favorite' => true,
-            'title' => 'Example travel',
-            'description' => 'This is a mock travel object to help us understand what we need',
-            'images' => [
-                'http://www.provancewine.ru/assets/shop/images/vodka01.jpg',
-                'http://s00.yaplakal.com/pics/pics_original/9/0/3/609309.jpg',
-            ],
-            'allowedDates' => [
-                [
-                    'first' => '2016-06-01',
-                    'last' => '2016-08-31',
-                ],
-                [
-                    'first' => '2016-12-01',
-                    'last' => '2017-02-28',
-                ],
-            ],
-            'author' => [
-                'id' => 0,
-                'image' => 'http://slon.gr/names/bday_photos/389.jpg',
-                'firstName' => 'Alexander',
-                'lastName' => 'Radischev',
-            ],
-            'elements' => [
-                [
-                    'offset' => 0,
-                    'offsetUnit' => 'minute',
-                    'type' => 'airport',
-                    'airport' => $led,
-                ],
-                [
-                    'offset' => 0,
-                    'offsetUnit' => 'minute',
-                    'type' => 'flight',
-                    'segments' => [
-                        [
-                            'origin' => 'LED',
-                            'destination' => 'SVO',
-                            'duration' => 80
-                        ]
-                    ]
-                ],
-                [
-                    'offset' => 80,
-                    'offsetUnit' => 'minute',
-                    'type' => 'airport',
-                    'airport' => $svo,
-                ],
-                [
-                    'offset' => 180,
-                    'offsetUnit' => 'minute',
-                    'type' => 'hotel',
-                    'subtype' => 'check-in',
-                    'hotel' => $cosmos,
-                ],
-                [
-                    'offset' => 1,
-                    'offsetUnit' => 'day',
-                    'type' => 'sight',
-                    'sight' => $redSquare,
-                ],
-                [
-                    'offset' => 2880,
-                    'offsetUnit' => 'minute',
-                    'type' => 'hotel',
-                    'subtype' => 'check-out',
-                    'hotel' => $cosmos
-                ],
-                [
-                    'offset' => 3000,
-                    'offsetUnit' => 'minute',
-                    'type' => 'airport',
-                    'airport' => $dme,
-                ],
-                [
-                    'offset' => 3000,
-                    'offsetUnit' => 'minute',
-                    'type' => 'flight',
-                    'segments' => [
-                        [
-                            'origin' => 'DME',
-                            'destination' => 'LED',
-                            'duration' => 80
-                        ]
-                    ]
-                ],
-                [
-                    'offset' => 3080,
-                    'offsetUnit' => 'minute',
-                    'type' => 'airport',
-                    'airport' => $led,
-                ],
-            ]
-        ];
     }
 }

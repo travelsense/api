@@ -43,6 +43,29 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
+     * @param $userId
+     * @param int $limit
+     * @param int $offset
+     * @return Travel|null
+     */
+    public function geTravelsByUserId($userId, int $limit, int $offset)
+    {
+        $select = $this->pdo->prepare('SELECT t.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.author_id = :userId LIMIT :limit OFFSET :offset');
+
+        $select->execute([
+            'userId' => $userId,
+            ':limit' => $limit,
+            ':offset' => $offset,
+        ]);
+        $travels = [];
+        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
+            list($travel) = $this->createFromJoined($row, $this);
+            $travels[] = $travel;
+        }
+        return $travels;
+    }
+
+    /**
      * Insert into DB, update id
      *
      * @param Travel $travel
@@ -56,10 +79,10 @@ class TravelMapper extends AbstractPDOMapper
             . '(:title, :description, :content::JSON, :author_id) RETURNING id'
         );
         $insert->execute([
-            ':title'       => $travel->getTitle(),
+            ':title' => $travel->getTitle(),
             ':description' => $travel->getDescription(),
-            ':content'     => json_encode($travel->getContent()),
-            ':author_id'   => $travel->getAuthor()->getId(),
+            ':content' => json_encode($travel->getContent()),
+            ':author_id' => $travel->getAuthor()->getId(),
         ]);
         $id = $insert->fetchColumn();
         $travel->setId($id);
@@ -96,10 +119,10 @@ class TravelMapper extends AbstractPDOMapper
             . 'WHERE id = :id'
         );
         $update->execute([
-            ':title'       => $travel->getTitle(),
+            ':title' => $travel->getTitle(),
             ':description' => $travel->getDescription(),
-            ':content'     => json_encode($travel->getContent()),
-            ':id'          => $travel->getId(),
+            ':content' => json_encode($travel->getContent()),
+            ':id' => $travel->getId(),
         ]);
     }
 
@@ -146,7 +169,7 @@ class TravelMapper extends AbstractPDOMapper
     public function getFavorites($userId)
     {
         $select = $this->pdo->prepare(
-                'SELECT t.*, u.* FROM  favorite_travels ft
+            'SELECT t.*, u.* FROM  favorite_travels ft
                 JOIN travels t ON ft.travel_id = t.id
                 JOIN users u ON ft.user_id = u.id
                 WHERE ft.user_id = :user_id');
@@ -169,7 +192,7 @@ class TravelMapper extends AbstractPDOMapper
     public function getTravelsByCategory($name, $limit, $offset)
     {
         $select = $this->pdo->prepare(
-                'SELECT t.*, u.* FROM travel_categories ct
+            'SELECT t.*, u.* FROM travel_categories ct
                 JOIN travels t ON ct.travel_id = t.id
                 JOIN categories c ON ct.category_id = c.id
                 JOIN users u ON u.id = t.author_id
@@ -182,8 +205,7 @@ class TravelMapper extends AbstractPDOMapper
         ]);
         $travels = [];
         while ($row = $select->fetch(PDO::FETCH_NAMED)) {
-            $travel = $this->createFromAlias($row, 't');
-            $author = $this->userMapper->createFromAlias($row, 'u');
+            list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
             $travel->setAuthor($author);
             $travels[] = $travel;
         }

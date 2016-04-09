@@ -59,6 +59,7 @@ class UserController
     public function getUser(User $user)
     {
         return [
+            'id' => $user->getId(),
             'email' => $user->getEmail(),
             'picture' => $user->getPicture(),
             'firstName' => $user->getFirstName(),

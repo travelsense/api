@@ -11,6 +11,7 @@ class AuthWorkflowTest extends FunctionalTestCase
         $user = $this->apiClient->getCurrentUser();
         $this->assertEquals(
             (object) [
+                'id' => 1,
                 'firstName' => 'Alexander',
                 'lastName' => 'Pushkin',
                 'email' => 'sasha@pushkin.ru',
@@ -20,6 +21,7 @@ class AuthWorkflowTest extends FunctionalTestCase
         );
 
         $this->apiClient->updateUser([
+            'id' => 1,
             'firstName' => 'Natalia',
             'lastName' => 'Pushkina',
             'picture' => 'http://pushkin.ru/sasha.jpg',
@@ -28,6 +30,7 @@ class AuthWorkflowTest extends FunctionalTestCase
         $user = $this->apiClient->getCurrentUser();
         $this->assertEquals(
             (object) [
+                'id' => 1,
                 'firstName' => 'Natalia',
                 'lastName' => 'Pushkina',
                 'email' => 'sasha@pushkin.ru',
