@@ -1,15 +1,22 @@
 <?php
 namespace Api\JSON;
 
+use Api\Exception\ApiException;
 use PHPUnit_Framework_TestCase;
 
 class DataObjectTest extends PHPUnit_Framework_TestCase
 {
     public function testExists()
     {
-        $data = (object)['a' => 'b'];
+        $data = (object) [
+            'a_string' => 'zzz',
+            'a_null' => null,
+            'a_false' => false,
+        ];
         $json = new DataObject($data);
-        $this->assertTrue($json->has('a'));
+        $this->assertTrue($json->has('a_string'));
+        $this->assertTrue($json->has('a_null'));
+        $this->assertTrue($json->has('a_false'));
         $this->assertFalse($json->has('x'));
     }
 
@@ -82,8 +89,9 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
         try {
             $data->get($property, $type, $constraint);
             $this->fail('Exception expected');
-        } catch (FormatException $e) {
+        } catch (ApiException $e) {
             $this->assertEquals($exception, $e->getMessage());
+            $this->assertEquals(ApiException::VALIDATION, $e->getCode());
         }
     }
 

@@ -91,7 +91,7 @@ class AuthController
     {
         $user = $this->userMapper->fetchByEmailAndPassword($email, $password);
         if (null === $user) {
-            throw ApiException::create(ApiException::INVALID_EMAIL_PASSWORD);
+            throw new ApiException('Invalid email or password', ApiException::INVALID_EMAIL_PASSWORD);
         }
         return $user;
     }

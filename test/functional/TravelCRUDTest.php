@@ -9,9 +9,17 @@ class TravelCRUDTest extends FunctionalTestCase
     public function testTravelCreationAndRetrieval()
     {
         $this->createAndLoginUser();
-        $id = $this->apiClient->createTravel('First Travel', 'To make sure ids work properly', 0, ['foo' => 'bar']);
+        $id = $this->apiClient->createTravel([
+            'title' => 'First Travel',
+            'description' => 'To make sure ids work properly',
+            'content' => ['foo' => 'bar']
+        ]);
         $this->assertEquals(1, $id);
-        $id = $this->apiClient->createTravel('Hobbit', 'There and back again', 0, ['foo' => 'bar']);
+        $id = $this->apiClient->createTravel([
+            'title' => 'Hobbit',
+            'description' => 'There and back again',
+            'content' => ['foo' => 'bar']
+        ]);
         $this->assertEquals(2, $id);
         $travel = $this->apiClient->getTravel($id);
         $author = $travel->author;
@@ -25,7 +33,11 @@ class TravelCRUDTest extends FunctionalTestCase
             $this->assertObjectHasAttribute($attr, $author);
         }
 
-        $this->apiClient->updateTravel($id, 'Two Towers', 'Before the Return of the King', 0, ['pew' => 'boom']);
+        $this->apiClient->updateTravel($id, [
+            'title' => 'Two Towers',
+            'description' => 'Before the Return of the King',
+            'content' => ['pew' => 'boom']
+        ]);
         $travelUpdated = $this->apiClient->getTravel($id);
         $this->assertEquals('Two Towers', $travelUpdated->title);
         $this->assertEquals('Before the Return of the King', $travelUpdated->description);
@@ -45,7 +57,11 @@ class TravelCRUDTest extends FunctionalTestCase
     public function testAddGetRemoveTravelFavorite()
     {
         $this->createAndLoginUser();
-        $id = $this->apiClient->createTravel('Hobbit', 'There and back again', 0);
+        $id = $this->apiClient->createTravel([
+            'title' => 'Hobbit',
+            'description' => 'There and back again',
+            'content' => ['foo' => 'bar']
+        ]);
         $this->apiClient->addTravelToFavorites($id);
         $favoriteTravels = $this->apiClient->getFavoriteTravels();
         $this->assertEquals(1, count($favoriteTravels));

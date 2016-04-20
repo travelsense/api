@@ -106,7 +106,6 @@ class UserControllerTest extends ControllerTestCase
             $this->fail('No exception thrown');
         } catch (ApiException $e) {
             $this->assertEquals(ApiException::USER_EXISTS, $e->getCode());
-            $this->assertEquals(Response::HTTP_FORBIDDEN, $e->getHttpCode());
         }
 
         $this->assertEquals([], $this->controller->createUser($request));
@@ -126,7 +125,6 @@ class UserControllerTest extends ControllerTestCase
             $this->fail();
         } catch (ApiException $e) {
             $this->assertEquals(ApiException::VALIDATION, $e->getCode());
-            $this->assertEquals(Response::HTTP_BAD_REQUEST, $e->getHttpCode());
         }
     }
 }

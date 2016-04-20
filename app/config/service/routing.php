@@ -1,7 +1,7 @@
 <?php
 /**
  * Routing
- * @var $app Application
+ * @var $app Api\Application
  */
 
 use Silex\Provider\UrlGeneratorServiceProvider;

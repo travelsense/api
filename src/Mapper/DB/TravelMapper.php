@@ -142,7 +142,9 @@ class TravelMapper extends AbstractPDOMapper
             'INSERT INTO favorite_travels '
             . '(user_id, travel_id) '
             . 'VALUES '
-            . '(:user_id, :travel_id)');
+            . '(:user_id, :travel_id)'
+            . ' ON CONFLICT DO NOTHING'
+        );
         $insert->execute([
             ':user_id' => $userId,
             ':travel_id' => $travelId,

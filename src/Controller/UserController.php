@@ -104,7 +104,7 @@ class UserController
         }
 
         if ($this->userMapper->emailExists($user->getEmail())) {
-            throw ApiException::create(ApiException::USER_EXISTS);
+            throw new ApiException('Email already exists', ApiException::USER_EXISTS);
         }
         $this->userMapper->insert($user);
         $this->sendConfirmationLink($user);
@@ -121,7 +121,7 @@ class UserController
     public function sendPasswordResetLink(string $email): array 
     {
         if (false === $this->userMapper->emailExists($email)) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+            throw new ApiException('Email not found', ApiException::RESOURCE_NOT_FOUND);
         }
         $token = $this->storage->store($email);
         $this->mailer->sendPasswordResetLink($email, $token);
@@ -141,13 +141,13 @@ class UserController
             if ($this->logger) {
                 $this->logger->warning('Expired token', ['token' => $token]);
             }
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+            throw new ApiException('Token expired', ApiException::RESOURCE_NOT_FOUND);
         }
         if (false === $this->userMapper->emailExists($email)) {
             if ($this->logger) {
                 $this->logger->error('Email not found', ['token' => $token, 'email' => $email]);
             }
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+            throw new ApiException('Email not found', ApiException::RESOURCE_NOT_FOUND);
         }
         $this->userMapper->confirmEmail($email);
         return [];
@@ -167,13 +167,13 @@ class UserController
             if ($this->logger) {
                 $this->logger->warning('Expired token', ['token' => $token]);
             }
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+            throw new ApiException('Token expired', ApiException::RESOURCE_NOT_FOUND);
         }
         if (false === $this->userMapper->emailExists($email)) {
             if ($this->logger) {
                 $this->logger->error('Email not found', ['token' => $token, 'email' => $email]);
             }
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+            throw new ApiException('Email not found', ApiException::RESOURCE_NOT_FOUND);
         }
         $json = DataObject::createFromString($request->getContent());
         $password = $json->getString('password');

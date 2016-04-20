@@ -26,8 +26,8 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Api\Exception\ApiException
-     * @expectedExceptionMessage Invalid or expired auth token
-     * @expectedExceptionCode 202
+     * @expectedExceptionMessage Invalid token
+     * @expectedExceptionCode 2200
      */
     public function testOnRequestThrowsException()
     {

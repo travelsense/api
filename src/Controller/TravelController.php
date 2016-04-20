@@ -55,9 +55,8 @@ class TravelController extends ApiController
         $travel->setDescription($json->getString('description'));
         $travel->setContent($json->get('content'));
         $this->travelMapper->insert($travel);
-        $categoryId = $json->get('category_id');
-        if ($categoryId) {
-            $this->categoryMapper->addTravelToCategory($travel->getId(), $categoryId);
+        if ($json->has('category_id')) {
+            $this->categoryMapper->addTravelToCategory($travel->getId(), $json->get('category_id'));
         }
 
         return ['id' => $travel->getId()];
@@ -77,7 +76,7 @@ class TravelController extends ApiController
             $travel->setCategoryId($category->getId());
         }
         if (!$travel) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+            throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
         return $this->buildTravelView($travel);
     }
@@ -223,12 +222,17 @@ class TravelController extends ApiController
     {
         $travel = $this->getOwnedTravel($id, $user);
         $json = DataObject::createFromString($request->getContent());
-        $travel->setTitle($json->getString('title'));
-        $travel->setDescription($json->getString('description'));
-        $travel->setContent($json->get('content'));
-        $categoryId = $json->get('category_id');
-        if ($categoryId) {
-            $this->categoryMapper->addTravelToCategory($id, $categoryId);
+        if ($json->has('title')) {
+            $travel->setTitle($json->getString('title'));
+        }
+        if ($json->has('description')) {
+            $travel->setDescription($json->getString('description'));
+        }
+        if ($json->has('content')) {
+            $travel->setContent($json->get('content'));
+        }
+        if ($json->has('category_id')) {
+            $this->categoryMapper->addTravelToCategory($id, $json->get('category_id'));
         }
         $this->travelMapper->update($travel);
 
@@ -245,10 +249,10 @@ class TravelController extends ApiController
     {
         $travel = $this->travelMapper->fetchById($id);
         if (!$travel) {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+            throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
         if ($travel->getAuthor()->getId() !== $user->getId()) {
-            throw ApiException::create(ApiException::ACCESS_DENIED);
+            throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
         }
         return $travel;
     }

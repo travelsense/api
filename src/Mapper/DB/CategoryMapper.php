@@ -1,5 +1,4 @@
 <?php
-
 namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
@@ -17,8 +16,7 @@ class CategoryMapper extends AbstractPDOMapper
         $select->execute();
         $categories = [];
         while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
-            $category = $this->create($row);
-            $categories[] = $category;
+            $categories[] = $this->create($row);
         }
         return $categories;
     }
@@ -48,8 +46,7 @@ class CategoryMapper extends AbstractPDOMapper
         ]);
         $categories = [];
         while ($row = $select->fetch(PDO::FETCH_NAMED)) {
-            list($category) = $this->createFromJoined($row, $this);
-            $categories[] = $category;
+            $categories[] = $this->create($row);
         }
         return $categories;
     }

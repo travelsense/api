@@ -49,9 +49,9 @@ class AuthControllerTest extends ControllerTestCase
             ['getFirstName', 'getLastName', 'getPicture', 'getEmail']
         );
         foreach ([
-                     'getEmail' => 'sasha@pushkin.ru',
+                     'getEmail'     => 'sasha@pushkin.ru',
                      'getFirstName' => 'Alexander',
-                     'getLastName' => 'Pushkin',
+                     'getLastName'  => 'Pushkin',
                  ] as $method => $value) {
             $fbUser->method($method)->willReturn($value);
         }
@@ -111,7 +111,6 @@ class AuthControllerTest extends ControllerTestCase
             $this->fail();
         } catch (ApiException $e) {
             $this->assertEquals(ApiException::INVALID_EMAIL_PASSWORD, $e->getCode());
-            $this->assertEquals(401, $e->getHttpCode());
         }
     }
 

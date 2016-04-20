@@ -3,7 +3,6 @@ namespace Api\Controller;
 
 use Api\Mapper\DB\CategoryMapper;
 use Psr\Log\LoggerAwareTrait;
-use Api\Model\Category;
 
 class CategoriesController extends ApiController
 {
@@ -24,26 +23,16 @@ class CategoriesController extends ApiController
     }
 
     /**
-     * @param Category $category
-     * @return array
-     */
-    private function buildCategoryView(Category $category): array
-    {
-        return [
-            'id' => $category->getId(),
-            'title' => $category->getTitle()
-        ];
-    }
-
-    /**
      * @return array
      */
     public function getCategories(): array
     {
-        $categories = $this->categoryMapper->getAllCategories();
         $response = [];
-        foreach ($categories as $category) {
-            $response[] = $this->buildCategoryView($category);
+        foreach ($this->categoryMapper->getAllCategories() as $category) {
+            $response[] = [
+                'id'    => $category->getId(),
+                'title' => $category->getTitle(),
+            ];
         }
         return $response;
     }

@@ -2,18 +2,17 @@
 /**
  * Application configuration
  *
- * @var $app Application
+ * @var $app Api\Application
  */
 
 use Api\ControllerResolver;
 use Api\Exception\ApiException;
-use Api\Exception\ValidationException;
-use Api\JSON\FormatException;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 $app['debug'] = $app['config']['debug'];
 $app['resolver'] = $app->share(function () use ($app) {
@@ -21,35 +20,38 @@ $app['resolver'] = $app->share(function () use ($app) {
     return new ControllerResolver($app, $app['logger']);
 });
 
-$app->error(function(FormatException $e, $code) use ($app) {
-    throw new ApiException($e->getMessage(), ApiException::VALIDATION, $e);
-});
-
-$app->error(function(ApiException $e, $code) use ($app) {
-    $response = [
-        'error' => $e->getMessage(),
-        'code' => $e->getCode(),
-    ];
-    return $app->json($response, $e->getHttpCode());
-});
-
-$app->error(function(Exception $e, $code) use ($app) {
-    if ($app['debug']) {
-        error_log($e);
-        return null; // let the internal handler show the exception
-    }
-    $codeToMessage = $app['config']['error_message_mapping'];
-    if (array_key_exists($code, $codeToMessage)) {
-        $message = $codeToMessage[$code];
+$app->error(function (Exception $e) use ($app) {
+    if ($e instanceof ApiException) {
+        $map = [
+            ApiException::VALIDATION             => Response::HTTP_FORBIDDEN,
+            ApiException::USER_EXISTS            => Response::HTTP_FORBIDDEN,
+            ApiException::AUTH_REQUIRED          => Response::HTTP_UNAUTHORIZED,
+            ApiException::INVALID_EMAIL_PASSWORD => Response::HTTP_UNAUTHORIZED,
+            ApiException::INVALID_TOKEN          => Response::HTTP_UNAUTHORIZED,
+            ApiException::RESOURCE_NOT_FOUND     => Response::HTTP_NOT_FOUND,
+            ApiException::ACCESS_DENIED          => Response::HTTP_FORBIDDEN,
+        ];
+        $code = $e->getCode();
+        $message = $e->getMessage();
+        $status = $map[$e->getCode()] ?? Response::HTTP_INTERNAL_SERVER_ERROR;
+    } elseif ($e instanceof HttpExceptionInterface) {
+        $code = 0;
+        $message = $e->getMessage();
+        $status = $e->getStatusCode();
     } else {
-        error_log($code);
         error_log($e);
-        $message = $codeToMessage['default'];
+        $app['monolog']->emergency($e->getMessage());
+        $code = 0;
+        $message = 'Internal Server Error';
+        $status = Response::HTTP_INTERNAL_SERVER_ERROR;
     }
-    return $app->json([
-        'error' => $message,
-        'code' => $code,
-    ], $code);
+    return $app->json(
+        [
+            'code'  => $code,
+            'error' => $message,
+        ], 
+        $status
+    );
 });
 
 // Register additional HTTP GET arguments

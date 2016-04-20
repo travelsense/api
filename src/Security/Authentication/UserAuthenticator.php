@@ -71,7 +71,7 @@ class UserAuthenticator implements EventSubscriberInterface
         $token = $matches[1];
         $userId = $this->sessionManager->getUserId($token);
         if (null === $userId) {
-            throw ApiException::create(ApiException::INVALID_TOKEN);
+            throw new ApiException('Invalid token', ApiException::INVALID_TOKEN);
         }
         $this->credentials->setUser($userId);
     }

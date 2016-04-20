@@ -33,7 +33,7 @@ class IataController extends ApiController
         if ($object) {
             return $object;
         } else {
-            throw ApiException::create(ApiException::RESOURCE_NOT_FOUND);
+            throw new ApiException('Not found', ApiException::RESOURCE_NOT_FOUND);
         }
     }
 

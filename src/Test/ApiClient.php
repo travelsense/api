@@ -146,20 +146,12 @@ class ApiClient
 
     /**
      * Create a new Travel
-     * @param string $title
-     * @param string $description
-     * @param int $category
-     * @param object|array $content
+     * @param array $travel
      * @return int
      */
-    public function createTravel($title, $description, $category, $content = [])
+    public function createTravel(array $travel)
     {
-        return $this->post('/travel', [
-            'title' => $title,
-            'description' => $description,
-            'category_id' => $category,
-            'content' => $content,
-        ])->id;
+        return $this->post('/travel', $travel)->id;
     }
 
     /**
@@ -197,19 +189,11 @@ class ApiClient
 
     /**
      * @param $id
-     * @param string $title
-     * @param string $description
-     * @param $category
-     * @param object|array $content
+     * @param array $travel
      */
-    public function updateTravel($id, $title, $description, $category, $content)
+    public function updateTravel($id, array $travel)
     {
-        $this->put('/travel/' . urlencode($id), [
-            'title' => $title,
-            'description' => $description,
-            'category_id' => $category,
-            'content' => $content,
-        ]);
+        $this->put('/travel/' . urlencode($id), $travel);
     }
 
     /**
