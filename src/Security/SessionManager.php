@@ -26,7 +26,7 @@ class SessionManager
     /**
      * Create a new session token
      *
-     * @param int $userId
+     * @param int     $userId
      * @param Request $request
      * @return string session token
      */
@@ -42,7 +42,7 @@ class SessionManager
      * Get user id by session token
      *
      * @param  string $token
-     * @return string|null
+     * @return string|false
      */
     public function getUserId(string $token)
     {

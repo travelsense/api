@@ -4,7 +4,6 @@ namespace Api\Mapper\DB;
 use Api\AbstractPDOMapper;
 use Api\Model\Travel\Comment;
 use DateTime;
-use PDO;
 
 /**
  * Class CommentMapper
@@ -41,7 +40,7 @@ class CommentMapper extends AbstractPDOMapper
         $insert->execute([
             ':author_id' => $comment->getAuthorId(),
             ':travel_id' => $comment->getTravelId(),
-            ':text' => $comment->getText(),
+            ':text'      => $comment->getText(),
         ]);
         $id = $insert->fetchColumn();
         $comment->setId($id);
@@ -51,7 +50,8 @@ class CommentMapper extends AbstractPDOMapper
      * @param array $row
      * @return Comment
      */
-    public function create(array $row) {
+    public function create(array $row): Comment
+    {
         $comment = new Comment();
         return $comment
             ->setId($row['id'])

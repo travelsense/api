@@ -29,7 +29,7 @@ class ExpirableStorage
     /**
      * Store an object, get a key
      *
-     * @param  mixed         $object   Object
+     * @param  mixed         $object Object
      * @param  DateTime|null $expireOn
      * @return string
      */
@@ -46,9 +46,9 @@ SQL;
         $insert = $this->pdo->prepare($sql);
         $insert->execute(
             [
-            ':obj' => $serialized,
-            ':token' => $token,
-            ':expires' => $expireOn
+                ':obj'     => $serialized,
+                ':token'   => $token,
+                ':expires' => $expireOn,
             ]
         );
         return $token . $insert->fetchColumn();
@@ -57,7 +57,7 @@ SQL;
     /**
      * Get the stored value by key
      *
-     * @param  $key
+     * @param       $key
      * @param  bool $delete Delete immediately
      * @return mixed|null
      */
@@ -76,8 +76,8 @@ SQL;
         $select = $this->pdo->prepare($sql);
         $select->execute(
             [
-            ':id' => $id,
-            ':token' => $token,
+                ':id'    => $id,
+                ':token' => $token,
             ]
         );
 
@@ -88,8 +88,8 @@ SQL;
                 ->prepare('DELETE FROM expirable_storage WHERE id = :id AND token = :token')
                 ->execute(
                     [
-                    ':id' => $id,
-                    ':token' => $token,
+                        ':id'    => $id,
+                        ':token' => $token,
                     ]
                 );
         }

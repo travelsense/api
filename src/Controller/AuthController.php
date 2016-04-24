@@ -9,7 +9,6 @@ use Api\Security\SessionManager;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use Psr\Log\LoggerAwareTrait;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -42,9 +41,9 @@ class AuthController
     /**
      * UserSessionController constructor.
      *
-     * @param UserMapper $userMapper
-     * @param SessionManager $sessionManager
-     * @param Facebook $facebook
+     * @param UserMapper                 $userMapper
+     * @param SessionManager             $sessionManager
+     * @param Facebook                   $facebook
      * @param PasswordGeneratorInterface $pwdGenerator
      */
     public function __construct(
@@ -52,7 +51,8 @@ class AuthController
         SessionManager $sessionManager,
         Facebook $facebook,
         PasswordGeneratorInterface $pwdGenerator
-    ) {
+    )
+    {
         $this->userMapper = $userMapper;
         $this->sessionManager = $sessionManager;
         $this->facebook = $facebook;
@@ -64,7 +64,7 @@ class AuthController
      * @return array  ['token' => $token]
      * @throws ApiException
      */
-    public function create(Request $request): array 
+    public function create(Request $request): array
     {
         $json = DataObject::createFromString($request->getContent());
         if ($this->logger) {

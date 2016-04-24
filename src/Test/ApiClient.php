@@ -21,7 +21,7 @@ class ApiClient
     /**
      * ApiClient constructor.
      *
-     * @param string $host
+     * @param string     $host
      * @param HttpClient $http
      */
     public function __construct($host, HttpClient $http = null)
@@ -53,7 +53,7 @@ class ApiClient
      */
     public function registerUser(array $user)
     {
-        return  $this->post('/user', $user);
+        return $this->post('/user', $user);
     }
 
     /**
@@ -79,17 +79,17 @@ class ApiClient
 
     public function confirmEmail($email)
     {
-        return $this->post('/email/confirm/'.urlencode($email));
+        return $this->post('/email/confirm/' . urlencode($email));
     }
 
     public function requestPasswordReset($email)
     {
-        return $this->post('/password/link/'.urlencode($email));
+        return $this->post('/password/link/' . urlencode($email));
     }
 
     public function updatePassword($token, $password)
     {
-        return $this->post('/password/reset/'.urlencode($token), ['password' => $password]);
+        return $this->post('/password/reset/' . urlencode($token), ['password' => $password]);
     }
 
     /**
@@ -110,7 +110,7 @@ class ApiClient
      */
     public function updateUser(array $request)
     {
-        return  $this->put('/user', $request);
+        return $this->put('/user', $request);
     }
 
     public function getCabEstimates($lat1, $lon1, $lat2, $lon2)
@@ -157,7 +157,7 @@ class ApiClient
     /**
      * Create a new Comment
      *
-     * @param int $id
+     * @param int    $id
      * @param string $text
      * @return int
      */
@@ -165,7 +165,7 @@ class ApiClient
     {
         return $this->post(sprintf('/travel/%s/comment', urlencode($id)), [
             'travel_id' => $id,
-            'text' => $text,
+            'text'      => $text,
         ])->id;
     }
 
@@ -188,7 +188,7 @@ class ApiClient
     }
 
     /**
-     * @param $id
+     * @param       $id
      * @param array $travel
      */
     public function updateTravel($id, array $travel)

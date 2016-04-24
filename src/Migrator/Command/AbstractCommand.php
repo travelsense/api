@@ -8,8 +8,8 @@ class AbstractCommand extends Command
 {
     /**
      * @param OutputInterface $output
-     * @param string $name
-     * @param string $version
+     * @param string          $name
+     * @param string          $version
      */
     protected function printStatus(OutputInterface $output, string $name, string $version)
     {

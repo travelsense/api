@@ -5,9 +5,9 @@
 
 namespace Api\Exception;
 
-use Exception;
+use RuntimeException;
 
-class ApiException extends Exception
+class ApiException extends RuntimeException
 {
     // State related
     const USER_EXISTS = 1000;
@@ -18,13 +18,11 @@ class ApiException extends Exception
     const INVALID_TOKEN = 2200;
 
     // Validation
-    const VALIDATION = 3000; 
+    const VALIDATION = 3000;
 
     // Not found
     const RESOURCE_NOT_FOUND = 4000;
 
     // Access violation
     const ACCESS_DENIED = 5000;
-    
-    public static function create() {}
 }

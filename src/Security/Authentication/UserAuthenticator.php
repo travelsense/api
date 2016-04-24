@@ -64,13 +64,13 @@ class UserAuthenticator implements EventSubscriberInterface
         if ($this->logger) {
             $this->logger->info('Authorization header', ['Authorization' => $authHeader]);
         }
-        if (! preg_match('/^Token (.+)/i', $authHeader, $matches)) {
+        if (!preg_match('/^Token (.+)/i', $authHeader, $matches)) {
             $event->setResponse(new Response('', 401, ['WWW-Authenticate' => 'Token']));
             return;
         }
         $token = $matches[1];
         $userId = $this->sessionManager->getUserId($token);
-        if (null === $userId) {
+        if (empty($userId)) {
             throw new ApiException('Invalid token', ApiException::INVALID_TOKEN);
         }
         $this->credentials->setUser($userId);

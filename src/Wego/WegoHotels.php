@@ -8,7 +8,6 @@ use DateTime;
  *
  * @see http://support.wan.travel/hc/en-us
  */
-
 class WegoHotels
 {
     const DATE_FORMAT = 'Ymd';
@@ -33,14 +32,15 @@ class WegoHotels
      *
      * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_search_new
      *
-     * @param string   $location The location ID of the location to search for.
-     * @param DateTime $checkIn  Check-in date
-     * @param DateTime $checkOut Check-out date
-     * @param int      $rooms    Number of hotel rooms required. Defaults to 1
-     * @param int      $guests   Number of guests staying. Defaults to 2
-     * @param string   $ip       The IP address of the end user who is performing the search (not your backend server).
-     *                              We require this to display room rates that are valid for the user's country.
-     * @param string   $country  Country code of the user. We require this to display room rates
+     * @param string   $location    The location ID of the location to search for.
+     * @param DateTime $checkIn     Check-in date
+     * @param DateTime $checkOut    Check-out date
+     * @param int      $rooms       Number of hotel rooms required. Defaults to 1
+     * @param int      $guests      Number of guests staying. Defaults to 2
+     * @param string   $ip          The IP address of the end user who is performing the search (not your backend
+     *                              server). We require this to display room rates that are valid for the user's
+     *                              country.
+     * @param string   $country     Country code of the user. We require this to display room rates
      *                              that are valid for the user's country.
      *
      * @return string Search ID
@@ -53,17 +53,18 @@ class WegoHotels
         $guests = 2,
         $ip = 'direct',
         $country = 'US'
-    ) {
+    )
+    {
         $response = $this->http->get(
             '/hotels/api/search/new',
             [
-            'location_id' => $location,
-            'check_in' => $checkIn->format(self::DATE_FORMAT),
-            'check_out' => $checkOut->format(self::DATE_FORMAT),
-            'user_ip' => $ip,
-            'country_code_for_site' => $country,
-            'rooms' => (int) $rooms,
-            'quests' => (int) $guests,
+                'location_id'           => $location,
+                'check_in'              => $checkIn->format(self::DATE_FORMAT),
+                'check_out'             => $checkOut->format(self::DATE_FORMAT),
+                'user_ip'               => $ip,
+                'country_code_for_site' => $country,
+                'rooms'                 => (int)$rooms,
+                'quests'                => (int)$guests,
             ]
         );
 
@@ -75,7 +76,7 @@ class WegoHotels
      *
      * @see http://support.wan.travel/hc/en-us/articles/200713154-Wego-Hotels-API#api_locations_search
      *
-     * @param $query
+     * @param         $query
      *
      * @param  string $lang    Language of results
      * @param  int    $page    Page of results to return. Use this together with per_page
@@ -91,10 +92,10 @@ class WegoHotels
         return $this->http->get(
             '/hotels/api/locations/search',
             [
-            'q' => $query,
-            'lang' => $lang,
-            'page' => (int) $page,
-            'per_page' => (int) $perPage,
+                'q'        => $query,
+                'lang'     => $lang,
+                'page'     => (int)$page,
+                'per_page' => (int)$perPage,
             ]
         );
     }
@@ -124,17 +125,18 @@ class WegoHotels
         $popularWith = 'XX',
         $page = 1,
         $perPage = 20
-    ) {
+    )
+    {
         return $this->http->get(
             '/hotels/api/search/' . urlencode($id),
             [
-                'refresh' => $refresh,
+                'refresh'       => $refresh,
                 'currency_code' => $currency,
-                'sort' => $sort ? 'true' : 'false',
-                'order' => $order,
-                'popular_with' => $popularWith,
-                'page' => $page,
-                'per_page' => $perPage,
+                'sort'          => $sort ? 'true' : 'false',
+                'order'         => $order,
+                'popular_with'  => $popularWith,
+                'page'          => $page,
+                'per_page'      => $perPage,
             ]
         );
     }
@@ -156,10 +158,10 @@ class WegoHotels
         return $this->http->get(
             '/hotels/api/search/show',
             [
-            'search_id' => $searchID,
-            'hotel_id' => $hotelID,
-            'currency' => $currency,
-            'lang' => $lang,
+                'search_id' => $searchID,
+                'hotel_id'  => $hotelID,
+                'currency'  => $currency,
+                'lang'      => $lang,
             ]
         );
     }

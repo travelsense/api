@@ -13,17 +13,17 @@ class Comment
     private $id;
 
     /**
-     * @var int 
+     * @var int
      */
     private $authorId;
 
     /**
-     * @var int 
+     * @var int
      */
     private $travelId;
 
     /**
-     * @var string 
+     * @var string
      */
     private $text;
 

@@ -1,7 +1,6 @@
 <?php
 namespace Api\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class HealthCheckController
@@ -13,9 +12,9 @@ class HealthCheckController
     public function healthCheck(Request $request): array
     {
         return [
-            'check' => 'OK',
+            'check'          => 'OK',
             'requestHeaders' => $request->headers->all(),
-            'env' => getenv('APP_ENV'),
+            'env'            => getenv('APP_ENV'),
         ];
     }
 }

@@ -59,11 +59,11 @@ SQL;
         $insert = $this->pdo->prepare($sql);
         $insert->execute(
             [
-            ':email' => $user->getEmail(),
-            ':password' => $this->getPasswordHash($user->getPassword()),
-            ':first_name' => $user->getFirstName(),
-            ':last_name' => $user->getLastName(),
-            ':picture' => $user->getPicture(),
+                ':email'      => $user->getEmail(),
+                ':password'   => $this->getPasswordHash($user->getPassword()),
+                ':first_name' => $user->getFirstName(),
+                ':last_name'  => $user->getLastName(),
+                ':picture'    => $user->getPicture(),
             ]
         );
         $id = $insert->fetchColumn();
@@ -101,12 +101,12 @@ SQL;
 
         $select->execute(
             [
-            ':email' => $email,
-            ':password' => $this->getPasswordHash($password),
+                ':email'    => $email,
+                ':password' => $this->getPasswordHash($password),
             ]
         );
         $row = $select->fetch(PDO::FETCH_NAMED);
-        return $row ? $this->create($row) : null;    
+        return $row ? $this->create($row) : null;
     }
 
     /**
@@ -118,11 +118,11 @@ SQL;
         $select = $this->pdo->prepare('SELECT * FROM users WHERE "id" = :id');
         $select->execute(
             [
-            ':id' => $id,
+                ':id' => $id,
             ]
         );
         $row = $select->fetch(PDO::FETCH_NAMED);
-        return $row ? $this->create($row) : null;    
+        return $row ? $this->create($row) : null;
     }
 
     /**
@@ -134,7 +134,7 @@ SQL;
         $select = $this->pdo->prepare('SELECT * FROM users WHERE "email" = :email');
         $select->execute(
             [
-            ':email' => $email,
+                ':email' => $email,
             ]
         );
         $row = $select->fetch(PDO::FETCH_NAMED);
@@ -160,8 +160,8 @@ SQL;
         $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE email= :email');
         return $update->execute(
             [
-                ':email' => $email,
-                ':password' => $this->getPasswordHash($password)
+                ':email'    => $email,
+                ':password' => $this->getPasswordHash($password),
             ]
         );
     }

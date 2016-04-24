@@ -31,15 +31,15 @@ class IATAMapper extends AbstractPDOMapper
 
     /**
      * @param string $type
-     * @param int $offset
-     * @param int $limit
+     * @param int    $offset
+     * @param int    $limit
      * @return array
      */
-    public function fetchAll(string $type, int $limit, int $offset)
+    public function fetchAll(string $type, int $limit, int $offset): array 
     {
         $select = $this->pdo->prepare("SELECT * FROM {$this->table[$type]} ORDER BY code ASC LIMIT :limit OFFSET :offset");
         $select->execute([
-            ':limit' => $limit,
+            ':limit'  => $limit,
             ':offset' => $offset,
         ]);
         return $select->fetchAll(PDO::FETCH_NAMED);

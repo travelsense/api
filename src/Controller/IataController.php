@@ -3,7 +3,6 @@ namespace Api\Controller;
 
 use Api\Exception\ApiException;
 use Api\Mapper\DB\IATAMapper;
-use Symfony\Component\HttpFoundation\Request;
 
 class IataController extends ApiController
 {
@@ -39,8 +38,8 @@ class IataController extends ApiController
 
     /**
      * @param string $type
-     * @param int $limit
-     * @param int $offset
+     * @param int    $limit
+     * @param int    $offset
      * @return array
      */
     public function getAll(string $type, int $limit = 10, int $offset = 0): array

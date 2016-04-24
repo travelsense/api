@@ -4,8 +4,6 @@ namespace Api\Controller;
 use Api\Exception\ApiException;
 use Api\Model\User;
 use Api\Test\ControllerTestCase;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends ControllerTestCase
 {
@@ -53,11 +51,11 @@ class UserControllerTest extends ControllerTestCase
     {
         $this->assertEquals(
             [
-                'id' => 1,
-                'email' => 'user1@example.com',
-                'picture' => 'http://example.com/user1.jpg',
+                'id'        => 1,
+                'email'     => 'user1@example.com',
+                'picture'   => 'http://example.com/user1.jpg',
                 'firstName' => 'User1',
-                'lastName' => 'Tester',
+                'lastName'  => 'Tester',
             ],
             $this->controller->getUser($this->testUser)
         );
@@ -69,11 +67,11 @@ class UserControllerTest extends ControllerTestCase
     public function testCreateUser()
     {
         $json = json_encode([
-            'email' => 'test@example.com',
-            'password' => 'my_pass',
-            'picture' => 'http://example.com/user.jpg',
+            'email'     => 'test@example.com',
+            'password'  => 'my_pass',
+            'picture'   => 'http://example.com/user.jpg',
             'firstName' => 'Simple',
-            'lastName' => 'Tester',
+            'lastName'  => 'Tester',
         ]);
 
         $request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
@@ -87,9 +85,9 @@ class UserControllerTest extends ControllerTestCase
             ->method('insert')
             ->with($this->callback(function (User $u) {
                 return $u->getEmail() === 'test@example.com'
-                    && $u->getFirstName() === 'Simple'
-                    && $u->getLastName() === 'Tester'
-                    && $u->getPicture() === 'http://example.com/user.jpg';
+                && $u->getFirstName() === 'Simple'
+                && $u->getLastName() === 'Tester'
+                && $u->getPicture() === 'http://example.com/user.jpg';
             }));
 
         $this->expStorage->expects($this->once())

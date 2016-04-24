@@ -32,9 +32,9 @@ class Migrator
 
     /**
      * Migration constructor.
-     * @param PDO $pdo
+     * @param PDO    $pdo
      * @param string $name
-     * @param $dir
+     * @param        $dir
      */
     public function __construct(PDO $pdo, $name, $dir)
     {
@@ -61,7 +61,7 @@ class Migrator
     {
         $select = $this->pdo->prepare("SELECT version FROM {$this->table} ORDER BY  id DESC LIMIT 1");
         $select->execute();
-        return (int) $select->fetchColumn();
+        return (int)$select->fetchColumn();
     }
 
 
@@ -136,7 +136,7 @@ class Migrator
         $pattern = "/^{$this->name}\\.(\\d+)\\.(up|dn)\\..*\$/";
         foreach (new \DirectoryIterator($this->dir) as $file) {
             if (preg_match($pattern, $file->getFilename(), $matches)) {
-                $ver = (int) $matches[1];
+                $ver = (int)$matches[1];
                 $direction = $matches[2];
                 if ($direction === self::DIR_UP) {
                     $this->upgrades[$ver] = $matches[0];

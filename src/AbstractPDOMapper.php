@@ -37,7 +37,7 @@ abstract class AbstractPDOMapper
      * Create an object from a joined table.
      * If the SQL result contains multiple columns with the same name
      *
-     * @param array $row Result set fetched using PDO::FETCH_NAMED method
+     * @param array               $row     Result set fetched using PDO::FETCH_NAMED method
      * @param AbstractPDOMapper[] $mappers Variadic list of mappers
      * @return array Array of created objects
      */
@@ -53,7 +53,7 @@ abstract class AbstractPDOMapper
     /**
      * Replace keys which are arrays with their $index-th elements
      * @param array $row
-     * @param int $index
+     * @param int   $index
      * @return array
      */
     private function normalize(array $row, int $index): array

@@ -9,20 +9,21 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
     public function testCreateFromJoined()
     {
         $mapperA = $this->getMockForAbstractClass('\\Api\\AbstractPDOMapper', [new LazyPDO('')]);
-        $objectA = (object) [];
+        $objectA = (object)[];
         $mapperA->expects($this->once())
             ->method('create')
             ->with(['a' => 'a', 'b' => 'b0'])
             ->willReturn($objectA);
 
         $mapperB = $this->getMockForAbstractClass('\\Api\\AbstractPDOMapper', [new LazyPDO('')]);
-        $objectB = (object) [];
+        $objectB = (object)[];
         $mapperB->expects($this->once())
             ->method('create')
             ->with(['a' => 'a', 'b' => 'b1'])
             ->willReturn($objectB);
 
-        $mapper = new class($mapperA, $mapperB) extends AbstractPDOMapper {
+        $mapper = new class($mapperA, $mapperB) extends AbstractPDOMapper
+        {
 
             private $a, $b;
 

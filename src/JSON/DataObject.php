@@ -1,5 +1,6 @@
 <?php
 namespace Api\JSON;
+
 use Api\Exception\ApiException;
 use stdClass;
 
@@ -49,14 +50,14 @@ class DataObject
      * @param string $property
      * @return bool
      */
-    public function has($property): bool 
+    public function has($property): bool
     {
         return property_exists($this->data, $property);
     }
 
     /**
-     * @param string $property
-     * @param string|array $types List of expected types (@see gettype() function)
+     * @param string          $property
+     * @param string|array    $types      List of expected types (@see gettype() function)
      * @param string|callable $constraint Regexp (preg_match) or a callable (should return error message or false)
      * @return mixed
      * @throws ApiException
@@ -69,13 +70,13 @@ class DataObject
 
         $value = $this->data->$property;
 
-        if (null !== $types && false === in_array(gettype($value), (array) $types)) {
+        if (null !== $types && false === in_array(gettype($value), (array)$types)) {
             $this->throwException(
                 sprintf(
                     'Property %s is of type %s, expected type(s): %s',
                     $property,
                     gettype($value),
-                    implode(', ', (array) $types)
+                    implode(', ', (array)$types)
                 )
             );
         }
@@ -95,7 +96,7 @@ class DataObject
 
     /**
      * Get string
-     * @param string $property
+     * @param string          $property
      * @param string|callable $constraint
      * @return string
      * @throws ApiException
@@ -111,7 +112,7 @@ class DataObject
      * @return string
      * @throws ApiException
      */
-    public function getEmail(string $property): string 
+    public function getEmail(string $property): string
     {
         $email = $this->getString($property);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {

@@ -2,9 +2,8 @@
 namespace Api\Controller;
 
 use Api\Wego\WegoHotels;
-use PDO;
 use DateTime;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use PDO;
 
 class WegoHotelController
 {
@@ -22,7 +21,7 @@ class WegoHotelController
      * WegoHotelController constructor.
      *
      * @param WegoHotels $wego
-     * @param PDO $pdo
+     * @param PDO        $pdo
      */
     public function __construct(WegoHotels $wego, PDO $pdo)
     {
@@ -42,7 +41,7 @@ class WegoHotelController
     public function startSearch($location, DateTime $in, DateTime $out, int $rooms): array
     {
         return [
-            'search_id' => $this->wego->startSearch($location, $in, $out, $rooms)
+            'search_id' => $this->wego->startSearch($location, $in, $out, $rooms),
         ];
     }
 
@@ -50,7 +49,7 @@ class WegoHotelController
      * Hotel search results
      *
      * @param  string $id
-     * @param  int $page
+     * @param  int    $page
      * @return array
      */
     public function getSearchResults(string $id, int $page): array
@@ -68,10 +67,10 @@ class WegoHotelController
         $location = $response['location'];
         $hotels = $response['hotels'];
         foreach ($hotels as $hotel) {
-            $hotelId  = $this->getHotelIdByWegoId($hotel['id']);
+            $hotelId = $this->getHotelIdByWegoId($hotel['id']);
             if ($hotelId !== false) {
                 $this->updateHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars'], $hotelId);
-            } else{
+            } else {
                 $hotelId = $this->insertHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars']);
                 $this->addWegoIdForHotelId($hotelId, $hotel['id']);
             }
@@ -82,10 +81,10 @@ class WegoHotelController
      * @param string $location
      * @param string $name
      * @param string $address
-     * @param float $lat
-     * @param float $lon
+     * @param float  $lat
+     * @param float  $lon
      * @param string $desc
-     * @param int $stars
+     * @param int    $stars
      * @return int
      */
     private function insertHotelData(string $location, string $name, string $address, float $lat, float $lon, string $desc, int $stars): int
@@ -97,13 +96,13 @@ class WegoHotelController
             (:name, :location, :address, :lat, :lon, :description, :stars) RETURNING id'
         );
         $insert->execute([
-            ':name' => $name,
-            ':location' => $location,
-            ':address' => $address,
-            ':lat' => $lat,
-            ':lon' => $lon,
+            ':name'        => $name,
+            ':location'    => $location,
+            ':address'     => $address,
+            ':lat'         => $lat,
+            ':lon'         => $lon,
             ':description' => $desc,
-            ':stars' => $stars
+            ':stars'       => $stars,
         ]);
         $id = $insert->fetchColumn();
         return $id;
@@ -113,11 +112,11 @@ class WegoHotelController
      * @param string $location
      * @param string $name
      * @param string $address
-     * @param float $lat
-     * @param float $lon
+     * @param float  $lat
+     * @param float  $lon
      * @param string $desc
-     * @param int $stars
-     * @param int $hotelId
+     * @param int    $stars
+     * @param int    $hotelId
      */
     private function updateHotelData(string $location, string $name, string $address, float $lat, float $lon, string $desc, int $stars, int $hotelId)
     {
@@ -128,14 +127,14 @@ class WegoHotelController
              WHERE id = :id'
         );
         $insert->execute([
-            ':name' => $name,
-            ':location' => $location,
-            ':address' => $address,
-            ':lat' => $lat,
-            ':lon' => $lon,
+            ':name'        => $name,
+            ':location'    => $location,
+            ':address'     => $address,
+            ':lat'         => $lat,
+            ':lon'         => $lon,
             ':description' => $desc,
-            ':stars' => $stars,
-            ':id' => $hotelId
+            ':stars'       => $stars,
+            ':id'          => $hotelId,
         ]);
     }
 
@@ -151,8 +150,8 @@ class WegoHotelController
              VALUES (:id, :wego_hotel_id)'
         );
         $insert->execute([
-            ':id' => $hotelId,
-            ':wego_hotel_id' => $wegoId
+            ':id'            => $hotelId,
+            ':wego_hotel_id' => $wegoId,
         ]);
     }
 

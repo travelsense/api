@@ -31,7 +31,7 @@ class TravelController extends ApiController
     /**
      * TravelController constructor.
      *
-     * @param TravelMapper $travelMapper
+     * @param TravelMapper   $travelMapper
      * @param CategoryMapper $categoryMapper
      */
     public function __construct(TravelMapper $travelMapper, CategoryMapper $categoryMapper)
@@ -42,7 +42,7 @@ class TravelController extends ApiController
 
     /**
      * @param Request $request
-     * @param User $user
+     * @param User    $user
      * @return array
      */
     public function createTravel(Request $request, User $user): array
@@ -89,19 +89,19 @@ class TravelController extends ApiController
     {
         $author = $travel->getAuthor();
         $view = [
-            'id' => $travel->getId(),
-            'title' => $travel->getTitle(),
+            'id'          => $travel->getId(),
+            'title'       => $travel->getTitle(),
             'description' => $travel->getDescription(),
-            'content' => $travel->getContent(),
-            'created' => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'category' => $travel->getCategoryId()];
+            'content'     => $travel->getContent(),
+            'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
+            'category'    => $travel->getCategoryId()];
 
         if ($author) {
             $view['author'] = [
-                'id' => $author->getId(),
+                'id'        => $author->getId(),
                 'firstName' => $author->getFirstName(),
-                'lastName' => $author->getLastName(),
-                'picture' => $author->getPicture()
+                'lastName'  => $author->getLastName(),
+                'picture'   => $author->getPicture(),
             ];
         }
         return $view;
@@ -109,8 +109,8 @@ class TravelController extends ApiController
 
     /**
      * @param User $user
-     * @param int $limit
-     * @param int $offset
+     * @param int  $limit
+     * @param int  $offset
      * @return array
      */
     public function getUserTravels(User $user, int $limit = 10, int $offset = 0): array
@@ -124,7 +124,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param int $id
+     * @param int  $id
      * @param User $user
      * @return array
      */
@@ -135,7 +135,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param int $id
+     * @param int  $id
      * @param User $user
      * @return array
      */
@@ -164,32 +164,31 @@ class TravelController extends ApiController
         $result = [
             'banners' => [
                 [
-                    'title' => 'Hawaii',
+                    'title'    => 'Hawaii',
                     'subtitle' => 'Popular Destinations',
-                    'image' => 'http://www.astonhotels.com/assets/slides/690x380-Hawaii-Sunset.jpg',
+                    'image'    => 'http://www.astonhotels.com/assets/slides/690x380-Hawaii-Sunset.jpg',
                     'category' => 'Hawaii',
                 ],
                 [
-                    'title' => 'Mexico',
+                    'title'    => 'Mexico',
                     'subtitle' => 'Authentic experience',
-                    'image' => 'http://image1.masterfile.com/em_w/02/93/35/625-02933564em.jpg',
+                    'image'    => 'http://image1.masterfile.com/em_w/02/93/35/625-02933564em.jpg',
                     'category' => 'Mexico',
                 ],
                 [
-                    'title' => 'California',
+                    'title'    => 'California',
                     'subtitle' => 'Explore local experiences',
-                    'image' => 'http://cdn.sheknows.com/articles/2012/02/southern-california-beach-horiz.jpg',
+                    'image'    => 'http://cdn.sheknows.com/articles/2012/02/southern-california-beach-horiz.jpg',
                     'category' => 'California',
-                ]
-            ]
+                ],
+            ],
         ];
         $featuredCategoryNames = ['Featured', 'Romantic', 'Sports'];
-        $featuredCategories = array();
-        for ($i = 0; $i < count($featuredCategoryNames); ++$i) {
-            $name = $featuredCategoryNames[$i];
+        $featuredCategories = [];
+        foreach ($featuredCategoryNames as $name) {
             $featuredCategories[] = [
-                'title' => $name,
-                'travels' => $this->getTravelsByCategory($name, 5, 0)
+                'title'   => $name,
+                'travels' => $this->getTravelsByCategory($name, 5, 0),
             ];
         }
         $result['categories'] = $featuredCategories;
@@ -198,8 +197,8 @@ class TravelController extends ApiController
 
     /**
      * @param string $name
-     * @param int $limit
-     * @param int $offset
+     * @param int    $limit
+     * @param int    $offset
      * @return array
      */
     public function getTravelsByCategory(string $name, int $limit = 10, int $offset = 0): array
@@ -213,9 +212,9 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param $id
+     * @param         $id
      * @param Request $request
-     * @param User $user
+     * @param User    $user
      * @return array
      */
     public function updateTravel(int $id, Request $request, User $user): array
@@ -240,7 +239,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param $id
+     * @param      $id
      * @param User $user
      * @return Travel
      * @throws ApiException
@@ -258,7 +257,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param $id
+     * @param      $id
      * @param User $user
      * @return array
      */

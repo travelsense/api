@@ -69,7 +69,7 @@ class WegoHttpClient
     {
         $query = [
             'api_key' => $this->key,
-            'ts_code' => $this->tsCode
+            'ts_code' => $this->tsCode,
         ];
         $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
         $response = $this->http->post($fullUrl, json_encode($request));

@@ -10,15 +10,15 @@ class TravelCRUDTest extends FunctionalTestCase
     {
         $this->createAndLoginUser();
         $id = $this->apiClient->createTravel([
-            'title' => 'First Travel',
+            'title'       => 'First Travel',
             'description' => 'To make sure ids work properly',
-            'content' => ['foo' => 'bar']
+            'content'     => ['foo' => 'bar'],
         ]);
         $this->assertEquals(1, $id);
         $id = $this->apiClient->createTravel([
-            'title' => 'Hobbit',
+            'title'       => 'Hobbit',
             'description' => 'There and back again',
-            'content' => ['foo' => 'bar']
+            'content'     => ['foo' => 'bar'],
         ]);
         $this->assertEquals(2, $id);
         $travel = $this->apiClient->getTravel($id);
@@ -27,21 +27,21 @@ class TravelCRUDTest extends FunctionalTestCase
         $this->assertEquals('There and back again', $travel->description);
 
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
-        $this->assertEquals((object) ['foo' => 'bar'], $travel->content);
+        $this->assertEquals((object)['foo' => 'bar'], $travel->content);
 
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
             $this->assertObjectHasAttribute($attr, $author);
         }
 
         $this->apiClient->updateTravel($id, [
-            'title' => 'Two Towers',
+            'title'       => 'Two Towers',
             'description' => 'Before the Return of the King',
-            'content' => ['pew' => 'boom']
+            'content'     => ['pew' => 'boom'],
         ]);
         $travelUpdated = $this->apiClient->getTravel($id);
         $this->assertEquals('Two Towers', $travelUpdated->title);
         $this->assertEquals('Before the Return of the King', $travelUpdated->description);
-        $this->assertEquals((object) ['pew' => 'boom'], $travelUpdated->content);
+        $this->assertEquals((object)['pew' => 'boom'], $travelUpdated->content);
 
         $this->apiClient->deleteTravel($id);
         try {
@@ -58,9 +58,9 @@ class TravelCRUDTest extends FunctionalTestCase
     {
         $this->createAndLoginUser();
         $id = $this->apiClient->createTravel([
-            'title' => 'Hobbit',
+            'title'       => 'Hobbit',
             'description' => 'There and back again',
-            'content' => ['foo' => 'bar']
+            'content'     => ['foo' => 'bar'],
         ]);
         $this->apiClient->addTravelToFavorites($id);
         $favoriteTravels = $this->apiClient->getFavoriteTravels();

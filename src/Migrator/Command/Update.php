@@ -41,7 +41,7 @@ class Update extends AbstractCommand
         if ($target === self::LATEST) {
             $target = null;
         } else {
-            $target = (int) $target;
+            $target = (int)$target;
         }
         $migrator = $this->getApplication()->getMigrator($name);
         $migrator->upgrade($target);

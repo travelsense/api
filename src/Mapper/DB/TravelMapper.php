@@ -43,7 +43,7 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param $userId
+     * @param     $userId
      * @param int $limit
      * @param int $offset
      * @return Travel|null
@@ -53,8 +53,8 @@ class TravelMapper extends AbstractPDOMapper
         $select = $this->pdo->prepare('SELECT t.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.author_id = :userId LIMIT :limit OFFSET :offset');
 
         $select->execute([
-            'userId' => $userId,
-            ':limit' => $limit,
+            'userId'  => $userId,
+            ':limit'  => $limit,
             ':offset' => $offset,
         ]);
         $travels = [];
@@ -79,10 +79,10 @@ class TravelMapper extends AbstractPDOMapper
             . '(:title, :description, :content::JSON, :author_id) RETURNING id'
         );
         $insert->execute([
-            ':title' => $travel->getTitle(),
+            ':title'       => $travel->getTitle(),
             ':description' => $travel->getDescription(),
-            ':content' => json_encode($travel->getContent()),
-            ':author_id' => $travel->getAuthor()->getId(),
+            ':content'     => json_encode($travel->getContent()),
+            ':author_id'   => $travel->getAuthor()->getId(),
         ]);
         $id = $insert->fetchColumn();
         $travel->setId($id);
@@ -119,10 +119,10 @@ class TravelMapper extends AbstractPDOMapper
             . 'WHERE id = :id'
         );
         $update->execute([
-            ':title' => $travel->getTitle(),
+            ':title'       => $travel->getTitle(),
             ':description' => $travel->getDescription(),
-            ':content' => json_encode($travel->getContent()),
-            ':id' => $travel->getId(),
+            ':content'     => json_encode($travel->getContent()),
+            ':id'          => $travel->getId(),
         ]);
     }
 
@@ -146,7 +146,7 @@ class TravelMapper extends AbstractPDOMapper
             . ' ON CONFLICT DO NOTHING'
         );
         $insert->execute([
-            ':user_id' => $userId,
+            ':user_id'   => $userId,
             ':travel_id' => $travelId,
         ]);
     }
@@ -159,7 +159,7 @@ class TravelMapper extends AbstractPDOMapper
     {
         $delete = $this->pdo->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id');
         $delete->execute([
-            ':user_id' => $userId,
+            ':user_id'   => $userId,
             ':travel_id' => $travelId,
         ]);
     }
@@ -187,8 +187,8 @@ class TravelMapper extends AbstractPDOMapper
 
     /**
      * @param string $name
-     * @param int $limit
-     * @param int $offset
+     * @param int    $limit
+     * @param int    $offset
      * @return Travel[]
      */
     public function getTravelsByCategory($name, $limit, $offset)
@@ -201,9 +201,9 @@ class TravelMapper extends AbstractPDOMapper
                 WHERE c.name = :name
                 LIMIT :limit OFFSET :offset');
         $select->execute([
-            'name' => $name,
-            ':limit' => $limit,
-            ':offset' => $offset
+            'name'    => $name,
+            ':limit'  => $limit,
+            ':offset' => $offset,
         ]);
         $travels = [];
         while ($row = $select->fetch(PDO::FETCH_NAMED)) {

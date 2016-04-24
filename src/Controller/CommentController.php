@@ -2,10 +2,10 @@
 
 namespace Api\Controller;
 
-use Api\Mapper\DB\CommentMapper;
 use Api\JSON\DataObject;
-use Api\Model\User;
+use Api\Mapper\DB\CommentMapper;
 use Api\Model\Travel\Comment;
+use Api\Model\User;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -33,10 +33,10 @@ class CommentController extends ApiController
 
     /**
      * @param Request $request
-     * @param User $user
+     * @param User    $user
      * @return array
      */
-    public function createTravelComment(Request $request, User $user)
+    public function createTravelComment(Request $request, User $user): array 
     {
         $json = DataObject::createFromString($request->getContent());
 
@@ -48,4 +48,3 @@ class CommentController extends ApiController
         return ['id' => $comment->getId()];
     }
 }
-    

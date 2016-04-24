@@ -2,17 +2,12 @@
 namespace Api\Test;
 
 use Api\Application;
-use Api\Model\User;
 use PDO;
 
 abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 {
     use PHPServerTrait;
-
-    /**
-     * @var Application
-     */
-    protected $app;
+    use DatabaseTrait;
 
     /**
      * @var ApiClient
@@ -21,24 +16,12 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->app = Application::createByEnvironment();
-        $env = $this->app['env'];
+        $app = Application::createByEnvironment();
+        $env = $app['env'];
         if ($env !== 'test') {
             $this->markTestSkipped("Functional tests are disabled on this environment: $env");
         }
-        foreach ($this->app['config']['db'] as $name => $db) {
-            $pdo = new PDO(
-                "pgsql:dbname=postgres;host={$db['host']}",
-                $db['user'],
-                $db['password'],
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-            );
-            $pdo->exec("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '{$db['database']}'");
-            $pdo->exec("DROP DATABASE IF EXISTS {$db['database']}");
-            $pdo->exec("CREATE DATABASE {$db['database']} OWNER={$db['user']}");
-            $this->app["db.$name.pdo"]->exec(file_get_contents(__DIR__ . '/../../db/ext/postgis.sql'));
-            $this->app["db.$name.migrator"]->upgrade();
-        }
+        $this->resetDatabase($app);
         $this->startServer('/tmp/php-server.log');
         $this->apiClient = new ApiClient("$this->host:$this->port");
     }
@@ -46,7 +29,6 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         $this->stopServer();
-        unset($this->app);
     }
 
     /**
@@ -58,10 +40,10 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
         $password = '123';
         $this->apiClient->registerUser([
             'firstName' => 'Alexander',
-            'lastName' => 'Pushkin',
-            'picture' => 'http://pushkin.ru/sasha.jpg',
-            'email' => $email,
-            'password' => $password,
+            'lastName'  => 'Pushkin',
+            'picture'   => 'http://pushkin.ru/sasha.jpg',
+            'email'     => $email,
+            'password'  => $password,
         ]);
         $token = $this->apiClient->getTokenByEmail($email, $password);
         $this->apiClient->setAuthToken($token);

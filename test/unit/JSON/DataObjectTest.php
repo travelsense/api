@@ -8,10 +8,10 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 {
     public function testExists()
     {
-        $data = (object) [
+        $data = (object)[
             'a_string' => 'zzz',
-            'a_null' => null,
-            'a_false' => false,
+            'a_null'   => null,
+            'a_false'  => false,
         ];
         $json = new DataObject($data);
         $this->assertTrue($json->has('a_string'));
@@ -85,7 +85,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
      */
     public function testGetWithException($json, $property, $type, $constraint, $exception)
     {
-        $data= new DataObject((object)$json);
+        $data = new DataObject((object)$json);
         try {
             $data->get($property, $type, $constraint);
             $this->fail('Exception expected');
@@ -97,7 +97,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 
     public function testGetString()
     {
-        $data = new DataObject((object) ['foo' => 'barx']);
+        $data = new DataObject((object)['foo' => 'barx']);
 
         $this->assertEquals('barx', $data->getString('foo', '/x/'));
 

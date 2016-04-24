@@ -4,14 +4,11 @@ namespace Api\Controller;
 use Api\Exception\ApiException;
 use Api\ExpirableStorage;
 use Api\JSON\DataObject;
-use Api\JSON\FormatException;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
-use Psr\Log\LoggerAwareTrait;
 use Api\Service\Mailer\MailerService;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * User API controller
@@ -46,7 +43,8 @@ class UserController
         UserMapper $userMapper,
         MailerService $mailer,
         ExpirableStorage $storage
-    ) {
+    )
+    {
         $this->userMapper = $userMapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
@@ -59,11 +57,11 @@ class UserController
     public function getUser(User $user)
     {
         return [
-            'id' => $user->getId(),
-            'email' => $user->getEmail(),
-            'picture' => $user->getPicture(),
+            'id'        => $user->getId(),
+            'email'     => $user->getEmail(),
+            'picture'   => $user->getPicture(),
             'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
+            'lastName'  => $user->getLastName(),
         ];
     }
 
@@ -92,16 +90,12 @@ class UserController
         $json = DataObject::createFromString($request->getContent());
 
         $user = new User();
-        try {
-            $user
-                ->setEmail($json->getString('email'))
-                ->setPassword($json->getString('password'))
-                ->setFirstName($json->getString('firstName'))
-                ->setLastName($json->getString('lastName'))
-                ->setPicture($json->has('picture') ? $json->getString('picture') : '');
-        } catch (FormatException $e) {
-            throw new ApiException($e->getMessage(), ApiException::VALIDATION, $e, Response::HTTP_BAD_REQUEST);
-        }
+        $user
+            ->setEmail($json->getString('email'))
+            ->setPassword($json->getString('password'))
+            ->setFirstName($json->getString('firstName'))
+            ->setLastName($json->getString('lastName'))
+            ->setPicture($json->has('picture') ? $json->getString('picture') : '');
 
         if ($this->userMapper->emailExists($user->getEmail())) {
             throw new ApiException('Email already exists', ApiException::USER_EXISTS);
@@ -118,7 +112,7 @@ class UserController
      * @return array
      * @throws ApiException
      */
-    public function sendPasswordResetLink(string $email): array 
+    public function sendPasswordResetLink(string $email): array
     {
         if (false === $this->userMapper->emailExists($email)) {
             throw new ApiException('Email not found', ApiException::RESOURCE_NOT_FOUND);
@@ -154,7 +148,7 @@ class UserController
     }
 
     /**
-     * @param string $token
+     * @param string  $token
      * @param Request $request
      * @return array
      * @throws ApiException
@@ -184,7 +178,7 @@ class UserController
     /**
      * Update User data by id
      *
-     * @param User $user
+     * @param User    $user
      * @param Request $request
      * @return array
      */
@@ -194,9 +188,9 @@ class UserController
         $email = $json->getString('email');
         $emailUpdate = ($user->getEmail() !== $email);
         $user
-             ->setEmail($json->getString('email'))
-             ->setFirstName($json->getString('firstName'))
-             ->setLastName($json->getString('lastName'));
+            ->setEmail($json->getString('email'))
+            ->setFirstName($json->getString('firstName'))
+            ->setLastName($json->getString('lastName'));
         if ($emailUpdate) {
             $user->setEmailConfirmed(false);
         }

@@ -21,7 +21,7 @@ class AuthControllerTest extends ControllerTestCase
     public function setUp()
     {
         $this->userMapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
-            ->setMethods(['fetchByEmailAndPassword', 'insert','fetchByEmail'])
+            ->setMethods(['fetchByEmailAndPassword', 'insert', 'fetchByEmail'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -89,7 +89,7 @@ class AuthControllerTest extends ControllerTestCase
         $this->request
             ->method('getContent')
             ->willReturn(json_encode([
-                'email' => 'user1@example.com',
+                'email'    => 'user1@example.com',
                 'password' => '123',
             ]));
 
@@ -103,7 +103,7 @@ class AuthControllerTest extends ControllerTestCase
         $this->request
             ->method('getContent')
             ->willReturn(json_encode([
-                'email' => 'notfound@example.com',
+                'email'    => 'notfound@example.com',
                 'password' => '123',
             ]));
         try {
@@ -148,8 +148,8 @@ class AuthControllerTest extends ControllerTestCase
         $this->userMapper->method('insert')
             ->with($this->callback(function (User $user) {
                 return $user->getFirstName() === 'Alexander'
-                    && $user->getEmail() === 'sasha@pushkin.ru'
-                    && $user->getPicture() === 'https://pushkin.ru/pic.jpg';
+                && $user->getEmail() === 'sasha@pushkin.ru'
+                && $user->getPicture() === 'https://pushkin.ru/pic.jpg';
             }))
             ->will($this->returnCallback(function (User $user) {
                 $user->setId(42);

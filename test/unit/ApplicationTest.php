@@ -13,9 +13,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application(
             [
-            'foo' => [
-                'bar' => 'baz',
-            ],
+                'foo' => [
+                    'bar' => 'baz',
+                ],
             ]
         );
         $this->assertEquals('baz', $app['config']['foo']['bar']);
@@ -25,10 +25,10 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testSecureConfig()
     {
         $config = [
-            'foo' => [
+            'foo'         => [
                 'bar' => 'baz',
             ],
-            'secure_json' => __DIR__.'/ApplicationTest/secure.json',
+            'secure_json' => __DIR__ . '/ApplicationTest/secure.json',
         ];
 
         $app = new Application($config);
@@ -39,8 +39,8 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application([
             'service' => [
-                __DIR__.'/ApplicationTest/service.php'
-            ]
+                __DIR__ . '/ApplicationTest/service.php',
+            ],
         ]);
         $this->assertEquals('my service', $app['my.service']);
     }

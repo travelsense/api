@@ -3,7 +3,6 @@
 namespace Api\Service\Mailer;
 
 use Psr\Log\LoggerAwareTrait;
-use Silex\Translator;
 use Swift_Mailer;
 use Swift_Message;
 use Twig_Environment;
@@ -64,7 +63,7 @@ class MailerService
                 [
                     'email' => $email,
                     'token' => $token,
-                    'sent' => $sent,
+                    'sent'  => $sent,
                 ]
             );
         }
@@ -92,7 +91,7 @@ class MailerService
                 [
                     'email' => $email,
                     'token' => $token,
-                    'sent' => $sent,
+                    'sent'  => $sent,
                 ]
             );
         }
