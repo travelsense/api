@@ -32,17 +32,18 @@ class CommentController extends ApiController
     }
 
     /**
+     * @param int     $id Travel id
      * @param Request $request
      * @param User    $user
      * @return array
      */
-    public function createTravelComment(Request $request, User $user): array 
+    public function createTravelComment(int $id, Request $request, User $user): array
     {
         $json = DataObject::createFromString($request->getContent());
 
         $comment = new Comment();
         $comment->setAuthorId($user->getId());
-        $comment->setTravelId($json->get('travel_id'));
+        $comment->setTravelId($id);
         $comment->setText($json->getString('text'));
         $this->commentMapper->insert($comment);
         return ['id' => $comment->getId()];

@@ -164,7 +164,6 @@ class ApiClient
     public function addTravelComment($id, $text)
     {
         return $this->post(sprintf('/travel/%s/comment', urlencode($id)), [
-            'travel_id' => $id,
             'text'      => $text,
         ])->id;
     }
