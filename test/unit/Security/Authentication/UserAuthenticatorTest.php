@@ -98,5 +98,4 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
     {
         $subscribedEvents=UserAuthenticator::getSubscribedEvents();
     }
-
 }
