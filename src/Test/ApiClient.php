@@ -161,12 +161,23 @@ class ApiClient
      * @param string $text
      * @return int
      */
-    public function createTravelComment($id, $text)
+    public function addTravelComment($id, $text)
     {
         return $this->post(sprintf('/travel/%s/comment', urlencode($id)), [
             'travel_id' => $id,
             'text'      => $text,
         ])->id;
+    }
+    
+    public function getTravelComments(int $id, int $limit, int $offset)
+    {
+        $url = sprintf('/travel/%d/comments?', urlencode($id)) 
+            . http_build_query([
+                'limit' => $limit,
+                'offset' => $offset,
+            ]);
+        
+        return $this->get($url);
     }
 
     /**

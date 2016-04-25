@@ -1,21 +1,15 @@
 <?php
 namespace Api\Model\Travel;
 
+use Api\Model\AuthorTrait;
+use Api\Model\IdTrait;
 use Api\Model\TimestampTrait;
 
 class Comment
 {
+    use IdTrait;
     use TimestampTrait;
-
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var int
-     */
-    private $authorId;
+    use AuthorTrait;
 
     /**
      * @var int
@@ -26,42 +20,6 @@ class Comment
      * @var string
      */
     private $text;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return Comment
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAuthorId()
-    {
-        return $this->authorId;
-    }
-
-    /**
-     * @param int $authorId
-     * @return Comment
-     */
-    public function setAuthorId($authorId)
-    {
-        $this->authorId = $authorId;
-        return $this;
-    }
 
     /**
      * @return int

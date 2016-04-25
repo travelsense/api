@@ -1,8 +1,12 @@
 <?php
 namespace Api\Model\Travel;
 
+use Api\Model\IdTrait;
+
 class Category
 {
+    use IdTrait;
+    
     /**
      * @var string
      */
@@ -17,29 +21,6 @@ class Category
      * @var string
      */
     private $image;
-
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     * @return Category
-     */
-    public function setId(string $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
 
     /**
      * @return string

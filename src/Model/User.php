@@ -3,6 +3,7 @@ namespace Api\Model;
 
 class User
 {
+    use IdTrait;
     use TimestampTrait;
 
     /**
@@ -11,7 +12,6 @@ class User
     private $email;
 
     /**
-     *
      * @var bool
      */
     private $emailConfirmed = false;
@@ -35,29 +35,6 @@ class User
      * @var string
      */
     private $password;
-
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     * @return User
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
 
     /**
      * @return string

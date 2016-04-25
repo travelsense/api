@@ -34,7 +34,7 @@ class TravelMapper extends AbstractPDOMapper
         $select = $this->pdo->prepare('SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id');
         $select->execute(['id' => $id]);
         $row = $select->fetch(PDO::FETCH_NAMED);
-        if (!$row) {
+        if (empty($row)) {
             return null;
         }
         list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);

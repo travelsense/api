@@ -20,8 +20,7 @@ $toInt = function ($val) {
 
 $iataType = '^country|city|port|carrier$';
 
-$app->get('/healthCheck', 'controller.health:healthCheck')
-    ->bind('health-check');
+// User
 
 $app->post('/user', 'controller.user:createUser')
     ->bind('create-user');
@@ -29,8 +28,6 @@ $app->post('/user', 'controller.user:createUser')
 $app->get('/user', 'controller.user:getUser');
 
 $app->put('/user', 'controller.user:updateUser');
-
-$app->get('/travel/by-user', 'controller.travel:getUserTravels');
 
 $app->post('/email/confirm/{token}', 'controller.user:confirmEmail')
     ->bind('confirm-email');
@@ -44,11 +41,15 @@ $app->post('/password/link/{email}', 'controller.user:sendPasswordResetLink')
 $app->post('/token', 'controller.auth:create')
     ->bind('create-token');
 
+// Uber
+
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEstimate');
 
-$app->get('/travel/by-category/{name}', 'controller.travel:getTravelsByCategory');
+// Travel
 
-$app->get('/categories', 'controller.categories:getCategories');
+$app->get('/travel/by-user', 'controller.travel:getUserTravels');
+
+$app->get('/travel/by-category/{name}', 'controller.travel:getTravelsByCategory');
 
 $app->get('/travel/featured', 'controller.travel:getFeatured');
 
@@ -58,6 +59,12 @@ $app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
     ->convert('id', $toInt);
 
 $app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite')
+    ->convert('id', $toInt);
+
+$app->get('/travel/{id}/comments', 'controller.comment:getAllByTravelId')
+    ->convert('id', $toInt);
+
+$app->post('/travel/{id}/comment', 'controller.comment:createTravelComment')
     ->convert('id', $toInt);
 
 $app->get('/travel/{id}', 'controller.travel:getTravel')
@@ -72,8 +79,11 @@ $app->delete('/travel/{id}', 'controller.travel:deleteTravel')
 
 $app->post('/travel', 'controller.travel:createTravel');
 
-$app->post('/travel/{id}/comment', 'controller.comment:createTravelComment')
-    ->convert('id', $toInt);
+// Travel categories
+
+$app->get('/categories', 'controller.categories:getCategories');
+
+// IATA entities
 
 $app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
     ->assert('type', $iataType)
@@ -83,6 +93,8 @@ $app->get('/iata/{type}/all', 'controller.iata:getAll')
     ->assert('type', $iataType)
     ->bind('iata-all');
 
+// Hotel
+
 $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:startSearch')
     ->convert('in', $toDate)
     ->convert('out', $toDate)
@@ -90,3 +102,8 @@ $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:start
 
 $app->get('/hotel/search-results/{id}/{page}', 'controller.wego:getSearchResults')
     ->convert('page', $toInt);
+
+// Health check
+
+$app->get('/healthCheck', 'controller.health:healthCheck')
+    ->bind('health-check');

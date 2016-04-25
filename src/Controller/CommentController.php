@@ -47,4 +47,30 @@ class CommentController extends ApiController
         $this->commentMapper->insert($comment);
         return ['id' => $comment->getId()];
     }
+
+    /**
+     * @param int $id Travel ID
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getAllByTravelId(int $id, int $limit = 10, int $offset = 0): array
+    {
+        $response = [];
+        foreach ($this->commentMapper->getByTravelId($id, $limit, $offset) as $comment) {
+            $author = $comment->getAuthor();
+            $response[] = [
+                'id' => $comment->getId(),
+                'created' => $comment->getCreated()->format(self::DATETIME_FORMAT),
+                'text' => $comment->getText(),
+                'author' => [
+                    'id'        => $author->getId(),
+                    'firstName' => $author->getFirstName(),
+                    'lastName'  => $author->getLastName(),
+                    'picture'   => $author->getPicture(),
+                ]
+            ];
+        }
+        return $response;
+    }
 }

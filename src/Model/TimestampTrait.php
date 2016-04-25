@@ -18,16 +18,16 @@ trait TimestampTrait
     /**
      * @return DateTime
      */
-    public function getCreated()
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
     /**
      * @param DateTime $created
-     * @return TimestampTrait
+     * @return self
      */
-    public function setCreated(DateTime $created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
         return $this;
@@ -36,16 +36,16 @@ trait TimestampTrait
     /**
      * @return DateTime
      */
-    public function getUpdated()
+    public function getUpdated(): DateTime
     {
         return $this->updated;
     }
 
     /**
      * @param DateTime $updated
-     * @return TimestampTrait
+     * @return self
      */
-    public function setUpdated(DateTime $updated)
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
         return $this;

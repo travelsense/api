@@ -1,17 +1,15 @@
 <?php
 namespace Api\Model\Travel;
 
+use Api\Model\AuthorTrait;
+use Api\Model\IdTrait;
 use Api\Model\TimestampTrait;
-use Api\Model\User;
 
 class Travel
 {
+    use IdTrait;
     use TimestampTrait;
-
-    /**
-     * @var int
-     */
-    private $id;
+    use AuthorTrait;
 
     /**
      * @var string
@@ -24,11 +22,6 @@ class Travel
     private $title;
 
     /**
-     * @var User
-     */
-    private $author;
-
-    /**
      * @var object|array
      */
     private $content;
@@ -37,24 +30,6 @@ class Travel
      * @var int
      */
     private $categoryId;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return Travel
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
 
     /**
      * @return string
@@ -89,24 +64,6 @@ class Travel
     public function setTitle($title)
     {
         $this->title = $title;
-        return $this;
-    }
-
-    /**
-     * @return User
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * @param User $author
-     * @return Travel
-     */
-    public function setAuthor(User $author)
-    {
-        $this->author = $author;
         return $this;
     }
 

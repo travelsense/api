@@ -4,6 +4,7 @@ namespace Api\Mapper\DB;
 use Api\AbstractPDOMapper;
 use Api\Model\Travel\Comment;
 use DateTime;
+use PDO;
 
 /**
  * Class CommentMapper
@@ -44,6 +45,38 @@ class CommentMapper extends AbstractPDOMapper
         ]);
         $id = $insert->fetchColumn();
         $comment->setId($id);
+    }
+
+    /**
+     * Get all comments by travel id
+     * @param int $travelId
+     * @param int $limit
+     * @param int $offset
+     * @return Comment[]
+     */
+    public function getByTravelId(int $travelId, int $limit, int $offset): array
+    {
+        $select = $this->pdo->prepare('
+            SELECT c.*, u.* FROM travel_comments c 
+            JOIN users u ON u.id = c.author_id
+            WHERE c.travel_id = :id 
+            ORDER BY c.id DESC LIMIT :limit OFFSET :offset
+        ');
+        $select->execute([
+            ':id'     => $travelId,
+            ':limit'  => $limit,
+            ':offset' => $offset,
+        ]);
+
+        $comments = [];
+        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
+            /** @var Comment $comment */
+            /** @var User $author */
+            list($comment, $author) = $this->createFromJoined($row, $this, $this->userMapper);
+            $comment->setAuthor($author);
+            $comments[] = $comment;
+        }
+        return $comments;
     }
 
     /**
