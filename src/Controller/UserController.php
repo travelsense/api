@@ -194,7 +194,7 @@ class UserController
         if ($emailUpdate) {
             $user->setEmailConfirmed(false);
         }
-        $this->userMapper->updateUser($user);
+        $this->userMapper->update($user);
         if ($emailUpdate) {
             $this->sendConfirmationLink($user);
         }

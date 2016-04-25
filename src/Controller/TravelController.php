@@ -70,7 +70,7 @@ class TravelController extends ApiController
     public function getTravel(int $id): array
     {
         $travel = $this->travelMapper->fetchById($id);
-        $categories = $this->categoryMapper->getTravelCategories($id);
+        $categories = $this->categoryMapper->fetchByTravelId($id);
         if (count($categories)) { // TODO move this logic to TravelMapper
             $category = $categories[0];
             $travel->setCategoryId($category->getId());
@@ -115,7 +115,7 @@ class TravelController extends ApiController
      */
     public function getUserTravels(User $user, int $limit = 10, int $offset = 0): array
     {
-        $travels = $this->travelMapper->geTravelsByUserId($user->getId(), $limit, $offset);
+        $travels = $this->travelMapper->fetchByAuthorId($user->getId(), $limit, $offset);
         $response = [];
         foreach ($travels as $travel) {
             $response[] = $this->buildTravelView($travel);
@@ -151,7 +151,7 @@ class TravelController extends ApiController
      */
     public function getFavorites(User $user): array
     {
-        $travels = $this->travelMapper->getFavorites($user->getId());
+        $travels = $this->travelMapper->fetchFavorites($user->getId());
         $response = [];
         foreach ($travels as $travel) {
             $response[] = $this->buildTravelView($travel);
@@ -203,7 +203,7 @@ class TravelController extends ApiController
      */
     public function getTravelsByCategory(string $name, int $limit = 10, int $offset = 0): array
     {
-        $travels = $this->travelMapper->getTravelsByCategory($name, $limit, $offset);
+        $travels = $this->travelMapper->fetchByCategory($name, $limit, $offset);
         $response = [];
         foreach ($travels as $travel) {
             $response[] = $this->buildTravelView($travel);

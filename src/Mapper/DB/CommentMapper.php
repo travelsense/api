@@ -55,7 +55,7 @@ class CommentMapper extends AbstractPDOMapper
      * @param int $offset
      * @return Comment[]
      */
-    public function getByTravelId(int $travelId, int $limit, int $offset): array
+    public function fetchByTravelId(int $travelId, int $limit, int $offset): array
     {
         $select = $this->pdo->prepare('
             SELECT c.*, u.* FROM travel_comments c 
@@ -82,7 +82,7 @@ class CommentMapper extends AbstractPDOMapper
     
     public function delete(int $id)
     {
-        
+        // TODO implement
     }
 
     /**

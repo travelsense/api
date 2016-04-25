@@ -10,7 +10,7 @@ class CategoryMapper extends AbstractPDOMapper
     /**
      * @return Category[]
      */
-    public function getAllCategories(): array
+    public function fetchAll(): array
     {
         $select = $this->pdo->prepare('SELECT * FROM categories ORDER BY id ASC');
         $select->execute();
@@ -35,10 +35,10 @@ class CategoryMapper extends AbstractPDOMapper
 
 
     /**
-     * @param string $travelId
+     * @param int|string $travelId
      * @return Category[]
      */
-    public function getTravelCategories(string $travelId): array
+    public function fetchByTravelId(int $travelId): array
     {
         $select = $this->pdo->prepare('SELECT c.* FROM travel_categories ct JOIN categories c ON ct.category_id = c.id WHERE ct.travel_id = :travel_id');
         $select->execute([
@@ -57,20 +57,17 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function addTravelToCategory(int $travelId, int $categoryId)
     {
-        $delete = $this->pdo->prepare(
-            'DELETE FROM travel_categories '
-            . 'WHERE travel_id=:travel_id');
-        $delete->execute([
+        $this->pdo->prepare('
+            DELETE FROM travel_categories
+            WHERE travel_id=:travel_id
+        ')->execute([
             ':travel_id' => $travelId,
         ]);
 
-        $insert = $this->pdo->prepare(
-            'INSERT INTO travel_categories '
-            . '(travel_id, category_id) '
-            . 'VALUES '
-            . '(:travel_id, :category_id)');
-
-        $insert->execute([
+        $this->pdo->prepare('
+            INSERT INTO travel_categories (travel_id, category_id)
+            VALUES (:travel_id, :category_id)
+        ')->execute([
             ':travel_id'   => $travelId,
             ':category_id' => $categoryId,
         ]);

@@ -74,7 +74,7 @@ SQL;
      * @param User $user
      * @return void
      */
-    public function updateUser(User $user)
+    public function update(User $user)
     {
         $email = $user->getEmail();
         $firstName = $user->getFirstName();

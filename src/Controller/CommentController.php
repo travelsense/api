@@ -48,6 +48,11 @@ class CommentController extends ApiController
         $this->commentMapper->insert($comment);
         return ['id' => $comment->getId()];
     }
+    
+    public function delete(int $id)
+    {
+        //$comment = $this->commentMapper->
+    }
 
     /**
      * @param int $id Travel ID
@@ -58,7 +63,7 @@ class CommentController extends ApiController
     public function getAllByTravelId(int $id, int $limit = 10, int $offset = 0): array
     {
         $response = [];
-        foreach ($this->commentMapper->getByTravelId($id, $limit, $offset) as $comment) {
+        foreach ($this->commentMapper->fetchByTravelId($id, $limit, $offset) as $comment) {
             $author = $comment->getAuthor();
             $response[] = [
                 'id' => $comment->getId(),

@@ -43,12 +43,12 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param int $userId
+     * @param int $authorId
      * @param int $limit
      * @param int $offset
-     * @return Travel|null
+     * @return Travel[]
      */
-    public function geTravelsByUserId(int $userId, int $limit, int $offset)
+    public function fetchByAuthorId(int $authorId, int $limit, int $offset): array
     {
         $select = $this->pdo->prepare('
           SELECT t.*, u.* FROM travels t 
@@ -59,7 +59,7 @@ class TravelMapper extends AbstractPDOMapper
         ');
 
         $select->execute([
-            'userId'  => $userId,
+            'userId'  => $authorId,
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
@@ -164,7 +164,7 @@ class TravelMapper extends AbstractPDOMapper
      * @param int $travelId
      * @param int $userId
      */
-    public function removeFavorite($travelId, $userId)
+    public function removeFavorite(int $travelId, int $userId)
     {
         $delete = $this->pdo->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id');
         $delete->execute([
@@ -177,7 +177,7 @@ class TravelMapper extends AbstractPDOMapper
      * @param int $userId
      * @return Travel[]
      */
-    public function getFavorites($userId)
+    public function fetchFavorites($userId): array 
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM  favorite_travels ft
@@ -200,7 +200,7 @@ class TravelMapper extends AbstractPDOMapper
      * @param int    $offset
      * @return Travel[]
      */
-    public function getTravelsByCategory($name, $limit, $offset)
+    public function fetchByCategory(string $name, int $limit, int $offset): array
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM travel_categories ct
