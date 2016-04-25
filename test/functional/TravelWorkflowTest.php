@@ -22,16 +22,17 @@ class TravelWorkflowTest extends FunctionalTestCase
         ]);
         $this->assertEquals(2, $id);
 
-        $this->checkTravelGet(2);
+        $this->checkGetTravel(2);
         $this->checkAddRemoveFavorites(2);
-        $this->checkTravelUpdate(2);
+        $this->checkUpdateTravel(2);
         $this->checkAddComments(1);
+        $this->checkGetMyTravels();
 
-        $this->checkTravelDelete(1);
-        $this->checkTravelDelete(2);
+        $this->checkDeleteTravel(1);
+        $this->checkDeleteTravel(2);
     }
 
-    private function checkTravelGet(int $id)
+    private function checkGetTravel(int $id)
     {
         $travel = $this->apiClient->getTravel($id);
         $author = $travel->author;
@@ -46,7 +47,7 @@ class TravelWorkflowTest extends FunctionalTestCase
         }
     }
 
-    private function checkTravelUpdate(int $id)
+    private function checkUpdateTravel(int $id)
     {
         $this->apiClient->updateTravel($id, [
             'title'       => 'Two Towers',
@@ -59,7 +60,7 @@ class TravelWorkflowTest extends FunctionalTestCase
         $this->assertEquals((object)['pew' => 'boom'], $travelUpdated->content);
     }
 
-    private function checkTravelDelete(int $id)
+    private function checkDeleteTravel(int $id)
     {
         $this->apiClient->deleteTravel($id);
         try {
@@ -83,6 +84,12 @@ class TravelWorkflowTest extends FunctionalTestCase
         $this->apiClient->removeTravelFromFavorites($id);
         $favoriteTravels = $this->apiClient->getFavoriteTravels();
         $this->assertEmpty($favoriteTravels);
+    }
+    
+    private function checkGetMyTravels()
+    {
+        $travels = $this->apiClient->getMyTravels();
+        $this->assertEquals(2, count($travels));
     }
     
     private function checkAddComments($id)

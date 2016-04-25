@@ -31,7 +31,6 @@ trait AuthorTrait
      */
     public function setAuthorId(int $authorId): self
     {
-        $this->author = null;
         $this->authorId = $authorId;
         return $this;
     }

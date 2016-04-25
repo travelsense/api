@@ -199,6 +199,14 @@ class ApiClient
     }
 
     /**
+     * @return mixed
+     */
+    public function getMyTravels()
+    {
+        return $this->get('/travel/by-user');
+    }
+
+    /**
      * @param       $id
      * @param array $travel
      */

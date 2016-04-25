@@ -33,10 +33,10 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Creates a user and logs him in
+     * @param string $email
      */
-    protected function createAndLoginUser()
+    protected function createAndLoginUser($email = 'sasha@pushkin.ru')
     {
-        $email = 'sasha@pushkin.ru';
         $password = '123';
         $this->apiClient->registerUser([
             'firstName' => 'Alexander',

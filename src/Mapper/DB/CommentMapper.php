@@ -3,6 +3,7 @@ namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
 use Api\Model\Travel\Comment;
+use Api\Model\User;
 use DateTime;
 use PDO;
 
@@ -32,12 +33,12 @@ class CommentMapper extends AbstractPDOMapper
      */
     public function insert(Comment $comment)
     {
-        $insert = $this->pdo->prepare(
-            'INSERT INTO travel_comments '
-            . '(author_id, travel_id, text)'
-            . ' VALUES '
-            . '(:author_id, :travel_id, :text) RETURNING id'
-        );
+        $insert = $this->pdo->prepare('
+            INSERT INTO travel_comments 
+            (author_id, travel_id, text)
+            VALUES 
+            (:author_id, :travel_id, :text) RETURNING id
+        ');
         $insert->execute([
             ':author_id' => $comment->getAuthorId(),
             ':travel_id' => $comment->getTravelId(),
@@ -77,6 +78,11 @@ class CommentMapper extends AbstractPDOMapper
             $comments[] = $comment;
         }
         return $comments;
+    }
+    
+    public function delete(int $id)
+    {
+        
     }
 
     /**

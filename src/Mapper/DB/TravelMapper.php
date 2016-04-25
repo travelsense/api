@@ -26,10 +26,10 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return Travel|null
      */
-    public function fetchById($id)
+    public function fetchById(int $id)
     {
         $select = $this->pdo->prepare('SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id');
         $select->execute(['id' => $id]);
@@ -43,14 +43,20 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param     $userId
+     * @param int $userId
      * @param int $limit
      * @param int $offset
      * @return Travel|null
      */
-    public function geTravelsByUserId($userId, int $limit, int $offset)
+    public function geTravelsByUserId(int $userId, int $limit, int $offset)
     {
-        $select = $this->pdo->prepare('SELECT t.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.author_id = :userId LIMIT :limit OFFSET :offset');
+        $select = $this->pdo->prepare('
+          SELECT t.*, u.* FROM travels t 
+          JOIN users u ON t.author_id = u.id 
+          WHERE t.author_id = :userId 
+          ORDER BY t.id DESC
+          LIMIT :limit OFFSET :offset
+        ');
 
         $select->execute([
             'userId'  => $userId,
@@ -59,8 +65,8 @@ class TravelMapper extends AbstractPDOMapper
         ]);
         $travels = [];
         while ($row = $select->fetch(PDO::FETCH_NAMED)) {
-            list($travel) = $this->createFromJoined($row, $this);
-            $travels[] = $travel;
+            list($travel, $user) = $this->createFromJoined($row, $this, $this->userMapper);
+            $travels[] = $travel->setAuthor($user);
         }
         return $travels;
     }
@@ -126,7 +132,10 @@ class TravelMapper extends AbstractPDOMapper
         ]);
     }
 
-    public function delete($id)
+    /**
+     * @param int $id
+     */
+    public function delete(int $id)
     {
         $deleteMain = $this->pdo->prepare("DELETE FROM travels WHERE id = :id");
         $deleteMain->execute([':id' => $id]);
@@ -136,7 +145,7 @@ class TravelMapper extends AbstractPDOMapper
      * @param int $travelId
      * @param int $userId
      */
-    public function addFavorite($travelId, $userId)
+    public function addFavorite(int $travelId, int $userId)
     {
         $insert = $this->pdo->prepare(
             'INSERT INTO favorite_travels '
@@ -170,17 +179,17 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function getFavorites($userId)
     {
-        $select = $this->pdo->prepare(
-            'SELECT t.*, u.* FROM  favorite_travels ft
-                JOIN travels t ON ft.travel_id = t.id
-                JOIN users u ON ft.user_id = u.id
-                WHERE ft.user_id = :user_id');
+        $select = $this->pdo->prepare('
+            SELECT t.*, u.* FROM  favorite_travels ft
+            JOIN travels t ON ft.travel_id = t.id
+            JOIN users u ON ft.user_id = u.id
+            WHERE ft.user_id = :user_id
+            ');
         $select->execute(['user_id' => $userId]);
         $travels = [];
         while ($row = $select->fetch(PDO::FETCH_NAMED)) {
             list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
-            $travel->setAuthor($author);
-            $travels[] = $travel;
+            $travels[] = $travel->setAuthor($author);
         }
         return $travels;
     }
@@ -193,13 +202,14 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function getTravelsByCategory($name, $limit, $offset)
     {
-        $select = $this->pdo->prepare(
-            'SELECT t.*, u.* FROM travel_categories ct
-                JOIN travels t ON ct.travel_id = t.id
-                JOIN categories c ON ct.category_id = c.id
-                JOIN users u ON u.id = t.author_id
-                WHERE c.name = :name
-                LIMIT :limit OFFSET :offset');
+        $select = $this->pdo->prepare('
+            SELECT t.*, u.* FROM travel_categories ct
+            JOIN travels t ON ct.travel_id = t.id
+            JOIN categories c ON ct.category_id = c.id
+            JOIN users u ON u.id = t.author_id
+            WHERE c.name = :name
+            LIMIT :limit OFFSET :offset
+        ');
         $select->execute([
             'name'    => $name,
             ':limit'  => $limit,
@@ -208,8 +218,7 @@ class TravelMapper extends AbstractPDOMapper
         $travels = [];
         while ($row = $select->fetch(PDO::FETCH_NAMED)) {
             list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
-            $travel->setAuthor($author);
-            $travels[] = $travel;
+            $travels[] = $travel->setAuthor($author);
         }
         return $travels;
     }
