@@ -3,6 +3,7 @@
 namespace Api\Controller\Travel;
 
 use Api\Controller\ApiController;
+use Api\Exception\ApiException;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\CommentMapper;
 use Api\Model\Travel\Comment;
@@ -49,10 +50,23 @@ class CommentController extends ApiController
         $this->commentMapper->insert($comment);
         return ['id' => $comment->getId()];
     }
-    
-    public function delete(int $id)
+
+    /**
+     * @param int  $id
+     * @param User $user
+     * @return array
+     */
+    public function deleteById(int $id, User $user): array 
     {
-        //$comment = $this->commentMapper->
+        $comment = $this->commentMapper->fetchBylId($id);
+        if (empty($comment)) {
+            throw new ApiException('Comment not found', ApiException::RESOURCE_NOT_FOUND);
+        }
+        if ($comment->getAuthorId() !== $user->getId()) {
+            throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
+        }
+        $this->commentMapper->delete($id);
+        return [];
     }
 
     /**

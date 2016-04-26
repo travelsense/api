@@ -49,6 +49,34 @@ class CommentMapper extends AbstractPDOMapper
     }
 
     /**
+     * Get by id
+     * @param int $id
+     * @return Comment|null
+     */
+    public function fetchBylId(int $id)
+    {
+        $select = $this->pdo->prepare('
+            SELECT c.*, u.* FROM travel_comments c 
+            JOIN users u ON u.id = c.author_id
+            WHERE c.id = :id 
+        ');
+        $select->execute([
+            ':id'     => $id,
+        ]);
+
+        $row = $select->fetch(PDO::FETCH_NAMED);
+        if (empty($row)) {
+            return null;
+        }
+
+        /** @var Comment $comment */
+        /** @var User $author */
+        list($comment, $author) = $this->createFromJoined($row, $this, $this->userMapper);
+        $comment->setAuthor($author);
+        return $comment;
+    }
+    
+    /**
      * Get all comments by travel id
      * @param int $travelId
      * @param int $limit
@@ -79,10 +107,15 @@ class CommentMapper extends AbstractPDOMapper
         }
         return $comments;
     }
-    
+
+    /**
+     * @param int $id
+     */
     public function delete(int $id)
     {
-        // TODO implement
+        $this->pdo
+            ->prepare('DELETE FROM travel_comments WHERE id=:id')
+            ->execute([':id' => $id]);
     }
 
     /**

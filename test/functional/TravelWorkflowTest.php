@@ -25,7 +25,7 @@ class TravelWorkflowTest extends FunctionalTestCase
         $this->checkGetTravel(2);
         $this->checkAddRemoveFavorites(2);
         $this->checkUpdateTravel(2);
-        $this->checkAddComments(1);
+        $this->checkAddRemoveComments(1);
         $this->checkGetMyTravels();
 
         $this->checkDeleteTravel(1);
@@ -92,11 +92,11 @@ class TravelWorkflowTest extends FunctionalTestCase
         $this->assertEquals(2, count($travels));
     }
     
-    private function checkAddComments($id)
+    private function checkAddRemoveComments($id)
     {
-        $comments = [];
+        $ids = [];
         for ($i = 0; $i < 20; $i++) {
-            $comments[] = $this->apiClient->addTravelComment($id, "Comment $i");
+            $ids[] = $this->apiClient->addTravelComment($id, "Comment $i");
         }
 
         $limit = 3;
@@ -110,5 +110,15 @@ class TravelWorkflowTest extends FunctionalTestCase
         $this->assertEquals('Comment 13', $comments[1]->text);
         $this->assertEquals('Comment 12', $comments[2]->text);
 
+        // Remove the last comment
+        $killMe = end($ids);
+        $this->apiClient->deleteTravelComment($killMe);
+
+        $comments = $this->apiClient->getTravelComments($id, $limit, $offset);
+
+        // 18 (latest) - 5 (offset) = 13
+        $this->assertEquals('Comment 13', $comments[0]->text);
+        $this->assertEquals('Comment 12', $comments[1]->text);
+        $this->assertEquals('Comment 11', $comments[2]->text);
     }
 }

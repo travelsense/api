@@ -167,6 +167,17 @@ class ApiClient
             'text'      => $text,
         ])->id;
     }
+
+    /**
+     * Delete a comment
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function deleteTravelComment($id)
+    {
+        return $this->delete(sprintf('/travel/comment/%s', urlencode($id)));
+    }
     
     public function getTravelComments(int $id, int $limit, int $offset)
     {

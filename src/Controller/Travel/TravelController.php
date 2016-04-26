@@ -240,7 +240,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param      $id
+     * @param int  $id
      * @param User $user
      * @return Travel
      * @throws ApiException

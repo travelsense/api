@@ -67,6 +67,9 @@ $app->get('/travel/{id}/comments', 'controller.comment:getAllByTravelId')
 $app->post('/travel/{id}/comment', 'controller.comment:createTravelComment')
     ->convert('id', $toInt);
 
+$app->delete('/travel/comment/{id}', 'controller.comment:deleteById')
+    ->convert('id', $toInt);
+
 $app->get('/travel/{id}', 'controller.travel:getTravel')
     ->convert('id', $toInt)
     ->bind('travel-by-id');
