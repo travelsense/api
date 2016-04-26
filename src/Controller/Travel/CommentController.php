@@ -1,7 +1,8 @@
 <?php
 
-namespace Api\Controller;
+namespace Api\Controller\Travel;
 
+use Api\Controller\ApiController;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\CommentMapper;
 use Api\Model\Travel\Comment;

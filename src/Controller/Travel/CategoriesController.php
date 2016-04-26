@@ -1,6 +1,7 @@
 <?php
-namespace Api\Controller;
+namespace Api\Controller\Travel;
 
+use Api\Controller\ApiController;
 use Api\Mapper\DB\CategoryMapper;
 use Psr\Log\LoggerAwareTrait;
 

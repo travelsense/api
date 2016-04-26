@@ -5,14 +5,14 @@
  */
 
 use Api\Controller\AuthController;
+use Api\Controller\HealthCheckController;
 use Api\Controller\IataController;
-use Api\Controller\TravelController;
-use Api\Controller\CategoriesController;
-use Api\Controller\CommentController;
+use Api\Controller\Travel\CategoriesController;
+use Api\Controller\Travel\CommentController;
+use Api\Controller\Travel\TravelController;
 use Api\Controller\UberController;
 use Api\Controller\UserController;
 use Api\Controller\WegoHotelController;
-use Api\Controller\HealthCheckController;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
