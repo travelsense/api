@@ -61,6 +61,9 @@ $app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
 $app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite')
     ->convert('id', $toInt);
 
+$app->post('/travel/{id}/flag', function() { return [];}) // TODO Implement flagging
+    ->convert('id', $toInt);
+
 $app->get('/travel/{id}/comments', 'controller.comment:getAllByTravelId')
     ->convert('id', $toInt);
 
