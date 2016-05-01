@@ -3,7 +3,7 @@ namespace Api\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class HealthCheckController
+class HealthCheckController extends ApiController
 {
     /**
      * @param Request $request

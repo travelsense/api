@@ -5,7 +5,7 @@ use Api\Wego\WegoHotels;
 use DateTime;
 use PDO;
 
-class WegoHotelController
+class WegoHotelController extends ApiController
 {
     /**
      * @var WegoHotels

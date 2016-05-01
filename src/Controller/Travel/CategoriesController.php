@@ -7,8 +7,6 @@ use Psr\Log\LoggerAwareTrait;
 
 class CategoriesController extends ApiController
 {
-    use LoggerAwareTrait;
-
     /**
      * @var CategoryMapper
      */

@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CommentController extends ApiController
 {
-    use LoggerAwareTrait;
-
     /**
      * @var CommentMapper
      */

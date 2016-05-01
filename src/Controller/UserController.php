@@ -13,10 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * User API controller
  */
-class UserController
+class UserController extends ApiController
 {
-    use LoggerAwareTrait;
-
     /**
      * @var UserMapper
      */

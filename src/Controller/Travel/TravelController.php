@@ -17,8 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TravelController extends ApiController
 {
-    use LoggerAwareTrait;
-
     /**
      * @var TravelMapper
      */

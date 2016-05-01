@@ -3,7 +3,7 @@ namespace Api\Controller;
 
 use F3\SimpleUber\Uber;
 
-class UberController
+class UberController extends ApiController
 {
     /**
      * @var Uber

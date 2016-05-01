@@ -14,10 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Auth API controller
  */
-class AuthController
+class AuthController extends ApiController
 {
-    use LoggerAwareTrait;
-
     /**
      * @var PasswordGeneratorInterface
      */

@@ -85,9 +85,9 @@ class WegoFlights
                     'arrival_city'   => $arrivalCity,
                 ],
             ],
-            'adults_count'      => (int)$adultsCount,
-            'children_count'    => (int)$childrenCount,
-            'infants_count'     => (int)$infantsCount,
+            'adults_count'      => (int) $adultsCount,
+            'children_count'    => (int) $childrenCount,
+            'infants_count'     => (int) $infantsCount,
             'cabin'             => $cabin,
             'user_country_code' => $userCountryCode,
             'country_site_code' => $countrySiteCode,
@@ -153,7 +153,7 @@ class WegoFlights
      */
     public function setFilterPrice($priceFrom, $priceTo)
     {
-        $this->setFilterMinMax('price_min_usd', 'price_max_usd', (int)$priceFrom, (int)$priceTo);
+        $this->setFilterMinMax('price_min_usd', 'price_max_usd', (int) $priceFrom, (int) $priceTo);
     }
 
     /**
@@ -224,14 +224,14 @@ class WegoFlights
         $this->setFilterMinMax(
             'duration_min',
             'duration_max',
-            (int)$min,
-            (int)$max
+            (int) $min,
+            (int) $max
         );
         $this->setFilterMinMax(
             'stopover_duration_min',
             'stopover_duration_max',
-            (int)$stopoverMin,
-            (int)$stopoverMax
+            (int) $stopoverMin,
+            (int) $stopoverMax
         );
     }
 
@@ -250,14 +250,14 @@ class WegoFlights
         $this->setFilterMinMax(
             'outbound_departure_day_time_min',
             'outbound_departure_day_time_max',
-            (int)$outboundMin,
-            (int)$outboundMax
+            (int) $outboundMin,
+            (int) $outboundMax
         );
         $this->setFilterMinMax(
             'inbound_departure_day_time_min',
             'inbound_departure_day_time_max',
-            (int)$inboundMin,
-            (int)$inboundMax
+            (int) $inboundMin,
+            (int) $inboundMax
         );
         $this->flightFilters['departure_day_time_filter_type'] = 'separate';
     }
@@ -295,8 +295,8 @@ class WegoFlights
                 'trip_id'          => $tripId,
                 'sort'             => $sort,
                 'order'            => $order,
-                'page'             => (int)$page,
-                'per_page'         => (int)$perPage,
+                'page'             => (int) $page,
+                'per_page'         => (int) $perPage,
                 'currency_code'    => $currency,
             ],
             $this->flightFilters
