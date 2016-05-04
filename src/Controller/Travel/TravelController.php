@@ -53,6 +53,9 @@ class TravelController extends ApiController
         $travel->setTitle($json->getString('title'));
         $travel->setDescription($json->getString('description'));
         $travel->setContent($json->get('content'));
+        if ($json->has('image')) {
+            $travel->setImage($json->get('image'));
+        }
         $this->travelMapper->insert($travel);
         if ($json->has('category_id')) {
             $this->categoryMapper->addTravelToCategory($travel->getId(), $json->get('category_id'));
@@ -242,6 +245,18 @@ class TravelController extends ApiController
     }
 
     /**
+     * @param      $id
+     * @param User $user
+     * @return array
+     */
+    public function deleteTravel(int $id, User $user): array
+    {
+        $travel = $this->getOwnedTravel($id, $user);
+        $this->travelMapper->delete($travel->getId());
+        return [];
+    }
+
+    /**
      * @param int  $id
      * @param User $user
      * @return Travel
@@ -257,17 +272,5 @@ class TravelController extends ApiController
             throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
         }
         return $travel;
-    }
-
-    /**
-     * @param      $id
-     * @param User $user
-     * @return array
-     */
-    public function deleteTravel(int $id, User $user): array
-    {
-        $travel = $this->getOwnedTravel($id, $user);
-        $this->travelMapper->delete($travel->getId());
-        return [];
     }
 }

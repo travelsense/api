@@ -120,11 +120,9 @@ class Travel
      * @param string $image
      * @return Travel
      */
-    public function setImage(string $image = null)
+    public function setImage($image)
     {
         $this->image = $image;
         return $this;
     }
-    
-    
 }

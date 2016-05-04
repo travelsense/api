@@ -107,7 +107,7 @@ class TravelMapper extends AbstractPDOMapper
             ->setDescription($row['description'])
             ->setTitle($row['title'])
             ->setContent(json_decode($row['content']))
-            ->setImage(json_decode($row['image']))
+            ->setImage($row['image'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
     }
