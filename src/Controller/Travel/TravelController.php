@@ -53,6 +53,9 @@ class TravelController extends ApiController
         $travel->setTitle($json->getString('title'));
         $travel->setDescription($json->getString('description'));
         $travel->setContent($json->get('content'));
+        if ($json->has('image')) {
+            $travel->setImage($json->get('image'));
+        }
         $this->travelMapper->insert($travel);
         if ($json->has('category_id')) {
             $this->categoryMapper->addTravelToCategory($travel->getId(), $json->get('category_id'));
@@ -92,6 +95,7 @@ class TravelController extends ApiController
             'title'       => $travel->getTitle(),
             'description' => $travel->getDescription(),
             'content'     => $travel->getContent(),
+            'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
             'category'    => $travel->getCategoryId()];
 
@@ -229,11 +233,26 @@ class TravelController extends ApiController
         if ($json->has('content')) {
             $travel->setContent($json->get('content'));
         }
+        if ($json->has('image')) {
+            $travel->setImage($json->get('image'));
+        }
         if ($json->has('category_id')) {
             $this->categoryMapper->addTravelToCategory($id, $json->get('category_id'));
         }
         $this->travelMapper->update($travel);
 
+        return [];
+    }
+
+    /**
+     * @param      $id
+     * @param User $user
+     * @return array
+     */
+    public function deleteTravel(int $id, User $user): array
+    {
+        $travel = $this->getOwnedTravel($id, $user);
+        $this->travelMapper->delete($travel->getId());
         return [];
     }
 
@@ -253,17 +272,5 @@ class TravelController extends ApiController
             throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
         }
         return $travel;
-    }
-
-    /**
-     * @param      $id
-     * @param User $user
-     * @return array
-     */
-    public function deleteTravel(int $id, User $user): array
-    {
-        $travel = $this->getOwnedTravel($id, $user);
-        $this->travelMapper->delete($travel->getId());
-        return [];
     }
 }

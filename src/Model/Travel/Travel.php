@@ -32,6 +32,11 @@ class Travel
     private $categoryId;
 
     /**
+     * @var string
+     */
+    private $image;
+    
+    /**
      * @return string
      */
     public function getDescription()
@@ -100,6 +105,24 @@ class Travel
     public function setCategoryId($categoryId)
     {
         $this->categoryId = $categoryId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param string $image
+     * @return Travel
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
         return $this;
     }
 }

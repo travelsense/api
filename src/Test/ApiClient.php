@@ -47,7 +47,7 @@ class ApiClient
      * Example: $client->registerUser([
      *  'firstName' => 'Alexander'
      *  'lastName'=> 'Pushkin',
-     *  'email' => 'sashs@nashe-vse.ru',
+     *  'email' => 'sasha@nashe-vse.ru',
      *  'password' => 'd4n73s l0h',
      * ]);
      */
@@ -164,7 +164,7 @@ class ApiClient
     public function addTravelComment($id, $text)
     {
         return $this->post(sprintf('/travel/%s/comment', urlencode($id)), [
-            'text'      => $text,
+            'text' => $text,
         ])->id;
     }
 

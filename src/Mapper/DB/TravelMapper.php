@@ -80,15 +80,16 @@ class TravelMapper extends AbstractPDOMapper
     {
         $insert = $this->pdo->prepare(
             'INSERT INTO travels '
-            . '(title, description, content, author_id)'
+            . '(title, description, content, image, author_id)'
             . ' VALUES '
-            . '(:title, :description, :content::JSON, :author_id) RETURNING id'
+            . '(:title, :description, :content::JSON, :image, :author_id) RETURNING id'
         );
         $insert->execute([
             ':title'       => $travel->getTitle(),
             ':description' => $travel->getDescription(),
             ':content'     => json_encode($travel->getContent()),
             ':author_id'   => $travel->getAuthor()->getId(),
+            ':image'       => $travel->getImage(),
         ]);
         $id = $insert->fetchColumn();
         $travel->setId($id);
@@ -106,6 +107,7 @@ class TravelMapper extends AbstractPDOMapper
             ->setDescription($row['description'])
             ->setTitle($row['title'])
             ->setContent(json_decode($row['content']))
+            ->setImage($row['image'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
     }
@@ -117,17 +119,21 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function update(Travel $travel)
     {
-        $update = $this->pdo->prepare(
-            'UPDATE travels SET '
-            . 'title = :title, '
-            . 'description = :description, '
-            . 'content = :content::JSON '
-            . 'WHERE id = :id'
-        );
+        $update = $this->pdo->prepare('
+          UPDATE travels SET
+            title = :title,
+            description = :description, 
+            author_id = :author_id,
+            content = :content::JSON,
+            image = :image
+          WHERE id = :id
+        ');
         $update->execute([
             ':title'       => $travel->getTitle(),
             ':description' => $travel->getDescription(),
             ':content'     => json_encode($travel->getContent()),
+            ':author_id'   => $travel->getAuthor()->getId(),
+            ':image'       => $travel->getImage(),
             ':id'          => $travel->getId(),
         ]);
     }
