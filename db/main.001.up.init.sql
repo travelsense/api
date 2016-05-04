@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS travels
   author_id INTEGER REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
+  image TEXT,
   content JSON NOT NULL DEFAULT '[]' :: JSON,
   created TIMESTAMP DEFAULT now(),
   updated TIMESTAMP

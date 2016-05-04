@@ -92,6 +92,7 @@ class TravelController extends ApiController
             'title'       => $travel->getTitle(),
             'description' => $travel->getDescription(),
             'content'     => $travel->getContent(),
+            'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
             'category'    => $travel->getCategoryId()];
 
@@ -228,6 +229,9 @@ class TravelController extends ApiController
         }
         if ($json->has('content')) {
             $travel->setContent($json->get('content'));
+        }
+        if ($json->has('image')) {
+            $travel->setImage($json->get('image'));
         }
         if ($json->has('category_id')) {
             $this->categoryMapper->addTravelToCategory($id, $json->get('category_id'));
