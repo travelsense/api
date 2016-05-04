@@ -47,9 +47,11 @@ $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEs
 
 // Travel
 
-$app->get('/travel/by-user', 'controller.travel:getUserTravels');
+$app->get('/travel/by-user', 'controller.travel:getUserTravels')
+    ->bind('travel-by-user');
 
-$app->get('/travel/by-category/{name}', 'controller.travel:getTravelsByCategory');
+$app->get('/travel/by-category/{name}', 'controller.travel:getTravelsByCategory')
+    ->bind('travel-by-category');
 
 $app->get('/travel/featured', 'controller.travel:getFeatured');
 
@@ -65,7 +67,8 @@ $app->post('/travel/comment/{id}/flag', function() { return [];}) // TODO Implem
     ->convert('id', $toInt);
 
 $app->get('/travel/{id}/comments', 'controller.comment:getAllByTravelId')
-    ->convert('id', $toInt);
+    ->convert('id', $toInt)
+    ->bind('travel-comment');
 
 $app->post('/travel/{id}/comment', 'controller.comment:createTravelComment')
     ->convert('id', $toInt);
@@ -87,7 +90,8 @@ $app->post('/travel', 'controller.travel:createTravel');
 
 // Travel categories
 
-$app->get('/categories', 'controller.categories:getCategories');
+$app->get('/categories', 'controller.categories:getCategories')
+    ->bind('travel-category');
 
 // IATA entities
 
