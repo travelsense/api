@@ -15,18 +15,22 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
      * @var Credentials
      */
     private $credentials;
+
     /**
      * @var SessionManager
      */
     private $sessionManager;
+
     /**
      * @var UserAuthenticator
      */
     private $authenticator;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
+
     /**
      * @var GetResponseEvent
      */
@@ -41,7 +45,7 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
             ->setMethods(['getUserId'])
             ->getMock();
 
-        $this->logger = $this->getMock('\\Psr\\Log\\LoggerInterface');
+        $this->logger = $this->getMock('\\Symfony\\Component\\HttpKernel\\Tests\\Logger');
 
         $this->event = $this->getMockBuilder('\\Symfony\\Component\\HttpKernel\\Event\\GetResponseEvent')
             ->disableOriginalConstructor()
@@ -86,21 +90,29 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
         $this->event->method('getRequest')->willReturn($request);
 
         $this->authenticator->onRequest($this->event);
+        
+        /*$this->logger
+            ->expects($this->once())
+            ->method('info')
+            ->with('Route excluded from auth');*/
     }
 
     public function testIsExcludedRouteTrue()
     {
-        $request = new Request([], [], ['_route' => 'excluded']);//2
+        $request = new Request([], [], ['_route' => 'excluded']);
 
         $this->event->method('getRequest')->willReturn($request);
 
         $this->authenticator->onRequest($this->event);
+
+        $logs= $this->logger->getLogs();
+        $this->assertEquals('Route excluded from auth', $logs['info'][0]);
     }
 
     public function testNotPregMatchFalse()
     {
         $request = new Request([], [], ['_route' => 'secured-route']);
-        $request->headers = new HeaderBag(['Authorization' => 'zzz']);//3
+        $request->headers = new HeaderBag(['Authorization' => 'zzz']);
 
         $this->event->method('getRequest')->willReturn($request);
 
