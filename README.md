@@ -1,1 +1,2 @@
-# See the [Wiki pages](https://github.com/travelsense/api/wiki)
+* [Dev set up](doc/dev_setup.md)
+* [Production deployment](doc/deploy.md)
