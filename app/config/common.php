@@ -47,7 +47,6 @@ return [
             'send-password-reset-link',
             'travel-by-category',
             'travel-by-id',
-            'travel-by-user',
             'travel-category',
             'travel-comment',
         ],
