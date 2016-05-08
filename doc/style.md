@@ -2,7 +2,7 @@
 ## PHP
 PHP code relies heavily on [PSR standards](http://www.php-fig.org/psr/), 
 particularly on [PSR-2](http://www.php-fig.org/psr/psr-2/) 
-and proposed [PSR-12](https://github.com/php-fig/fig-standards/blob/master/proposed/extended-coding-style-guide.md) 
+and proposed [PSR-12](https://github.com/php-fig/fig-standards/blob/master/proposed/extended-coding-style-guide.md),
 with the following clarifications:
 * Valiable names must be in `lowerCamelCase`
 * Array keys (including configuration) must be in `lower_snake_case`
