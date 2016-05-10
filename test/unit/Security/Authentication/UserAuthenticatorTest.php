@@ -1,14 +1,23 @@
 <?php
 namespace Api\Security\Authentication;
 
+use Api\Security\SessionManager;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Credentials
+     */
     private $credentials;
+
+    /**
+     * @var SessionManager
+     */
     private $sessionManager;
+    
     /**
      * @var UserAuthenticator
      */
@@ -42,5 +51,10 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 
         $this->authenticator->onRequest($event);
 
+    }
+
+    public function testGetSubscribedEvents()
+    {
+        $this->assertEquals(['kernel.request' => 'onRequest'], UserAuthenticator::getSubscribedEvents());
     }
 }
