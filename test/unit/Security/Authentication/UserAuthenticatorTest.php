@@ -17,7 +17,7 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
      * @var SessionManager
      */
     private $sessionManager;
-    
+
     /**
      * @var UserAuthenticator
      */
@@ -55,6 +55,6 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 
     public function testGetSubscribedEvents()
     {
-        $this->assertEquals(['kernel.request' => 'onRequest'], UserAuthenticator::getSubscribedEvents());
+        $this->assertEquals(['kernel.request' => 'onRequest_'], UserAuthenticator::getSubscribedEvents());
     }
 }
