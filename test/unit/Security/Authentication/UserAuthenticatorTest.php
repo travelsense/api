@@ -55,6 +55,6 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 
     public function testGetSubscribedEvents()
     {
-        $this->assertEquals(['kernel.request' => 'onRequest_'], UserAuthenticator::getSubscribedEvents());
+        $this->assertEquals(['kernel.request' => 'xxx'], UserAuthenticator::getSubscribedEvents());
     }
 }
