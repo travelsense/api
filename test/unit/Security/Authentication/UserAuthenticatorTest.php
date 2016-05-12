@@ -6,6 +6,7 @@ use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 {
@@ -29,11 +30,21 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
      */
     private $logger;
 
+    /**
+     * @var GetResponseEvent
+     */
+    private $event;
+
     public function setUp()
     {
         $this->credentials = $this->getMock('\\Api\\Security\\Authentication\\Credentials');
         $this->sessionManager = $this->getMockBuilder('\\Api\\Security\\SessionManager')
             ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->setMethods(['getRequest'])
             ->getMock();
 
         $this->authenticator = new UserAuthenticator($this->credentials, $this->sessionManager, ['excluded']);
@@ -52,13 +63,9 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
         $request = new Request([], [], ['_route' => 'secured-route']);
         $request->headers = new HeaderBag(['Authorization' => 'Token zzz']);
 
-        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\GetResponseEvent')
-            ->disableOriginalConstructor()
-            ->setMethods(['getRequest'])
-            ->getMock();
-        $event->method('getRequest')->willReturn($request);
+        $this->event->method('getRequest')->willReturn($request);
 
-        $this->authenticator->onRequest($event);
+        $this->authenticator->onRequest($this->event);
 
     }
 
@@ -70,16 +77,21 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
     public function testIsExcludedRouteTrue()
     {
         $request = new Request([], [], ['_route' => 'excluded']);
-        
-        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\GetResponseEvent')
-            ->disableOriginalConstructor()
-            ->setMethods(['getRequest'])
-            ->getMock();
-        
-        $event->method('getRequest')->willReturn($request);
+
+        $this->event->method('getRequest')->willReturn($request);
         
         $this->logger->expects($this->once())->method('info')->with('Route excluded from auth');
 
-        $this->authenticator->onRequest($event);
+        $this->authenticator->onRequest($this->event);
+    }
+
+    public function testNotPregMatchFalse()
+    {
+        $request = new Request([], [], ['_route' => 'secured-route']);
+        $request->headers = new HeaderBag(['Authorization' => 'zzz']);
+
+        $this->event->method('getRequest')->willReturn($request);
+
+        $this->authenticator->onRequest($this->event);
     }
 }
