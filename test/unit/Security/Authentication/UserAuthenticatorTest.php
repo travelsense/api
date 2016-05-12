@@ -78,8 +78,8 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
         
         $event->method('getRequest')->willReturn($request);
         
-        $this->authenticator->onRequest($event);
-
         $this->logger->expects($this->once())->method('info')->with('Route excluded from auth');
+
+        $this->authenticator->onRequest($event);
     }
 }
