@@ -38,7 +38,7 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 
         $this->authenticator = new UserAuthenticator($this->credentials, $this->sessionManager, ['excluded']);
 
-        $this->logger = $this->getMock('\\Symfony\\Component\\HttpKernel\\Tests\\Logger');
+        $this->logger = $this->getMock('\\Psr\\Log\\LoggerInterface');
         $this->authenticator->setLogger($this->logger);
     }
 
@@ -79,5 +79,7 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
         $event->method('getRequest')->willReturn($request);
         
         $this->authenticator->onRequest($event);
+
+        $this->logger->expects($this->once())->method('info')->with('Route excluded from auth');
     }
 }
