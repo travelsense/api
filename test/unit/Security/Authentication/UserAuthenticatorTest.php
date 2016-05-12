@@ -5,6 +5,7 @@ use Api\Security\SessionManager;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
 
 class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 {
@@ -23,6 +24,11 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
      */
     private $authenticator;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function setUp()
     {
         $this->credentials = $this->getMock('\\Api\\Security\\Authentication\\Credentials');
@@ -31,6 +37,9 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->authenticator = new UserAuthenticator($this->credentials, $this->sessionManager, ['excluded']);
+
+        $this->logger = $this->getMock('\\Psr\\Log\\LoggerInterface');
+        $this->authenticator->setLogger($this->logger);
     }
 
     /**
@@ -56,5 +65,21 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
     public function testGetSubscribedEvents()
     {
         $this->assertEquals(['kernel.request' => 'onRequest'], UserAuthenticator::getSubscribedEvents());
+    }
+
+    public function testIsExcludedRouteTrue()
+    {
+        $request = new Request([], [], ['_route' => 'excluded']);
+        
+        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->setMethods(['getRequest'])
+            ->getMock();
+        
+        $event->method('getRequest')->willReturn($request);
+        
+        $this->logger->expects($this->once())->method('info')->with('Route excluded from auth');
+
+        $this->authenticator->onRequest($event);
     }
 }
