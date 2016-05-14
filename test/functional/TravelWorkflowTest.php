@@ -41,6 +41,7 @@ class TravelWorkflowTest extends FunctionalTestCase
         $this->assertEquals('Hobbit', $travel->title);
         $this->assertEquals('There and back again', $travel->description);
         $this->assertEquals('https://host.com/image.jpg', $travel->image);
+        $this->assertEquals(false, $travel->published);
 
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
         $this->assertEquals((object)['foo' => 'bar'], $travel->content);
@@ -56,12 +57,14 @@ class TravelWorkflowTest extends FunctionalTestCase
             'title'       => 'Two Towers',
             'description' => 'Before the Return of the King',
             'image'       => 'https://host.com/new_image.jpg',
+            'published'   => true,
             'content'     => ['pew' => 'boom'],
         ]);
         $travelUpdated = $this->apiClient->getTravel($id);
         $this->assertEquals('Two Towers', $travelUpdated->title);
         $this->assertEquals('Before the Return of the King', $travelUpdated->description);
         $this->assertEquals('https://host.com/new_image.jpg', $travelUpdated->image);
+        $this->assertEquals(true, $travelUpdated->published);
         $this->assertEquals((object)['pew' => 'boom'], $travelUpdated->content);
     }
 

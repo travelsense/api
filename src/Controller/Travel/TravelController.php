@@ -9,7 +9,6 @@ use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
-use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -60,6 +59,9 @@ class TravelController extends ApiController
         if ($json->has('category_id')) {
             $this->categoryMapper->addTravelToCategory($travel->getId(), $json->get('category_id'));
         }
+        if ($json->has('published')) {
+            $travel->setPublished($json->get('published'));
+        }
 
         return ['id' => $travel->getId()];
     }
@@ -84,33 +86,6 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param Travel $travel
-     * @return array
-     */
-    public function buildTravelView(Travel $travel): array
-    {
-        $author = $travel->getAuthor();
-        $view = [
-            'id'          => $travel->getId(),
-            'title'       => $travel->getTitle(),
-            'description' => $travel->getDescription(),
-            'content'     => $travel->getContent(),
-            'image'       => $travel->getImage(),
-            'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'category'    => $travel->getCategoryId()];
-
-        if ($author) {
-            $view['author'] = [
-                'id'        => $author->getId(),
-                'firstName' => $author->getFirstName(),
-                'lastName'  => $author->getLastName(),
-                'picture'   => $author->getPicture(),
-            ];
-        }
-        return $view;
-    }
-
-    /**
      * @param User $user
      * @param int  $limit
      * @param int  $offset
@@ -119,11 +94,7 @@ class TravelController extends ApiController
     public function getUserTravels(User $user, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travelMapper->fetchByAuthorId($user->getId(), $limit, $offset);
-        $response = [];
-        foreach ($travels as $travel) {
-            $response[] = $this->buildTravelView($travel);
-        }
-        return $response;
+        return $this->buildTravelSetView($travels);
     }
 
     /**
@@ -155,13 +126,12 @@ class TravelController extends ApiController
     public function getFavorites(User $user): array
     {
         $travels = $this->travelMapper->fetchFavorites($user->getId());
-        $response = [];
-        foreach ($travels as $travel) {
-            $response[] = $this->buildTravelView($travel);
-        }
-        return $response;
+        return $this->buildTravelSetView($travels);
     }
 
+    /**
+     * @return array
+     */
     public function getFeatured(): array
     {
         $result = [
@@ -189,9 +159,10 @@ class TravelController extends ApiController
         $featuredCategoryNames = ['Featured', 'Romantic', 'Sports'];
         $featuredCategories = [];
         foreach ($featuredCategoryNames as $name) {
+            $travels = $this->travelMapper->fetchPublishedByCategory($name, 5, 0);
             $featuredCategories[] = [
                 'title'   => $name,
-                'travels' => $this->getTravelsByCategory($name, 5, 0),
+                'travels' => $this->buildTravelSetView($travels),
             ];
         }
         $result['categories'] = $featuredCategories;
@@ -207,11 +178,7 @@ class TravelController extends ApiController
     public function getTravelsByCategory(string $name, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travelMapper->fetchByCategory($name, $limit, $offset);
-        $response = [];
-        foreach ($travels as $travel) {
-            $response[] = $this->buildTravelView($travel);
-        }
-        return $response;
+        return $this->buildTravelSetView($travels);
     }
 
     /**
@@ -235,6 +202,9 @@ class TravelController extends ApiController
         }
         if ($json->has('image')) {
             $travel->setImage($json->get('image'));
+        }
+        if ($json->has('published')) {
+            $travel->setPublished($json->get('published'));
         }
         if ($json->has('category_id')) {
             $this->categoryMapper->addTravelToCategory($id, $json->get('category_id'));
@@ -268,9 +238,51 @@ class TravelController extends ApiController
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        if ($travel->getAuthor()->getId() !== $user->getId()) {
+        if ($travel->getAuthorId() !== $user->getId()) {
             throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
         }
         return $travel;
+    }
+
+    /**
+     * @param Travel $travel
+     * @return array
+     */
+    private function buildTravelView(Travel $travel): array
+    {
+        $author = $travel->getAuthor();
+        $view = [
+            'id'          => $travel->getId(),
+            'title'       => $travel->getTitle(),
+            'description' => $travel->getDescription(),
+            'content'     => $travel->getContent(),
+            'image'       => $travel->getImage(),
+            'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
+            'category'    => $travel->getCategoryId(),
+            'published'   => $travel->isPublished(),
+        ];
+
+        if ($author) {
+            $view['author'] = [
+                'id'        => $author->getId(),
+                'firstName' => $author->getFirstName(),
+                'lastName'  => $author->getLastName(),
+                'picture'   => $author->getPicture(),
+            ];
+        }
+        return $view;
+    }
+
+    /**
+     * @param Travel[] $travels
+     * @return array
+     */
+    private function buildTravelSetView(array $travels): array
+    {
+        $view = [];
+        foreach ($travels as $travel) {
+            $view[] = $this->buildTravelView($travel);
+        }
+        return $view;
     }
 }
