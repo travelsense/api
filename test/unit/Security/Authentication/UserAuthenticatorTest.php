@@ -74,23 +74,13 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['kernel.request' => 'onRequest'], UserAuthenticator::getSubscribedEvents());
     }
 
-    public function testIsExcludedRouteTrue()
+    public function testExcludedRoute()
     {
         $request = new Request([], [], ['_route' => 'excluded']);
 
         $this->event->method('getRequest')->willReturn($request);
         
         $this->logger->expects($this->once())->method('info')->with('Route excluded from auth');
-
-        $this->authenticator->onRequest($this->event);
-    }
-
-    public function testNotPregMatchFalse()
-    {
-        $request = new Request([], [], ['_route' => 'secured-route']);
-        $request->headers = new HeaderBag(['Authorization' => 'zzz']);
-
-        $this->event->method('getRequest')->willReturn($request);
 
         $this->authenticator->onRequest($this->event);
     }
