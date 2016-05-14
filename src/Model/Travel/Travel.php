@@ -35,7 +35,12 @@ class Travel
      * @var string
      */
     private $image;
-    
+
+    /**
+     * @var bool
+     */
+    private $published = false;
+
     /**
      * @return string
      */
@@ -123,6 +128,24 @@ class Travel
     public function setImage($image)
     {
         $this->image = $image;
+        return $this;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function isPublished(): bool 
+    {
+        return $this->published;
+    }
+
+    /**
+     * @param boolean $published
+     * @return Travel
+     */
+    public function setPublished(bool $published)
+    {
+        $this->published = $published;
         return $this;
     }
 }

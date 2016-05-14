@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS travels
   description TEXT NOT NULL,
   image TEXT,
   content JSON NOT NULL DEFAULT '[]' :: JSON,
+  is_published BOOLEAN DEFAULT FALSE,
   created TIMESTAMP DEFAULT now(),
   updated TIMESTAMP
 );
