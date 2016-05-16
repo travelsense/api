@@ -91,11 +91,11 @@ SQL;
     }
 
     /**
-     * @param $email
-     * @param $password
+     * @param string $email
+     * @param string $password
      * @return User|null
      */
-    public function fetchByEmailAndPassword($email, $password)
+    public function fetchByEmailAndPassword(string $email, string $password)
     {
         $select = $this->pdo->prepare('SELECT * FROM users WHERE email = :email AND "password" = :password');
 
@@ -110,10 +110,10 @@ SQL;
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return User|null
      */
-    public function fetchById($id)
+    public function fetchById(int $id)
     {
         $select = $this->pdo->prepare('SELECT * FROM users WHERE "id" = :id');
         $select->execute(
@@ -129,7 +129,7 @@ SQL;
      * @param $email
      * @return User|null
      */
-    public function fetchByEmail($email)
+    public function fetchByEmail(string $email)
     {
         $select = $this->pdo->prepare('SELECT * FROM users WHERE "email" = :email');
         $select->execute(
@@ -142,20 +142,20 @@ SQL;
     }
 
     /**
-     * @param $password
+     * @param string $password
      * @return string
      */
-    private function getPasswordHash($password)
+    private function getPasswordHash(string $password): string
     {
         return sha1($password . $this->salt);
     }
 
     /**
-     * @param $email
-     * @param $password
+     * @param string $email
+     * @param string $password
      * @return User|null
      */
-    public function updatePasswordByEmail($email, $password)
+    public function updatePasswordByEmail(string $email, string $password)
     {
         $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE email= :email');
         return $update->execute(
@@ -170,7 +170,7 @@ SQL;
      * @param array $row
      * @return User
      */
-    protected function create(array $row)
+    protected function create(array $row): User
     {
         $user = new User();
         return $user

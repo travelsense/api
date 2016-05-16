@@ -123,7 +123,7 @@ class TravelMapper extends AbstractPDOMapper
      * @param int $userId
      * @return Travel[]
      */
-    public function fetchFavorites($userId): array
+    public function fetchFavorites(int $userId): array
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM  favorite_travels ft
