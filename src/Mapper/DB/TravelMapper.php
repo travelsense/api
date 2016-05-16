@@ -38,7 +38,7 @@ class TravelMapper extends AbstractPDOMapper
         if (empty($row)) {
             return null;
         }
-        return $this->createTravelWithAuthor($row);
+        return $this->build($row);
     }
 
     /**
@@ -62,7 +62,7 @@ class TravelMapper extends AbstractPDOMapper
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
-        return $this->createTravelSetWithAuthor($select);
+        return $this->buildAll($select);
     }
 
     /**
@@ -132,7 +132,7 @@ class TravelMapper extends AbstractPDOMapper
             WHERE ft.user_id = :user_id
             ');
         $select->execute(['user_id' => $userId]);
-        return $this->createTravelSetWithAuthor($select);
+        return $this->buildAll($select);
     }
 
     /**
@@ -156,7 +156,7 @@ class TravelMapper extends AbstractPDOMapper
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
-        return $this->createTravelSetWithAuthor($select);
+        return $this->buildAll($select);
     }
 
     /**
@@ -180,7 +180,7 @@ class TravelMapper extends AbstractPDOMapper
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
-        return $this->createTravelSetWithAuthor($select);
+        return $this->buildAll($select);
     }
 
     /**
@@ -242,23 +242,10 @@ class TravelMapper extends AbstractPDOMapper
      * @param array $row
      * @return Travel
      */
-    private function createTravelWithAuthor(array $row): Travel
+    protected function build(array $row): Travel
     {
         list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
         $travel->setAuthor($author);
         return $travel;
-    }
-
-    /**
-     * @param PDOStatement $statement
-     * @return Travel[]
-     */
-    private function createTravelSetWithAuthor(PDOStatement $statement) : array
-    {
-        $travels = [];
-        while ($row = $statement->fetch(PDO::FETCH_NAMED)) {
-            $travels[] = $this->createTravelWithAuthor($row);
-        }
-        return $travels;
     }
 }

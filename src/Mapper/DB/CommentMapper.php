@@ -68,12 +68,7 @@ class CommentMapper extends AbstractPDOMapper
         if (empty($row)) {
             return null;
         }
-
-        /** @var Comment $comment */
-        /** @var User $author */
-        list($comment, $author) = $this->createFromJoined($row, $this, $this->userMapper);
-        $comment->setAuthor($author);
-        return $comment;
+        return $this->build($row);
     }
     
     /**
@@ -96,16 +91,7 @@ class CommentMapper extends AbstractPDOMapper
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
-
-        $comments = [];
-        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
-            /** @var Comment $comment */
-            /** @var User $author */
-            list($comment, $author) = $this->createFromJoined($row, $this, $this->userMapper);
-            $comment->setAuthor($author);
-            $comments[] = $comment;
-        }
-        return $comments;
+        return $this->buildAll($select);
     }
 
     /**
@@ -122,7 +108,7 @@ class CommentMapper extends AbstractPDOMapper
      * @param array $row
      * @return Comment
      */
-    public function create(array $row): Comment
+    protected function create(array $row): Comment
     {
         $comment = new Comment();
         return $comment
@@ -132,5 +118,14 @@ class CommentMapper extends AbstractPDOMapper
             ->setText($row['text'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
+    }
+
+    protected function build(array $row)
+    {
+        /** @var Comment $comment */
+        /** @var User $author */
+        list($comment, $author) = $this->createFromJoined($row, $this, $this->userMapper);
+        $comment->setAuthor($author);
+        return $comment;
     }
 }

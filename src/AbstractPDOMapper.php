@@ -2,6 +2,7 @@
 namespace Api;
 
 use PDO;
+use PDOStatement;
 
 abstract class AbstractPDOMapper
 {
@@ -32,6 +33,43 @@ abstract class AbstractPDOMapper
      * @return mixed
      */
     abstract protected function create(array $row);
+
+    /**
+     * Create object with all dependencies.
+     * This method is to be overloaded in child classes
+     * @param array $row
+     * @return mixed
+     */
+    protected function build(array $row)
+    {
+        return $this->create($row);
+    }
+
+    /**
+     * @param PDOStatement $statement
+     * @return array
+     */
+    protected function buildAll(PDOStatement $statement): array
+    {
+        $list = [];
+        while ($row = $statement->fetch(PDO::FETCH_NAMED)) {
+            $list[] = $this->build($row);
+        }
+        return $list;
+    }
+
+    /**
+     * @param PDOStatement $statement
+     * @return array
+     */
+    protected function createAll(PDOStatement $statement): array
+    {
+        $list = [];
+        while ($row = $statement->fetch(PDO::FETCH_NAMED)) {
+            $list[] = $this->create($row);
+        }
+        return $list;
+    }
 
     /**
      * Create an object from a joined table.

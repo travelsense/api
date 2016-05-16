@@ -14,18 +14,14 @@ class CategoryMapper extends AbstractPDOMapper
     {
         $select = $this->pdo->prepare('SELECT * FROM categories ORDER BY id ASC');
         $select->execute();
-        $categories = [];
-        while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
-            $categories[] = $this->create($row);
-        }
-        return $categories;
+        return $this->createAll($select);
     }
 
     /**
      * @param array $row
      * @return Category
      */
-    public function create(array $row): Category
+    protected function create(array $row): Category
     {
         $category = new Category();
         return $category
@@ -44,11 +40,7 @@ class CategoryMapper extends AbstractPDOMapper
         $select->execute([
             'travel_id' => $travelId,
         ]);
-        $categories = [];
-        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
-            $categories[] = $this->create($row);
-        }
-        return $categories;
+        return $this->createAll($select);
     }
 
     /**
