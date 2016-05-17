@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 {
@@ -44,7 +45,7 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 
         $this->event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\GetResponseEvent')
             ->disableOriginalConstructor()
-            ->setMethods(['getRequest'])
+            ->setMethods(['getRequest', 'setResponse'])
             ->getMock();
 
         $this->authenticator = new UserAuthenticator($this->credentials, $this->sessionManager, ['excluded']);
@@ -81,6 +82,24 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
         $this->event->method('getRequest')->willReturn($request);
         
         $this->logger->expects($this->once())->method('info')->with('Route excluded from auth');
+
+        $this->authenticator->onRequest($this->event);
+    }
+
+    public function testNotAuthorized()
+    {
+        $request = new Request([], [], ['_route' => 'secured-route']);
+
+        $this->event->method('getRequest')->willReturn($request);
+
+        $this->event
+            ->expects($this->once())
+            ->method('setResponse')
+            ->with($this->callback(function(Response $response){
+                return $response->getContent() === '' &&
+                $response->getStatusCode() === Response::HTTP_UNAUTHORIZED &&
+                $response->headers->get('WWW-Authenticate') === 'Token';
+            }));
 
         $this->authenticator->onRequest($this->event);
     }
