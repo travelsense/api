@@ -19,11 +19,24 @@ class TravelMapper extends AbstractPDOMapper
     private $userMapper;
 
     /**
+     * @var CategoryMapper
+     */
+    private $categoryMapper;
+
+    /**
      * @param UserMapper $userMapper
      */
     public function setUserMapper(UserMapper $userMapper)
     {
         $this->userMapper = $userMapper;
+    }
+
+    /**
+     * @param CategoryMapper $categoryMapper
+     */
+    public function setCategoryMapper($categoryMapper)
+    {
+        $this->categoryMapper = $categoryMapper;
     }
 
     /**
@@ -79,6 +92,10 @@ class TravelMapper extends AbstractPDOMapper
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
         $travel->setId($insert->fetchColumn());
+        
+        if ($travel->getCategoryId()) {
+            $this->
+        }
     }
 
     /**

@@ -8,6 +8,18 @@ use PDO;
 class CategoryMapper extends AbstractPDOMapper
 {
     /**
+     * @param Category $category
+     */
+    public function insert(Category $category)
+    {
+        $insert = $this->pdo->prepare('INSERT INTO categories (name) VALUES (:name) RETURNING id');
+        $insert->execute([
+            ':name' => $category->getName(),
+        ]);
+        $category->setId($insert->fetchColumn());
+    }
+    
+    /**
      * @return Category[]
      */
     public function fetchAll(): array
@@ -18,20 +30,7 @@ class CategoryMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param array $row
-     * @return Category
-     */
-    protected function create(array $row): Category
-    {
-        $category = new Category();
-        return $category
-            ->setId($row['id'])
-            ->setTitle($row['name']);
-    }
-
-
-    /**
-     * @param int|string $travelId
+     * @param int $travelId
      * @return Category[]
      */
     public function fetchByTravelId(int $travelId): array
@@ -41,6 +40,23 @@ class CategoryMapper extends AbstractPDOMapper
             'travel_id' => $travelId,
         ]);
         return $this->createAll($select);
+    }
+    
+    /**
+     * @param int $id
+     * @return Category
+     */
+    public function fetchBylId(int $id): Category
+    {
+        $select = $this->pdo->prepare('SELECT * FROM categories WHERE id = :id');
+        $select->execute([
+            'id' => $id,
+        ]);
+        $row = $select->fetch(PDO::FETCH_ASSOC);
+        if (empty($row)) {
+            return null;
+        }
+        return $this->create($row);
     }
 
     /**
@@ -65,4 +81,15 @@ class CategoryMapper extends AbstractPDOMapper
         ]);
     }
 
+    /**
+     * @param array $row
+     * @return Category
+     */
+    protected function create(array $row): Category
+    {
+        $category = new Category();
+        return $category
+            ->setId($row['id'])
+            ->setName($row['name']);
+    }
 }
