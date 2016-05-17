@@ -65,7 +65,7 @@ class UserAuthenticator implements EventSubscriberInterface
             $this->logger->info('Authorization header', ['Authorization' => $authHeader]);
         }
         if (!preg_match('/^Token (.+)/i', $authHeader, $matches)) {
-            $event->setResponse(new Response('', 401, ['WWW-Authenticate' => 'Token']));
+            $event->setResponse(new Response('', Response::HTTP_UNAUTHORIZED, ['WWW-Authenticate' => 'Token']));
             return;
         }
         $token = $matches[1];
