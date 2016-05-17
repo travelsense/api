@@ -103,4 +103,24 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
 
         $this->authenticator->onRequest($this->event);
     }
+
+    public function testOnRequestHappyPath()
+    {
+        $this->sessionManager
+            ->method('getUserId')
+            ->with('zzz')
+            ->willReturn('test_user_id');
+
+        $this->credentials
+            ->expects($this->once())
+            ->method('setUser')
+            ->with('test_user_id');
+
+        $request = new Request([], [], ['_route' => 'secured-route']);
+        $request->headers = new HeaderBag(['Authorization' => 'Token zzz']);
+
+        $this->event->method('getRequest')->willReturn($request);
+
+        $this->authenticator->onRequest($this->event);
+    }
 }
