@@ -16,7 +16,7 @@ class UserMapper extends AbstractPDOMapper
     /**
      * @param string $salt
      */
-    public function setSalt($salt)
+    public function setSalt(string $salt)
     {
         $this->salt = $salt;
     }
@@ -25,7 +25,7 @@ class UserMapper extends AbstractPDOMapper
      * @param string $email
      * @return bool
      */
-    public function emailExists($email)
+    public function emailExists(string$email)
     {
         $select = $this->pdo->prepare('SELECT id FROM users WHERE email=:email');
         $select->execute([':email' => $email]);
@@ -36,7 +36,7 @@ class UserMapper extends AbstractPDOMapper
      * @param string $email
      * @return void
      */
-    public function confirmEmail($email)
+    public function confirmEmail(string $email)
     {
         $select = $this->pdo->prepare('UPDATE users SET email_confirmed = true WHERE email=:email');
         $select->execute([':email' => $email]);
@@ -79,7 +79,7 @@ SQL;
         $email = $user->getEmail();
         $firstName = $user->getFirstName();
         $lastName = $user->getLastName();
-        $emailConfirmed = $user->getEmailConfirmed();
+        $emailConfirmed = $user->isEmailConfirmed();
         $id = $user->getId();
         $update = $this->pdo->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
         $update->bindValue(':email', $email);
@@ -142,15 +142,6 @@ SQL;
     }
 
     /**
-     * @param string $password
-     * @return string
-     */
-    private function getPasswordHash(string $password): string
-    {
-        return sha1($password . $this->salt);
-    }
-
-    /**
      * @param string $email
      * @param string $password
      * @return User|null
@@ -181,4 +172,14 @@ SQL;
             ->setPicture($row['picture'])
             ->setEmailConfirmed($row['email_confirmed']);
     }
+
+    /**
+     * @param string $password
+     * @return string
+     */
+    private function getPasswordHash(string $password): string
+    {
+        return sha1($password . $this->salt);
+    }
+
 }

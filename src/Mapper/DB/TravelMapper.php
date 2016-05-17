@@ -128,7 +128,7 @@ class TravelMapper extends AbstractPDOMapper
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM  favorite_travels ft
             JOIN travels t ON ft.travel_id = t.id
-            JOIN users u ON ft.user_id = u.id
+            JOIN users u ON t.author_id = u.id
             WHERE ft.user_id = :user_id
             ');
         $select->execute(['user_id' => $userId]);
