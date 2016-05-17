@@ -7,7 +7,7 @@ use PDO;
 
 trait DatabaseTrait
 {
-    protected function resetDatabase(Application $app)
+    static protected function resetDatabase(Application $app)
     {
         foreach ($app['config']['db'] as $name => $db) {
             $pdo = new PDO(

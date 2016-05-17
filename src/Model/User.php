@@ -58,7 +58,7 @@ class User
      *
      * @return bool
      */
-    public function getEmailConfirmed()
+    public function isEmailConfirmed()
     {
         return $this->emailConfirmed;
     }
