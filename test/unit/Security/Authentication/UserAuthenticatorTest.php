@@ -89,7 +89,6 @@ class UserAuthenticatorTest extends PHPUnit_Framework_TestCase
     public function testNotAuthorized()
     {
         $request = new Request([], [], ['_route' => 'secured-route']);
-        $request->headers = new HeaderBag(['Authorization' => 'zzz']);
 
         $this->event->method('getRequest')->willReturn($request);
 
