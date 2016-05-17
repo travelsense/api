@@ -5,6 +5,7 @@ use Api\AbstractPDOMapper;
 use Api\Model\Travel\Travel;
 use DateTime;
 use PDO;
+use PDOStatement;
 
 /**
  * Class TravelMapper
@@ -37,9 +38,7 @@ class TravelMapper extends AbstractPDOMapper
         if (empty($row)) {
             return null;
         }
-        list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
-        $travel->setAuthor($author);
-        return $travel;
+        return $this->build($row);
     }
 
     /**
@@ -51,11 +50,11 @@ class TravelMapper extends AbstractPDOMapper
     public function fetchByAuthorId(int $authorId, int $limit, int $offset): array
     {
         $select = $this->pdo->prepare('
-          SELECT t.*, u.* FROM travels t 
-          JOIN users u ON t.author_id = u.id 
-          WHERE t.author_id = :userId 
-          ORDER BY t.id DESC
-          LIMIT :limit OFFSET :offset
+            SELECT t.*, u.* FROM travels t 
+            JOIN users u ON t.author_id = u.id 
+            WHERE t.author_id = :userId 
+            ORDER BY t.id DESC
+            LIMIT :limit OFFSET :offset
         ');
 
         $select->execute([
@@ -63,12 +62,7 @@ class TravelMapper extends AbstractPDOMapper
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
-        $travels = [];
-        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
-            list($travel, $user) = $this->createFromJoined($row, $this, $this->userMapper);
-            $travels[] = $travel->setAuthor($user);
-        }
-        return $travels;
+        return $this->buildAll($select);
     }
 
     /**
@@ -78,64 +72,13 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function insert(Travel $travel)
     {
-        $insert = $this->pdo->prepare(
-            'INSERT INTO travels '
-            . '(title, description, content, image, author_id)'
-            . ' VALUES '
-            . '(:title, :description, :content::JSON, :image, :author_id) RETURNING id'
-        );
-        $insert->execute([
-            ':title'       => $travel->getTitle(),
-            ':description' => $travel->getDescription(),
-            ':content'     => json_encode($travel->getContent()),
-            ':author_id'   => $travel->getAuthor()->getId(),
-            ':image'       => $travel->getImage(),
-        ]);
-        $id = $insert->fetchColumn();
-        $travel->setId($id);
-    }
-
-    /**
-     * @param array $row
-     * @return Travel
-     */
-    protected function create(array $row)
-    {
-        $travel = new Travel();
-        return $travel
-            ->setId($row['id'])
-            ->setDescription($row['description'])
-            ->setTitle($row['title'])
-            ->setContent(json_decode($row['content']))
-            ->setImage($row['image'])
-            ->setCreated(new DateTime($row['created']))
-            ->setUpdated(new DateTime($row['updated']));
-    }
-
-    /**
-     * Update title and description in DB
-     *
-     * @param Travel $travel
-     */
-    public function update(Travel $travel)
-    {
-        $update = $this->pdo->prepare('
-          UPDATE travels SET
-            title = :title,
-            description = :description, 
-            author_id = :author_id,
-            content = :content::JSON,
-            image = :image
-          WHERE id = :id
+        $insert = $this->pdo->prepare('
+            INSERT INTO travels (title, description, content, is_published, image, author_id)
+            VALUES (:title, :description, :content::JSON, :published, :image, :author_id) RETURNING id
         ');
-        $update->execute([
-            ':title'       => $travel->getTitle(),
-            ':description' => $travel->getDescription(),
-            ':content'     => json_encode($travel->getContent()),
-            ':author_id'   => $travel->getAuthor()->getId(),
-            ':image'       => $travel->getImage(),
-            ':id'          => $travel->getId(),
-        ]);
+        $this->bindCommonValues($insert, $travel);
+        $insert->execute();
+        $travel->setId($insert->fetchColumn());
     }
 
     /**
@@ -153,13 +96,10 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function addFavorite(int $travelId, int $userId)
     {
-        $insert = $this->pdo->prepare(
-            'INSERT INTO favorite_travels '
-            . '(user_id, travel_id) '
-            . 'VALUES '
-            . '(:user_id, :travel_id)'
-            . ' ON CONFLICT DO NOTHING'
-        );
+        $insert = $this->pdo->prepare('
+            INSERT INTO favorite_travels (user_id, travel_id)
+            VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING
+        ');
         $insert->execute([
             ':user_id'   => $userId,
             ':travel_id' => $travelId,
@@ -183,21 +123,16 @@ class TravelMapper extends AbstractPDOMapper
      * @param int $userId
      * @return Travel[]
      */
-    public function fetchFavorites($userId): array 
+    public function fetchFavorites(int $userId): array
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM  favorite_travels ft
             JOIN travels t ON ft.travel_id = t.id
-            JOIN users u ON ft.user_id = u.id
+            JOIN users u ON t.author_id = u.id
             WHERE ft.user_id = :user_id
             ');
         $select->execute(['user_id' => $userId]);
-        $travels = [];
-        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
-            list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
-            $travels[] = $travel->setAuthor($author);
-        }
-        return $travels;
+        return $this->buildAll($select);
     }
 
     /**
@@ -221,11 +156,96 @@ class TravelMapper extends AbstractPDOMapper
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
-        $travels = [];
-        while ($row = $select->fetch(PDO::FETCH_NAMED)) {
-            list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
-            $travels[] = $travel->setAuthor($author);
-        }
-        return $travels;
+        return $this->buildAll($select);
+    }
+
+    /**
+     * @param string $name
+     * @param int    $limit
+     * @param int    $offset
+     * @return Travel[]
+     */
+    public function fetchPublishedByCategory(string $name, int $limit, int $offset): array
+    {
+        $select = $this->pdo->prepare('
+            SELECT t.*, u.* FROM travel_categories ct
+            JOIN travels t ON ct.travel_id = t.id
+            JOIN categories c ON ct.category_id = c.id
+            JOIN users u ON u.id = t.author_id
+            WHERE c.name = :name AND is_published
+            LIMIT :limit OFFSET :offset
+        ');
+        $select->execute([
+            'name'    => $name,
+            ':limit'  => $limit,
+            ':offset' => $offset,
+        ]);
+        return $this->buildAll($select);
+    }
+
+    /**
+     * Update title and description in DB
+     *
+     * @param Travel $travel
+     */
+    public function update(Travel $travel)
+    {
+        $update = $this->pdo->prepare('
+            UPDATE travels SET
+            title = :title,
+            description = :description,
+            content = :content::JSON,
+            is_published = :published,
+            image = :image,
+            author_id = :author_id
+            WHERE id = :id
+        ');
+
+        $this->bindCommonValues($update, $travel);
+        $update->bindValue('id', $travel->getId(), PDO::PARAM_INT);
+        $update->execute();
+    }
+
+    /**
+     * @param array $row
+     * @return Travel
+     */
+    protected function create(array $row)
+    {
+        $travel = new Travel();
+        return $travel
+            ->setId($row['id'])
+            ->setDescription($row['description'])
+            ->setTitle($row['title'])
+            ->setContent(json_decode($row['content']))
+            ->setPublished($row['is_published'])
+            ->setImage($row['image'])
+            ->setCreated(new DateTime($row['created']))
+            ->setUpdated(new DateTime($row['updated']));
+    }
+
+    /**
+     * @param PDOStatement $statement
+     * @param Travel        $travel
+     */
+    private function bindCommonValues(PDOStatement $statement, Travel $travel)
+    {
+        $statement->bindValue('title', $travel->getTitle(), PDO::PARAM_STR);
+        $statement->bindValue('description', $travel->getDescription(), PDO::PARAM_STR);
+        $statement->bindValue('content', json_encode($travel->getContent()), PDO::PARAM_STR);
+        $statement->bindValue('published', $travel->isPublished(), PDO::PARAM_BOOL);
+        $statement->bindValue('image', $travel->getImage(), PDO::PARAM_STR);
+        $statement->bindValue('author_id', $travel->getAuthorId(), PDO::PARAM_INT);
+    }
+
+    /**
+     * @param array $row
+     * @return Travel
+     */
+    protected function build(array $row): Travel
+    {
+        list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
+        $travel->setAuthor($author);
+        return $travel;
     }
 }
