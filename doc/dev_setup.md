@@ -1,7 +1,7 @@
 # Development environment setup
 The project can be run on any Unix-like system. If you feel confident enough just 
 * clone the repo
-* install the packages mentioned in [provision/setup.sh](../provision/setup.sh)
+* install the packages and configs mentioned in [provision/setup.sh](../provision/setup.sh)
 * and run ``` cd public && APP_ENV=dev php -S localhost:8000 app.php```
 
 Otherwise use Vagrant.
