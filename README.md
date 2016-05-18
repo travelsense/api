@@ -10,3 +10,4 @@
  * [Composer](https://getcomposer.org/)
  * [PHP The Right Way](http://www.phptherightway.com/)
 * [PostgreSQL](http://www.postgresql.org/) 
+* [Vagrant](https://www.vagrantup.com/)
