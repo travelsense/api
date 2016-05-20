@@ -183,13 +183,11 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
      */
     private function assertSameTravels(Travel $a, Travel $b)
     {
-        $this->assertTrue(
-            $a->getId() === $b->getId()
-            && $a->getAuthorId() === $b->getAuthorId()
-            && $a->getContent() === $b->getContent()
-            && $a->getDescription() === $b->getDescription()
-            && $a->getTitle() === $b->getTitle()
-        );
+        $this->assertEquals($a->getId(), $b->getId());
+        $this->assertEquals($a->getAuthorId(), $b->getAuthorId());
+        $this->assertEquals($a->getContent(), $b->getContent());
+        $this->assertEquals($a->getTitle(), $b->getTitle());
+        $this->assertEquals($a->getCategoryId(), $b->getCategoryId());
     }
 
     /**

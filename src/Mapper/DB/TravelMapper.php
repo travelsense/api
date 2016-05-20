@@ -241,7 +241,7 @@ class TravelMapper extends AbstractPDOMapper
             ->setUpdated(new DateTime($row['updated']));
         $categories = $this->categoryMapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
-            $travel->setCategoryId($categories[0]);
+            $travel->setCategoryId($categories[0]->getId());
         }
         return $travel;
     }
