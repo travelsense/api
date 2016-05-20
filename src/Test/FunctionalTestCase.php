@@ -12,7 +12,17 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
      * @var ApiClient
      */
     protected $apiClient;
+    
+    public static function setUpBeforeClass()
+    {
+        self::startServer('/tmp/php-server.log');
+    }
 
+    public static function tearDownAfterClass()
+    {
+        self::stopServer();
+    }
+    
     public function setUp()
     {
         $app = Application::createByEnvironment();
@@ -21,13 +31,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped("Functional tests are disabled on this environment: $env");
         }
         $this->resetDatabase($app);
-        $this->startServer('/tmp/php-server.log');
-        $this->apiClient = new ApiClient("$this->host:$this->port");
-    }
-
-    public function tearDown()
-    {
-        $this->stopServer();
+        $this->apiClient = new ApiClient(sprintf('%s:%s', self::$host, self::$port));
     }
 
     /**
