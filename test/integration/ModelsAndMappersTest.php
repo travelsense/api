@@ -147,8 +147,12 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $travelList = $this->travelMapper->fetchByCategory($catA->getName(), 1, 0);
         $this->assertSameTravels($travelA, $travelList[0]);
 
-
-
+        $this->assertEquals(
+            $catA->getId(),
+            $this->travelMapper
+                ->fetchById($travelA->getId())
+                ->getCategoryId()
+        );
     }
 
 
