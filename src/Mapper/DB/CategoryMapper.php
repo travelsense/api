@@ -4,6 +4,7 @@ namespace Api\Mapper\DB;
 use Api\AbstractPDOMapper;
 use Api\Model\Travel\Category;
 use PDO;
+use PDOException;
 
 class CategoryMapper extends AbstractPDOMapper
 {
@@ -65,20 +66,24 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function addTravelToCategory(int $travelId, int $categoryId)
     {
-        $this->pdo->prepare('
-            DELETE FROM travel_categories
-            WHERE travel_id=:travel_id
-        ')->execute([
-            ':travel_id' => $travelId,
-        ]);
+        try {
+            $this->pdo->beginTransaction();
+            $this->pdo
+                ->prepare('DELETE FROM travel_categories WHERE travel_id=:travel_id')
+                ->execute([
+                    ':travel_id' => $travelId,
+                ]);
 
-        $this->pdo->prepare('
-            INSERT INTO travel_categories (travel_id, category_id)
-            VALUES (:travel_id, :category_id)
-        ')->execute([
-            ':travel_id'   => $travelId,
-            ':category_id' => $categoryId,
-        ]);
+            $this->pdo
+                ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)')
+                ->execute([
+                    ':travel_id'   => $travelId,
+                    ':category_id' => $categoryId,
+                ]);
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+        }
     }
 
     /**

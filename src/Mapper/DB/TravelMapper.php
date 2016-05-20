@@ -94,7 +94,7 @@ class TravelMapper extends AbstractPDOMapper
         $travel->setId($insert->fetchColumn());
         
         if ($travel->getCategoryId()) {
-            $this->
+            $this->categoryMapper->addTravelToCategory($travel->getId(), $travel->getCategoryId());
         }
     }
 
@@ -230,7 +230,7 @@ class TravelMapper extends AbstractPDOMapper
     protected function create(array $row)
     {
         $travel = new Travel();
-        return $travel
+        $travel
             ->setId($row['id'])
             ->setDescription($row['description'])
             ->setTitle($row['title'])
@@ -239,6 +239,11 @@ class TravelMapper extends AbstractPDOMapper
             ->setImage($row['image'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
+        $categories = $this->categoryMapper->fetchByTravelId($travel->getId());
+        if (count($categories)) {
+            $travel->setCategoryId($categories[0]);
+        }
+        return $travel;
     }
 
     /**

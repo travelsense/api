@@ -82,7 +82,7 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * CategoryMapper
      */
     public function testCategoryMapper()
     {
@@ -94,7 +94,7 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * TravelMapper
      */
     public function testTravelMapperFavorites()
     {
@@ -130,6 +130,9 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $catA = $this->createCategory('a');
         $this->categoryMapper->insert($catA);
 
+        $catB = $this->createCategory('b');
+        $this->categoryMapper->insert($catB);
+
         $travelA = $this->createTravel($userA, 'a');
         $travelA->setCategoryId($catA->getId());
         $this->travelMapper->insert($travelA);
@@ -140,8 +143,12 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $catList = $this->categoryMapper->fetchByTravelId($travelA->getId());
         $this->assertSameCategories($catA, $catList[0]);
 
+        $this->assertEquals([], $this->travelMapper->fetchByCategory($catB->getName(), 1, 0));
         $travelList = $this->travelMapper->fetchByCategory($catA->getName(), 1, 0);
         $this->assertSameTravels($travelA, $travelList[0]);
+
+
+
     }
 
 
