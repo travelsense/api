@@ -4,9 +4,22 @@ namespace Api\Mapper\DB;
 use Api\AbstractPDOMapper;
 use Api\Model\Travel\Category;
 use PDO;
+use PDOException;
 
 class CategoryMapper extends AbstractPDOMapper
 {
+    /**
+     * @param Category $category
+     */
+    public function insert(Category $category)
+    {
+        $insert = $this->pdo->prepare('INSERT INTO categories (name) VALUES (:name) RETURNING id');
+        $insert->execute([
+            ':name' => $category->getName(),
+        ]);
+        $category->setId($insert->fetchColumn());
+    }
+    
     /**
      * @return Category[]
      */
@@ -18,20 +31,7 @@ class CategoryMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param array $row
-     * @return Category
-     */
-    protected function create(array $row): Category
-    {
-        $category = new Category();
-        return $category
-            ->setId($row['id'])
-            ->setTitle($row['name']);
-    }
-
-
-    /**
-     * @param int|string $travelId
+     * @param int $travelId
      * @return Category[]
      */
     public function fetchByTravelId(int $travelId): array
@@ -42,6 +42,23 @@ class CategoryMapper extends AbstractPDOMapper
         ]);
         return $this->createAll($select);
     }
+    
+    /**
+     * @param int $id
+     * @return Category
+     */
+    public function fetchBylId(int $id): Category
+    {
+        $select = $this->pdo->prepare('SELECT * FROM categories WHERE id = :id');
+        $select->execute([
+            'id' => $id,
+        ]);
+        $row = $select->fetch(PDO::FETCH_ASSOC);
+        if (empty($row)) {
+            return null;
+        }
+        return $this->create($row);
+    }
 
     /**
      * @param int $travelId
@@ -49,20 +66,35 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function addTravelToCategory(int $travelId, int $categoryId)
     {
-        $this->pdo->prepare('
-            DELETE FROM travel_categories
-            WHERE travel_id=:travel_id
-        ')->execute([
-            ':travel_id' => $travelId,
-        ]);
+        try {
+            $this->pdo->beginTransaction();
+            $this->pdo
+                ->prepare('DELETE FROM travel_categories WHERE travel_id=:travel_id')
+                ->execute([
+                    ':travel_id' => $travelId,
+                ]);
 
-        $this->pdo->prepare('
-            INSERT INTO travel_categories (travel_id, category_id)
-            VALUES (:travel_id, :category_id)
-        ')->execute([
-            ':travel_id'   => $travelId,
-            ':category_id' => $categoryId,
-        ]);
+            $this->pdo
+                ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)')
+                ->execute([
+                    ':travel_id'   => $travelId,
+                    ':category_id' => $categoryId,
+                ]);
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+        }
     }
 
+    /**
+     * @param array $row
+     * @return Category
+     */
+    protected function create(array $row): Category
+    {
+        $category = new Category();
+        return $category
+            ->setId($row['id'])
+            ->setName($row['name']);
+    }
 }

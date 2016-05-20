@@ -7,8 +7,10 @@
 
 namespace Api;
 
+use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\UserMapper;
+use Api\Model\Travel\Category;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
 use Api\Test\DatabaseTrait;
@@ -27,6 +29,11 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
      */
     private $travelMapper;
 
+    /**
+     * @var CategoryMapper
+     */
+    private $categoryMapper;
+
     public function setUp()
     {
         $app = Application::createByEnvironment('test');
@@ -34,6 +41,7 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
 
         $this->userMapper = $app['mapper.db.user'];
         $this->travelMapper = $app['mapper.db.travel'];
+        $this->categoryMapper = $app['mapper.db.category'];
     }
 
     /**
@@ -43,6 +51,7 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     {
         $mapper = $this->userMapper;
         $user = $this->createUser('a');
+        $this->assertNull($user->getId());
 
         // Test on empty db
         $this->assertFalse($mapper->emailExists($user->getEmail()));
@@ -72,6 +81,21 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameUsers($user, $mapper->fetchByEmail($user->getEmail()));
     }
 
+    /**
+     * CategoryMapper
+     */
+    public function testCategoryMapper()
+    {
+        $category = $this->createCategory('a');
+        $this->assertNull($category->getId());
+        $this->categoryMapper->insert($category);
+        $this->assertTrue(is_int($category->getId()));
+        $this->assertSameCategories($category, $this->categoryMapper->fetchBylId($category->getId()));
+    }
+
+    /**
+     * TravelMapper
+     */
     public function testTravelMapperFavorites()
     {
         $userA = $this->createUser('a');
@@ -95,6 +119,63 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameTravels($travelA, $favorites[0]);
     }
 
+    /**
+     *
+     */
+    public function testTravelCategories()
+    {
+        $userA = $this->createUser('a');
+        $this->userMapper->insert($userA);
+
+        $catA = $this->createCategory('a');
+        $this->categoryMapper->insert($catA);
+
+        $catB = $this->createCategory('b');
+        $this->categoryMapper->insert($catB);
+
+        $travelA = $this->createTravel($userA, 'a');
+        $travelA->setCategoryId($catA->getId());
+        $this->travelMapper->insert($travelA);
+
+        $travelB = $this->createTravel($userA, 'b');
+        $this->travelMapper->insert($travelB);
+
+        $catList = $this->categoryMapper->fetchByTravelId($travelA->getId());
+        $this->assertSameCategories($catA, $catList[0]);
+
+        $this->assertEquals([], $this->travelMapper->fetchByCategory($catB->getName(), 1, 0));
+        $travelList = $this->travelMapper->fetchByCategory($catA->getName(), 1, 0);
+        $this->assertSameTravels($travelA, $travelList[0]);
+
+        $this->assertEquals(
+            $catA->getId(),
+            $this->travelMapper
+                ->fetchById($travelA->getId())
+                ->getCategoryId()
+        );
+    }
+
+
+    private function assertSameCategories(Category $a, Category $b)
+    {
+        $this->assertTrue(
+            $a->getId() === $b->getId()
+            && $a->getName() === $b->getName()
+        );
+    }
+
+    /**
+     * @param string $token
+     * @return Category
+     */
+    private function createCategory(string $token): Category
+    {
+        $category = new Category();
+        $category
+            ->setName($token)
+        ;
+        return $category;
+    }
 
     /**
      * @param Travel $a
@@ -102,21 +183,19 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
      */
     private function assertSameTravels(Travel $a, Travel $b)
     {
-        $this->assertTrue(
-            $a->getId() === $b->getId()
-            && $a->getAuthorId() === $b->getAuthorId()
-            && $a->getContent() === $b->getContent()
-            && $a->getDescription() === $b->getDescription()
-            && $a->getTitle() === $b->getTitle()
-        );
+        $this->assertEquals($a->getId(), $b->getId());
+        $this->assertEquals($a->getAuthorId(), $b->getAuthorId());
+        $this->assertEquals($a->getContent(), $b->getContent());
+        $this->assertEquals($a->getTitle(), $b->getTitle());
+        $this->assertEquals($a->getCategoryId(), $b->getCategoryId());
     }
 
     /**
      * @param User $author
-     * @param $token
+     * @param string $token
      * @return Travel
      */
-    private function createTravel(User $author, $token): Travel
+    private function createTravel(User $author, string $token): Travel
     {
         $travel = new Travel();
         $travel
