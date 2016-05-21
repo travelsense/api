@@ -86,4 +86,9 @@ The following logs can be used to debug:
 * `/var/log/nginx/error.log` - error log, contains fatal php errors
 * `/tmp/api_dev.log` - application log
 
+## Testing
 
+* Unit tests:`vendor/bin/phpunit --testsuite unit`
+* Integration tests:`vendor/bin/phpunit --testsuite integration` (require VM or DB)
+* Functional tests:`vendor/bin/phpunit --testsuite functional` (require VM or DB)
+* All tests:`vendor/bin/phpunit` (require VM or DB)

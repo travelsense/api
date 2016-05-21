@@ -11,9 +11,18 @@
         verbose="true"
         syntaxCheck="true">
 
+    <php>
+        <env name="APP_ENV" value="test"/>
+    </php>
     <testsuites>
         <testsuite name="unit">
             <directory>test/unit/</directory>
+        </testsuite>
+        <testsuite name="integration">
+            <directory>test/integration/</directory>
+        </testsuite>
+        <testsuite name="functional">
+            <directory>test/functional/</directory>
         </testsuite>
     </testsuites>
     <filter>
