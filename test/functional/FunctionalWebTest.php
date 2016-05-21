@@ -10,16 +10,12 @@ class FunctionalWebTest extends FunctionalTestCase
     {
         $this->createAndLoginUser();
         $user = $this->apiClient->getCurrentUser();
-        $this->assertEquals(
-            (object)[
-                'id'        => 1,
-                'firstName' => 'Alexander',
-                'lastName'  => 'Pushkin',
-                'email'     => 'sasha@pushkin.ru',
-                'picture'   => 'http://pushkin.ru/sasha.jpg',
-            ],
-            $user
-        );
+
+        $this->assertEquals(1, $user->id);
+        $this->assertEquals('Alexander', $user->firstName);
+        $this->assertEquals('Pushkin', $user->lastName);
+        $this->assertEquals('sasha@pushkin.ru', $user->email);
+        $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
 
         $this->apiClient->updateUser([
             'id'        => 1,
@@ -29,16 +25,11 @@ class FunctionalWebTest extends FunctionalTestCase
             'email'     => 'sasha@pushkin.ru',
         ]);
         $user = $this->apiClient->getCurrentUser();
-        $this->assertEquals(
-            (object)[
-                'id'        => 1,
-                'firstName' => 'Natalia',
-                'lastName'  => 'Pushkina',
-                'email'     => 'sasha@pushkin.ru',
-                'picture'   => 'http://pushkin.ru/sasha.jpg',
-            ],
-            $user
-        );
+
+        $this->assertEquals('Natalia', $user->firstName);
+        $this->assertEquals('Pushkina', $user->lastName);
+        $this->assertEquals('sasha@pushkin.ru', $user->email);
+        $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
     }
     
     public function testTravelCreationAndRetrieval()
@@ -110,9 +101,8 @@ class FunctionalWebTest extends FunctionalTestCase
             $this->apiClient->getTravel($id);
             $this->fail("travel record still exists after deleteTravel()");
         } catch (ApiClientException $e) {
-            if ($e->getCode() !== 404) {
-                $this->fail("Wrong error code for getting deleted travel: " . $e->getMessage());
-            }
+            $this->assertEquals(4000, $e->getCode());
+            $this->assertEquals('Travel not found', $e->getMessage());
         }
     }
 

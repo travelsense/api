@@ -55,7 +55,7 @@ INSERT INTO users
   ("email", "password", "first_name", "last_name", "picture")
 VALUES
   (:email, :password, :first_name, :last_name, :picture)
-RETURNING id
+RETURNING id, created
 SQL;
         $insert = $this->pdo->prepare($sql);
         $insert->execute(
@@ -67,8 +67,9 @@ SQL;
                 ':picture'    => $user->getPicture(),
             ]
         );
-        $id = $insert->fetchColumn();
-        $user->setId($id);
+        $row = $insert->fetch(PDO::FETCH_ASSOC);
+        $user->setId($row['id']);
+        $user->setCreated(new DateTime($row['created']));
     }
 
     /**
