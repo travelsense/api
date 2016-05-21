@@ -4,6 +4,7 @@ namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
 use Api\Model\User;
+use DateTime;
 use PDO;
 
 class UserMapper extends AbstractPDOMapper
@@ -170,6 +171,7 @@ SQL;
             ->setFirstName($row['first_name'])
             ->setLastName($row['last_name'])
             ->setPicture($row['picture'])
+            ->setCreated(new DateTime($row['created']))
             ->setEmailConfirmed($row['email_confirmed']);
     }
 

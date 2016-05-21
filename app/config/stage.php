@@ -3,7 +3,7 @@ return array_replace_recursive(
     require __DIR__ . '/prod.php',
     [
         'log' => [
-            'main' => '/var/log/vaca_dev.log',
+            'main' => '/var/log/api_stage.log',
         ],
     ]
 );

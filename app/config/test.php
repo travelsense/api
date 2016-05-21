@@ -7,13 +7,13 @@ return array_replace_recursive(
             'email' => __DIR__ . '/service/email.mock.php',
         ],
         'log' => [
-            'main' => '/tmp/vaca_test.log',
+            'main' => '/tmp/api_test.log',
         ],
         'db' => [
             'main' => [
-                'user'     => 'vaca_test',
-                'database' => 'vaca_test',
-                'password' => 'vaca_test',
+                'user'     => 'api_test',
+                'database' => 'api_test',
+                'password' => 'api_test',
             ],
         ],
     ]
