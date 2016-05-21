@@ -1,6 +1,6 @@
 ALTER ROLE postgres PASSWORD 'postgres';
 
-CREATE ROLE vaca_dev LOGIN PASSWORD 'vaca_dev';
-CREATE ROLE vaca_test LOGIN CREATEDB SUPERUSER PASSWORD 'vaca_test';
+CREATE ROLE api_dev LOGIN PASSWORD 'api_dev';
+CREATE ROLE api_test LOGIN CREATEDB SUPERUSER PASSWORD 'api_test';
 
-CREATE DATABASE vaca_dev OWNER=vaca_dev;
+CREATE DATABASE api_dev OWNER = api_dev;

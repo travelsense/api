@@ -1,26 +1,18 @@
 # API host
 server {
     listen 80;
-    server_name api.vacarious-dev.com vacarious-dev.com 172.16.0.101;
+    server_name 172.16.0.101;
 
     root /vagrant/public;
-    index index.html;
 
     # Important for VirtualBox
     sendfile off;
 
-    location /static/ {
-        # server as is
-    }
-
     location / {
         include fastcgi_params;
-
         fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
-
         fastcgi_param APP_ENV dev;
         fastcgi_param SCRIPT_FILENAME $document_root/app.php;
         fastcgi_cache off;
-        fastcgi_index index.php;
     }
 }

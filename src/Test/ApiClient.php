@@ -16,6 +16,9 @@ class ApiClient
      */
     private $host;
 
+    /**
+     * @var HttpClient
+     */
     private $http;
 
     /**
@@ -24,7 +27,7 @@ class ApiClient
      * @param string     $host
      * @param HttpClient $http
      */
-    public function __construct($host, HttpClient $http = null)
+    public function __construct(string $host, HttpClient $http = null)
     {
         $this->http = $http ?: new HttpClient();
         $this->host = $host;
@@ -33,7 +36,7 @@ class ApiClient
     /**
      * @param string $authToken
      */
-    public function setAuthToken($authToken)
+    public function setAuthToken(string $authToken)
     {
         $this->authToken = $authToken;
     }
@@ -61,7 +64,7 @@ class ApiClient
      * @param string $password
      * @return string Auth token
      */
-    public function getTokenByEmail($email, $password)
+    public function getTokenByEmail(string $email, string $password)
     {
         return $this->post('/token', ['email' => $email, 'password' => $password])
             ->token;
@@ -71,23 +74,23 @@ class ApiClient
      * @param string $fbToken
      * @return string Auth token
      */
-    public function getTokenByFacebook($fbToken)
+    public function getTokenByFacebook(string $fbToken)
     {
         return $this->post('/token', ['fbToken' => $fbToken])
             ->token;
     }
 
-    public function confirmEmail($email)
+    public function confirmEmail(string $email)
     {
         return $this->post('/email/confirm/' . urlencode($email));
     }
 
-    public function requestPasswordReset($email)
+    public function requestPasswordReset(string $email)
     {
         return $this->post('/password/link/' . urlencode($email));
     }
 
-    public function updatePassword($token, $password)
+    public function updatePassword(string $token, string $password)
     {
         return $this->post('/password/reset/' . urlencode($token), ['password' => $password]);
     }
@@ -113,7 +116,7 @@ class ApiClient
         return $this->put('/user', $request);
     }
 
-    public function getCabEstimates($lat1, $lon1, $lat2, $lon2)
+    public function getCabEstimates(float $lat1, float $lon1, float $lat2, float $lon2)
     {
         return $this->get("/cab/$lat1/$lon1/$lat2/$lon2");
     }
@@ -127,7 +130,7 @@ class ApiClient
      * @param  int    $rooms
      * @return int wego search id
      */
-    public function startHotelSearch($location, $in, $out, $rooms)
+    public function startHotelSearch(int $location, string $in, string $out, int $rooms)
     {
         return $this->post("/hotel/search/$location/$in/$out/$rooms");
     }
@@ -139,7 +142,7 @@ class ApiClient
      * @param  int $page page number
      * @return array
      */
-    public function getHotelSearchResults($id, $page = 1)
+    public function getHotelSearchResults(int $id, int $page = 1)
     {
         return $this->get("/hotel/search-results/$id/$page");
     }
@@ -161,7 +164,7 @@ class ApiClient
      * @param string $text
      * @return int
      */
-    public function addTravelComment($id, $text)
+    public function addTravelComment(int $id, string $text)
     {
         return $this->post(sprintf('/travel/%s/comment', urlencode($id)), [
             'text' => $text,
@@ -174,7 +177,7 @@ class ApiClient
      * @param int $id
      * @return mixed
      */
-    public function deleteTravelComment($id)
+    public function deleteTravelComment(int $id)
     {
         return $this->delete(sprintf('/travel/comment/%s', urlencode($id)));
     }
@@ -194,7 +197,7 @@ class ApiClient
      * @param $id
      * @return mixed
      */
-    public function getTravel($id)
+    public function getTravel(int $id)
     {
         return $this->get('/travel/' . urlencode($id));
     }
@@ -203,7 +206,7 @@ class ApiClient
      * @param string $name
      * @return mixed
      */
-    public function getTravelsByCategory($name)
+    public function getTravelsByCategory(string $name)
     {
         return $this->get('/travel/by-category/' . urlencode($name));
     }
@@ -217,19 +220,19 @@ class ApiClient
     }
 
     /**
-     * @param       $id
+     * @param int $id
      * @param array $travel
      */
-    public function updateTravel($id, array $travel)
+    public function updateTravel(int $id, array $travel)
     {
         $this->put('/travel/' . urlencode($id), $travel);
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return void
      */
-    public function deleteTravel($id)
+    public function deleteTravel(int $id)
     {
         $this->delete('/travel/' . urlencode($id));
     }
@@ -238,7 +241,7 @@ class ApiClient
      * @param int $id
      * @return object
      */
-    public function addTravelToFavorites($id)
+    public function addTravelToFavorites(int $id)
     {
         return $this->post('/travel/favorite/' . urlencode($id));
     }
@@ -247,7 +250,7 @@ class ApiClient
      * @param int $id
      * @return object
      */
-    public function removeTravelFromFavorites($id)
+    public function removeTravelFromFavorites(int $id)
     {
         return $this->delete('/travel/favorite/' . urlencode($id));
     }
@@ -272,13 +275,17 @@ class ApiClient
      */
     private function parse(HttpResponse $response)
     {
-        if ($response->getCode() !== 200) {
-            $message = "HTTP ERROR {$response->getCode()}\n"
-                . implode("\n", $response->getHeaders())
-                . "\n\n" . $response->getBody();
-            throw new ApiClientException($message, $response->getCode());
+        if ($response->getCode() === 200) {
+            return json_decode($response->getBody());
         }
-        return json_decode($response->getBody());
+        $error = @json_decode($response->getBody());
+        if (!empty($error)) {
+            throw new ApiClientException($error->error, $error->code);
+        }
+        $message = "HTTP ERROR {$response->getCode()}\n"
+            . implode("\n", $response->getHeaders())
+            . "\n\n" . $response->getBody();
+        throw new \RuntimeException($message, $response->getCode());
     }
 
     private function get($url, array $headers = [])

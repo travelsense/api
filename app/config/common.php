@@ -61,9 +61,9 @@ return [
         'main' => [
             'driver' => 'pgsql',
             'host' => 'localhost',
-            'user' => 'vaca',
-            'database' => 'vaca',
-            'password' => 'vaca',
+            'user' => 'xxx',
+            'database' => 'xxx',
+            'password' => 'xxx',
             'options' => [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ],

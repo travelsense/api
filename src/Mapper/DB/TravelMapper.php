@@ -87,12 +87,14 @@ class TravelMapper extends AbstractPDOMapper
     {
         $insert = $this->pdo->prepare('
             INSERT INTO travels (title, description, content, is_published, image, author_id)
-            VALUES (:title, :description, :content::JSON, :published, :image, :author_id) RETURNING id
+            VALUES (:title, :description, :content::JSON, :published, :image, :author_id) RETURNING id, created
         ');
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
-        $travel->setId($insert->fetchColumn());
-        
+        $row = $insert->fetch(PDO::FETCH_ASSOC);
+        $travel->setId($row['id']);
+        $travel->setCreated(new DateTime($row['created']));
+
         if ($travel->getCategoryId()) {
             $this->categoryMapper->addTravelToCategory($travel->getId(), $travel->getCategoryId());
         }
