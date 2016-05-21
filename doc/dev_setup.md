@@ -63,7 +63,7 @@ Run it using console:
 ```
 $ php example.php 
 Auth token: a8ffb63291f06796f0098e6b5903e950c2bdc42611
-/home/f3ath/p/api/example.php:26:
+
 class stdClass#5 (6) {
   public $id =>
   int(2)
