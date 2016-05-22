@@ -35,7 +35,7 @@ To manage the DB, use `bin/db.php`:
 ## Mappers and Models
 * [Mappers](../src/Mapper)
 * [Model](../src/Model)
-* 
+
 Mappers is the layer responsible for CRUD operations on models. The storage-speific logic (e.g. SQL statments) must reside in mappers. The database mappers is a thin layer on top of PDO. The existing mappers can be fund in [src/Mapper](../src/Mapper). Mapers may operate entire model object as well as their ids. To keep it simple, there can be mappers without models and models without corresponding mappers.
 
 ## Controllers and routing
