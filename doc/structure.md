@@ -1,6 +1,6 @@
 # Project structire
 ## Front controller
-This front controller is [public/app.php](../public/app.php). All requests are served by this file. It creates an instance of [Api\Application](../src/Applcation.php) and calls `run()`. 
+This front controller is [public/app.php](../public/app.php). All HTTP requests are served by this file. It creates an instance of [Api\Application](../src/Applcation.php) and calls `run()`. 
 
 ## Application and configuration
 [Api\Application](../src/Application.php), the main project application, is basically a [Silex](http://silex.sensiolabs.org/) app. It is configured by one of environment-specific [configs](../app/config).
@@ -32,6 +32,10 @@ To manage the DB, use `bin/db.php`:
 * ` APP_ENV=dev bin/db.php st main` - show status of db `main` in `dev` env
 * ` APP_ENV=stage bin/db.php up main 123` - update db `main` to version 123 in `stage` env
 
-## Database access layer (mappers)
-## Model
-## Controllers
+## Mappers and Models
+* [Mappers](../src/Mapper)
+* [Model](../src/Model)
+* 
+Mappers is the layer responsible for CRUD operations on models. The storage-speific logic (e.g. SQL statments) must reside in mappers. The database mappers is a thin layer on top of PDO. The existing mappers can be fund in [src/Mapper](../src/Mapper). Mapers may operate entire model object as well as their ids. To keep it simple, there can be mappers without models and models without corresponding mappers.
+
+## Controllers and routing
