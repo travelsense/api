@@ -1,4 +1,7 @@
 # Project structire
+## Front controller
+[public/app.php](../public/app.php) is the front controller. All requests are served by this file. It creates an instance of Api\Application and calls 
+
 ## Application and configuration
 The main application class extends Silex\Application. All the project configuration is in [app/config](../app/config).
 ### Dependency Injection
@@ -13,7 +16,6 @@ DI configuration is in [app/config/service](../app/config/service).
 
 ### Environments
 
-## Front controller
 ## Database schema and migrations
 ## Database access layer (mappers)
 ## Model
