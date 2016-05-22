@@ -1,6 +1,7 @@
 #API
 ## Project docs
 * [Dev environment set up](doc/dev_setup.md)
+* [Project structure](doc/structure.md)
 * [Style guide](doc/style.md)
 * [Production deployment](doc/deploy.md)
 
