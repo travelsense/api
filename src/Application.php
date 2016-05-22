@@ -37,7 +37,7 @@ class Application extends \Silex\Application
      */
     public static function createByEnvironment(string $env = null): self
     {
-        if ($env === null) {
+        if (empty($env)) {
             $env = getenv('APP_ENV') ?: 'prod';
         }
         $app = new self(include sprintf(__DIR__ . '/../app/config/%s.php', $env));
