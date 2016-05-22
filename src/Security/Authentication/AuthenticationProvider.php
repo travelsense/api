@@ -1,7 +1,6 @@
 <?php
 namespace Api\Security\Authentication;
 
-use Security\SessionManager;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 

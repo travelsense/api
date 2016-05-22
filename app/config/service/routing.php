@@ -4,9 +4,13 @@
  * @var $app Api\Application
  */
 
-use Silex\Provider\UrlGeneratorServiceProvider;
+use Api\ControllerResolver;
 
-$app->register(new UrlGeneratorServiceProvider());
+$app['resolver'] = function () use ($app) {
+    // Use the project specific ControllerResolver
+    return new ControllerResolver($app, $app['logger']);
+};
+
 
 // Parameter converters
 

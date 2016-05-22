@@ -7,6 +7,6 @@ require __DIR__ . '/email.php';
 
 use Api\Test\Mailer;
 
-$app['mailer'] = $app->share(function($app) {
+$app['mailer'] = function($app) {
     return new Mailer($app['config']['email']['message_log']);
-});
+};

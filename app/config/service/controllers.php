@@ -19,7 +19,7 @@ $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
 // API
 
-$app['controller.user'] = $app->share(function($app) {
+$app['controller.user'] = function($app) {
     $controller = new UserController(
         $app['mapper.db.user'],
         $app['email.service'],
@@ -28,9 +28,9 @@ $app['controller.user'] = $app->share(function($app) {
     );
     $controller->setLogger($app['monolog']);
     return $controller;
-});
+};
 
-$app['controller.auth'] = $app->share(function($app) {
+$app['controller.auth'] = function($app) {
     $controller = new AuthController(
         $app['mapper.db.user'],
         $app['security.session_manager'],
@@ -39,49 +39,49 @@ $app['controller.auth'] = $app->share(function($app) {
     );
     $controller->setLogger($app['monolog']);
     return $controller;
-});
+};
 
-$app['controller.travel'] = $app->share(function($app) {
+$app['controller.travel'] = function($app) {
     $controller = new TravelController(
         $app['mapper.db.travel'],
         $app['mapper.db.category']
     );
     $controller->setLogger($app['monolog']);
     return $controller;
-});
+};
 
-$app['controller.categories'] = $app->share(function($app) {
+$app['controller.categories'] = function($app) {
     $controller = new CategoriesController(
         $app['mapper.db.category']
     );
     $controller->setLogger($app['monolog']);
     return $controller;
-});
+};
 
-$app['controller.comment'] = $app->share(function($app) {
+$app['controller.comment'] = function($app) {
     $controller = new CommentController(
         $app['mapper.db.comment']
     );
     $controller->setLogger($app['monolog']);
     return $controller;
-});
+};
 
-$app['controller.uber'] = $app->share(function($app) {
+$app['controller.uber'] = function($app) {
     return new UberController($app['uber']);
-});
+};
 
-$app['controller.wego'] = $app->share(function($app) {
+$app['controller.wego'] = function($app) {
     return new WegoHotelController($app['wego.hotels'], $app['db.main.pdo']);
-});
+};
 
-$app['controller.health'] = $app->share(function($app) {
+$app['controller.health'] = function($app) {
     return new HealthCheckController();
-});
+};
 
-$app['controller.iata'] = $app->share(function($app) {
+$app['controller.iata'] = function($app) {
     return new IataController($app['mapper.db.iata']);
 });
 
-$app['controller.client'] = $app->share(function($app) {
+$app['controller.client'] = function($app) {
     return new ClientController();
-});
+};

@@ -1,20 +1,20 @@
 <?php
 /**
- * @var $app Application
+ * @var $app Api\Application
  */
 
 use Api\Security\Authentication\AuthenticationProvider;
 use Api\Security\SessionManager;
 
-$app['security.session_manager'] = $app->share(function($app) {
+$app['security.session_manager'] = function($app) {
     return new SessionManager($app['mapper.db.sessions']);
-});
+};
 
 // Authentication
 
 $app['auth.enabled'] = $app['config']['security']['enabled'];
 $app['auth.unsecured_routes'] = $app['config']['security']['unsecured_routes'];
-$app->register(new AuthenticationProvider());
+//$app->register(new AuthenticationProvider());
 
 // User object
 
