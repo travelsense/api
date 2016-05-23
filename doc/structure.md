@@ -1,6 +1,6 @@
 # Project structire
 ## Front controller
-This front controller is [public/app.php](../public/app.php). All HTTP requests are served by this file. It creates an instance of [Api\Application](../src/Applcation.php) and calls `run()`. 
+This front controller is [public/app.php](../public/app.php). All HTTP requests are served by this file. It creates an instance of [Api\Application](../src/Application.php) and calls `run()`. 
 
 ## Application and configuration
 [Api\Application](../src/Application.php), the main project application, is basically a [Silex](http://silex.sensiolabs.org/) app. It is configured by one of environment-specific [configs](../app/config).
