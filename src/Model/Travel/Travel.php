@@ -104,10 +104,10 @@ class Travel
     }
 
     /**
-     * @param $categoryId
+     * @param int $categoryId
      * @return Travel
      */
-    public function setCategoryId($categoryId)
+    public function setCategoryId(int $categoryId)
     {
         $this->categoryId = $categoryId;
         return $this;

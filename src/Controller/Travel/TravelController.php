@@ -74,11 +74,6 @@ class TravelController extends ApiController
     public function getTravel(int $id): array
     {
         $travel = $this->travelMapper->fetchById($id);
-        $categories = $this->categoryMapper->fetchByTravelId($id);
-        if (count($categories)) { // TODO move this logic to TravelMapper
-            $category = $categories[0];
-            $travel->setCategoryId($category->getId());
-        }
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
@@ -182,7 +177,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param         $id
+     * @param int     $id
      * @param Request $request
      * @param User    $user
      * @return array

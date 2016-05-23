@@ -6,73 +6,27 @@ use Api\Model\IdTrait;
 class Category
 {
     use IdTrait;
-    
-    /**
-     * @var string
-     */
-    private $title;
 
     /**
      * @var string
      */
-    private $subtitle;
-
-    /**
-     * @var string
-     */
-    private $image;
+    private $name;
 
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getName()
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
-     * @param string $title
+     * @param string $name
      * @return Category
      */
-    public function setTitle(string $title)
+    public function setName($name)
     {
-        $this->title = $title;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubtitle(): string
-    {
-        return $this->subtitle;
-    }
-
-    /**
-     * @param string $subtitle
-     * @return Category
-     */
-    public function setSubtitle(string $subtitle): self
-    {
-        $this->subtitle = $subtitle;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getImage(): string
-    {
-        return $this->image;
-    }
-
-    /**
-     * @param string $image
-     * @return Category
-     */
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
+        $this->name = $name;
         return $this;
     }
 }

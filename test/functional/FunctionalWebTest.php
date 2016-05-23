@@ -4,8 +4,34 @@ namespace Test;
 use Api\Test\ApiClientException;
 use Api\Test\FunctionalTestCase;
 
-class TravelWorkflowTest extends FunctionalTestCase
+class FunctionalWebTest extends FunctionalTestCase
 {
+    public function testUpdateUserDetails()
+    {
+        $this->createAndLoginUser();
+        $user = $this->apiClient->getCurrentUser();
+
+        $this->assertEquals(1, $user->id);
+        $this->assertEquals('Alexander', $user->firstName);
+        $this->assertEquals('Pushkin', $user->lastName);
+        $this->assertEquals('sasha@pushkin.ru', $user->email);
+        $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
+
+        $this->apiClient->updateUser([
+            'id'        => 1,
+            'firstName' => 'Natalia',
+            'lastName'  => 'Pushkina',
+            'picture'   => 'http://pushkin.ru/sasha.jpg',
+            'email'     => 'sasha@pushkin.ru',
+        ]);
+        $user = $this->apiClient->getCurrentUser();
+
+        $this->assertEquals('Natalia', $user->firstName);
+        $this->assertEquals('Pushkina', $user->lastName);
+        $this->assertEquals('sasha@pushkin.ru', $user->email);
+        $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
+    }
+    
     public function testTravelCreationAndRetrieval()
     {
         $this->createAndLoginUser();
@@ -75,9 +101,8 @@ class TravelWorkflowTest extends FunctionalTestCase
             $this->apiClient->getTravel($id);
             $this->fail("travel record still exists after deleteTravel()");
         } catch (ApiClientException $e) {
-            if ($e->getCode() !== 404) {
-                $this->fail("Wrong error code for getting deleted travel: " . $e->getMessage());
-            }
+            $this->assertEquals(4000, $e->getCode());
+            $this->assertEquals('Travel not found', $e->getMessage());
         }
     }
 

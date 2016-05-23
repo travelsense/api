@@ -19,11 +19,24 @@ class TravelMapper extends AbstractPDOMapper
     private $userMapper;
 
     /**
+     * @var CategoryMapper
+     */
+    private $categoryMapper;
+
+    /**
      * @param UserMapper $userMapper
      */
     public function setUserMapper(UserMapper $userMapper)
     {
         $this->userMapper = $userMapper;
+    }
+
+    /**
+     * @param CategoryMapper $categoryMapper
+     */
+    public function setCategoryMapper($categoryMapper)
+    {
+        $this->categoryMapper = $categoryMapper;
     }
 
     /**
@@ -74,11 +87,17 @@ class TravelMapper extends AbstractPDOMapper
     {
         $insert = $this->pdo->prepare('
             INSERT INTO travels (title, description, content, is_published, image, author_id)
-            VALUES (:title, :description, :content::JSON, :published, :image, :author_id) RETURNING id
+            VALUES (:title, :description, :content::JSON, :published, :image, :author_id) RETURNING id, created
         ');
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
-        $travel->setId($insert->fetchColumn());
+        $row = $insert->fetch(PDO::FETCH_ASSOC);
+        $travel->setId($row['id']);
+        $travel->setCreated(new DateTime($row['created']));
+
+        if ($travel->getCategoryId()) {
+            $this->categoryMapper->addTravelToCategory($travel->getId(), $travel->getCategoryId());
+        }
     }
 
     /**
@@ -213,7 +232,7 @@ class TravelMapper extends AbstractPDOMapper
     protected function create(array $row)
     {
         $travel = new Travel();
-        return $travel
+        $travel
             ->setId($row['id'])
             ->setDescription($row['description'])
             ->setTitle($row['title'])
@@ -222,6 +241,11 @@ class TravelMapper extends AbstractPDOMapper
             ->setImage($row['image'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
+        $categories = $this->categoryMapper->fetchByTravelId($travel->getId());
+        if (count($categories)) {
+            $travel->setCategoryId($categories[0]->getId());
+        }
+        return $travel;
     }
 
     /**
