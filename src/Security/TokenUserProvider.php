@@ -1,14 +1,28 @@
 <?php
-namespace Api\Security;
+namespace Security;
 
 
+use Api\Mapper\DB\UserMapper;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserProvider implements UserProviderInterface
+class TokenUserProvider implements UserProviderInterface
 {
+    /**
+     * @var UserMapper
+     */
+    private $userMapper;
+
+    /**
+     * TokenUserProvider constructor.
+     * @param UserMapper $userMapper
+     */
+    public function __construct(UserMapper $userMapper)
+    {
+        $this->userMapper = $userMapper;
+    }
 
     /**
      * Loads the user for the given username.
@@ -24,7 +38,11 @@ class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        // TODO: Implement loadUserByUsername() method.
+        $user = $this->userMapper->fetchById($username);
+        if (empty($user)) {
+            throw new UsernameNotFoundException();
+        }
+        return new UserWrapper($user);
     }
 
     /**
@@ -43,7 +61,7 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        // TODO: Implement refreshUser() method.
+        throw new UnsupportedUserException();
     }
 
     /**
@@ -55,6 +73,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        // TODO: Implement supportsClass() method.
+        return 'Api\\Security\\UserWrapper' === $class;
     }
 }

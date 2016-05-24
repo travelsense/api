@@ -1,31 +1,19 @@
 <?php
-/**
- * Routing
- * @var $app Api\Application
- */
+// Routing
 
-use Api\ControllerResolver;
-
-$app['resolver'] = function () use ($app) {
-    // Use the project specific ControllerResolver
-    return new ControllerResolver($app, $app['logger']);
-};
-
-
-// Parameter converters
-
-$toDate = function ($date) {
+$toDate = function (string $date): DateTime {
     return new DateTime($date);
 };
 
-$toInt = function ($val) {
+$toInt = function (string $val): int {
     return intval($val);
 };
 
 $iataType = '^country|city|port|carrier$';
 
-// User
+/** @var $app Api\Application */
 
+// User
 $app->post('/user', 'controller.user:createUser')
     ->bind('create-user');
 
