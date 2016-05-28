@@ -117,3 +117,6 @@ $app->get('/hotel/search-results/{id}/{page}', 'controller.wego:getSearchResults
 
 $app->get('/healthCheck', 'controller.health:healthCheck')
     ->bind('health-check');
+
+$app->get('/version/{version}', 'controller.client:version')
+    ->bind('version');

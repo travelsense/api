@@ -49,6 +49,7 @@ return [
             'travel-by-id',
             'travel-category',
             'travel-comment',
+            'version',
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],

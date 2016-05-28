@@ -5,6 +5,7 @@
  */
 
 use Api\Controller\AuthController;
+use Api\Controller\ClientController;
 use Api\Controller\HealthCheckController;
 use Api\Controller\IataController;
 use Api\Controller\Travel\CategoriesController;
@@ -79,4 +80,8 @@ $app['controller.health'] = $app->share(function($app) {
 
 $app['controller.iata'] = $app->share(function($app) {
     return new IataController($app['mapper.db.iata']);
+});
+
+$app['controller.client'] = $app->share(function($app) {
+    return new ClientController();
 });
