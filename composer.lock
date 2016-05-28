@@ -527,25 +527,25 @@
         },
         {
             "name": "silex/silex",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "23598ae94fc3ce631c0162079f06779cde5f0a3f"
+                "reference": "cf02a560d2d87aa4381b3c72d783fcf3aef2434f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/23598ae94fc3ce631c0162079f06779cde5f0a3f",
-                "reference": "23598ae94fc3ce631c0162079f06779cde5f0a3f",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/cf02a560d2d87aa4381b3c72d783fcf3aef2434f",
+                "reference": "cf02a560d2d87aa4381b3c72d783fcf3aef2434f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.9",
                 "pimple/pimple": "~3.0",
-                "symfony/event-dispatcher": "~2.8|3.0.*",
-                "symfony/http-foundation": "~2.8|3.0.*",
-                "symfony/http-kernel": "~2.8|3.0.*",
-                "symfony/routing": "~2.8|3.0.*"
+                "symfony/event-dispatcher": "~2.8|^3.0",
+                "symfony/http-foundation": "~2.8|^3.0",
+                "symfony/http-kernel": "~2.8|^3.0",
+                "symfony/routing": "~2.8|^3.0"
             },
             "replace": {
                 "silex/api": "self.version",
@@ -555,26 +555,26 @@
                 "doctrine/dbal": "~2.2",
                 "monolog/monolog": "^1.4.1",
                 "swiftmailer/swiftmailer": "~5",
-                "symfony/asset": "~2.8|3.0.*",
-                "symfony/browser-kit": "~2.8|3.0.*",
-                "symfony/config": "~2.8|3.0.*",
-                "symfony/css-selector": "~2.8|3.0.*",
-                "symfony/debug": "~2.8|3.0.*",
-                "symfony/doctrine-bridge": "~2.8|3.0.*",
-                "symfony/dom-crawler": "~2.8|3.0.*",
-                "symfony/expression-language": "~2.8|3.0.*",
-                "symfony/finder": "~2.8|3.0.*",
-                "symfony/form": "~2.8|3.0.*",
-                "symfony/locale": "~2.8|3.0.*",
-                "symfony/monolog-bridge": "~2.8|3.0.*",
-                "symfony/options-resolver": "~2.8|3.0.*",
-                "symfony/process": "~2.8|3.0.*",
-                "symfony/security": "~2.8|3.0.*",
-                "symfony/serializer": "~2.8|3.0.*",
-                "symfony/translation": "~2.8|3.0.*",
-                "symfony/twig-bridge": "~2.8|3.0.*",
-                "symfony/validator": "~2.8|3.0.*",
-                "symfony/var-dumper": "~2.8|3.0.*",
+                "symfony/asset": "~2.8|^3.0",
+                "symfony/browser-kit": "~2.8|^3.0",
+                "symfony/config": "~2.8|^3.0",
+                "symfony/css-selector": "~2.8|^3.0",
+                "symfony/debug": "~2.8|^3.0",
+                "symfony/doctrine-bridge": "~2.8|^3.0",
+                "symfony/dom-crawler": "~2.8|^3.0",
+                "symfony/expression-language": "~2.8|^3.0",
+                "symfony/finder": "~2.8|^3.0",
+                "symfony/form": "~2.8|^3.0",
+                "symfony/intl": "~2.8|^3.0",
+                "symfony/monolog-bridge": "~2.8|^3.0",
+                "symfony/options-resolver": "~2.8|^3.0",
+                "symfony/process": "~2.8|^3.0",
+                "symfony/security": "~2.8|^3.0",
+                "symfony/serializer": "~2.8|^3.0",
+                "symfony/translation": "~2.8|^3.0",
+                "symfony/twig-bridge": "~2.8|^3.0",
+                "symfony/validator": "~2.8|^3.0",
+                "symfony/var-dumper": "~2.8|^3.0",
                 "twig/twig": "~1.8|~2.0"
             },
             "type": "library",
@@ -607,7 +607,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2016-05-18 07:56:56"
+            "time": "2016-05-27 11:37:31"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1677,16 +1677,16 @@
         },
         {
             "name": "fabpot/php-cs-fixer",
-            "version": "v1.11.2",
+            "version": "v1.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "41f70154642ec0f9ea9ea9c290943f3b5dfa76fc"
+                "reference": "b0a383d856d884d6b16e15892f507ecf89f8dbd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/41f70154642ec0f9ea9ea9c290943f3b5dfa76fc",
-                "reference": "41f70154642ec0f9ea9ea9c290943f3b5dfa76fc",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/b0a383d856d884d6b16e15892f507ecf89f8dbd2",
+                "reference": "b0a383d856d884d6b16e15892f507ecf89f8dbd2",
                 "shasum": ""
             },
             "require": {
@@ -1727,7 +1727,8 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2016-02-26 07:37:29"
+            "abandoned": "friendsofphp/php-cs-fixer",
+            "time": "2016-05-26 23:49:24"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1884,16 +1885,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "3.3.1",
+            "version": "3.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86"
+                "reference": "44cd8e3930e431658d1a5de7d282d5cb37837fd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/2431befdd451fac43fbcde94d1a92fb3b8b68f86",
-                "reference": "2431befdd451fac43fbcde94d1a92fb3b8b68f86",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/44cd8e3930e431658d1a5de7d282d5cb37837fd5",
+                "reference": "44cd8e3930e431658d1a5de7d282d5cb37837fd5",
                 "shasum": ""
             },
             "require": {
@@ -1943,7 +1944,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-04-08 08:14:53"
+            "time": "2016-05-27 16:24:29"
         },
         {
             "name": "phpunit/php-file-iterator",

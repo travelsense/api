@@ -2,9 +2,10 @@
 namespace Api;
 
 use ReflectionParameter;
+use Silex\ControllerResolver;
 use Symfony\Component\HttpFoundation\Request;
 
-class ControllerResolver extends \Silex\ControllerResolver
+class ApiControllerResolver extends ControllerResolver
 {
     protected function doGetArguments(Request $request, $controller, array $parameters)
     {

@@ -122,7 +122,7 @@ class User
      * @param string $picture
      * @return User
      */
-    public function setPicture(string $picture)
+    public function setPicture(string $picture = null)
     {
         $this->picture = $picture;
         return $this;

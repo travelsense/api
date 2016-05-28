@@ -1,7 +1,7 @@
 <?php
 /**
  * Controllers
- * @var $app Application
+ * @var $app Api\Application
  */
 
 use Api\Controller\AuthController;
@@ -14,6 +14,10 @@ use Api\Controller\Travel\TravelController;
 use Api\Controller\UberController;
 use Api\Controller\UserController;
 use Api\Controller\WegoHotelController;
+
+$app['resolver'] = function ($app) {
+    return new \Api\ApiControllerResolver($app, $app['logger']);
+};
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
