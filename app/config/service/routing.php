@@ -1,27 +1,19 @@
 <?php
-/**
- * Routing
- * @var $app Api\Application
- */
+// Routing
 
-use Silex\Provider\UrlGeneratorServiceProvider;
-
-$app->register(new UrlGeneratorServiceProvider());
-
-// Parameter converters
-
-$toDate = function ($date) {
+$toDate = function (string $date): DateTime {
     return new DateTime($date);
 };
 
-$toInt = function ($val) {
+$toInt = function (string $val): int {
     return intval($val);
 };
 
 $iataType = '^country|city|port|carrier$';
 
-// User
+/** @var $app Api\Application */
 
+// User
 $app->post('/user', 'controller.user:createUser')
     ->bind('create-user');
 

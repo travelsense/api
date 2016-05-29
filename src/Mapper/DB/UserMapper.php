@@ -26,7 +26,7 @@ class UserMapper extends AbstractPDOMapper
      * @param string $email
      * @return bool
      */
-    public function emailExists(string$email)
+    public function emailExists(string $email)
     {
         $select = $this->pdo->prepare('SELECT id FROM users WHERE email=:email');
         $select->execute([':email' => $email]);

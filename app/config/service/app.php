@@ -5,7 +5,6 @@
  * @var $app Api\Application
  */
 
-use Api\ControllerResolver;
 use Api\Exception\ApiException;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -15,10 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 $app['debug'] = $app['config']['debug'];
-$app['resolver'] = $app->share(function () use ($app) {
-    // Use the project specific ControllerResolver
-    return new ControllerResolver($app, $app['logger']);
-});
 
 $app->error(function (Exception $e) use ($app) {
     if ($e instanceof ApiException) {

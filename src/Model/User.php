@@ -48,7 +48,7 @@ class User
      * @param string $email
      * @return User
      */
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
         return $this;
@@ -68,7 +68,7 @@ class User
      * @param bool $emailConfirmed
      * @return User
      */
-    public function setEmailConfirmed($emailConfirmed)
+    public function setEmailConfirmed(bool $emailConfirmed)
     {
         $this->emailConfirmed = $emailConfirmed;
         return $this;
@@ -86,7 +86,7 @@ class User
      * @param string $firstName
      * @return User
      */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName)
     {
         $this->firstName = $firstName;
         return $this;
@@ -104,7 +104,7 @@ class User
      * @param string $lastName
      * @return User
      */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName)
     {
         $this->lastName = $lastName;
         return $this;
@@ -122,7 +122,7 @@ class User
      * @param string $picture
      * @return User
      */
-    public function setPicture($picture)
+    public function setPicture(string $picture = null)
     {
         $this->picture = $picture;
         return $this;
@@ -140,7 +140,7 @@ class User
      * @param string $password
      * @return User
      */
-    public function setPassword($password)
+    public function setPassword(string $password)
     {
         $this->password = $password;
         return $this;

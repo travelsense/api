@@ -71,6 +71,8 @@ class AuthControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
+        $this->pwGen->method('generatePassword')->willReturn('test_generated_password');
+
         $this->request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
 
         $this->controller = new AuthController(

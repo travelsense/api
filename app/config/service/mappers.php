@@ -12,38 +12,38 @@ use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Mapper\DB\CategoryMapper;
 
-$app['mapper.db.user'] = $app->share(function($app) {
+$app['mapper.db.user'] = function($app) {
     $mapper =  new UserMapper($app['db.main.pdo']);
     $mapper->setSalt($app['config']['security']['password_salt']);
     return $mapper;
-});
+};
 
-$app['mapper.db.sessions'] = $app->share(function($app) {
+$app['mapper.db.sessions'] = function($app) {
     return new SessionMapper($app['db.main.pdo']);
-});
+};
 
-$app['mapper.db.iata'] = $app->share(function($app) {
+$app['mapper.db.iata'] = function($app) {
     return new IATAMapper($app['db.main.pdo']);
-});
+};
 
-$app['mapper.db.expirable_storage'] = $app->share(function($app) {
+$app['mapper.db.expirable_storage'] = function($app) {
     return new ExpirableStorage($app['db.main.pdo']);
-});
+};
 
-$app['mapper.db.travel'] = $app->share(function($app) {
+$app['mapper.db.travel'] = function($app) {
     $mapper = new TravelMapper($app['db.main.pdo']);
     $mapper->setUserMapper($app['mapper.db.user']);
     $mapper->setCategoryMapper($app['mapper.db.category']);
     return $mapper;
-});
+};
 
-$app['mapper.db.category'] = $app->share(function($app) {
+$app['mapper.db.category'] = function($app) {
     $mapper = new CategoryMapper($app['db.main.pdo']);
     return $mapper;
-});
+};
 
-$app['mapper.db.comment'] = $app->share(function($app) {
+$app['mapper.db.comment'] = function($app) {
     $mapper = new CommentMapper($app['db.main.pdo']);
     $mapper->setUserMapper($app['mapper.db.user']);
     return $mapper;
-});
+};
