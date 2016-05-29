@@ -84,7 +84,7 @@ $app['controller.health'] = function($app) {
 
 $app['controller.iata'] = function($app) {
     return new IataController($app['mapper.db.iata']);
-});
+};
 
 $app['controller.client'] = function($app) {
     return new ClientController();
