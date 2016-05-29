@@ -7,7 +7,7 @@
 
 ## External docs
 * [PHP](http://php.net/docs.php)
- * [Silex 1.3](http://silex.sensiolabs.org/doc/1.3/)
+ * [Silex](http://silex.sensiolabs.org/)
  * [Composer](https://getcomposer.org/)
  * [PHP The Right Way](http://www.phptherightway.com/)
 * [PostgreSQL](http://www.postgresql.org/) 
