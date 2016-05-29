@@ -1,5 +1,9 @@
 {
+  "name": "hoptrip/api",
+  "license": "proprietary",
+
   "require": {
+    "php": "^7.0",
     "f3ath/simpleuber": "^1.0",
     "f3ath/lazypdo": "0.*",
     "facebook/php-sdk-v4" : "~5.0",
