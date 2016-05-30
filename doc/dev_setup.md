@@ -7,6 +7,7 @@ The development cycle is similar to [Contributing to Open Source]( https://guide
 * Create a dedicated branch in your fork
 * Commit your work and push the changes
 * Open a pull request to the main project 
+
 ## Getting Vagrant running
 * install [Vagrant](https://www.vagrantup.com/) and [VitrualBox](https://www.virtualbox.org)
 * run `vagrant up` from the project root folder and wait till it finishes
