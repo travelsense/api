@@ -12,7 +12,7 @@ The development cycle is similar to [Contributing to Open Source]( https://guide
 * install [Vagrant](https://www.vagrantup.com/). Do **not** run `vagrant init`.
 * install [VitrualBox](https://www.virtualbox.org). Do **not** install any OS into VirtualBox.
 * open a console and `cd` into the project root folder
-* run `vagrant plugin install vagrant-vbguest`
+* run `vagrant plugin install vagrant-vbguest` to install Guest Additions plugin
 * run `vagrant up` and wait till it finishes
 * open http://172.16.0.101/healthCheck in a browser, the page should show a JSON response
 
