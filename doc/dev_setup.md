@@ -83,7 +83,7 @@ class stdClass#5 (6) {
 
 ## SSH'ing into VM
 To ssh into the Virtual Machine you can 
-* connect to `172.16.0.101:22` using your favorite [ssh client](https://en.wikipedia.org/wiki/Comparison_of_SSH_clients)
+* connect to `172.16.0.101:22` using an [ssh client](https://en.wikipedia.org/wiki/Comparison_of_SSH_clients)
 * or just run `vagrant ssh` from the project root folder
 
 ## Debugging
