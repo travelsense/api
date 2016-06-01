@@ -9,7 +9,7 @@ The development cycle is similar to [Contributing to Open Source]( https://guide
 * Open a pull request to the main project 
 
 ## Getting Vagrant running
-* install [Vagrant](https://www.vagrantup.com/) and [VitrualBox](https://www.virtualbox.org)
+* install [Vagrant](https://www.vagrantup.com/) and [VitrualBox](https://www.virtualbox.org). Do **not** run `vagrant init` or install any OS into VirtualBox! Just install the applications themselves.
 * run `vagrant up` from the project root folder and wait till it finishes
 * open http://172.16.0.101/healthCheck in a browser, the page should show a JSON response
 
