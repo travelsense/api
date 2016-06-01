@@ -14,7 +14,7 @@ The development cycle is similar to [Contributing to Open Source]( https://guide
 * open http://172.16.0.101/healthCheck in a browser, the page should show a JSON response
 
 ## Troubleshooting
-* On some Linux boxes Vagrant does not always set the network up automatically. You may need to do something similar to `sudo ip link set vboxnet0 up` and `sudo ip addr add 172.16.0.1/24 dev vboxnet0` to enable networking.
+* On some Linux boxes Vagrant does not always set the network up automatically. You may need to do something similar to `sudo ip link set vboxnet0 up && sudo ip addr add 172.16.0.1/24 dev vboxnet0` to enable networking.
 
 ## Getting Database access
 PostgreSQL server is listening on all interfaces at port 5432. There are 2 databases available:
