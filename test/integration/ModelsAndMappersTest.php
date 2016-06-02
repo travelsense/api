@@ -10,10 +10,14 @@ namespace Api;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\UserMapper;
+use Api\Mapper\DB\FlaggedCommentMapper;
+use Api\Mapper\DB\CommentMapper;
 use Api\Model\Travel\Category;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
+use Api\Model\Travel\Comment;
 use Api\Test\DatabaseTrait;
+use PDO;
 
 class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,6 +38,21 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
      */
     private $categoryMapper;
 
+    /*
+     * @var PDO
+     */
+    private $pdo;
+
+    /*
+     *@var FlaggedCommentMapper
+     */
+    private $flaggedCommentMapper;
+
+    /*
+     * @var CommentMapper
+     */
+    private $commentMapper;
+    
     public function setUp()
     {
         $app = Application::createByEnvironment('test');
@@ -42,6 +61,9 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $this->userMapper = $app['mapper.db.user'];
         $this->travelMapper = $app['mapper.db.travel'];
         $this->categoryMapper = $app['mapper.db.category'];
+        $this->pdo = $app['db.main.pdo'];
+        $this->flaggedCommentMapper = $app['mapper.db.flagged_comments'];
+        $this->commentMapper = $app['mapper.db.travel_comments'];
     }
 
     /**
@@ -235,5 +257,29 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
             && $a->getLastName() === $b->getLastName()
             && $a->isEmailConfirmed() === $b->isEmailConfirmed()
         );
+    }
+
+    public function createComment(int $travelId, string $text)
+    {
+        $comment = new Comment();
+        $comment
+            ->setTravelId($travelId)
+            ->setText($text)
+        ;
+        return $comment;
+    }
+    
+    public function testFlagComment()
+    {
+        $user = $this->createUser('a');
+        $travel = $this->createTravel($user, 'a');
+        $comment = $this->createComment($travel->getId(), 'flagged this comment');
+            
+        $mapper = $this->flaggedCommentMapper;
+        
+        $mapper->flagComment($user->getId(), $comment->getId());
+        $select = $this->pdo->prepare('SELECT * FROM flagged_comments');
+        $row = $select->fetch(PDO::FETCH_NAMED);
+        $this->assertEquals($row, [$user->getId() => $comment->getId()]);
     }
 }
