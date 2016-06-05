@@ -60,8 +60,13 @@
     sudo_user: postgres
     postgresql_user: name=api_test password=api_test role_attr_flags=LOGIN,CREATEDB,SUPERUSER
 
+  - name: PostgreSQL listen on all intefaces
+    lineinfile: dest=/etc/postgresql/9.5/main/postgresql.conf regexp=^#listen_addresses line="listen_addresses = '*'"
+    notify:
+      - restart postgresql
+
   - name: Open access to PostgreSQL
-    lineinfile: dest=/etc/postgresql/9.5/main/pg_hba.conf line="host all all 0.0.0.0/0 md5" state=present
+    lineinfile: dest=/etc/postgresql/9.5/main/pg_hba.conf line="host all all 0.0.0.0/0 md5"
     notify:
       - restart postgresql
 
@@ -92,11 +97,4 @@
     shell: APP_ENV=dev /vagrant/bin/db.php up
 
   handlers:
-    - name: restart php7.0-fpm
-      service: name=php7.0-fpm state=restarted
-
-    - name: restart nginx
-      service: name=nginx state=restarted
-
-    - name: restart postgresql
-      service: name=postgresql state=restarted
+  - include: handlers.yml
