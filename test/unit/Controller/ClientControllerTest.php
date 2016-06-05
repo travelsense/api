@@ -1,5 +1,5 @@
 <?php
-namespace Api\Test;
+namespace Api\Controller ;
 
 use Api\Controller\ClientController;
 
