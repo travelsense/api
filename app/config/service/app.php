@@ -77,7 +77,7 @@ $app->register(new TwigServiceProvider , [
 // Monolog
 $app->register(new MonologServiceProvider, [
     'monolog.logfile' => $app['config']['log']['main'],
-    'monolog.name' => 'vaca',
+    'monolog.name' => 'api',
 ]);
 
 // Pimple dumper
