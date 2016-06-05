@@ -10,4 +10,4 @@ with the following clarifications:
 
 ## Database schema
 * table and database names must be in `lower_snake_case`
-* table names must be plural, e.g. users, sessions
+* table names must be plural, e.g. `users`, `sessions`
