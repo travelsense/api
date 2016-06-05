@@ -1,5 +1,5 @@
 <?php
-namespace Api\Controller ;
+namespace Api\Controller;
 
 use Api\Controller\ClientController;
 
