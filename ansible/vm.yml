@@ -19,9 +19,6 @@
 
   - apt: upgrade=dist update_cache=yes
 
-  - name: Remove php5
-    apt: name=php5-common state=absent purge=yes
-
   - name: Install packages
     apt: name={{ item }} state=present
     with_items:
@@ -40,12 +37,14 @@
       - git
       - python-psycopg2
 
+  - name: Remove php5
+    apt: name=php5-common state=absent purge=yes
 
   - name: Create DB api_dev
     sudo_user: postgres
     postgresql_db: name=api_dev
 
-  - name: Create DB api_dev
+  - name: Install postgis on api_dev
     sudo_user: postgres
     shell: psql api_dev -f /vagrant/db/ext/postgis.sql
 

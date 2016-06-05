@@ -82,7 +82,6 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "ansible/vm.yml"
     ansible.inventory_path = "ansible/inventory"
     ansible.install = true
-    ansible.verbose = true
     ansible.limit = "all"
   end
 end
