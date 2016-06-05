@@ -66,7 +66,7 @@
       - restart postgresql
 
   - name: Open access to PostgreSQL
-    lineinfile: dest=/etc/postgresql/9.5/main/pg_hba.conf line="host all all 0/0 md5"
+    lineinfile: dest=/etc/postgresql/9.5/main/pg_hba.conf line="host all all 0.0.0.0/0 md5"
     notify:
       - restart postgresql
 
