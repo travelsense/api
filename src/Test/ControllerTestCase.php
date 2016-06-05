@@ -23,4 +23,18 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
         $user->method('getCreated')->willReturn(new DateTime('2000-01-01'));
         return $user;
     }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function buildCategory()
+    {
+        $category = $this->getMock(
+            'Api\\Model\\Travel\\Category',
+            ['getId', 'getName']
+        );
+        $category->method('getId')->willReturn(1);
+        $category->method('getName')->willReturn('test_category');
+        return $category;
+    }
 }
