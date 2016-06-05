@@ -9,6 +9,7 @@
 * [PHP](http://php.net/docs.php)
  * [Silex](http://silex.sensiolabs.org/)
  * [Composer](https://getcomposer.org/)
+ * [PHPUnit](https://phpunit.de/)
  * [PHP The Right Way](http://www.phptherightway.com/)
 * [PostgreSQL](http://www.postgresql.org/) 
 * [Vagrant](https://www.vagrantup.com/)
