@@ -259,7 +259,7 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function createComment(int $travelId, string $text)
+    public function createComment(int $travelId, string $text): Comment
     {
         $comment = new Comment();
         $comment
