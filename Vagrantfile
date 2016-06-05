@@ -79,9 +79,9 @@ Vagrant.configure(2) do |config|
   # SHELL
 
   config.vm.provision "ansible_local" do |ansible|
-    ansible.playbook = "ansible/vm.yml"
-    ansible.inventory_path = "ansible/inventory"
+    ansible.playbook = "ansible/dev.yml"
+    ansible.inventory_path = "ansible/localhost"
     ansible.install = true
-    ansible.limit = "all"
+    ansible.limit = "localhost"
   end
 end

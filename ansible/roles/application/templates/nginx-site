@@ -1,0 +1,17 @@
+# API host
+server {
+    listen 80;
+
+    root {{ nginx_root }};
+
+    # Important for VirtualBox
+    sendfile off;
+
+    location / {
+        include fastcgi_params;
+        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+        fastcgi_param APP_ENV {{ env }};
+        fastcgi_param SCRIPT_FILENAME $document_root/app.php;
+        fastcgi_cache off;
+    }
+}
