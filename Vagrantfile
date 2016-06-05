@@ -78,7 +78,10 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 
-  config.vm.provision "shell" do |s|
-    s.path = "provision/setup.sh"
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "ansible/vm.yml"
+    ansible.inventory_path = "ansible/inventory"
+    ansible.install = true
+    ansible.limit = "all"
   end
 end
