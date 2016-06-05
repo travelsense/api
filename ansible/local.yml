@@ -1,8 +1,7 @@
 ---
-- hosts: self
-  sudo: yes
+- hosts: localhost
+  become: yes
   roles:
-    - common
     - ansible_controller
     - role: application
       env: 'dev'

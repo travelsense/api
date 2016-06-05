@@ -19,21 +19,21 @@
 
 - name: postgres pg_hba.conf
   lineinfile: dest=/etc/postgresql/9.5/main/pg_hba.conf line="{{ item }}"
-  with_items: hba_entries
+  with_items: '{{ hba_entries }}'
   notify:
     - restart postgresql
 
 - name: create databases
-  sudo_user: postgres
+  become_user: postgres
   postgresql_db: name={{ item }}
-  with_items: databases
+  with_items: '{{ databases }}'
 
 - name: create users
-  sudo_user: postgres
+  become_user: postgres
   postgresql_user: name={{ item.name }} db={{ item.db }} password={{ item.password }} role_attr_flags={{ item.roles }}
-  with_items: users
+  with_items: '{{ users }}'
 
 - name: run scripts
-  sudo_user: postgres
+  become_user: postgres
   shell: psql {{ item.db }} -f {{ item.file }}
-  with_items: scripts
+  with_items: '{{ scripts }}'

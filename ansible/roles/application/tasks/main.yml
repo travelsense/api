@@ -24,7 +24,7 @@
 
 - name: Configure php.ini
   template: src=php-{{ env }}.ini dest=/etc/php/7.0/{{ item }}/conf.d/99-application.ini
-  with_items: php_sapi
+  with_items: '{{ php_sapi}}'
   notify:
     - restart php7.0-fpm
     - restart nginx
