@@ -1,0 +1,36 @@
+---
+- name: add php7 repo key
+  apt_key: url='https://www.dotdeb.org/dotdeb.gpg'
+
+- name: add php7 repo
+  apt_repository: repo='deb http://packages.dotdeb.org jessie all'
+
+- name: Install packages
+  apt: name={{ item }}
+  with_items:
+    - php7.0-common
+    - php7.0-dev
+    - php7.0-cli
+    - php7.0-fpm
+    - php7.0-curl
+    - php7.0-pgsql
+    - php7.0-xdebug
+    - curl
+    - nginx
+    - git
+
+- name: Remove php5
+  apt: name=php5-common state=absent purge=yes
+
+- name: Configure php.ini
+  template: src=php-{{ env }}.ini dest=/etc/php/7.0/{{ item }}/conf.d/99-application.ini
+  with_items: php_sapi
+  notify:
+    - restart php7.0-fpm
+    - restart nginx
+
+- name: Configure nginx
+  template: src=nginx-site dest=/etc/nginx/sites-available/default
+  notify:
+    - restart php7.0-fpm
+    - restart nginx
