@@ -2,7 +2,6 @@
 - hosts: localhost
   become: yes
   roles:
-    - ansible_controller
     - role: application
       env: 'dev'
       nginx_root: '/vagrant/public'
