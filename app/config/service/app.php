@@ -81,4 +81,6 @@ $app->register(new MonologServiceProvider, [
 ]);
 
 // Pimple dumper
-$app->register(new PimpleDumpProvider());
+if ($app['env'] === 'dev') {
+    $app->register(new PimpleDumpProvider());
+}

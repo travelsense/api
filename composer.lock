@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d03083b2de86b4b7b252e0d043128346",
-    "content-hash": "479398fe8c2f88e90c117138d4101104",
+    "hash": "9baf68058f7fc8c513cba543e8cad552",
+    "content-hash": "c31bfb9cd0df3f974558aaa391c3c947",
     "packages": [
         {
             "name": "f3ath/lazypdo",
@@ -2834,7 +2834,7 @@
         },
         {
             "name": "sorien/silex-pimple-dumper",
-            "version": "dev-master",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sorien/silex-pimple-dumper.git",
@@ -3361,9 +3361,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "sorien/silex-pimple-dumper": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
