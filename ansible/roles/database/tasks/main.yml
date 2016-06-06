@@ -11,6 +11,7 @@
     - postgresql-9.5
     - postgresql-contrib-9.5
     - postgresql-9.5-postgis-2.2
+    - python-psycopg2 # to allow ansible manager the DB
 
 - name: postgres listen addresses
   lineinfile: dest=/etc/postgresql/9.5/main/postgresql.conf regexp=^#listen_addresses line="listen_addresses = '{{ addresses }}'"
@@ -27,6 +28,13 @@
   become_user: postgres
   postgresql_db: name={{ item }}
   with_items: '{{ databases }}'
+
+- name: create extenstions
+  become_user: postgres
+  postgresql_ext: name={{ item[0] }} db={{ item[1] }}
+  with_nested:
+    - '{{ extensions }}'
+    - '{{ databases }}'
 
 - name: create users
   become_user: postgres
