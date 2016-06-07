@@ -27,6 +27,7 @@ class ClientControllerTest extends \PHPUnit_Framework_TestCase
      
      /**
       * @expectedException  Api\Exception\ApiException
+      * @expectedExceptionCode Api\Exception\ApiException::RESOURCE_NOT_FOUND
       */
      public function testInvalidVersion()
      { 
