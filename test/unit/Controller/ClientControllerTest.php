@@ -25,11 +25,11 @@ class ClientControllerTest extends \PHPUnit_Framework_TestCase
         );
     }
      
-     /**
-      * @expectedException  Api\Exception\ApiException
-      */
-      public function testInvalidVersion()
-      { 
+    /**
+     * @expectedException  Api\Exception\ApiException
+     */
+     public function testInvalidVersion()
+     { 
         $this->controller->version(' ');
-      }
+     }
 }
