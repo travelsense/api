@@ -1,19 +1,23 @@
 # Development environment setup
-The project can be run on any Unix-like system. If you feel confident enough just 
-* clone the repo
-* install the packages and configs mentioned in [provision/setup.sh](../provision/setup.sh) (NGiNX is not necessary)
-* and run `cd public && APP_ENV=dev php -S localhost:8000 app.php`
+## The workflow
+First of all, [fork](https://help.github.com/articles/fork-a-repo/) the repo and [clone](https://help.github.com/articles/cloning-a-repository/) it to your local machine. 
 
-Otherwise use Vagrant.
+The development cycle is similar to [Contributing to Open Source]( https://guides.github.com/activities/contributing-to-open-source/):
+* Get an assignment to work on
+* Create a dedicated branch in your fork
+* Commit your work and push the changes
+* Open a pull request to the main project 
 
 ## Getting Vagrant running
-* install [Vagrant](https://www.vagrantup.com/) and [VitrualBox](https://www.virtualbox.org)
-* clone the repo and cd into `git clone https://github.com/travelsense/api && cd api`
-* run `vagrant up`
+* install [Vagrant](https://www.vagrantup.com/). Do **not** run `vagrant init`.
+* install [VitrualBox](https://www.virtualbox.org). Do **not** install any OS into VirtualBox.
+* open a console and `cd` into the project root folder
+* run `vagrant plugin install vagrant-vbguest` to install Guest Additions plugin
+* run `vagrant up` and wait till it finishes
 * open http://172.16.0.101/healthCheck in a browser, the page should show a JSON response
 
 ## Troubleshooting
-* On some OS Vagrant does not always set the network up automatically. You may need to do something similar to `sudo ip link set vboxnet0 up` and `sudo ip addr add 172.16.0.1/24 dev vboxnet0` to enable networking.
+* On some Linux boxes Vagrant does not always set the network up automatically. You may need to do something similar to `sudo ip link set vboxnet0 up && sudo ip addr add 172.16.0.1/24 dev vboxnet0` to enable networking.
 
 ## Getting Database access
 PostgreSQL server is listening on all interfaces at port 5432. There are 2 databases available:
@@ -80,8 +84,13 @@ class stdClass#5 (6) {
 }
 ```
 
+## SSH'ing into VM
+To ssh into the Virtual Machine you can 
+* connect to `172.16.0.101:22` using an [ssh client](https://en.wikipedia.org/wiki/Comparison_of_SSH_clients)
+* or just run `vagrant ssh` from the project root folder
+
 ## Debugging
-The following logs can be used to debug:
+The following VM logs can be used to debug:
 * `/var/log/nginx/access.log` - access log
 * `/var/log/nginx/error.log` - error log, contains fatal php errors
 * `/tmp/api_dev.log` - application log

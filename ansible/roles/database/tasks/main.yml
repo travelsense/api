@@ -1,0 +1,47 @@
+---
+- name: add postgres repo key
+  apt_key: url='https://www.postgresql.org/media/keys/ACCC4CF8.asc' state=present
+
+- name: add postgres repo
+  apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt jessie-pgdg main' state=present
+
+- name: install postgres
+  apt: name={{ item }} state=present
+  with_items:
+    - postgresql-9.5
+    - postgresql-contrib-9.5
+    - postgresql-9.5-postgis-2.2
+    - python-psycopg2 # to allow ansible manager the DB
+
+- name: postgres listen addresses
+  lineinfile: dest=/etc/postgresql/9.5/main/postgresql.conf regexp=^#listen_addresses line="listen_addresses = '{{ addresses }}'"
+  notify:
+    - restart postgresql
+
+- name: postgres pg_hba.conf
+  lineinfile: dest=/etc/postgresql/9.5/main/pg_hba.conf line="{{ item }}"
+  with_items: '{{ hba_entries }}'
+  notify:
+    - restart postgresql
+
+- name: create databases
+  become_user: postgres
+  postgresql_db: name={{ item }}
+  with_items: '{{ databases }}'
+
+- name: create extenstions
+  become_user: postgres
+  postgresql_ext: name={{ item[0] }} db={{ item[1] }}
+  with_nested:
+    - '{{ extensions }}'
+    - '{{ databases }}'
+
+- name: create users
+  become_user: postgres
+  postgresql_user: name={{ item.name }} db={{ item.db }} password={{ item.password }} role_attr_flags={{ item.roles }}
+  with_items: '{{ users }}'
+
+- name: run scripts
+  become_user: postgres
+  shell: psql {{ item.db }} -f {{ item.file }}
+  with_items: '{{ scripts }}'

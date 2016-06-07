@@ -6,11 +6,11 @@ use F3\SimpleUber\Uber;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
-$app['facebook'] = $app->share(function ($app) {
+$app['facebook'] = function ($app) {
     return new Facebook($app['config']['facebook']);
-});
+};
 
-$app['password_generator'] = $app->share(function ($app) {
+$app['password_generator'] = function ($app) {
     $generator = new ComputerPasswordGenerator();
     $generator
         ->setOptionValue(ComputerPasswordGenerator::OPTION_UPPER_CASE, true)
@@ -19,8 +19,8 @@ $app['password_generator'] = $app->share(function ($app) {
         ->setOptionValue(ComputerPasswordGenerator::OPTION_SYMBOLS, false);
 
     return $generator;
-});
+};
 
-$app['uber'] = $app->share(function ($app) {
+$app['uber'] = function ($app) {
     return new Uber($app['config']['uber']['server_token']);
-});
+};

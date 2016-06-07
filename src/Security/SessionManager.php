@@ -49,7 +49,7 @@ class SessionManager
         if (strlen($token) <= self::SHA1_LENGTH) {
             return null;
         }
-        list($token, $id) = str_split($token, self::SHA1_LENGTH);
-        return $this->sessionMapper->getUserId($id, $token);
+        list($session, $id) = str_split($token, self::SHA1_LENGTH);
+        return $this->sessionMapper->getUserId($id, $session);
     }
 }
