@@ -8,12 +8,12 @@ class ClientControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-          $this->controller=new ClientController();
+          $this->controller = new ClientController();
     }
     
     /**
-    * client
-    */
+     * client
+     */
     public function testClient()
     {
         $this->assertEquals(
@@ -26,7 +26,7 @@ class ClientControllerTest extends \PHPUnit_Framework_TestCase
     }
      
      /**
-      *@expectedException  Api\Exception\ApiException
+      * @expectedException  Api\Exception\ApiException
       */
       public function testInvalidVersion()
       { 
