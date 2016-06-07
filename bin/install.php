@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/usr/bin/php
 <?php
 $tag = $argc > 1 ? $argv[1] : 'master';
 $build = date('YmdHis') . '-' . strtr($tag, '/', '-');
