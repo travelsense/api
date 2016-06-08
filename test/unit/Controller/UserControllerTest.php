@@ -77,7 +77,6 @@ class UserControllerTest extends ControllerTestCase
 
        $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
             ->setMethods(['getContent'])
-            ->disableOriginalConstructor()
             ->getMock();
         
         $request->method('getContent')->willReturn($json);
@@ -122,7 +121,6 @@ class UserControllerTest extends ControllerTestCase
 
        $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
             ->setMethods(['getContent'])
-            ->disableOriginalConstructor()
             ->getMock();
         
         $request->method('getContent')->willReturn($json);
