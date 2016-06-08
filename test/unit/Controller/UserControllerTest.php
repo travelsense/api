@@ -133,3 +133,4 @@ class UserControllerTest extends ControllerTestCase
         }
     }
 }
+
