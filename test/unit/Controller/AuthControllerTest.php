@@ -18,6 +18,9 @@ class AuthControllerTest extends ControllerTestCase
      */
     private $controller;
 
+    /**
+     *
+     */
     public function setUp()
     {
         $this->userMapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
@@ -41,13 +44,17 @@ class AuthControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $fbUserPic = $this->getMock('Facebook\\GraphNodes\\GraphPicture', ['getUrl']);
+        $fbUserPic = $this->getMockBuilder('Facebook\\GraphNodes\\GraphPicture')
+            ->setMethods(['getUrl'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        
         $fbUserPic->method('getUrl')->willReturn('https://pushkin.ru/pic.jpg');
 
-        $fbUser = $this->getMock(
-            'Facebook\\GraphNodes\\GraphUser',
-            ['getFirstName', 'getLastName', 'getPicture', 'getEmail']
-        );
+        $fbUser = $this->getMockBuilder('Facebook\\GraphNodes\\GraphUser')
+            ->setMethods(['getFirstName', 'getLastName', 'getPicture', 'getEmail'])
+            ->disableOriginalConstructor()
+            ->getMock();
         foreach ([
                      'getEmail'     => 'sasha@pushkin.ru',
                      'getFirstName' => 'Alexander',
@@ -73,7 +80,10 @@ class AuthControllerTest extends ControllerTestCase
 
         $this->pwGen->method('generatePassword')->willReturn('test_generated_password');
 
-        $this->request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
+        $this->request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
+            ->setMethods(['getContent'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->controller = new AuthController(
             $this->userMapper,
