@@ -28,7 +28,7 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
      */
     protected function buildCategory()
     {
-        $category = $this->getMock('Api\\Model\\Travel\\Category')
+        $category = $this->getMockBuilder('Api\\Model\\Travel\\Category')
             ->setMethods(['getId', 'getName'])
             ->getMock();
         $category->method('getId')->willReturn(1);
