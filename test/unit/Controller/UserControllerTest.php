@@ -75,7 +75,10 @@ class UserControllerTest extends ControllerTestCase
             'lastName'  => 'Tester',
         ]);
 
-        $request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
+        $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
+            ->setMethods(['getContent'])
+            ->getMock();
+        
         $request->method('getContent')->willReturn($json);
 
         $this->userMapper->method('emailExists')
@@ -115,8 +118,11 @@ class UserControllerTest extends ControllerTestCase
         $json = json_encode([
             'ololo' => 'invalid stuff',
         ]);
-
-        $request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
+            $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
+            ->setMethods(['getContent'])
+            ->getMock();
+        
+        
         $request->method('getContent')->willReturn($json);
 
         try {
@@ -127,3 +133,4 @@ class UserControllerTest extends ControllerTestCase
         }
     }
 }
+
