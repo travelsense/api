@@ -11,6 +11,7 @@ use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Mapper\DB\CategoryMapper;
+use Api\Mapper\DB\FlaggedCommentMapper;
 
 $app['mapper.db.user'] = function($app) {
     $mapper =  new UserMapper($app['db.main.pdo']);
@@ -45,5 +46,15 @@ $app['mapper.db.category'] = function($app) {
 $app['mapper.db.comment'] = function($app) {
     $mapper = new CommentMapper($app['db.main.pdo']);
     $mapper->setUserMapper($app['mapper.db.user']);
+    return $mapper;
+};
+
+$app['mapper.db.flagged_comments'] = function($app){
+    $mapper = new  FlaggedCommentMapper($app['db.main.pdo']);
+    return $mapper;
+};
+
+$app['mapper.db.travel_comments'] = function($app){
+    $mapper = new  CommentMapper($app['db.main.pdo']);
     return $mapper;
 };
