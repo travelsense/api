@@ -8,14 +8,14 @@
 namespace Api;
 
 use Api\Mapper\DB\CategoryMapper;
+use Api\Mapper\DB\CommentMapper;
+use Api\Mapper\DB\FlaggedCommentMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\UserMapper;
-use Api\Mapper\DB\FlaggedCommentMapper;
-use Api\Mapper\DB\CommentMapper;
 use Api\Model\Travel\Category;
+use Api\Model\Travel\Comment;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
-use Api\Model\Travel\Comment;
 use Api\Test\DatabaseTrait;
 use PDO;
 
@@ -259,10 +259,15 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function createComment(int $travelId, string $text): Comment
+    /**
+     * @param int $authorId, int $travelId, string $text
+     * @return Comment
+     */
+    public function createComment(int $authorId, int $travelId, string $text): Comment
     {
         $comment = new Comment();
         $comment
+            ->setAuthorId($authorId)
             ->setTravelId($travelId)
             ->setText($text)
         ;
@@ -271,15 +276,23 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     
     public function testFlagComment()
     {
-        $user = $this->createUser('a');
-        $travel = $this->createTravel($user, 'a');
-        $comment = $this->createComment($travel->getId(), 'flagged this comment');
-            
+        $user = $this->createUser('testUser');
+        $this->userMapper->insert($user);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $this->travelMapper->insert($travel);
+
+        $comment = $this->createComment($user->getId(), $travel->getId(), 'flagged this comment');
+        $this->commentMapper->insert($comment);
+
         $mapper = $this->flaggedCommentMapper;
         
         $mapper->flagComment($user->getId(), $comment->getId());
-        $select = $this->pdo->prepare('SELECT * FROM flagged_comments');
+        $select = $this->pdo->prepare('SELECT comment_id, user_id FROM flagged_comments');
+        $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
-        $this->assertEquals($row, [$user->getId() => $comment->getId()]);
+        $this->assertEquals(
+            ['comment_id' => $comment->getId(), 'user_id' => $user->getId()],
+            $row );
     }
 }
