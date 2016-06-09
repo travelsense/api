@@ -49,12 +49,10 @@ $app['mapper.db.comment'] = function($app) {
     return $mapper;
 };
 
-$app['mapper.db.flagged_comments'] = function($app){
-    $mapper = new  FlaggedCommentMapper($app['db.main.pdo']);
-    return $mapper;
+$app['mapper.db.flagged_comments'] = function($app) {
+    return new FlaggedCommentMapper($app['db.main.pdo']);
 };
 
-$app['mapper.db.travel_comments'] = function($app){
-    $mapper = new  CommentMapper($app['db.main.pdo']);
-    return $mapper;
+$app['mapper.db.travel_comments'] = function($app) {
+    return new CommentMapper($app['db.main.pdo']);
 };

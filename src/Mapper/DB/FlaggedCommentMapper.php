@@ -2,6 +2,7 @@
 namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
+use BadMethodCallException;
 
 class FlaggedCommentMapper extends AbstractPDOMapper
 {
@@ -27,6 +28,6 @@ class FlaggedCommentMapper extends AbstractPDOMapper
 
     protected function create(array $row)
     {
-        throw new \BadMethodCallException();
+        throw new BadMethodCallException();
     }
 }
