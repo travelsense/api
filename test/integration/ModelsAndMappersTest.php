@@ -293,6 +293,7 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $row = $select->fetch(PDO::FETCH_NAMED);
         $this->assertEquals(
             ['comment_id' => $comment->getId(), 'user_id' => $user->getId()],
-            $row );
+            $row
+        );
     }
 }

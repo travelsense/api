@@ -2,7 +2,6 @@
 namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
-use PDO;
 
 class FlaggedCommentMapper extends AbstractPDOMapper
 {
@@ -28,6 +27,6 @@ class FlaggedCommentMapper extends AbstractPDOMapper
 
     protected function create(array $row)
     {
-        // TODO: Implement create() method.
+        throw new \BadMethodCallException();
     }
 }
