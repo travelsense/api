@@ -13,7 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
-$app['debug'] = $app['config']['debug'];
+foreach (['debug', 'env'] as $key) {
+    $app[$key] = $app['config'][$key];
+}
 
 $app->error(function (Exception $e) use ($app) {
     if ($e instanceof ApiException) {
@@ -77,8 +79,10 @@ $app->register(new TwigServiceProvider , [
 // Monolog
 $app->register(new MonologServiceProvider, [
     'monolog.logfile' => $app['config']['log']['main'],
-    'monolog.name' => 'vaca',
+    'monolog.name' => 'api',
 ]);
 
 // Pimple dumper
-$app->register(new PimpleDumpProvider());
+if ($app['env'] === 'dev') {
+    $app->register(new PimpleDumpProvider());
+}

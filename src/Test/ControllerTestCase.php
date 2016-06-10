@@ -11,10 +11,9 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
      */
     protected function buildUser()
     {
-        $user = $this->getMock(
-            'Api\\Model\\User',
-            ['getEmail', 'getPicture', 'getFirstName', 'getLastName', 'getId', 'getCreated']
-        );
+        $user = $this->getMockBuilder('Api\\Model\\User')
+            ->setMethods(['getEmail', 'getPicture', 'getFirstName', 'getLastName', 'getId', 'getCreated'])
+            ->getMock();
         $user->method('getEmail')->willReturn('user1@example.com');
         $user->method('getPicture')->willReturn('http://example.com/user1.jpg');
         $user->method('getFirstName')->willReturn('User1');
@@ -22,5 +21,18 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
         $user->method('getId')->willReturn(1);
         $user->method('getCreated')->willReturn(new DateTime('2000-01-01'));
         return $user;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function buildCategory()
+    {
+        $category = $this->getMockBuilder('Api\\Model\\Travel\\Category')
+            ->setMethods(['getId', 'getName'])
+            ->getMock();
+        $category->method('getId')->willReturn(1);
+        $category->method('getName')->willReturn('test_category');
+        return $category;
     }
 }

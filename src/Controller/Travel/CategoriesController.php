@@ -30,7 +30,7 @@ class CategoriesController extends ApiController
         foreach ($this->categoryMapper->fetchAll() as $category) {
             $response[] = [
                 'id'    => $category->getId(),
-                'title' => $category->getTitle(),
+                'title' => $category->getName(),
             ];
         }
         return $response;

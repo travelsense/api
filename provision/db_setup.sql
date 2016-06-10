@@ -1,6 +1,0 @@
-ALTER ROLE postgres PASSWORD 'postgres';
-
-CREATE ROLE api_dev LOGIN PASSWORD 'api_dev';
-CREATE ROLE api_test LOGIN CREATEDB SUPERUSER PASSWORD 'api_test';
-
-CREATE DATABASE api_dev OWNER = api_dev;

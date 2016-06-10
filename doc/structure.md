@@ -40,4 +40,4 @@ To manage the DB, use `bin/db.php`:
 Mappers is the layer responsible for CRUD operations on models. The storage-specific logic (e.g. SQL statements) must reside in mappers. The database mappers is a thin layer on top of PDO. Mappers may operate entire model object as well as their ids. To keep it simple, there can be mappers without models and models without corresponding mappers.
 
 ## Controllers and routing
-Refer to [Silex routing documentation](http://silex.sensiolabs.org/doc/master/usage.html) to get the general idea. The routing is configured in [routing.php](../app/config/service/routing.php). The route parameters and HTTP GET parameters are passed to controller methods as arguments. 
+Refer to [Silex routing documentation](http://silex.sensiolabs.org/doc/master/usage.html) to get the general idea. The routing is configured in [routing.php](../app/config/service/routing.php). The route parameters and HTTP GET parameters are passed to controller methods as arguments.
