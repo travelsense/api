@@ -1,4 +1,6 @@
 #Production deployment
 
-* Build: `bin/build-tag.sh <tag>`. If tag is not specified, the most recent tag will be used. 
-This will create a `build/<tag>.tar.gz` archive to be released.
+Run `bin/deploy.sh [-s] [-i] [-t <tag>]`.
+* -t - tag to build (the most recent by default)
+* -s - switch to the deployed release
+* -i - run database install scripts
