@@ -7,8 +7,8 @@
 RELEASE_DIR=/www/release
 CURRENT=/www/current
 
-while getopts ":sit:" opt; do
-  case $opt in
+while getopts ":sit:" OPT; do
+  case ${OPT} in
     t)
       TAG=$OPTARG
       ;;
@@ -19,7 +19,7 @@ while getopts ":sit:" opt; do
       DO_INSTALL=true
       ;;
     \?)
-      echo "Invalid option: -$OPTARG"
+      echo "Invalid option: -${OPTARG}"
       exit 1
       ;;
   esac
@@ -52,6 +52,9 @@ fi
 if [[ "$DO_SWITCH" = true ]]; then
     echo "*** Switching to tag ${TAG}"
     sudo ln -sfT ${RELEASE} /www/current
+    for SERVICE in php7.0-fpm nginx; do
+        sudo service ${SERVICE} restart
+    done
 fi
 
 if [[ "$DO_INSTALL" = true ]]; then
