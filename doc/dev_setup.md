@@ -18,6 +18,7 @@ The development cycle is similar to [Contributing to Open Source]( https://guide
 
 ## Troubleshooting
 * On some Linux boxes Vagrant does not always set the network up automatically. You may need to do something similar to `sudo ip link set vboxnet0 up && sudo ip addr add 172.16.0.1/24 dev vboxnet0` to enable networking.
+* If you have problem with disabled 64bit system virtualization. You have to enable this option in BIOS CPU settings.
 
 ## Getting Database access
 PostgreSQL server is listening on all interfaces at port 5432. There are 2 databases available:
