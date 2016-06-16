@@ -42,6 +42,11 @@ class Travel
     private $published = false;
 
     /**
+     * @var string
+     */
+    private $creationMode;
+
+    /**
      * @return string
      */
     public function getDescription()
@@ -148,4 +153,23 @@ class Travel
         $this->published = $published;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getCreationMode()
+    {
+        return $this->creationMode;
+    }
+
+    /**
+     * @param string $creationMode
+     * @return Travel
+     */
+    public function setCreationMode($creationMode)
+    {
+        $this->creationMode = $creationMode;
+        return $this;
+    }
+
 }

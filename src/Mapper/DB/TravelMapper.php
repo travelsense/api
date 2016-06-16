@@ -86,8 +86,8 @@ class TravelMapper extends AbstractPDOMapper
     public function insert(Travel $travel)
     {
         $insert = $this->pdo->prepare('
-            INSERT INTO travels (title, description, content, is_published, image, author_id)
-            VALUES (:title, :description, :content::JSON, :published, :image, :author_id) RETURNING id, created
+            INSERT INTO travels (title, description, content, is_published, image, author_id, creation_mode)
+            VALUES (:title, :description, :content::JSON, :published, :image, :author_id, :creation_mode) RETURNING id, created
         ');
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
@@ -216,7 +216,8 @@ class TravelMapper extends AbstractPDOMapper
             content = :content::JSON,
             is_published = :published,
             image = :image,
-            author_id = :author_id
+            author_id = :author_id,
+            creation_mode = :creation_mode
             WHERE id = :id
         ');
 
@@ -240,7 +241,8 @@ class TravelMapper extends AbstractPDOMapper
             ->setPublished($row['is_published'])
             ->setImage($row['image'])
             ->setCreated(new DateTime($row['created']))
-            ->setUpdated(new DateTime($row['updated']));
+            ->setUpdated(new DateTime($row['updated']))
+            ->setCreationMode($row['creation_mode']);
         $categories = $this->categoryMapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
             $travel->setCategoryId($categories[0]->getId());
@@ -260,6 +262,7 @@ class TravelMapper extends AbstractPDOMapper
         $statement->bindValue('published', $travel->isPublished(), PDO::PARAM_BOOL);
         $statement->bindValue('image', $travel->getImage(), PDO::PARAM_STR);
         $statement->bindValue('author_id', $travel->getAuthorId(), PDO::PARAM_INT);
+        $statement->bindValue('creation_mode', $travel->getCreationMode(), PDO::PARAM_STR);
     }
 
     /**

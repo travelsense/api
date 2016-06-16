@@ -40,6 +40,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'description' => 'To make sure ids work properly',
             'image'       => 'https://host.com/image.jpg',
             'content'     => ['foo' => 'bar'],
+            'creation_mode' => 'First Travel test mode',
         ]);
         $this->assertEquals(1, $id);
         $id = $this->apiClient->createTravel([
@@ -47,6 +48,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'description' => 'There and back again',
             'image'       => 'https://host.com/image.jpg',
             'content'     => ['foo' => 'bar'],
+            'creation_mode' => 'Hobbit test mode',
         ]);
         $this->assertEquals(2, $id);
 
@@ -68,6 +70,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('There and back again', $travel->description);
         $this->assertEquals('https://host.com/image.jpg', $travel->image);
         $this->assertEquals(false, $travel->published);
+        $this->assertEquals('Hobbit test mode', $travel->creation_mode);
 
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
         $this->assertEquals((object)['foo' => 'bar'], $travel->content);
@@ -85,6 +88,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'image'       => 'https://host.com/new_image.jpg',
             'published'   => true,
             'content'     => ['pew' => 'boom'],
+            'creation_mode' => 'Two Towers test mode',
         ]);
         $travelUpdated = $this->apiClient->getTravel($id);
         $this->assertEquals('Two Towers', $travelUpdated->title);
@@ -92,6 +96,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('https://host.com/new_image.jpg', $travelUpdated->image);
         $this->assertEquals(true, $travelUpdated->published);
         $this->assertEquals((object)['pew' => 'boom'], $travelUpdated->content);
+        $this->assertEquals('Two Towers test mode', $travelUpdated->creation_mode);
     }
 
     private function checkDeleteTravel(int $id)
