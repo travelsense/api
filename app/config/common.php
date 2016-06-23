@@ -72,4 +72,8 @@ return [
         'key' => 'xxx',
         'ts_code' => 'xxx',
     ],
+    'booking' => [
+        'reward_point_price' => 0.1, // 10 cents
+    ],
+    
 ];

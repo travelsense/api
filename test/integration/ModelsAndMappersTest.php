@@ -7,6 +7,7 @@
 
 namespace Api;
 
+use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\FlaggedCommentMapper;
@@ -38,20 +39,25 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
      */
     private $categoryMapper;
 
-    /*
+    /**
      * @var PDO
      */
     private $pdo;
 
-    /*
-     *@var FlaggedCommentMapper
+    /**
+     * @var FlaggedCommentMapper
      */
     private $flaggedCommentMapper;
 
-    /*
+    /**
      * @var CommentMapper
      */
     private $commentMapper;
+
+    /**
+     * @var BookingMapper
+     */
+    private $bookingMapper;
     
     public function setUp()
     {
@@ -62,8 +68,9 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $this->travelMapper = $app['mapper.db.travel'];
         $this->categoryMapper = $app['mapper.db.category'];
         $this->pdo = $app['db.main.pdo'];
-        $this->flaggedCommentMapper = $app['mapper.db.flagged_comments'];
-        $this->commentMapper = $app['mapper.db.travel_comments'];
+        $this->flaggedCommentMapper = $app['mapper.db.flagged_comment'];
+        $this->commentMapper = $app['mapper.db.comment'];
+        $this->bookingMapper = $app['mapper.db.booking'];
     }
 
     /**
@@ -260,7 +267,9 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int $authorId, int $travelId, string $text
+     * @param int $authorId
+     * @param int $travelId
+     * @param string $text
      * @return Comment
      */
     public function createComment(int $authorId, int $travelId, string $text): Comment
@@ -295,5 +304,39 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
             ['comment_id' => $comment->getId(), 'user_id' => $user->getId()],
             $row
         );
+    }
+    
+    public function testBookingMapper()
+    {
+        $user = $this->createUser('testUser');
+        $this->userMapper->insert($user);
+
+        $travel1 = $this->createTravel($user, 'testTravel');
+        $this->travelMapper->insert($travel1);
+        $travel2 = $this->createTravel($user, 'testTravel');
+        $this->travelMapper->insert($travel2);
+
+        $this->bookingMapper->registerBooking($user->getId(), $travel1->getId());
+        $this->bookingMapper->registerBooking($user->getId(), $travel1->getId()); // no error on double insert
+
+        $select = $this->pdo->prepare('SELECT * FROM bookings');
+        $select->execute();
+        $row = $select->fetch(PDO::FETCH_ASSOC);
+        $this->assertEquals($user->getId(), $row['user_id']);
+        $this->assertEquals($travel1->getId(), $row['travel_id']);
+
+        // getBooksTotal
+        $this->assertEquals(1, $this->bookingMapper->getBookingsTotal($user->getId()));
+        $this->bookingMapper->registerBooking($user->getId(), $travel2->getId());
+        $this->assertEquals(2, $this->bookingMapper->getBookingsTotal($user->getId()));
+
+        // getStats
+        $stats = $this->bookingMapper->getStats($user->getId());
+        $total = 0;
+        foreach ($stats as $item) {
+            $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item['date']);
+            $total += $item['count'];
+        }
+        $this->assertEquals(2, $total);
     }
 }

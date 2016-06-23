@@ -14,6 +14,7 @@ $iataType = '^country|city|port|carrier$';
 /** @var $app Api\Application */
 
 // User
+
 $app->post('/user', 'controller.user:createUser')
     ->bind('create-user');
 
@@ -36,6 +37,10 @@ $app->post('/token', 'controller.auth:create')
 // Uber
 
 $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEstimate');
+
+// Stats
+
+$app->get('/stats', 'controller.booking:getStats');
 
 // Travel
 
@@ -63,6 +68,9 @@ $app->get('/travel/{id}/comments', 'controller.comment:getAllByTravelId')
     ->bind('travel-comment');
 
 $app->post('/travel/{id}/comment', 'controller.comment:createTravelComment')
+    ->convert('id', $toInt);
+
+$app->post('/travel/{id}/book', 'controller.booking:registerBooking')
     ->convert('id', $toInt);
 
 $app->delete('/travel/comment/{id}', 'controller.comment:deleteById')

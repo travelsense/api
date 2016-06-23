@@ -8,6 +8,7 @@ use Api\Controller\AuthController;
 use Api\Controller\ClientController;
 use Api\Controller\HealthCheckController;
 use Api\Controller\IataController;
+use Api\Controller\Travel\BookingController;
 use Api\Controller\Travel\CategoriesController;
 use Api\Controller\Travel\CommentController;
 use Api\Controller\Travel\TravelController;
@@ -88,4 +89,10 @@ $app['controller.iata'] = function($app) {
 
 $app['controller.client'] = function($app) {
     return new ClientController();
+};
+
+$app['controller.booking'] = function($app) {
+    $controller =  new BookingController($app['mapper.db.booking']);
+    $controller->setPointPrice($app['config']['booking']['reward_point_price']);
+    return $controller;
 };
