@@ -34,10 +34,9 @@ class BookingMapper extends AbstractPDOMapper
     /**
      * Get booking stats for the last 7 days as array:
      * [
-     *  '2016-01-03' => 3,
-     *  '2016-01-04' => 7,
+     *  ['date' => '2016-01-03', 'count'=> 3],
      *  ...
-     *  '2016-01-09' => 2,
+     *  ['date' => '2016-01-09' => 'count' => 2],
      * ]
      *
      * @param int $authorId
