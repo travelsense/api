@@ -12,6 +12,11 @@ class BookingController
     private $bookingMapper;
 
     /**
+     * @var float
+     */
+    private $pointPrice = 0.01;
+
+    /**
      * StatsController constructor.
      * @param BookingMapper $bookingMapper
      */
@@ -20,6 +25,14 @@ class BookingController
         $this->bookingMapper = $bookingMapper;
     }
 
+    /**
+     * @param float $pointPrice
+     */
+    public function setPointPrice(float $pointPrice)
+    {
+        $this->pointPrice = $pointPrice;
+    }
+    
     /**
      * @param User $user
      * @param int $id Travel ID
@@ -38,8 +51,10 @@ class BookingController
      */
     public function getStats(User $user): array
     {
+        $bookingsTotal = $this->bookingMapper->getBookingsTotal($user->getId());
         return [
-            'bookingsTotal' => $this->bookingMapper->getBooksTotal($user->getId()),
+            'bookingsTotal' => $bookingsTotal,
+            'rewardTotal' => $bookingsTotal * $this->pointPrice,
             'bookingsLastWeek' => $this->bookingMapper->getStats($user->getId()),
         ];
     }

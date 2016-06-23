@@ -326,9 +326,9 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($travel1->getId(), $row['travel_id']);
 
         // getBooksTotal
-        $this->assertEquals(1, $this->bookingMapper->getBooksTotal($user->getId()));
+        $this->assertEquals(1, $this->bookingMapper->getBookingsTotal($user->getId()));
         $this->bookingMapper->registerBooking($user->getId(), $travel2->getId());
-        $this->assertEquals(2, $this->bookingMapper->getBooksTotal($user->getId()));
+        $this->assertEquals(2, $this->bookingMapper->getBookingsTotal($user->getId()));
 
         // getStats
         $stats = $this->bookingMapper->getStats($user->getId());

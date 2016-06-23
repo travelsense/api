@@ -76,6 +76,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->apiClient->registerBooking($id);
         $stats = $this->apiClient->getStats();
         $this->assertEquals(1, $stats->bookingsTotal);
+        $this->assertEquals(0.1, $stats->rewardTotal);
         $total = 0;
         foreach ($stats->bookingsLastWeek as $item) {
             $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item->date);

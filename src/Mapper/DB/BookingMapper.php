@@ -24,7 +24,7 @@ class BookingMapper extends AbstractPDOMapper
      * @param int $authorId
      * @return int
      */
-    public function getBooksTotal(int $authorId): int
+    public function getBookingsTotal(int $authorId): int
     {
         $select = $this->pdo->prepare("SELECT COUNT(*) FROM bookings b LEFT JOIN travels t on t.id = b.travel_id WHERE t.author_id = :author_id");
         $select->execute([':author_id' => $authorId]);
