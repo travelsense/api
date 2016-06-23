@@ -332,9 +332,11 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
 
         // getStats
         $stats = $this->bookingMapper->getStats($user->getId());
-        $this->assertEquals(2, array_sum($stats));
-        foreach ($stats as $key => $val) {
-            $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $key);
+        $total = 0;
+        foreach ($stats as $item) {
+            $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item['date']);
+            $total += $item['count'];
         }
+        $this->assertEquals(2, $total);
     }
 }

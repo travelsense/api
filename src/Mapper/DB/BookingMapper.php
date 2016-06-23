@@ -46,24 +46,21 @@ class BookingMapper extends AbstractPDOMapper
     public function getStats(int $authorId): array
     {
         $select = $this->pdo->prepare("
-          SELECT d.date AS date, COUNT (b.*) AS count FROM (
-            SELECT to_char(date_trunc('day', (CURRENT_DATE - offs)), 'YYYY-MM-DD')
-            AS date
-            FROM generate_series(0, 6, 1)
-            AS offs
+          SELECT 
+            d.date AS date, 
+            COUNT (b.*) AS count 
+          FROM (
+            SELECT CURRENT_DATE - offs AS date FROM generate_series(0, 6) AS offs
           ) d
-          LEFT OUTER JOIN bookings b 
-          ON (d.date = to_char(date_trunc('day', b.created), 'YYYY-MM-DD'))
-          LEFT JOIN travels t on t.id = b.travel_id AND t.author_id = :author_id
+          LEFT JOIN bookings b 
+            ON (b.created >= d.date) AND (b.created < d.date + 1)
+          LEFT JOIN travels t 
+            ON t.id = b.travel_id AND t.author_id = :author_id
           GROUP BY d.date
           ORDER BY d.date ASC
         ");
         $select->execute([':author_id' => $authorId]);
-        $stats = [];
-        while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
-            $stats[$row['date']] = $row['count'];
-        }
-        return $stats;
+        return $select->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**

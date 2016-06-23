@@ -62,6 +62,29 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->checkDeleteTravel(2);
     }
 
+    public function testBookingStats()
+    {
+        $this->createAndLoginUser();
+        $id = $this->apiClient->createTravel([
+            'title'       => 'First Travel',
+            'description' => 'To make sure ids work properly',
+            'image'       => 'https://host.com/image.jpg',
+            'content'     => ['foo' => 'bar'],
+            'creation_mode' => 'First Travel test mode',
+        ]);
+
+        $this->apiClient->registerBooking($id);
+        $stats = $this->apiClient->getStats();
+        $this->assertEquals(1, $stats->bookingsTotal);
+        $total = 0;
+        foreach ($stats->bookingsLastWeek as $item) {
+            $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item->date);
+            $total += $item->count;
+        }
+        $this->assertEquals(1, $total);
+    }
+
+
     private function checkGetTravel(int $id)
     {
         $travel = $this->apiClient->getTravel($id);

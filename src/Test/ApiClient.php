@@ -263,6 +263,23 @@ class ApiClient
         return $this->get('/travel/favorite');
     }
 
+    /**
+     * @param int $id Travel id
+     * @return mixed
+     */
+    public function registerBooking(int $id)
+    {
+        return $this->post("/travel/$id/book");
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStats()
+    {
+        return $this->get('/stats');
+    }
+
     private function addAuth(array $headers)
     {
         $headers[] = 'Authorization: Token ' . $this->authToken;
