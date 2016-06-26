@@ -78,7 +78,8 @@ $app->register(new TwigServiceProvider , [
 
 // Monolog
 $app->register(new MonologServiceProvider, [
-    'monolog.logfile' => $app['config']['log']['main'],
+    'monolog.logfile' => $app['config']['log']['main']['file'],
+    'monolog.level' => $app['config']['log']['main']['level'],
     'monolog.name' => 'api',
 ]);
 
