@@ -17,7 +17,10 @@ return [
     ],
     'debug' => false,
     'log' => [
-        'main' => '/var/log/api.log',
+        'main' => [
+            'file' => '/var/log/api.log',
+            'level' => 'info',
+        ],
     ],
     'email' => [
         'smtp_user' => 'noreply@hoptrip.us',
