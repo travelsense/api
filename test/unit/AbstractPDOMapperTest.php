@@ -1,8 +1,7 @@
 <?php
 namespace Api;
 
-
-use F3\LazyPDO\LazyPDO;
+use LazyPDO\LazyPDO;
 
 class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 {
