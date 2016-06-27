@@ -5,11 +5,11 @@
   "require": {
     "php": "^7.0",
     "f3ath/simpleuber": "^1.0",
-    "f3ath/lazypdo": "0.*",
+    "lazypdo/lazypdo": "^1.0",
     "facebook/php-sdk-v4" : "~5.0",
     "hackzilla/password-generator": "^1.1",
     "monolog/monolog": "^1.17",
-    "silex/silex": "~2.0",
+    "silex/silex": "^2.0.3-dev",
     "swiftmailer/swiftmailer": "^5.0",
     "symfony/security": "^3.0",
     "symfony/translation": "^3.0",
@@ -22,7 +22,7 @@
     "sorien/silex-pimple-dumper": "~2.0",
     "weew/php-http-server": "^1.0",
     "squizlabs/php_codesniffer": "~2.5",
-    "fabpot/php-cs-fixer": "^1.11"
+    "friendsofphp/php-cs-fixer": "^1.11"
   },
   "autoload": {
     "psr-4": {"Api\\": "src/"}
