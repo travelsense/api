@@ -67,12 +67,12 @@ class WegoHotelController extends ApiController
         $location = $response['location'];
         $hotels = $response['hotels'];
         foreach ($hotels as $hotel) {
-            $hotelId = $this->getHotelIdByWegoId($hotel['id']);
-            if ($hotelId !== false) {
-                $this->updateHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars'], $hotelId);
+            $hotel_id = $this->getHotelIdByWegoId($hotel['id']);
+            if ($hotel_id !== false) {
+                $this->updateHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars'], $hotel_id);
             } else {
-                $hotelId = $this->insertHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars']);
-                $this->addWegoIdForHotelId($hotelId, $hotel['id']);
+                $hotel_id = $this->insertHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars']);
+                $this->addWegoIdForHotelId($hotel_id, $hotel['id']);
             }
         }
     }
@@ -116,9 +116,9 @@ class WegoHotelController extends ApiController
      * @param float  $lon
      * @param string $desc
      * @param int    $stars
-     * @param int    $hotelId
+     * @param int    $hotel_id
      */
-    private function updateHotelData(string $location, string $name, string $address, float $lat, float $lon, string $desc, int $stars, int $hotelId)
+    private function updateHotelData(string $location, string $name, string $address, float $lat, float $lon, string $desc, int $stars, int $hotel_id)
     {
         $insert = $this->pdo->prepare(
             'UPDATE hotels SET
@@ -134,15 +134,15 @@ class WegoHotelController extends ApiController
             ':lon'         => $lon,
             ':description' => $desc,
             ':stars'       => $stars,
-            ':id'          => $hotelId,
+            ':id'          => $hotel_id,
         ]);
     }
 
     /**
-     * @param int $hotelId
-     * @param int $wegoId
+     * @param int $hotel_id
+     * @param int $wego_id
      */
-    private function addWegoIdForHotelId(int $hotelId, int $wegoId)
+    private function addWegoIdForHotelId(int $hotel_id, int $wego_id)
     {
         $insert = $this->pdo->prepare(
             'INSERT INTO wego_hotels
@@ -150,19 +150,19 @@ class WegoHotelController extends ApiController
              VALUES (:id, :wego_hotel_id)'
         );
         $insert->execute([
-            ':id'            => $hotelId,
-            ':wego_hotel_id' => $wegoId,
+            ':id'            => $hotel_id,
+            ':wego_hotel_id' => $wego_id,
         ]);
     }
 
     /**
-     * @param int $wegoId
+     * @param int $wego_id
      * @return int|false
      */
-    private function getHotelIdByWegoId(int $wegoId)
+    private function getHotelIdByWegoId(int $wego_id)
     {
         $select = $this->pdo->prepare('SELECT hotel_id FROM wego_hotels WHERE wego_hotel_id = :wego_hotel_id');
-        $select->execute([':wego_hotel_id' => $wegoId]);
+        $select->execute([':wego_hotel_id' => $wego_id]);
         return $select->fetchColumn();
     }
 }

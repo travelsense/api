@@ -8,26 +8,26 @@ use PDO;
 class BookingMapper extends AbstractPDOMapper
 {
     /**
-     * @param int $userId
-     * @param int $travelId
+     * @param int $user_id
+     * @param int $travel_id
      */
-    public function registerBooking(int $userId, int $travelId)
+    public function registerBooking(int $user_id, int $travel_id)
     {
         $insert = $this->pdo->prepare("INSERT INTO bookings (user_id, travel_id) VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING");
         $insert->execute([
-            ':user_id' => $userId,
-            ':travel_id' => $travelId,
+            ':user_id' => $user_id,
+            ':travel_id' => $travel_id,
         ]);
     }
 
     /**
-     * @param int $authorId
+     * @param int $author_id
      * @return int
      */
-    public function getBookingsTotal(int $authorId): int
+    public function getBookingsTotal(int $author_id): int
     {
         $select = $this->pdo->prepare("SELECT COUNT(*) FROM bookings b LEFT JOIN travels t on t.id = b.travel_id WHERE t.author_id = :author_id");
-        $select->execute([':author_id' => $authorId]);
+        $select->execute([':author_id' => $author_id]);
         return $select->fetchColumn();
     }
 
@@ -39,10 +39,10 @@ class BookingMapper extends AbstractPDOMapper
      *  ['date' => '2016-01-09' => 'count' => 2],
      * ]
      *
-     * @param int $authorId
+     * @param int $author_id
      * @return array
      */
-    public function getStats(int $authorId): array
+    public function getStats(int $author_id): array
     {
         $select = $this->pdo->prepare("
           SELECT 
@@ -58,7 +58,7 @@ class BookingMapper extends AbstractPDOMapper
           GROUP BY d.date
           ORDER BY d.date ASC
         ");
-        $select->execute([':author_id' => $authorId]);
+        $select->execute([':author_id' => $author_id]);
         return $select->fetchAll(PDO::FETCH_ASSOC);
     }
 

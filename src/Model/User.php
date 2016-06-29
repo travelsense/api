@@ -14,17 +14,17 @@ class User
     /**
      * @var bool
      */
-    private $emailConfirmed = false;
+    private $email_confirmed = false;
 
     /**
      * @var string
      */
-    private $firstName;
+    private $first_name;
 
     /**
      * @var string
      */
-    private $lastName;
+    private $last_name;
 
     /**
      * @var string
@@ -60,17 +60,17 @@ class User
      */
     public function isEmailConfirmed()
     {
-        return $this->emailConfirmed;
+        return $this->email_confirmed;
     }
 
     /**
      *
-     * @param bool $emailConfirmed
+     * @param bool $email_confirmed
      * @return User
      */
-    public function setEmailConfirmed(bool $emailConfirmed)
+    public function setEmailConfirmed(bool $email_confirmed)
     {
-        $this->emailConfirmed = $emailConfirmed;
+        $this->email_confirmed = $email_confirmed;
         return $this;
     }
 
@@ -79,16 +79,16 @@ class User
      */
     public function getFirstName()
     {
-        return $this->firstName;
+        return $this->first_name;
     }
 
     /**
-     * @param string $firstName
+     * @param string $first_name
      * @return User
      */
-    public function setFirstName(string $firstName)
+    public function setFirstName(string $first_name)
     {
-        $this->firstName = $firstName;
+        $this->first_name = $first_name;
         return $this;
     }
 
@@ -97,16 +97,16 @@ class User
      */
     public function getLastName()
     {
-        return $this->lastName;
+        return $this->last_name;
     }
 
     /**
-     * @param string $lastName
+     * @param string $last_name
      * @return User
      */
-    public function setLastName(string $lastName)
+    public function setLastName(string $last_name)
     {
-        $this->lastName = $lastName;
+        $this->last_name = $last_name;
         return $this;
     }
 

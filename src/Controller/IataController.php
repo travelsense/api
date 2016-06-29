@@ -9,15 +9,15 @@ class IataController extends ApiController
     /**
      * @var IATAMapper
      */
-    private $iataMapper;
+    private $iata_mapper;
 
     /**
      * IataController constructor.
-     * @param IATAMapper $iataMapper
+     * @param IATAMapper $iata_mapper
      */
-    public function __construct(IATAMapper $iataMapper)
+    public function __construct(IATAMapper $iata_mapper)
     {
-        $this->iataMapper = $iataMapper;
+        $this->iata_mapper = $iata_mapper;
     }
 
     /**
@@ -28,7 +28,7 @@ class IataController extends ApiController
      */
     public function getOne(string $type, string $code): array
     {
-        $object = $this->iataMapper->fetchOne($type, $code);
+        $object = $this->iata_mapper->fetchOne($type, $code);
         if ($object) {
             return $object;
         } else {
@@ -44,6 +44,6 @@ class IataController extends ApiController
      */
     public function getAll(string $type, int $limit = 10, int $offset = 0): array
     {
-        return $this->iataMapper->fetchAll($type, $limit, $offset);
+        return $this->iata_mapper->fetchAll($type, $limit, $offset);
     }
 }

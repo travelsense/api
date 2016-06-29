@@ -7,18 +7,18 @@ use BadMethodCallException;
 class SessionMapper extends AbstractPDOMapper
 {
     /**
-     * @param int    $userId
+     * @param int    $user_id
      * @param string $token
      * @param string $device
      * @return int session id
      */
-    public function createSession(int $userId, string $token, string $device = null): int
+    public function createSession(int $user_id, string $token, string $device = null): int
     {
         $sql = 'INSERT INTO sessions (user_id, token, device) VALUES (:user_id, :token, :device) RETURNING id';
         $insert = $this->pdo->prepare($sql);
         $insert->execute(
             [
-                ':user_id' => $userId,
+                ':user_id' => $user_id,
                 ':token'   => $token,
                 ':device'  => $device,
             ]

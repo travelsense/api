@@ -16,27 +16,27 @@ class TravelMapper extends AbstractPDOMapper
     /**
      * @var UserMapper
      */
-    private $userMapper;
+    private $user_mapper;
 
     /**
      * @var CategoryMapper
      */
-    private $categoryMapper;
+    private $category_mapper;
 
     /**
-     * @param UserMapper $userMapper
+     * @param UserMapper $user_mapper
      */
-    public function setUserMapper(UserMapper $userMapper)
+    public function setUserMapper(UserMapper $user_mapper)
     {
-        $this->userMapper = $userMapper;
+        $this->user_mapper = $user_mapper;
     }
 
     /**
-     * @param CategoryMapper $categoryMapper
+     * @param CategoryMapper $category_mapper
      */
-    public function setCategoryMapper($categoryMapper)
+    public function setCategoryMapper($category_mapper)
     {
-        $this->categoryMapper = $categoryMapper;
+        $this->category_mapper = $category_mapper;
     }
 
     /**
@@ -55,12 +55,12 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param int $authorId
+     * @param int $author_id
      * @param int $limit
      * @param int $offset
      * @return Travel[]
      */
-    public function fetchByAuthorId(int $authorId, int $limit, int $offset): array
+    public function fetchByAuthorId(int $author_id, int $limit, int $offset): array
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM travels t 
@@ -71,7 +71,7 @@ class TravelMapper extends AbstractPDOMapper
         ');
 
         $select->execute([
-            'userId'  => $authorId,
+            'userId'  => $author_id,
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
@@ -96,7 +96,7 @@ class TravelMapper extends AbstractPDOMapper
         $travel->setCreated(new DateTime($row['created']));
 
         if ($travel->getCategoryId()) {
-            $this->categoryMapper->addTravelToCategory($travel->getId(), $travel->getCategoryId());
+            $this->category_mapper->addTravelToCategory($travel->getId(), $travel->getCategoryId());
         }
     }
 
@@ -105,44 +105,45 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function delete(int $id)
     {
-        $deleteMain = $this->pdo->prepare("DELETE FROM travels WHERE id = :id");
-        $deleteMain->execute([':id' => $id]);
+        $this->pdo
+            ->prepare("DELETE FROM travels WHERE id = :id")
+            ->execute([':id' => $id]);
     }
 
     /**
-     * @param int $travelId
-     * @param int $userId
+     * @param int $travel_id
+     * @param int $user_id
      */
-    public function addFavorite(int $travelId, int $userId)
+    public function addFavorite(int $travel_id, int $user_id)
     {
-        $insert = $this->pdo->prepare('
+        $this->pdo->prepare('
             INSERT INTO favorite_travels (user_id, travel_id)
             VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING
-        ');
-        $insert->execute([
-            ':user_id'   => $userId,
-            ':travel_id' => $travelId,
+        ')->execute([
+            ':user_id' => $user_id,
+            ':travel_id' => $travel_id,
         ]);
     }
 
     /**
-     * @param int $travelId
-     * @param int $userId
+     * @param int $travel_id
+     * @param int $user_id
      */
-    public function removeFavorite(int $travelId, int $userId)
+    public function removeFavorite(int $travel_id, int $user_id)
     {
-        $delete = $this->pdo->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id');
-        $delete->execute([
-            ':user_id'   => $userId,
-            ':travel_id' => $travelId,
-        ]);
+        $this->pdo
+            ->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id')
+            ->execute([
+                ':user_id' => $user_id,
+                ':travel_id' => $travel_id,
+            ]);
     }
 
     /**
-     * @param int $userId
+     * @param int $user_id
      * @return Travel[]
      */
-    public function fetchFavorites(int $userId): array
+    public function fetchFavorites(int $user_id): array
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM  favorite_travels ft
@@ -150,7 +151,7 @@ class TravelMapper extends AbstractPDOMapper
             JOIN users u ON t.author_id = u.id
             WHERE ft.user_id = :user_id
             ');
-        $select->execute(['user_id' => $userId]);
+        $select->execute(['user_id' => $user_id]);
         return $this->buildAll($select);
     }
 
@@ -243,7 +244,7 @@ class TravelMapper extends AbstractPDOMapper
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']))
             ->setCreationMode($row['creation_mode']);
-        $categories = $this->categoryMapper->fetchByTravelId($travel->getId());
+        $categories = $this->category_mapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
             $travel->setCategoryId($categories[0]->getId());
         }
@@ -252,7 +253,7 @@ class TravelMapper extends AbstractPDOMapper
 
     /**
      * @param PDOStatement $statement
-     * @param Travel        $travel
+     * @param Travel $travel
      */
     private function bindCommonValues(PDOStatement $statement, Travel $travel)
     {
@@ -271,7 +272,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     protected function build(array $row): Travel
     {
-        list($travel, $author) = $this->createFromJoined($row, $this, $this->userMapper);
+        list($travel, $author) = $this->createFromJoined($row, $this, $this->user_mapper);
         $travel->setAuthor($author);
         return $travel;
     }

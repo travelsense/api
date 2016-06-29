@@ -19,23 +19,23 @@ class TravelController extends ApiController
     /**
      * @var TravelMapper
      */
-    private $travelMapper;
+    private $travel_mapper;
 
     /**
      * @var CategoryMapper
      */
-    private $categoryMapper;
+    private $category_mapper;
 
     /**
      * TravelController constructor.
      *
-     * @param TravelMapper   $travelMapper
-     * @param CategoryMapper $categoryMapper
+     * @param TravelMapper   $travel_mapper
+     * @param CategoryMapper $category_mapper
      */
-    public function __construct(TravelMapper $travelMapper, CategoryMapper $categoryMapper)
+    public function __construct(TravelMapper $travel_mapper, CategoryMapper $category_mapper)
     {
-        $this->travelMapper = $travelMapper;
-        $this->categoryMapper = $categoryMapper;
+        $this->travel_mapper = $travel_mapper;
+        $this->category_mapper = $category_mapper;
     }
 
     /**
@@ -58,9 +58,9 @@ class TravelController extends ApiController
         if ($json->has('creation_mode')) {
             $travel->setCreationMode($json->get('creation_mode'));
         }
-        $this->travelMapper->insert($travel);
+        $this->travel_mapper->insert($travel);
         if ($json->has('category_id')) {
-            $this->categoryMapper->addTravelToCategory($travel->getId(), $json->get('category_id'));
+            $this->category_mapper->addTravelToCategory($travel->getId(), $json->get('category_id'));
         }
         if ($json->has('published')) {
             $travel->setPublished($json->get('published'));
@@ -76,7 +76,7 @@ class TravelController extends ApiController
      */
     public function getTravel(int $id): array
     {
-        $travel = $this->travelMapper->fetchById($id);
+        $travel = $this->travel_mapper->fetchById($id);
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
@@ -91,7 +91,7 @@ class TravelController extends ApiController
      */
     public function getUserTravels(User $user, int $limit = 10, int $offset = 0): array
     {
-        $travels = $this->travelMapper->fetchByAuthorId($user->getId(), $limit, $offset);
+        $travels = $this->travel_mapper->fetchByAuthorId($user->getId(), $limit, $offset);
         return $this->buildTravelSetView($travels);
     }
 
@@ -102,7 +102,7 @@ class TravelController extends ApiController
      */
     public function addFavorite(int $id, User $user): array
     {
-        $this->travelMapper->addFavorite($id, $user->getId());
+        $this->travel_mapper->addFavorite($id, $user->getId());
         return [];
     }
 
@@ -113,7 +113,7 @@ class TravelController extends ApiController
      */
     public function removeFavorite(int $id, User $user): array
     {
-        $this->travelMapper->removeFavorite($id, $user->getId());
+        $this->travel_mapper->removeFavorite($id, $user->getId());
         return [];
     }
 
@@ -123,7 +123,7 @@ class TravelController extends ApiController
      */
     public function getFavorites(User $user): array
     {
-        $travels = $this->travelMapper->fetchFavorites($user->getId());
+        $travels = $this->travel_mapper->fetchFavorites($user->getId());
         return $this->buildTravelSetView($travels);
     }
 
@@ -154,16 +154,16 @@ class TravelController extends ApiController
                 ],
             ],
         ];
-        $featuredCategoryNames = ['Featured', 'Romantic', 'Sports'];
-        $featuredCategories = [];
-        foreach ($featuredCategoryNames as $name) {
-            $travels = $this->travelMapper->fetchPublishedByCategory($name, 5, 0);
-            $featuredCategories[] = [
+        $featured_category_names = ['Featured', 'Romantic', 'Sports'];
+        $featured_categories = [];
+        foreach ($featured_category_names as $name) {
+            $travels = $this->travel_mapper->fetchPublishedByCategory($name, 5, 0);
+            $featured_categories[] = [
                 'title'   => $name,
                 'travels' => $this->buildTravelSetView($travels),
             ];
         }
-        $result['categories'] = $featuredCategories;
+        $result['categories'] = $featured_categories;
         return $result;
     }
 
@@ -175,7 +175,7 @@ class TravelController extends ApiController
      */
     public function getTravelsByCategory(string $name, int $limit = 10, int $offset = 0): array
     {
-        $travels = $this->travelMapper->fetchByCategory($name, $limit, $offset);
+        $travels = $this->travel_mapper->fetchByCategory($name, $limit, $offset);
         return $this->buildTravelSetView($travels);
     }
 
@@ -208,9 +208,9 @@ class TravelController extends ApiController
             $travel->setCreationMode($json->get('creation_mode'));
         }
         if ($json->has('category_id')) {
-            $this->categoryMapper->addTravelToCategory($id, $json->get('category_id'));
+            $this->category_mapper->addTravelToCategory($id, $json->get('category_id'));
         }
-        $this->travelMapper->update($travel);
+        $this->travel_mapper->update($travel);
 
         return [];
     }
@@ -223,7 +223,7 @@ class TravelController extends ApiController
     public function deleteTravel(int $id, User $user): array
     {
         $travel = $this->getOwnedTravel($id, $user);
-        $this->travelMapper->delete($travel->getId());
+        $this->travel_mapper->delete($travel->getId());
         return [];
     }
 
@@ -235,7 +235,7 @@ class TravelController extends ApiController
      */
     private function getOwnedTravel(int $id, User $user): Travel
     {
-        $travel = $this->travelMapper->fetchById($id);
+        $travel = $this->travel_mapper->fetchById($id);
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }

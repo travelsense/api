@@ -25,21 +25,21 @@ $app->on(KernelEvents::REQUEST, function(GetResponseEvent $event) use ($app) {
     if (in_array($route, $app['config']['security']['unsecured_routes'])) {
         return;
     }
-    $authHeader = $request->headers->get('Authorization');
-    if (!preg_match('/^Token (.+)/i', $authHeader, $matches)) {
+    $auth_header = $request->headers->get('Authorization');
+    if (!preg_match('/^Token (.+)/i', $auth_header, $matches)) {
         $event->setResponse(new Response('', Response::HTTP_UNAUTHORIZED, ['WWW-Authenticate' => 'Token']));
         return;
     }
-    $authEvent = new AuthenticationEvent($matches[1]);
-    $app['dispatcher']->dispatch($authEvent::NAME, $authEvent);
+    $auth_event = new AuthenticationEvent($matches[1]);
+    $app['dispatcher']->dispatch($auth_event::NAME, $auth_event);
 });
 
 $app->on(AuthenticationEvent::NAME, function(AuthenticationEvent $event) use ($app) {
-    $userId = $app['security.session_manager']->getUserId($event->getToken());
-    if (empty($userId)) {
+    $user_id = $app['security.session_manager']->getUserId($event->getToken());
+    if (empty($user_id)) {
         throw new ApiException('Invalid token', ApiException::INVALID_TOKEN);
     }
-    $app['security.credentials']->setUserId($userId);
+    $app['security.credentials']->setUserId($user_id);
 });
 
 $app['user'] = function($app) {
@@ -49,8 +49,8 @@ $app['user'] = function($app) {
     if (empty($id)) {
         throw new LogicException('User not authenticated');
     }
-    /** @var \Api\Mapper\DB\UserMapper $userMapper */
-    $userMapper = $app['mapper.db.user'];
-    return $userMapper->fetchById($id);
+    /** @var \Api\Mapper\DB\UserMapper $user_mapper */
+    $user_mapper = $app['mapper.db.user'];
+    return $user_mapper->fetchById($id);
 };
 
