@@ -9,28 +9,28 @@ class BookingController
     /**
      * @var BookingMapper
      */
-    private $bookingMapper;
+    private $booking_mapper;
 
     /**
      * @var float
      */
-    private $pointPrice = 0.01;
+    private $point_price = 0.01;
 
     /**
      * StatsController constructor.
-     * @param BookingMapper $bookingMapper
+     * @param BookingMapper $booking_mapper
      */
-    public function __construct(BookingMapper $bookingMapper)
+    public function __construct(BookingMapper $booking_mapper)
     {
-        $this->bookingMapper = $bookingMapper;
+        $this->booking_mapper = $booking_mapper;
     }
 
     /**
-     * @param float $pointPrice
+     * @param float $point_price
      */
-    public function setPointPrice(float $pointPrice)
+    public function setPointPrice(float $point_price)
     {
-        $this->pointPrice = $pointPrice;
+        $this->point_price = $point_price;
     }
     
     /**
@@ -40,7 +40,7 @@ class BookingController
      */
     public function registerBooking(User $user, int $id)
     {
-        $this->bookingMapper->registerBooking($user->getId(), $id);
+        $this->booking_mapper->registerBooking($user->getId(), $id);
         return [];
     }
 
@@ -51,11 +51,11 @@ class BookingController
      */
     public function getStats(User $user): array
     {
-        $bookingsTotal = $this->bookingMapper->getBookingsTotal($user->getId());
+        $bookings_total = $this->booking_mapper->getBookingsTotal($user->getId());
         return [
-            'bookingsTotal' => $bookingsTotal,
-            'rewardTotal' => $bookingsTotal * $this->pointPrice,
-            'bookingsLastWeek' => $this->bookingMapper->getStats($user->getId()),
+            'bookingsTotal' => $bookings_total,
+            'rewardTotal' => $bookings_total * $this->point_price,
+            'bookingsLastWeek' => $this->booking_mapper->getStats($user->getId()),
         ];
     }
 }

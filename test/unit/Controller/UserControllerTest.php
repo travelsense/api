@@ -7,20 +7,20 @@ use Api\Test\ControllerTestCase;
 
 class UserControllerTest extends ControllerTestCase
 {
-    private $userMapper;
+    private $user_mapper;
     private $mailer;
-    private $expStorage;
+    private $storage;
 
     /**
      * @var UserController
      */
     private $controller;
 
-    private $testUser;
+    private $test_user;
 
     public function setUp()
     {
-        $this->userMapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
+        $this->user_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
             ->setMethods(['insert', 'emailExists'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -30,18 +30,18 @@ class UserControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->expStorage = $this->getMockBuilder('Api\\ExpirableStorage')
+        $this->storage = $this->getMockBuilder('Api\\ExpirableStorage')
             ->setMethods(['store'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->controller = new UserController(
-            $this->userMapper,
+            $this->user_mapper,
             $this->mailer,
-            $this->expStorage
+            $this->storage
         );
 
-        $this->testUser = $this->buildUser();
+        $this->test_user = $this->buildUser();
     }
 
     /**
@@ -58,7 +58,7 @@ class UserControllerTest extends ControllerTestCase
                 'lastName'  => 'Tester',
                 'created'   => '2000-01-01T00:00:00+00:00',
             ],
-            $this->controller->getUser($this->testUser)
+            $this->controller->getUser($this->test_user)
         );
     }
 
@@ -81,11 +81,11 @@ class UserControllerTest extends ControllerTestCase
         
         $request->method('getContent')->willReturn($json);
 
-        $this->userMapper->method('emailExists')
+        $this->user_mapper->method('emailExists')
             ->with('test@example.com')
             ->willReturn(true, false);
 
-        $this->userMapper->expects($this->once())
+        $this->user_mapper->expects($this->once())
             ->method('insert')
             ->with($this->callback(function (User $u) {
                 return $u->getEmail() === 'test@example.com'
@@ -94,7 +94,7 @@ class UserControllerTest extends ControllerTestCase
                 && $u->getPicture() === 'http://example.com/user.jpg';
             }));
 
-        $this->expStorage->expects($this->once())
+        $this->storage->expects($this->once())
             ->method('store')
             ->with('test@example.com')
             ->willReturn('test_token');

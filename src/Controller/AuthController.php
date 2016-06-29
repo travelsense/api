@@ -19,17 +19,17 @@ class AuthController extends ApiController
     /**
      * @var PasswordGeneratorInterface
      */
-    private $pwdGenerator;
+    private $pwd_generator;
 
     /**
      * @var UserMapper
      */
-    private $userMapper;
+    private $user_mapper;
 
     /**
      * @var SessionManager
      */
-    private $sessionManager;
+    private $session_manager;
 
     /**
      * @var Facebook
@@ -39,22 +39,22 @@ class AuthController extends ApiController
     /**
      * UserSessionController constructor.
      *
-     * @param UserMapper                 $userMapper
-     * @param SessionManager             $sessionManager
+     * @param UserMapper                 $user_mapper
+     * @param SessionManager             $session_manager
      * @param Facebook                   $facebook
-     * @param PasswordGeneratorInterface $pwdGenerator
+     * @param PasswordGeneratorInterface $pwd_generator
      */
     public function __construct(
-        UserMapper $userMapper,
-        SessionManager $sessionManager,
+        UserMapper $user_mapper,
+        SessionManager $session_manager,
         Facebook $facebook,
-        PasswordGeneratorInterface $pwdGenerator
+        PasswordGeneratorInterface $pwd_generator
     )
     {
-        $this->userMapper = $userMapper;
-        $this->sessionManager = $sessionManager;
+        $this->user_mapper = $user_mapper;
+        $this->session_manager = $session_manager;
         $this->facebook = $facebook;
-        $this->pwdGenerator = $pwdGenerator;
+        $this->pwd_generator = $pwd_generator;
     }
 
     /**
@@ -75,7 +75,7 @@ class AuthController extends ApiController
             $password = $json->getString('password');
             $user = $this->getUserByEmailPassword($email, $password);
         }
-        $token = $this->sessionManager->createSession($user->getId(), $request);
+        $token = $this->session_manager->createSession($user->getId(), $request);
         return ['token' => $token];
     }
 
@@ -87,7 +87,7 @@ class AuthController extends ApiController
      */
     protected function getUserByEmailPassword(string $email, string $password): User
     {
-        $user = $this->userMapper->fetchByEmailAndPassword($email, $password);
+        $user = $this->user_mapper->fetchByEmailAndPassword($email, $password);
         if (null === $user) {
             throw new ApiException('Invalid email or password', ApiException::INVALID_EMAIL_PASSWORD);
         }
@@ -95,26 +95,26 @@ class AuthController extends ApiController
     }
 
     /**
-     * @param string $fbToken
+     * @param string $token
      * @return User
      */
-    protected function getUserByFacebookToken(string $fbToken): User
+    protected function getUserByFacebookToken(string $token): User
     {
-        $this->facebook->setDefaultAccessToken($fbToken);
-        $fbUser = $this->facebook
+        $this->facebook->setDefaultAccessToken($token);
+        $fb_user = $this->facebook
             ->get('/me?fields=picture,email,first_name,last_name')
             ->getGraphUser();
-        $user = $this->userMapper->fetchByEmail($fbUser->getEmail());
+        $user = $this->user_mapper->fetchByEmail($fb_user->getEmail());
         if (null === $user) {
-            $pic = $fbUser->getPicture();
+            $pic = $fb_user->getPicture();
             $user = new User();
             $user
-                ->setEmail($fbUser->getEmail())
-                ->setFirstName($fbUser->getFirstName())
-                ->setLastName($fbUser->getLastName())
+                ->setEmail($fb_user->getEmail())
+                ->setFirstName($fb_user->getFirstName())
+                ->setLastName($fb_user->getLastName())
                 ->setPicture($pic ? $pic->getUrl() : null)
-                ->setPassword($this->pwdGenerator->generatePassword());
-            $this->userMapper->insert($user);
+                ->setPassword($this->pwd_generator->generatePassword());
+            $this->user_mapper->insert($user);
         }
         return $user;
     }

@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SessionManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $mapper;
-    private $sessionManager;
+    private $manager;
 
     public function setUp()
     {
@@ -15,7 +15,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['createSession', 'getUserId'])
             ->getMock();
 
-        $this->sessionManager = new SessionManager($this->mapper);
+        $this->manager = new SessionManager($this->mapper);
     }
 
     public function testCreateSession()
@@ -29,12 +29,12 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
             )
             ->willReturn(42);
         $request = new Request([], [], [], [], [], ['HTTP_USER_AGENT' => 'test_device']);
-        $this->assertRegExp('/^[0-9a-f]{40}42$/', $this->sessionManager->createSession(123, $request));
+        $this->assertRegExp('/^[0-9a-f]{40}42$/', $this->manager->createSession(123, $request));
     }
 
     public function testShortKey()
     {
-        $this->assertNull($this->sessionManager->getuserId('foo'));
+        $this->assertNull($this->manager->getuserId('foo'));
     }
 
     public function testGetUserId()
@@ -47,6 +47,6 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
                 $token
             )
             ->willReturn('test_user_id');
-        $this->assertEquals('test_user_id', $this->sessionManager->getuserId($token . '42'));
+        $this->assertEquals('test_user_id', $this->manager->getuserId($token . '42'));
     }
 }

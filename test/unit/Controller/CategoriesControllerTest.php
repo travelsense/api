@@ -5,27 +5,27 @@ use Api\Test\ControllerTestCase;
 
 class CategoriesControllerTest extends ControllerTestCase
 {
-    private $categoryMapper;
+    private $category_mapper;
 
     /**
      * @var CategoriesController
      */
     private $controller;
 
-    private $testCategory;
+    private $test_category;
 
     public function setUp()
     {
-        $this->categoryMapper = $this->getMockBuilder('Api\\Mapper\\DB\\CategoryMapper')
+        $this->category_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\CategoryMapper')
             ->setMethods(['fetchAll'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->controller = new CategoriesController(
-            $this->categoryMapper
+            $this->category_mapper
         );
 
-        $this->testCategory = $this->buildCategory();
+        $this->test_category = $this->buildCategory();
     }
 
     /**
@@ -33,9 +33,9 @@ class CategoriesControllerTest extends ControllerTestCase
      */
     public function testGetCategories()
     {
-        $this->categoryMapper->method('fetchAll')
+        $this->category_mapper->method('fetchAll')
             ->willReturn(
-                [$this->testCategory]
+                [$this->test_category]
             );
 
         $this->assertEquals(

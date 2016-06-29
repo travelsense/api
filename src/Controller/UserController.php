@@ -18,7 +18,7 @@ class UserController extends ApiController
     /**
      * @var UserMapper
      */
-    private $userMapper;
+    private $user_mapper;
 
     /**
      * @var MailerService
@@ -33,17 +33,17 @@ class UserController extends ApiController
     /**
      * UserController constructor.
      *
-     * @param UserMapper       $userMapper
+     * @param UserMapper       $user_mapper
      * @param MailerService    $mailer
      * @param ExpirableStorage $storage
      */
     public function __construct(
-        UserMapper $userMapper,
+        UserMapper $user_mapper,
         MailerService $mailer,
         ExpirableStorage $storage
     )
     {
-        $this->userMapper = $userMapper;
+        $this->user_mapper = $user_mapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
     }
@@ -96,10 +96,10 @@ class UserController extends ApiController
             ->setLastName($json->getString('lastName'))
             ->setPicture($json->has('picture') ? $json->getString('picture') : '');
 
-        if ($this->userMapper->emailExists($user->getEmail())) {
+        if ($this->user_mapper->emailExists($user->getEmail())) {
             throw new ApiException('Email already exists', ApiException::USER_EXISTS);
         }
-        $this->userMapper->insert($user);
+        $this->user_mapper->insert($user);
         $this->sendConfirmationLink($user);
         return [];
     }
@@ -113,7 +113,7 @@ class UserController extends ApiController
      */
     public function sendPasswordResetLink(string $email): array
     {
-        if (false === $this->userMapper->emailExists($email)) {
+        if (false === $this->user_mapper->emailExists($email)) {
             throw new ApiException('Email not found', ApiException::RESOURCE_NOT_FOUND);
         }
         $token = $this->storage->store($email);
@@ -136,13 +136,13 @@ class UserController extends ApiController
             }
             throw new ApiException('Token expired', ApiException::RESOURCE_NOT_FOUND);
         }
-        if (false === $this->userMapper->emailExists($email)) {
+        if (false === $this->user_mapper->emailExists($email)) {
             if ($this->logger) {
                 $this->logger->error('Email not found', ['token' => $token, 'email' => $email]);
             }
             throw new ApiException('Email not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        $this->userMapper->confirmEmail($email);
+        $this->user_mapper->confirmEmail($email);
         return [];
     }
 
@@ -162,7 +162,7 @@ class UserController extends ApiController
             }
             throw new ApiException('Token expired', ApiException::RESOURCE_NOT_FOUND);
         }
-        if (false === $this->userMapper->emailExists($email)) {
+        if (false === $this->user_mapper->emailExists($email)) {
             if ($this->logger) {
                 $this->logger->error('Email not found', ['token' => $token, 'email' => $email]);
             }
@@ -170,7 +170,7 @@ class UserController extends ApiController
         }
         $json = DataObject::createFromString($request->getContent());
         $password = $json->getString('password');
-        $this->userMapper->updatePasswordByEmail($email, $password);
+        $this->user_mapper->updatePasswordByEmail($email, $password);
         return [];
     }
 
@@ -185,16 +185,16 @@ class UserController extends ApiController
     {
         $json = DataObject::createFromString($request->getContent());
         $email = $json->getString('email');
-        $emailUpdate = ($user->getEmail() !== $email);
+        $email_update = ($user->getEmail() !== $email);
         $user
             ->setEmail($json->getString('email'))
             ->setFirstName($json->getString('firstName'))
             ->setLastName($json->getString('lastName'));
-        if ($emailUpdate) {
+        if ($email_update) {
             $user->setEmailConfirmed(false);
         }
-        $this->userMapper->update($user);
-        if ($emailUpdate) {
+        $this->user_mapper->update($user);
+        if ($email_update) {
             $this->sendConfirmationLink($user);
         }
         return [];

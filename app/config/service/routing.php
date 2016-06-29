@@ -1,15 +1,15 @@
 <?php
 // Routing
 
-$toDate = function (string $date): DateTime {
+$to_date = function (string $date): DateTime {
     return new DateTime($date);
 };
 
-$toInt = function (string $val): int {
+$to_int = function (string $val): int {
     return intval($val);
 };
 
-$iataType = '^country|city|port|carrier$';
+$iata_type = '^country|city|port|carrier$';
 
 /** @var $app Api\Application */
 
@@ -55,36 +55,36 @@ $app->get('/travel/featured', 'controller.travel:getFeatured');
 $app->get('/travel/favorite', 'controller.travel:getFavorites');
 
 $app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
-    ->convert('id', $toInt);
+    ->convert('id', $to_int);
 
 $app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite')
-    ->convert('id', $toInt);
+    ->convert('id', $to_int);
 
 $app->post('/travel/comment/{id}/flag', function() { return [];}) // TODO Implement flagging
-    ->convert('id', $toInt);
+    ->convert('id', $to_int);
 
 $app->get('/travel/{id}/comments', 'controller.comment:getAllByTravelId')
-    ->convert('id', $toInt)
+    ->convert('id', $to_int)
     ->bind('travel-comment');
 
 $app->post('/travel/{id}/comment', 'controller.comment:createTravelComment')
-    ->convert('id', $toInt);
+    ->convert('id', $to_int);
 
 $app->post('/travel/{id}/book', 'controller.booking:registerBooking')
-    ->convert('id', $toInt);
+    ->convert('id', $to_int);
 
 $app->delete('/travel/comment/{id}', 'controller.comment:deleteById')
-    ->convert('id', $toInt);
+    ->convert('id', $to_int);
 
 $app->get('/travel/{id}', 'controller.travel:getTravel')
-    ->convert('id', $toInt)
+    ->convert('id', $to_int)
     ->bind('travel-by-id');
 
 $app->put('/travel/{id}', 'controller.travel:updateTravel')
-    ->convert('id', $toInt);
+    ->convert('id', $to_int);
 
 $app->delete('/travel/{id}', 'controller.travel:deleteTravel')
-    ->convert('id', $toInt);
+    ->convert('id', $to_int);
 
 $app->post('/travel', 'controller.travel:createTravel');
 
@@ -96,22 +96,22 @@ $app->get('/categories', 'controller.categories:getCategories')
 // IATA entities
 
 $app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
-    ->assert('type', $iataType)
+    ->assert('type', $iata_type)
     ->bind('iata-by-code');
 
 $app->get('/iata/{type}/all', 'controller.iata:getAll')
-    ->assert('type', $iataType)
+    ->assert('type', $iata_type)
     ->bind('iata-all');
 
 // Hotel
 
 $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:startSearch')
-    ->convert('in', $toDate)
-    ->convert('out', $toDate)
-    ->convert('rooms', $toInt);
+    ->convert('in', $to_date)
+    ->convert('out', $to_date)
+    ->convert('rooms', $to_int);
 
 $app->get('/hotel/search-results/{id}/{page}', 'controller.wego:getSearchResults')
-    ->convert('page', $toInt);
+    ->convert('page', $to_int);
 
 // Health check
 

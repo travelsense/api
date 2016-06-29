@@ -8,26 +8,26 @@ class Credentials
     /**
      * @var int
      */
-    private $userId;
+    private $user_id;
 
     /**
      * @return int
      */
     public function getUserId():int 
     {
-        if (empty($this->userId)) {
+        if (empty($this->user_id)) {
             throw new LogicException('User id not set');
         }
-        return $this->userId;
+        return $this->user_id;
     }
 
     /**
-     * @param int $userId
+     * @param int $user_id
      * @return Credentials
      */
-    public function setUserId(int $userId)
+    public function setUserId(int $user_id)
     {
-        $this->userId = $userId;
+        $this->user_id = $user_id;
         return $this;
     }
     

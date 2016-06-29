@@ -19,16 +19,16 @@ class CommentController extends ApiController
     /**
      * @var CommentMapper
      */
-    private $commentMapper;
+    private $comment_mapper;
 
     /**
      * CommentController constructor.
      *
-     * @param CommentMapper $commentMapper
+     * @param CommentMapper $comment_mapper
      */
-    public function __construct(CommentMapper $commentMapper)
+    public function __construct(CommentMapper $comment_mapper)
     {
-        $this->commentMapper = $commentMapper;
+        $this->comment_mapper = $comment_mapper;
     }
 
     /**
@@ -45,7 +45,7 @@ class CommentController extends ApiController
         $comment->setAuthorId($user->getId());
         $comment->setTravelId($id);
         $comment->setText($json->getString('text'));
-        $this->commentMapper->insert($comment);
+        $this->comment_mapper->insert($comment);
         return ['id' => $comment->getId()];
     }
 
@@ -56,14 +56,14 @@ class CommentController extends ApiController
      */
     public function deleteById(int $id, User $user): array 
     {
-        $comment = $this->commentMapper->fetchBylId($id);
+        $comment = $this->comment_mapper->fetchBylId($id);
         if (empty($comment)) {
             throw new ApiException('Comment not found', ApiException::RESOURCE_NOT_FOUND);
         }
         if ($comment->getAuthorId() !== $user->getId()) {
             throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
         }
-        $this->commentMapper->delete($id);
+        $this->comment_mapper->delete($id);
         return [];
     }
 
@@ -76,7 +76,7 @@ class CommentController extends ApiController
     public function getAllByTravelId(int $id, int $limit = 10, int $offset = 0): array
     {
         $response = [];
-        foreach ($this->commentMapper->fetchByTravelId($id, $limit, $offset) as $comment) {
+        foreach ($this->comment_mapper->fetchByTravelId($id, $limit, $offset) as $comment) {
             $author = $comment->getAuthor();
             $response[] = [
                 'id' => $comment->getId(),

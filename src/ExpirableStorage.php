@@ -30,25 +30,25 @@ class ExpirableStorage
      * Store an object, get a key
      *
      * @param  mixed         $object Object
-     * @param  DateTime|null $expireOn
+     * @param  DateTime|null $expires
      * @return string
      */
-    public function store($object, DateTime $expireOn = null): string
+    public function store($object, DateTime $expires = null): string
     {
         $serialized = serialize($object);
         $token = sha1(mt_rand() . $serialized);
-        $sql = <<<SQL
-INSERT INTO expirable_storage
-(serialized_object, token, expires)
-VALUES (:obj, :token, :expires)
-RETURNING id
-SQL;
-        $insert = $this->pdo->prepare($sql);
+        $insert = $this->pdo
+            ->prepare("
+              INSERT INTO expirable_storage
+                (serialized_object, token, expires)
+              VALUES (:obj, :token, :expires)
+              RETURNING id
+           ");
         $insert->execute(
             [
                 ':obj'     => $serialized,
                 ':token'   => $token,
-                ':expires' => $expireOn,
+                ':expires' => $expires,
             ]
         );
         return $token . $insert->fetchColumn();
@@ -68,12 +68,9 @@ SQL;
             return null;
         }
         list($token, $id) = str_split($key, self::SHA1_LENGTH);
-        $sql = <<<SQL
-SELECT serialized_object from expirable_storage
-WHERE id = :id AND token = :token AND (expires >= now() OR expires IS NULL)
-SQL;
 
-        $select = $this->pdo->prepare($sql);
+        $select = $this->pdo
+            ->prepare('SELECT serialized_object from expirable_storage WHERE id = :id AND token = :token AND (expires >= now() OR expires IS NULL)');
         $select->execute(
             [
                 ':id'    => $id,
