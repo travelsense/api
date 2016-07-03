@@ -26,7 +26,7 @@ class BookingMapper extends AbstractPDOMapper
      */
     public function getBookingsTotal(int $author_id): int
     {
-        $select = $this->pdo->prepare("SELECT COUNT(*) FROM bookings b LEFT JOIN travels t on t.id = b.travel_id WHERE t.author_id = :author_id");
+        $select = $this->pdo->prepare("SELECT COUNT(*) FROM bookings b JOIN travels t on t.id = b.travel_id WHERE t.author_id = :author_id");
         $select->execute([':author_id' => $author_id]);
         return $select->fetchColumn();
     }
@@ -47,7 +47,7 @@ class BookingMapper extends AbstractPDOMapper
         $select = $this->pdo->prepare("
           SELECT 
             d.date AS date, 
-            COUNT (b.*) AS count 
+            COUNT (t.*) AS count 
           FROM (
             SELECT CURRENT_DATE - offs AS date FROM generate_series(0, 6) AS offs
           ) d

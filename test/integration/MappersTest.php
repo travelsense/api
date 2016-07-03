@@ -20,7 +20,7 @@ use Api\Model\User;
 use Api\Test\DatabaseTrait;
 use PDO;
 
-class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
+class MappersTest extends \PHPUnit_Framework_TestCase
 {
     use DatabaseTrait;
 
@@ -131,14 +131,14 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
         $this->user_mapper->insert($user_a);
         $user_b = $this->createUser('b');
         $this->user_mapper->insert($user_b);
-        
+
         // User A created Travel
         $travel = $this->createTravel($user_a, 'a');
         $this->travel_mapper->insert($travel);
-        
+
         // User B favorited Travel
         $this->travel_mapper->addFavorite($travel->getId(), $user_b->getId());
-        
+
         // User B gets their favorites
         $favorites = $this->travel_mapper->fetchFavorites($user_b->getId());
         $this->assertCount(1, $favorites);
@@ -308,35 +308,42 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     
     public function testBookingMapper()
     {
-        $user = $this->createUser('testUser');
-        $this->user_mapper->insert($user);
+        $author_a = $this->createUser('a');
+        $this->user_mapper->insert($author_a);
 
-        $travel_a = $this->createTravel($user, 'testTravel');
-        $this->travel_mapper->insert($travel_a);
-        $travel_b = $this->createTravel($user, 'testTravel');
-        $this->travel_mapper->insert($travel_b);
+        $travel_a1 = $this->createTravel($author_a, 'a1');
+        $this->travel_mapper->insert($travel_a1);
+        $travel_a2 = $this->createTravel($author_a, 'a2');
+        $this->travel_mapper->insert($travel_a2);
 
-        $this->booking_mapper->registerBooking($user->getId(), $travel_a->getId());
-        $this->booking_mapper->registerBooking($user->getId(), $travel_a->getId()); // no error on double insert
+        $author_b = $this->createUser('author2');
+        $this->user_mapper->insert($author_b);
 
-        $select = $this->pdo->prepare('SELECT * FROM bookings');
-        $select->execute();
-        $row = $select->fetch(PDO::FETCH_ASSOC);
-        $this->assertEquals($user->getId(), $row['user_id']);
-        $this->assertEquals($travel_a->getId(), $row['travel_id']);
+        $travel_b1 = $this->createTravel($author_b, 'b1');
+        $this->travel_mapper->insert($travel_b1);
 
-        // getBooksTotal
-        $this->assertEquals(1, $this->booking_mapper->getBookingsTotal($user->getId()));
-        $this->booking_mapper->registerBooking($user->getId(), $travel_b->getId());
-        $this->assertEquals(2, $this->booking_mapper->getBookingsTotal($user->getId()));
+        $booker = $this->createUser('booker');
+        $this->user_mapper->insert($booker);
+
+        // $travel_a1 presents twice to test double booking
+        foreach ([$travel_a1, $travel_a1, $travel_a2, $travel_b1] as $travel) {
+            $this->booking_mapper->registerBooking($booker->getId(), $travel->getId());
+        }
+
+        // getBookingsTotal
+        $this->assertEquals(2, $this->booking_mapper->getBookingsTotal($author_a->getId()));
+        $this->assertEquals(1, $this->booking_mapper->getBookingsTotal($author_b->getId()));
 
         // getStats
-        $stats = $this->booking_mapper->getStats($user->getId());
-        $total = 0;
-        foreach ($stats as $item) {
+        $stats = $this->booking_mapper->getStats($author_a->getId());
+        for ($i = 0; $i < count($stats); $i++) {
+            $item = $stats[$i];
             $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item['date']);
-            $total += $item['count'];
+            if ($i === 6) {
+                $this->assertEquals(2, $item['count']);
+            } else {
+                $this->assertEquals(0, $item['count']);
+            }
         }
-        $this->assertEquals(2, $total);
     }
 }
