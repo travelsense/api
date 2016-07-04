@@ -272,4 +272,17 @@ class TravelMapper extends AbstractPDOMapper
         $travel->setAuthor($author);
         return $travel;
     }
+
+    public function markDeleted( int $travelId, bool $deleted = true)
+    {
+        $update = $this->pdo->prepare('
+            UPDATE travels SET
+            deleted = :deleted
+            WHERE id = :id
+        ');
+
+        $update->bindValue('id', $travelId, PDO::PARAM_INT);
+        $update->bindValue('deleted', $deleted, PDO::PARAM_BOOL);
+        $update->execute();
+    }
 }
