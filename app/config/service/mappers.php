@@ -1,10 +1,11 @@
 <?php
 /**
  * Mappers
- * @var $app Application
+ * @var $app Api\Application
  */
 
 use Api\ExpirableStorage;
+use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\IATAMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\TravelMapper;
@@ -49,10 +50,10 @@ $app['mapper.db.comment'] = function($app) {
     return $mapper;
 };
 
-$app['mapper.db.flagged_comments'] = function($app) {
+$app['mapper.db.flagged_comment'] = function($app) {
     return new FlaggedCommentMapper($app['db.main.pdo']);
 };
 
-$app['mapper.db.travel_comments'] = function($app) {
-    return new CommentMapper($app['db.main.pdo']);
+$app['mapper.db.booking'] = function($app) {
+    return new BookingMapper($app['db.main.pdo']);
 };

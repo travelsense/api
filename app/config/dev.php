@@ -7,7 +7,10 @@ return array_replace_recursive(
             'email'       => __DIR__ . '/service/email.mock.php',
         ],
         'log' => [
-            'main' => '/tmp/api_dev.log',
+            'main' => [
+                'file' => '/tmp/api_dev.log',
+                'level' => 'debug',
+            ]
         ],
         'secure_json' => __DIR__ . '/local.json',
         'db' => [

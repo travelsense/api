@@ -1,12 +1,6 @@
 <?php
 namespace Api;
 
-/**
- * Created by PhpStorm.
- * User: f3ath
- * Date: 10/25/15
- * Time: 4:01 PM
- */
 class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfig()

@@ -9,7 +9,7 @@ class FunctionalWebTest extends FunctionalTestCase
     public function testUpdateUserDetails()
     {
         $this->createAndLoginUser();
-        $user = $this->apiClient->getCurrentUser();
+        $user = $this->client->getCurrentUser();
 
         $this->assertEquals(1, $user->id);
         $this->assertEquals('Alexander', $user->firstName);
@@ -17,14 +17,14 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('sasha@pushkin.ru', $user->email);
         $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
 
-        $this->apiClient->updateUser([
+        $this->client->updateUser([
             'id'        => 1,
             'firstName' => 'Natalia',
             'lastName'  => 'Pushkina',
             'picture'   => 'http://pushkin.ru/sasha.jpg',
             'email'     => 'sasha@pushkin.ru',
         ]);
-        $user = $this->apiClient->getCurrentUser();
+        $user = $this->client->getCurrentUser();
 
         $this->assertEquals('Natalia', $user->firstName);
         $this->assertEquals('Pushkina', $user->lastName);
@@ -35,18 +35,20 @@ class FunctionalWebTest extends FunctionalTestCase
     public function testTravelCreationAndRetrieval()
     {
         $this->createAndLoginUser();
-        $id = $this->apiClient->createTravel([
+        $id = $this->client->createTravel([
             'title'       => 'First Travel',
             'description' => 'To make sure ids work properly',
             'image'       => 'https://host.com/image.jpg',
             'content'     => ['foo' => 'bar'],
+            'creation_mode' => 'First Travel test mode',
         ]);
         $this->assertEquals(1, $id);
-        $id = $this->apiClient->createTravel([
+        $id = $this->client->createTravel([
             'title'       => 'Hobbit',
             'description' => 'There and back again',
             'image'       => 'https://host.com/image.jpg',
             'content'     => ['foo' => 'bar'],
+            'creation_mode' => 'Hobbit test mode',
         ]);
         $this->assertEquals(2, $id);
 
@@ -60,14 +62,39 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->checkDeleteTravel(2);
     }
 
+    public function testBookingStats()
+    {
+        $this->createAndLoginUser();
+        $id = $this->client->createTravel([
+            'title'       => 'First Travel',
+            'description' => 'To make sure ids work properly',
+            'image'       => 'https://host.com/image.jpg',
+            'content'     => ['foo' => 'bar'],
+            'creation_mode' => 'First Travel test mode',
+        ]);
+
+        $this->client->registerBooking($id);
+        $stats = $this->client->getStats();
+        $this->assertEquals(1, $stats->bookingsTotal);
+        $this->assertEquals(0.1, $stats->rewardTotal);
+        $total = 0;
+        foreach ($stats->bookingsLastWeek as $item) {
+            $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item->date);
+            $total += $item->count;
+        }
+        $this->assertEquals(1, $total);
+    }
+
+
     private function checkGetTravel(int $id)
     {
-        $travel = $this->apiClient->getTravel($id);
+        $travel = $this->client->getTravel($id);
         $author = $travel->author;
         $this->assertEquals('Hobbit', $travel->title);
         $this->assertEquals('There and back again', $travel->description);
         $this->assertEquals('https://host.com/image.jpg', $travel->image);
         $this->assertEquals(false, $travel->published);
+        $this->assertEquals('Hobbit test mode', $travel->creation_mode);
 
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
         $this->assertEquals((object)['foo' => 'bar'], $travel->content);
@@ -79,26 +106,28 @@ class FunctionalWebTest extends FunctionalTestCase
 
     private function checkUpdateTravel(int $id)
     {
-        $this->apiClient->updateTravel($id, [
+        $this->client->updateTravel($id, [
             'title'       => 'Two Towers',
             'description' => 'Before the Return of the King',
             'image'       => 'https://host.com/new_image.jpg',
             'published'   => true,
             'content'     => ['pew' => 'boom'],
+            'creation_mode' => 'Two Towers test mode',
         ]);
-        $travelUpdated = $this->apiClient->getTravel($id);
-        $this->assertEquals('Two Towers', $travelUpdated->title);
-        $this->assertEquals('Before the Return of the King', $travelUpdated->description);
-        $this->assertEquals('https://host.com/new_image.jpg', $travelUpdated->image);
-        $this->assertEquals(true, $travelUpdated->published);
-        $this->assertEquals((object)['pew' => 'boom'], $travelUpdated->content);
+        $travel = $this->client->getTravel($id);
+        $this->assertEquals('Two Towers', $travel->title);
+        $this->assertEquals('Before the Return of the King', $travel->description);
+        $this->assertEquals('https://host.com/new_image.jpg', $travel->image);
+        $this->assertEquals(true, $travel->published);
+        $this->assertEquals((object)['pew' => 'boom'], $travel->content);
+        $this->assertEquals('Two Towers test mode', $travel->creation_mode);
     }
 
     private function checkDeleteTravel(int $id)
     {
-        $this->apiClient->deleteTravel($id);
+        $this->client->deleteTravel($id);
         try {
-            $this->apiClient->getTravel($id);
+            $this->client->getTravel($id);
             $this->fail("travel record still exists after deleteTravel()");
         } catch (ApiClientException $e) {
             $this->assertEquals(4000, $e->getCode());
@@ -108,20 +137,20 @@ class FunctionalWebTest extends FunctionalTestCase
 
     private function checkAddRemoveFavorites(int $id)
     {
-        $this->apiClient->addTravelToFavorites($id);
-        $favoriteTravels = $this->apiClient->getFavoriteTravels();
-        $this->assertEquals(1, count($favoriteTravels));
-        $travel = $favoriteTravels[0];
+        $this->client->addTravelToFavorites($id);
+        $favorites = $this->client->getFavoriteTravels();
+        $this->assertEquals(1, count($favorites));
+        $travel = $favorites[0];
         $this->assertEquals('Hobbit', $travel->title);
         $this->assertEquals('There and back again', $travel->description);
-        $this->apiClient->removeTravelFromFavorites($id);
-        $favoriteTravels = $this->apiClient->getFavoriteTravels();
-        $this->assertEmpty($favoriteTravels);
+        $this->client->removeTravelFromFavorites($id);
+        $favorites = $this->client->getFavoriteTravels();
+        $this->assertEmpty($favorites);
     }
     
     private function checkGetMyTravels()
     {
-        $travels = $this->apiClient->getMyTravels();
+        $travels = $this->client->getMyTravels();
         $this->assertEquals(2, count($travels));
     }
     
@@ -129,12 +158,12 @@ class FunctionalWebTest extends FunctionalTestCase
     {
         $ids = [];
         for ($i = 0; $i < 20; $i++) {
-            $ids[] = $this->apiClient->addTravelComment($id, "Comment $i");
+            $ids[] = $this->client->addTravelComment($id, "Comment $i");
         }
 
         $limit = 3;
         $offset = 5;
-        $comments = $this->apiClient->getTravelComments($id, $limit, $offset);
+        $comments = $this->client->getTravelComments($id, $limit, $offset);
 
         $this->assertEquals($limit, count($comments));
 
@@ -145,9 +174,9 @@ class FunctionalWebTest extends FunctionalTestCase
 
         // Remove the last comment
         $killMe = end($ids);
-        $this->apiClient->deleteTravelComment($killMe);
+        $this->client->deleteTravelComment($killMe);
 
-        $comments = $this->apiClient->getTravelComments($id, $limit, $offset);
+        $comments = $this->client->getTravelComments($id, $limit, $offset);
 
         // 18 (latest) - 5 (offset) = 13
         $this->assertEquals('Comment 13', $comments[0]->text);

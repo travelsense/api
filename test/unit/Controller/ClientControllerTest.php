@@ -6,6 +6,8 @@ use Api\Exception\ApiException;
 
 class ClientControllerTest extends \PHPUnit_Framework_TestCase
 {
+    private $controller;
+
     public function setUp()
     {
         $this->controller = new ClientController();
@@ -26,8 +28,8 @@ class ClientControllerTest extends \PHPUnit_Framework_TestCase
     }
      
      /**
-      * @expectedException  Api\Exception\ApiException
-      * @expectedExceptionCode Api\Exception\ApiException::RESOURCE_NOT_FOUND
+      * @expectedException  \Api\Exception\ApiException
+      * @expectedExceptionCode \Api\Exception\ApiException::RESOURCE_NOT_FOUND
       */
      public function testInvalidVersion()
      { 

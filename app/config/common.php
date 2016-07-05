@@ -17,7 +17,10 @@ return [
     ],
     'debug' => false,
     'log' => [
-        'main' => '/var/log/api.log',
+        'main' => [
+            'file' => '/var/log/api.log',
+            'level' => 'info',
+        ],
     ],
     'email' => [
         'smtp_user' => 'noreply@hoptrip.us',
@@ -72,4 +75,8 @@ return [
         'key' => 'xxx',
         'ts_code' => 'xxx',
     ],
+    'booking' => [
+        'reward_point_price' => 0.1, // 10 cents
+    ],
+    
 ];

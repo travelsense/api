@@ -31,14 +31,14 @@ class CategoryMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param int $travelId
+     * @param int $travel_id
      * @return Category[]
      */
-    public function fetchByTravelId(int $travelId): array
+    public function fetchByTravelId(int $travel_id): array
     {
         $select = $this->pdo->prepare('SELECT c.* FROM travel_categories ct JOIN categories c ON ct.category_id = c.id WHERE ct.travel_id = :travel_id');
         $select->execute([
-            'travel_id' => $travelId,
+            'travel_id' => $travel_id,
         ]);
         return $this->createAll($select);
     }
@@ -61,24 +61,24 @@ class CategoryMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param int $travelId
-     * @param int $categoryId
+     * @param int $travel_id
+     * @param int $category_id
      */
-    public function addTravelToCategory(int $travelId, int $categoryId)
+    public function addTravelToCategory(int $travel_id, int $category_id)
     {
         try {
             $this->pdo->beginTransaction();
             $this->pdo
                 ->prepare('DELETE FROM travel_categories WHERE travel_id=:travel_id')
                 ->execute([
-                    ':travel_id' => $travelId,
+                    ':travel_id' => $travel_id,
                 ]);
 
             $this->pdo
                 ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)')
                 ->execute([
-                    ':travel_id'   => $travelId,
-                    ':category_id' => $categoryId,
+                    ':travel_id'   => $travel_id,
+                    ':category_id' => $category_id,
                 ]);
             $this->pdo->commit();
         } catch (PDOException $e) {

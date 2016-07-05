@@ -7,11 +7,11 @@ use BadMethodCallException;
 class FlaggedCommentMapper extends AbstractPDOMapper
 {
     /**
-     * @param int $userId
-     * @param int $commentId
+     * @param int $user_id
+     * @param int $comment_id
      * @return void
      */
-    public function flagComment(int $userId, int $commentId)
+    public function flagComment(int $user_id, int $comment_id)
     {
         $insert = $this->pdo->prepare('
             INSERT INTO flagged_comments 
@@ -21,8 +21,8 @@ class FlaggedCommentMapper extends AbstractPDOMapper
             ON CONFLICT (comment_id, user_id) DO NOTHING
         ');
         $insert->execute([
-            ':comment_id' => $commentId,
-            ':user_id' => $userId,
+            ':comment_id' => $comment_id,
+            ':user_id' => $user_id,
         ]);
     }
 

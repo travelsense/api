@@ -47,12 +47,12 @@ class MailerService
      */
     public function sendAccountConfirmationMessage(string $email, string $token)
     {
-        $emailTpl = $this->twig->loadTemplate('email/confirmation.twig');
+        $template = $this->twig->loadTemplate('email/confirmation.twig');
 
         $link = "https://travelsen.se/#confirm/$token";
 
-        $message = Swift_Message::newInstance($emailTpl->renderBlock('subj', []))
-            ->setBody($emailTpl->renderBlock('body', ['link' => $link]))
+        $message = Swift_Message::newInstance($template->renderBlock('subj', []))
+            ->setBody($template->renderBlock('body', ['link' => $link]))
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($email);
 
@@ -75,12 +75,12 @@ class MailerService
      */
     public function sendPasswordResetLink(string $email, string $token)
     {
-        $emailTpl = $this->twig->loadTemplate('email/reset.twig');
+        $template = $this->twig->loadTemplate('email/reset.twig');
 
         $link = "https://travelsen.se/#reset/$token";
 
-        $message = Swift_Message::newInstance($emailTpl->renderBlock('subj', []))
-            ->setBody($emailTpl->renderBlock('body', ['link' => $link]))
+        $message = Swift_Message::newInstance($template->renderBlock('subj', []))
+            ->setBody($template->renderBlock('body', ['link' => $link]))
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($email);
 

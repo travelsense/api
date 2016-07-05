@@ -7,6 +7,7 @@
 
 namespace Api;
 
+use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\FlaggedCommentMapper;
@@ -19,51 +20,57 @@ use Api\Model\User;
 use Api\Test\DatabaseTrait;
 use PDO;
 
-class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
+class MappersTest extends \PHPUnit_Framework_TestCase
 {
     use DatabaseTrait;
 
     /**
      * @var UserMapper
      */
-    private $userMapper;
+    private $user_mapper;
 
     /**
      * @var TravelMapper
      */
-    private $travelMapper;
+    private $travel_mapper;
 
     /**
      * @var CategoryMapper
      */
-    private $categoryMapper;
+    private $category_mapper;
 
-    /*
+    /**
      * @var PDO
      */
     private $pdo;
 
-    /*
-     *@var FlaggedCommentMapper
+    /**
+     * @var FlaggedCommentMapper
      */
-    private $flaggedCommentMapper;
+    private $flagged_comment_mapper;
 
-    /*
+    /**
      * @var CommentMapper
      */
-    private $commentMapper;
+    private $comment_mapper;
+
+    /**
+     * @var BookingMapper
+     */
+    private $booking_mapper;
     
     public function setUp()
     {
         $app = Application::createByEnvironment('test');
         self::resetDatabase($app);
 
-        $this->userMapper = $app['mapper.db.user'];
-        $this->travelMapper = $app['mapper.db.travel'];
-        $this->categoryMapper = $app['mapper.db.category'];
+        $this->user_mapper = $app['mapper.db.user'];
+        $this->travel_mapper = $app['mapper.db.travel'];
+        $this->category_mapper = $app['mapper.db.category'];
         $this->pdo = $app['db.main.pdo'];
-        $this->flaggedCommentMapper = $app['mapper.db.flagged_comments'];
-        $this->commentMapper = $app['mapper.db.travel_comments'];
+        $this->flagged_comment_mapper = $app['mapper.db.flagged_comment'];
+        $this->comment_mapper = $app['mapper.db.comment'];
+        $this->booking_mapper = $app['mapper.db.booking'];
     }
 
     /**
@@ -71,7 +78,7 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
      */
     public function testUserMapper()
     {
-        $mapper = $this->userMapper;
+        $mapper = $this->user_mapper;
         $user = $this->createUser('a');
         $this->assertNull($user->getId());
 
@@ -110,9 +117,9 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     {
         $category = $this->createCategory('a');
         $this->assertNull($category->getId());
-        $this->categoryMapper->insert($category);
+        $this->category_mapper->insert($category);
         $this->assertTrue(is_int($category->getId()));
-        $this->assertSameCategories($category, $this->categoryMapper->fetchBylId($category->getId()));
+        $this->assertSameCategories($category, $this->category_mapper->fetchBylId($category->getId()));
     }
 
     /**
@@ -120,25 +127,25 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
      */
     public function testTravelMapperFavorites()
     {
-        $userA = $this->createUser('a');
-        $this->userMapper->insert($userA);
-        $userB = $this->createUser('b');
-        $this->userMapper->insert($userB);
-        
-        // UserA created TravelA
-        $travelA = $this->createTravel($userA, 'a');
-        $this->travelMapper->insert($travelA);
-        
-        // UserB favorited TravelA
-        $this->travelMapper->addFavorite($travelA->getId(), $userB->getId());
-        
-        // UserB gets their favorites
-        $favorites = $this->travelMapper->fetchFavorites($userB->getId());
+        $user_a = $this->createUser('a');
+        $this->user_mapper->insert($user_a);
+        $user_b = $this->createUser('b');
+        $this->user_mapper->insert($user_b);
+
+        // User A created Travel
+        $travel = $this->createTravel($user_a, 'a');
+        $this->travel_mapper->insert($travel);
+
+        // User B favorited Travel
+        $this->travel_mapper->addFavorite($travel->getId(), $user_b->getId());
+
+        // User B gets their favorites
+        $favorites = $this->travel_mapper->fetchFavorites($user_b->getId());
         $this->assertCount(1, $favorites);
-        // The author is UserA
-        $this->assertSameUsers($userA, $favorites[0]->getAuthor());
+        // The author is User A
+        $this->assertSameUsers($user_a, $favorites[0]->getAuthor());
         // And it's the same travel
-        $this->assertSameTravels($travelA, $favorites[0]);
+        $this->assertSameTravels($travel, $favorites[0]);
     }
 
     /**
@@ -146,33 +153,33 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
      */
     public function testTravelCategories()
     {
-        $userA = $this->createUser('a');
-        $this->userMapper->insert($userA);
+        $user = $this->createUser('a');
+        $this->user_mapper->insert($user);
 
-        $catA = $this->createCategory('a');
-        $this->categoryMapper->insert($catA);
+        $cat_a = $this->createCategory('a');
+        $this->category_mapper->insert($cat_a);
 
-        $catB = $this->createCategory('b');
-        $this->categoryMapper->insert($catB);
+        $cat_b = $this->createCategory('b');
+        $this->category_mapper->insert($cat_b);
 
-        $travelA = $this->createTravel($userA, 'a');
-        $travelA->setCategoryId($catA->getId());
-        $this->travelMapper->insert($travelA);
+        $travel_a = $this->createTravel($user, 'a');
+        $travel_a->setCategoryId($cat_a->getId());
+        $this->travel_mapper->insert($travel_a);
 
-        $travelB = $this->createTravel($userA, 'b');
-        $this->travelMapper->insert($travelB);
+        $travel_b = $this->createTravel($user, 'b');
+        $this->travel_mapper->insert($travel_b);
 
-        $catList = $this->categoryMapper->fetchByTravelId($travelA->getId());
-        $this->assertSameCategories($catA, $catList[0]);
+        $cat_list = $this->category_mapper->fetchByTravelId($travel_a->getId());
+        $this->assertSameCategories($cat_a, $cat_list[0]);
 
-        $this->assertEquals([], $this->travelMapper->fetchByCategory($catB->getName(), 1, 0));
-        $travelList = $this->travelMapper->fetchByCategory($catA->getName(), 1, 0);
-        $this->assertSameTravels($travelA, $travelList[0]);
+        $this->assertEquals([], $this->travel_mapper->fetchByCategory($cat_b->getName(), 1, 0));
+        $trave_lList = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
+        $this->assertSameTravels($travel_a, $trave_lList[0]);
 
         $this->assertEquals(
-            $catA->getId(),
-            $this->travelMapper
-                ->fetchById($travelA->getId())
+            $cat_a->getId(),
+            $this->travel_mapper
+                ->fetchById($travel_a->getId())
                 ->getCategoryId()
         );
     }
@@ -260,15 +267,17 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int $authorId, int $travelId, string $text
+     * @param int $author_id
+     * @param int $travel_id
+     * @param string $text
      * @return Comment
      */
-    public function createComment(int $authorId, int $travelId, string $text): Comment
+    public function createComment(int $author_id, int $travel_id, string $text): Comment
     {
         $comment = new Comment();
         $comment
-            ->setAuthorId($authorId)
-            ->setTravelId($travelId)
+            ->setAuthorId($author_id)
+            ->setTravelId($travel_id)
             ->setText($text)
         ;
         return $comment;
@@ -277,15 +286,15 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
     public function testFlagComment()
     {
         $user = $this->createUser('testUser');
-        $this->userMapper->insert($user);
+        $this->user_mapper->insert($user);
 
         $travel = $this->createTravel($user, 'testTravel');
-        $this->travelMapper->insert($travel);
+        $this->travel_mapper->insert($travel);
 
         $comment = $this->createComment($user->getId(), $travel->getId(), 'flagged this comment');
-        $this->commentMapper->insert($comment);
+        $this->comment_mapper->insert($comment);
 
-        $mapper = $this->flaggedCommentMapper;
+        $mapper = $this->flagged_comment_mapper;
         
         $mapper->flagComment($user->getId(), $comment->getId());
         $select = $this->pdo->prepare('SELECT comment_id, user_id FROM flagged_comments');
@@ -295,5 +304,46 @@ class ModelsAndMappersTest extends \PHPUnit_Framework_TestCase
             ['comment_id' => $comment->getId(), 'user_id' => $user->getId()],
             $row
         );
+    }
+    
+    public function testBookingMapper()
+    {
+        $author_a = $this->createUser('a');
+        $this->user_mapper->insert($author_a);
+
+        $travel_a1 = $this->createTravel($author_a, 'a1');
+        $this->travel_mapper->insert($travel_a1);
+        $travel_a2 = $this->createTravel($author_a, 'a2');
+        $this->travel_mapper->insert($travel_a2);
+
+        $author_b = $this->createUser('author2');
+        $this->user_mapper->insert($author_b);
+
+        $travel_b1 = $this->createTravel($author_b, 'b1');
+        $this->travel_mapper->insert($travel_b1);
+
+        $booker = $this->createUser('booker');
+        $this->user_mapper->insert($booker);
+
+        // $travel_a1 presents twice to test double booking
+        foreach ([$travel_a1, $travel_a1, $travel_a2, $travel_b1] as $travel) {
+            $this->booking_mapper->registerBooking($booker->getId(), $travel->getId());
+        }
+
+        // getBookingsTotal
+        $this->assertEquals(2, $this->booking_mapper->getBookingsTotal($author_a->getId()));
+        $this->assertEquals(1, $this->booking_mapper->getBookingsTotal($author_b->getId()));
+
+        // getStats
+        $stats = $this->booking_mapper->getStats($author_a->getId());
+        for ($i = 0; $i < count($stats); $i++) {
+            $item = $stats[$i];
+            $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item['date']);
+            if ($i === 6) {
+                $this->assertEquals(2, $item['count']);
+            } else {
+                $this->assertEquals(0, $item['count']);
+            }
+        }
     }
 }

@@ -4,10 +4,12 @@
  * @var $app Api\Application
  */
 
+use Api\ArgumentValueResolver;
 use Api\Controller\AuthController;
 use Api\Controller\ClientController;
 use Api\Controller\HealthCheckController;
 use Api\Controller\IataController;
+use Api\Controller\Travel\BookingController;
 use Api\Controller\Travel\CategoriesController;
 use Api\Controller\Travel\CommentController;
 use Api\Controller\Travel\TravelController;
@@ -15,15 +17,20 @@ use Api\Controller\UberController;
 use Api\Controller\UserController;
 use Api\Controller\WegoHotelController;
 
-$app['resolver'] = function ($app) {
-    return new \Api\ApiControllerResolver($app, $app['logger']);
-};
+$app['argument_value_resolvers'] = $app->extend('argument_value_resolvers', function (array $resolvers, $app) {
+    return array_merge(
+        $resolvers,
+        [
+            new ArgumentValueResolver($app),
+        ]
+    );
+});
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
 // API
 
-$app['controller.user'] = function($app) {
+$app['controller.user'] = function ($app) {
     $controller = new UserController(
         $app['mapper.db.user'],
         $app['email.service'],
@@ -34,7 +41,7 @@ $app['controller.user'] = function($app) {
     return $controller;
 };
 
-$app['controller.auth'] = function($app) {
+$app['controller.auth'] = function ($app) {
     $controller = new AuthController(
         $app['mapper.db.user'],
         $app['security.session_manager'],
@@ -45,7 +52,7 @@ $app['controller.auth'] = function($app) {
     return $controller;
 };
 
-$app['controller.travel'] = function($app) {
+$app['controller.travel'] = function ($app) {
     $controller = new TravelController(
         $app['mapper.db.travel'],
         $app['mapper.db.category']
@@ -54,7 +61,7 @@ $app['controller.travel'] = function($app) {
     return $controller;
 };
 
-$app['controller.categories'] = function($app) {
+$app['controller.categories'] = function ($app) {
     $controller = new CategoriesController(
         $app['mapper.db.category']
     );
@@ -62,7 +69,7 @@ $app['controller.categories'] = function($app) {
     return $controller;
 };
 
-$app['controller.comment'] = function($app) {
+$app['controller.comment'] = function ($app) {
     $controller = new CommentController(
         $app['mapper.db.comment']
     );
@@ -70,22 +77,28 @@ $app['controller.comment'] = function($app) {
     return $controller;
 };
 
-$app['controller.uber'] = function($app) {
+$app['controller.uber'] = function ($app) {
     return new UberController($app['uber']);
 };
 
-$app['controller.wego'] = function($app) {
+$app['controller.wego'] = function ($app) {
     return new WegoHotelController($app['wego.hotels'], $app['db.main.pdo']);
 };
 
-$app['controller.health'] = function($app) {
+$app['controller.health'] = function ($app) {
     return new HealthCheckController($app['db.main.migrator']);
 };
 
-$app['controller.iata'] = function($app) {
+$app['controller.iata'] = function ($app) {
     return new IataController($app['mapper.db.iata']);
 };
 
-$app['controller.client'] = function($app) {
+$app['controller.client'] = function ($app) {
     return new ClientController();
+};
+
+$app['controller.booking'] = function ($app) {
+    $controller = new BookingController($app['mapper.db.booking']);
+    $controller->setPointPrice($app['config']['booking']['reward_point_price']);
+    return $controller;
 };

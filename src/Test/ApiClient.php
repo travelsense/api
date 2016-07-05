@@ -9,7 +9,7 @@ class ApiClient
     /**
      * @var string
      */
-    private $authToken;
+    private $auth_token;
 
     /**
      * @var string
@@ -34,11 +34,11 @@ class ApiClient
     }
 
     /**
-     * @param string $authToken
+     * @param string $auth_token
      */
-    public function setAuthToken(string $authToken)
+    public function setAuthToken(string $auth_token)
     {
-        $this->authToken = $authToken;
+        $this->auth_token = $auth_token;
     }
 
     /**
@@ -263,9 +263,26 @@ class ApiClient
         return $this->get('/travel/favorite');
     }
 
+    /**
+     * @param int $id Travel id
+     * @return mixed
+     */
+    public function registerBooking(int $id)
+    {
+        return $this->post("/travel/$id/book");
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStats()
+    {
+        return $this->get('/stats');
+    }
+
     private function addAuth(array $headers)
     {
-        $headers[] = 'Authorization: Token ' . $this->authToken;
+        $headers[] = 'Authorization: Token ' . $this->auth_token;
         return $headers;
     }
 

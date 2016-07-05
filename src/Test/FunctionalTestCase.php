@@ -11,7 +11,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @var ApiClient
      */
-    protected $apiClient;
+    protected $client;
     
     public static function setUpBeforeClass()
     {
@@ -31,7 +31,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped("Functional tests are disabled on this environment: $env");
         }
         $this->resetDatabase($app);
-        $this->apiClient = new ApiClient(sprintf('%s:%s', self::$host, self::$port));
+        $this->client = new ApiClient(sprintf('%s:%s', self::$host, self::$port));
     }
 
     /**
@@ -41,14 +41,14 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
     protected function createAndLoginUser($email = 'sasha@pushkin.ru')
     {
         $password = '123';
-        $this->apiClient->registerUser([
+        $this->client->registerUser([
             'firstName' => 'Alexander',
             'lastName'  => 'Pushkin',
             'picture'   => 'http://pushkin.ru/sasha.jpg',
             'email'     => $email,
             'password'  => $password,
         ]);
-        $token = $this->apiClient->getTokenByEmail($email, $password);
-        $this->apiClient->setAuthToken($token);
+        $token = $this->client->getTokenByEmail($email, $password);
+        $this->client->setAuthToken($token);
     }
 }

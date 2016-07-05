@@ -1,7 +1,6 @@
 <?php
 namespace Api\Test;
 
-
 use Api\Application;
 use PDO;
 
