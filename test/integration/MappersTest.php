@@ -58,7 +58,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
      * @var BookingMapper
      */
     private $booking_mapper;
-    
+
     public function setUp()
     {
         $app = Application::createByEnvironment('test');
@@ -345,5 +345,25 @@ class MappersTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals(0, $item['count']);
             }
         }
+    }
+
+    public function testMarkDeleted()
+    {
+        $user = $this->createUser('testUser');
+        $this->user_mapper->insert($user);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $this->travel_mapper->insert($travel);
+
+        $mapper = $this->travel_mapper;
+
+        $mapper->markDeleted($travel->getId(), $deleted = true);
+        $select = $this->pdo->prepare('SELECT id, deleted FROM travels WHERE deleted=true');
+        $select->execute();
+        $row = $select->fetch(PDO::FETCH_NAMED);
+        $this->assertEquals(
+            ['id' => $travel->getId(), 'deleted' => true],
+            $row
+        );
     }
 }
