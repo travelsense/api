@@ -5,3 +5,4 @@ databases: [] # database names
 extensions: [postgis, postgis_topology]
 users: [] # users: { name: api_dev, password: api_dev, db: api_dev, roles: "LOGIN"}
 scripts: [] # scripts {db: api_dev, file: /vagrant/db/ext/postgis.sql}
+superuser_password: postgres
