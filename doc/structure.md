@@ -30,9 +30,9 @@ Database migration scripts are in [db](../db). The naming convention for migrati
 * memo - a short description (optional)
 
 To manage the DB, use `bin/db.php`:
-* ` APP_ENV=dev php bin/db.php up` - update db
 * ` APP_ENV=dev php bin/db.php st main` - show status of db `main` in `dev` env
 * ` APP_ENV=stage php bin/db.php up main 123` - update db `main` to version 123 in `stage` env
+* ` APP_ENV=dev php bin/db.php up` - update the default database
 
 ## Mappers and Models
 * [Mappers](../src/Mapper)
