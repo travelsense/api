@@ -41,6 +41,10 @@
   postgresql_user: name={{ item.name }} db={{ item.db }} password={{ item.password }} role_attr_flags={{ item.roles }}
   with_items: '{{ users }}'
 
+- name: set superuser password
+  become_user: postgres
+  postgresql_user: name=postgres password={{ superuser_password }}
+
 - name: run scripts
   become_user: postgres
   shell: psql {{ item.db }} -f {{ item.file }}
