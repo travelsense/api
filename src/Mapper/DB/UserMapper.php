@@ -52,7 +52,7 @@ class UserMapper extends AbstractPDOMapper
     {
         $sql = <<<SQL
 INSERT INTO users
-  ("email", "password", "first_name", "last_name", "picture","creator")
+  ("email", "password", "first_name", "last_name", "picture", "creator")
 VALUES
   (:email, :password, :first_name, :last_name, :picture, :creator)
 RETURNING id, created
