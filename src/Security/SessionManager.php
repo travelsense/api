@@ -11,30 +11,30 @@ class SessionManager
     /**
      * @var SessionMapper
      */
-    private $sessionMapper;
+    private $session_mapper;
 
     /**
      * SessionManager constructor.
      *
-     * @param SessionMapper $sessionMapper
+     * @param SessionMapper $session_mapper
      */
-    public function __construct(SessionMapper $sessionMapper)
+    public function __construct(SessionMapper $session_mapper)
     {
-        $this->sessionMapper = $sessionMapper;
+        $this->session_mapper = $session_mapper;
     }
 
     /**
      * Create a new session token
      *
-     * @param int     $userId
+     * @param int     $user_id
      * @param Request $request
      * @return string session token
      */
-    public function createSession(int $userId, Request $request)
+    public function createSession(int $user_id, Request $request)
     {
-        $token = sha1(mt_rand() . $userId);
+        $token = sha1(mt_rand() . $user_id);
         $device = $request->headers->get('User-Agent');
-        $id = $this->sessionMapper->createSession($userId, $token, $device);
+        $id = $this->session_mapper->createSession($user_id, $token, $device);
         return $token . $id;
     }
 
@@ -50,6 +50,6 @@ class SessionManager
             return null;
         }
         list($session, $id) = str_split($token, self::SHA1_LENGTH);
-        return $this->sessionMapper->getUserId($id, $session);
+        return $this->session_mapper->getUserId($id, $session);
     }
 }

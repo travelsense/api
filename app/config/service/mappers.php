@@ -1,16 +1,18 @@
 <?php
 /**
  * Mappers
- * @var $app Application
+ * @var $app Api\Application
  */
 
 use Api\ExpirableStorage;
+use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\IATAMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Mapper\DB\CategoryMapper;
+use Api\Mapper\DB\FlaggedCommentMapper;
 
 $app['mapper.db.user'] = function($app) {
     $mapper =  new UserMapper($app['db.main.pdo']);
@@ -46,4 +48,12 @@ $app['mapper.db.comment'] = function($app) {
     $mapper = new CommentMapper($app['db.main.pdo']);
     $mapper->setUserMapper($app['mapper.db.user']);
     return $mapper;
+};
+
+$app['mapper.db.flagged_comment'] = function($app) {
+    return new FlaggedCommentMapper($app['db.main.pdo']);
+};
+
+$app['mapper.db.booking'] = function($app) {
+    return new BookingMapper($app['db.main.pdo']);
 };

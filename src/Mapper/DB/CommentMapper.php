@@ -16,14 +16,14 @@ class CommentMapper extends AbstractPDOMapper
     /**
      * @var UserMapper
      */
-    private $userMapper;
+    private $user_mapper;
 
     /**
-     * @param UserMapper $userMapper
+     * @param UserMapper $user_mapper
      */
-    public function setUserMapper(UserMapper $userMapper)
+    public function setUserMapper(UserMapper $user_mapper)
     {
-        $this->userMapper = $userMapper;
+        $this->user_mapper = $user_mapper;
     }
 
     /**
@@ -73,12 +73,12 @@ class CommentMapper extends AbstractPDOMapper
     
     /**
      * Get all comments by travel id
-     * @param int $travelId
+     * @param int $travel_id
      * @param int $limit
      * @param int $offset
      * @return Comment[]
      */
-    public function fetchByTravelId(int $travelId, int $limit, int $offset): array
+    public function fetchByTravelId(int $travel_id, int $limit, int $offset): array
     {
         $select = $this->pdo->prepare('
             SELECT c.*, u.* FROM travel_comments c 
@@ -87,7 +87,7 @@ class CommentMapper extends AbstractPDOMapper
             ORDER BY c.id DESC LIMIT :limit OFFSET :offset
         ');
         $select->execute([
-            ':id'     => $travelId,
+            ':id'     => $travel_id,
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
@@ -124,7 +124,7 @@ class CommentMapper extends AbstractPDOMapper
     {
         /** @var Comment $comment */
         /** @var User $author */
-        list($comment, $author) = $this->createFromJoined($row, $this, $this->userMapper);
+        list($comment, $author) = $this->createFromJoined($row, $this, $this->user_mapper);
         $comment->setAuthor($author);
         return $comment;
     }

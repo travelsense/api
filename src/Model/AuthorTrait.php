@@ -10,7 +10,7 @@ trait AuthorTrait
     /**
      * @var int
      */
-    private $authorId;
+    private $author_id;
 
     /**
      * @var User
@@ -22,16 +22,16 @@ trait AuthorTrait
      */
     public function getAuthorId(): int
     {
-        return $this->authorId;
+        return $this->author_id;
     }
 
     /**
-     * @param int $authorId
+     * @param int $author_id
      * @return self
      */
-    public function setAuthorId(int $authorId): self
+    public function setAuthorId(int $author_id): self
     {
-        $this->authorId = $authorId;
+        $this->author_id = $author_id;
         return $this;
     }
 
@@ -50,7 +50,7 @@ trait AuthorTrait
     public function setAuthor(User $author): self
     {
         $this->author = $author;
-        $this->authorId = $author->getId();
+        $this->author_id = $author->getId();
         return $this;
     }
 }

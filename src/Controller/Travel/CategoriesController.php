@@ -10,15 +10,15 @@ class CategoriesController extends ApiController
     /**
      * @var CategoryMapper
      */
-    private $categoryMapper;
+    private $category_mapper;
 
     /**
      * CategoriesController constructor.
-     * @param CategoryMapper $categoryMapper
+     * @param CategoryMapper $category_mapper
      */
-    public function __construct(CategoryMapper $categoryMapper)
+    public function __construct(CategoryMapper $category_mapper)
     {
-        $this->categoryMapper = $categoryMapper;
+        $this->category_mapper = $category_mapper;
     }
 
     /**
@@ -27,10 +27,10 @@ class CategoriesController extends ApiController
     public function getCategories(): array
     {
         $response = [];
-        foreach ($this->categoryMapper->fetchAll() as $category) {
+        foreach ($this->category_mapper->fetchAll() as $category) {
             $response[] = [
                 'id'    => $category->getId(),
-                'title' => $category->getTitle(),
+                'title' => $category->getName(),
             ];
         }
         return $response;

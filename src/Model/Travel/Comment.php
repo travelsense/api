@@ -14,7 +14,7 @@ class Comment
     /**
      * @var int
      */
-    private $travelId;
+    private $travel_id;
 
     /**
      * @var string
@@ -26,16 +26,16 @@ class Comment
      */
     public function getTravelId(): int
     {
-        return $this->travelId;
+        return $this->travel_id;
     }
 
     /**
-     * @param int $travelId
-     * @return self
+     * @param int $travel_id
+     * @return Comment
      */
-    public function setTravelId(int $travelId): self
+    public function setTravelId(int $travel_id): self
     {
-        $this->travelId = $travelId;
+        $this->travel_id = $travel_id;
         return $this;
     }
 
@@ -49,7 +49,7 @@ class Comment
 
     /**
      * @param string $text
-     * @return self
+     * @return Comment
      */
     public function setText(string $text): self
     {

@@ -7,7 +7,7 @@
 use Api\Application;
 use Api\ExpirableStorage;
 use Api\Migrator\Migrator;
-use F3\LazyPDO\LazyPDO;
+use LazyPDO\LazyPDO;
 
 $app['db.main.pdo'] = function (Application $app) {
     $main = $app['config']['db']['main'];

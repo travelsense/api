@@ -9,7 +9,7 @@ abstract class AbstractPDOMapper
     /**
      * @var array
      */
-    protected $driverOptions = [];
+    protected $driver_options = [];
 
     /**
      * @var PDO

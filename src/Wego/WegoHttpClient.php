@@ -14,7 +14,7 @@ class WegoHttpClient
     /**
      * @var string
      */
-    private $apiUrl;
+    private $url;
 
     /**
      * @var string
@@ -24,21 +24,21 @@ class WegoHttpClient
     /**
      * @var string
      */
-    private $tsCode;
+    private $ts_code;
 
     /**
      * Client constructor.
      *
      * @param string     $key
-     * @param string     $tsCode
-     * @param string     $apiUrl
+     * @param string     $ts_code
+     * @param string     $url
      * @param HttpClient $http
      */
-    public function __construct($key, $tsCode, $apiUrl = 'http://api.wego.com', HttpClient $http = null)
+    public function __construct($key, $ts_code, $url = 'http://api.wego.com', HttpClient $http = null)
     {
         $this->key = $key;
-        $this->tsCode = $tsCode;
-        $this->apiUrl = $apiUrl;
+        $this->ts_code = $ts_code;
+        $this->url = $url;
         $this->http = $http ?: new HttpClient();
     }
 
@@ -52,9 +52,9 @@ class WegoHttpClient
     public function get($uri, array $query)
     {
         $query['api_key'] = $this->key;
-        $query['ts_code'] = $this->tsCode;
-        $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
-        $response = $this->http->get($fullUrl);
+        $query['ts_code'] = $this->ts_code;
+        $full_url = $this->url . $uri . '?' . http_build_query($query);
+        $response = $this->http->get($full_url);
         return $this->parseResponse($response);
     }
 
@@ -69,10 +69,10 @@ class WegoHttpClient
     {
         $query = [
             'api_key' => $this->key,
-            'ts_code' => $this->tsCode,
+            'ts_code' => $this->ts_code,
         ];
-        $fullUrl = $this->apiUrl . $uri . '?' . http_build_query($query);
-        $response = $this->http->post($fullUrl, json_encode($request));
+        $full_url = $this->url . $uri . '?' . http_build_query($query);
+        $response = $this->http->post($full_url, json_encode($request));
         return $this->parseResponse($response);
     }
 

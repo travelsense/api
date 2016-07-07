@@ -40,8 +40,8 @@ class Application extends \Silex\Application
         if (empty($env)) {
             $env = getenv('APP_ENV') ?: 'prod';
         }
-        $app = new self(include sprintf(__DIR__ . '/../app/config/%s.php', $env));
-        $app['env'] = $env;
-        return $app;
+        $config = include sprintf(__DIR__ . '/../app/config/%s.php', $env);
+        $config['env'] = $env;
+        return new self($config);
     }
 }

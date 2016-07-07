@@ -23,7 +23,7 @@ class Mailer extends Swift_Mailer
         $this->log = $log;
     }
 
-    public function send(Swift_Mime_Message $message, &$failedRecipients = null)
+    public function send(Swift_Mime_Message $message, &$failed_recipients = null)
     {
         $log = "Date: " . date('Y-m-d H:i:s') . "\n";
         $log .= "Subject: " . $message->getSubject() . "\n";

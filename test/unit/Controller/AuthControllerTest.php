@@ -7,10 +7,10 @@ use Api\Test\ControllerTestCase;
 
 class AuthControllerTest extends ControllerTestCase
 {
-    private $userMapper;
-    private $sessionManager;
+    private $user_mapper;
+    private $session_manager;
     private $facebook;
-    private $pwGen;
+    private $pw_gen;
     private $request;
 
     /**
@@ -18,20 +18,23 @@ class AuthControllerTest extends ControllerTestCase
      */
     private $controller;
 
+    /**
+     *
+     */
     public function setUp()
     {
-        $this->userMapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
+        $this->user_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
             ->setMethods(['fetchByEmailAndPassword', 'insert', 'fetchByEmail'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->userMapper->method('fetchByEmailAndPassword')
+        $this->user_mapper->method('fetchByEmailAndPassword')
             ->willReturnMap([
                 ['user1@example.com', '123', $this->buildUser()],
                 ['notfound@example.com', '123', null],
             ]);
 
-        $this->sessionManager = $this->getMockBuilder('Api\\Security\\SessionManager')
+        $this->session_manager = $this->getMockBuilder('Api\\Security\\SessionManager')
             ->setMethods(['createSession'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -41,19 +44,21 @@ class AuthControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $fbUserPic = $this->getMock('Facebook\\GraphNodes\\GraphPicture', ['getUrl']);
-        $fbUserPic->method('getUrl')->willReturn('https://pushkin.ru/pic.jpg');
+        $user_pic = $this->getMockBuilder('Facebook\\GraphNodes\\GraphPicture')
+            ->setMethods(['getUrl'])
+            ->getMock();
+        
+        $user_pic->method('getUrl')->willReturn('https://pushkin.ru/pic.jpg');
 
-        $fbUser = $this->getMock(
-            'Facebook\\GraphNodes\\GraphUser',
-            ['getFirstName', 'getLastName', 'getPicture', 'getEmail']
-        );
+        $fb_user = $this->getMockBuilder('Facebook\\GraphNodes\\GraphUser')
+            ->setMethods(['getFirstName', 'getLastName', 'getPicture', 'getEmail'])
+            ->getMock();
         foreach ([
                      'getEmail'     => 'sasha@pushkin.ru',
                      'getFirstName' => 'Alexander',
                      'getLastName'  => 'Pushkin',
                  ] as $method => $value) {
-            $fbUser->method($method)->willReturn($value);
+            $fb_user->method($method)->willReturn($value);
         }
 
         $this->facebook->method('get')
@@ -61,31 +66,33 @@ class AuthControllerTest extends ControllerTestCase
             ->willReturnSelf();
 
         $this->facebook->method('getGraphUser')
-            ->willReturn($fbUser);
+            ->willReturn($fb_user);
 
-        $fbUser->method('getPicture')
-            ->willReturn($fbUserPic);
+        $fb_user->method('getPicture')
+            ->willReturn($user_pic);
 
-        $this->pwGen = $this->getMockBuilder('Hackzilla\\PasswordGenerator\\Generator\\PasswordGeneratorInterface')
+        $this->pw_gen = $this->getMockBuilder('Hackzilla\\PasswordGenerator\\Generator\\PasswordGeneratorInterface')
             ->setMethods(['generatePassword'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
-        $this->pwGen->method('generatePassword')->willReturn('test_generated_password');
+        $this->pw_gen->method('generatePassword')->willReturn('test_generated_password');
 
-        $this->request = $this->getMock('Symfony\\Component\\HttpFoundation\\Request', ['getContent']);
+        $this->request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
+            ->setMethods(['getContent'])
+            ->getMock();
 
         $this->controller = new AuthController(
-            $this->userMapper,
-            $this->sessionManager,
+            $this->user_mapper,
+            $this->session_manager,
             $this->facebook,
-            $this->pwGen
+            $this->pw_gen
         );
     }
 
     public function testCreateByEmailSuccess()
     {
-        $this->sessionManager->method('createSession')
+        $this->session_manager->method('createSession')
             ->with(1, $this->request)
             ->willReturn('token1');
         $this->request
@@ -119,11 +126,11 @@ class AuthControllerTest extends ControllerTestCase
 
     public function testCreateByFacebookForExistingUser()
     {
-        $this->userMapper->method('fetchByEmail')
+        $this->user_mapper->method('fetchByEmail')
             ->with('sasha@pushkin.ru')
             ->willReturn($this->buildUser());
 
-        $this->sessionManager->method('createSession')
+        $this->session_manager->method('createSession')
             ->with(1, $this->request)
             ->willreturn('token1');
 
@@ -143,11 +150,11 @@ class AuthControllerTest extends ControllerTestCase
 
     public function testCreateTokenByFacebookForNewUser()
     {
-        $this->userMapper->method('fetchByEmail')
+        $this->user_mapper->method('fetchByEmail')
             ->with('sasha@pushkin.ru')
             ->willReturn(null);
 
-        $this->userMapper->method('insert')
+        $this->user_mapper->method('insert')
             ->with($this->callback(function (User $user) {
                 return $user->getFirstName() === 'Alexander'
                 && $user->getEmail() === 'sasha@pushkin.ru'
@@ -157,7 +164,7 @@ class AuthControllerTest extends ControllerTestCase
                 $user->setId(42);
             }));
 
-        $this->sessionManager->method('createSession')
+        $this->session_manager->method('createSession')
             ->with(42, $this->request)
             ->willreturn('token42');
 

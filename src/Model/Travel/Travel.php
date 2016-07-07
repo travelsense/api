@@ -29,7 +29,7 @@ class Travel
     /**
      * @var int
      */
-    private $categoryId;
+    private $category_id;
 
     /**
      * @var string
@@ -40,6 +40,11 @@ class Travel
      * @var bool
      */
     private $published = false;
+
+    /**
+     * @var string
+     */
+    private $creation_mode;
 
     /**
      * @return string
@@ -100,16 +105,16 @@ class Travel
      */
     public function getCategoryId()
     {
-        return $this->categoryId;
+        return $this->category_id;
     }
 
     /**
-     * @param int $categoryId
+     * @param int $category_id
      * @return Travel
      */
-    public function setCategoryId(int $categoryId)
+    public function setCategoryId(int $category_id)
     {
-        $this->categoryId = $categoryId;
+        $this->category_id = $category_id;
         return $this;
     }
 
@@ -148,4 +153,23 @@ class Travel
         $this->published = $published;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getCreationMode()
+    {
+        return $this->creation_mode;
+    }
+
+    /**
+     * @param string $creation_mode
+     * @return Travel
+     */
+    public function setCreationMode($creation_mode)
+    {
+        $this->creation_mode = $creation_mode;
+        return $this;
+    }
+
 }
