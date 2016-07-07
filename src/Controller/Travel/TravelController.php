@@ -96,24 +96,24 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param int  $id
      * @param User $user
+     * @param int  $id
      * @return array
      */
-    public function addFavorite(int $id, User $user): array
+    public function addFavorite(User $user, int $id): array
     {
-        $this->travel_mapper->addFavorite($id, $user->getId());
+        $this->travel_mapper->addFavorite($user->getId(), $id);
         return [];
     }
 
     /**
-     * @param int  $id
      * @param User $user
+     * @param int  $id
      * @return array
      */
-    public function removeFavorite(int $id, User $user): array
+    public function removeFavorite(User $user, int $id): array
     {
-        $this->travel_mapper->removeFavorite($id, $user->getId());
+        $this->travel_mapper->removeFavorite($user->getId(), $id);
         return [];
     }
 

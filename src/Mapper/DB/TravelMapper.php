@@ -111,10 +111,10 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param int $travel_id
      * @param int $user_id
+     * @param int $travel_id
      */
-    public function addFavorite(int $travel_id, int $user_id)
+    public function addFavorite(int $user_id, int $travel_id)
     {
         $this->pdo->prepare('
             INSERT INTO favorite_travels (user_id, travel_id)
@@ -126,14 +126,15 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param int $travel_id
      * @param int $user_id
+     * @param int $travel_id
      */
-    public function removeFavorite(int $travel_id, int $user_id)
+    public function removeFavorite(int $user_id, int $travel_id)
     {
-        $this->pdo
-            ->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id')
-            ->execute([
+        $this->pdo->prepare('
+                DELETE FROM favorite_travels WHERE user_id = :user_id 
+                AND travel_id = :travel_id
+            ')->execute([
                 ':user_id' => $user_id,
                 ':travel_id' => $travel_id,
             ]);
