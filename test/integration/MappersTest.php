@@ -125,7 +125,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     /**
      * TravelMapper
      */
-    public function testTravelMapperFavorites()
+    public function testTravelMapperFavorites()//TODO: need to fix this test function to test the modified SQL-query
     {
         $user_a = $this->createUser('a');
         $this->user_mapper->insert($user_a);
@@ -151,7 +151,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testTravelCategories()
+    public function testTravelCategories()//TODO: need to fix this test function to test the modified SQL-query
     {
         $user = $this->createUser('a');
         $this->user_mapper->insert($user);
@@ -173,8 +173,8 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameCategories($cat_a, $cat_list[0]);
 
         $this->assertEquals([], $this->travel_mapper->fetchByCategory($cat_b->getName(), 1, 0));
-        $trave_lList = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
-        $this->assertSameTravels($travel_a, $trave_lList[0]);
+        $travel_list = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
+        $this->assertSameTravels($travel_a, $travel_list[0]);
 
         $this->assertEquals(
             $cat_a->getId(),
@@ -365,5 +365,48 @@ class MappersTest extends \PHPUnit_Framework_TestCase
             ['id' => $travel->getId(), 'deleted' => true],
             $row
         );
+    }
+    
+    public function testFetchById()//TODO: need to fix this test function to test the modified SQL-query
+    {
+        $user = $this->createUser('testUser');
+        $this->user_mapper->insert($user);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $this->travel_mapper->insert($travel);
+
+        $travel_test = $this->travel_mapper->fetchById($travel->getId());
+
+        $this->assertSameTravels($travel_test, $travel);
+    }
+    
+    public function testFetchByAuthorId()//TODO: need to fix this test function to test the modified SQL-query
+    {
+        $user = $this->createUser('testUser');
+        $this->user_mapper->insert($user);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $this->travel_mapper->insert($travel);
+
+        $travel_list = $this->travel_mapper->fetchByAuthorId($user->getId(), 1, 0);
+
+        $this->assertSameTravels($travel_list[0], $travel);
+    }
+
+    public function testFetchPublishedByCategory()//TODO: need to fix this test function to test the modified SQL-query
+    {
+        $user = $this->createUser('testUser');
+        $this->user_mapper->insert($user);
+
+        $cat = $this->createCategory('testCategory');
+        $this->category_mapper->insert($cat);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $travel->setCategoryId($cat->getId());
+        $this->travel_mapper->insert($travel);
+
+        $travel_list = $this->travel_mapper->fetchByCategory($cat->getName(), 1, 0);
+        
+        $this->assertSameTravels($travel_list[0], $travel);
     }
 }
