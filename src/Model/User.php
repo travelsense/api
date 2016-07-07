@@ -155,7 +155,7 @@ class User
      * @param bool $creator
      * @return User
      */
-    public function setCreator( $creator=false )
+    public function setCreator( $creator = false )
     {
         $this->creator = $creator;
         return $this;
