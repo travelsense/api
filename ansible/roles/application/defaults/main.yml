@@ -1,0 +1,4 @@
+---
+env: prod
+php_sapi: [cli, fpm]
+nginx_root: /www/current/public

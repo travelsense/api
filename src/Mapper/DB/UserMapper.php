@@ -52,9 +52,9 @@ class UserMapper extends AbstractPDOMapper
     {
         $sql = <<<SQL
 INSERT INTO users
-  ("email", "password", "first_name", "last_name", "picture","creator")
+  ("email", "password", "first_name", "last_name", "picture")
 VALUES
-  (:email, :password, :first_name, :last_name, :picture, :creator)
+  (:email, :password, :first_name, :last_name, :picture)
 RETURNING id, created
 SQL;
         $insert = $this->pdo->prepare($sql);
@@ -65,7 +65,6 @@ SQL;
                 ':first_name' => $user->getFirstName(),
                 ':last_name'  => $user->getLastName(),
                 ':picture'    => $user->getPicture(),
-                ':creator'    => $user->getCreator(),
             ]
         );
         $row = $insert->fetch(PDO::FETCH_ASSOC);
@@ -84,14 +83,12 @@ SQL;
         $last_name = $user->getLastName();
         $email_confirmed = $user->isEmailConfirmed();
         $id = $user->getId();
-        $creator=$user->getCreator();
         $update = $this->pdo->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
         $update->bindValue(':email', $email);
         $update->bindValue(':firstname', $first_name);
         $update->bindValue(':lastname', $last_name);
         $update->bindValue(':email_confirmed', $email_confirmed, PDO::PARAM_BOOL);
         $update->bindValue(':id', $id);
-        $update->bindValue(':creator',$creator);
         $update->execute();
     }
 
@@ -176,8 +173,7 @@ SQL;
             ->setLastName($row['last_name'])
             ->setPicture($row['picture'])
             ->setCreated(new DateTime($row['created']))
-            ->setEmailConfirmed($row['email_confirmed'])
-            ->setCreator($row['creator']);
+            ->setEmailConfirmed($row['email_confirmed']);
     }
 
     /**

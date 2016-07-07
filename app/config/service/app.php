@@ -17,7 +17,7 @@ foreach (['debug', 'env'] as $key) {
     $app[$key] = $app['config'][$key];
 }
 
-$app->error(function (Exception $e) use ($app) {
+$app->error(function (Throwable $e) use ($app) {
     if ($e instanceof ApiException) {
         $map = [
             ApiException::VALIDATION             => Response::HTTP_FORBIDDEN,
