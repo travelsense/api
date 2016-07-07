@@ -1,6 +1,8 @@
 <?php
 namespace Api\Model;
 
+use Api\Model\boolean;
+
 class User
 {
     use IdTrait;
@@ -30,7 +32,12 @@ class User
      * @var string
      */
     private $picture;
-
+    
+    /**
+     * @var bool
+     */
+    private $creator = false;
+    
     /**
      * @var string
      */
@@ -144,5 +151,23 @@ class User
     {
         $this->password = $password;
         return $this;
+    }
+    
+    /**
+     * @param bool $creator
+     * @return User
+     */
+    public function setCreator( $creator=false )
+    {
+        $this->creator = $creator;
+        return $this;
+    }
+    
+    /**
+     * @return bool
+     */
+    public function getCreator()
+    {
+        return $this->creator;
     }
 }
