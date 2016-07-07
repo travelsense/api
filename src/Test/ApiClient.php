@@ -243,7 +243,7 @@ class ApiClient
      */
     public function addTravelToFavorites(int $id)
     {
-        return $this->post('/travel/favorite/' . urlencode($id));
+        return $this->post(sprintf('/travel/%s/favorite', urlencode($id)));
     }
 
     /**
@@ -252,7 +252,7 @@ class ApiClient
      */
     public function removeTravelFromFavorites(int $id)
     {
-        return $this->delete('/travel/favorite/' . urlencode($id));
+        return $this->delete(sprintf('/travel/%s/favorite', urlencode($id)));
     }
 
     /**

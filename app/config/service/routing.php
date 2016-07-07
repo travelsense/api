@@ -54,10 +54,10 @@ $app->get('/travel/featured', 'controller.travel:getFeatured');
 
 $app->get('/travel/favorite', 'controller.travel:getFavorites');
 
-$app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
+$app->post('/travel/{id}/favorite', 'controller.travel:addFavorite')
     ->convert('id', $to_int);
 
-$app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite')
+$app->delete('/travel/{id}/favorite', 'controller.travel:removeFavorite')
     ->convert('id', $to_int);
 
 $app->post('/travel/comment/{id}/flag', function() { return [];}) // TODO Implement flagging
