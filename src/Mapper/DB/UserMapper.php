@@ -84,14 +84,14 @@ SQL;
         $last_name = $user->getLastName();
         $email_confirmed = $user->isEmailConfirmed();
         $id = $user->getId();
-        $creator=$user->getCreator();
+        $creator = $user->getCreator();
         $update = $this->pdo->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
         $update->bindValue(':email', $email);
         $update->bindValue(':firstname', $first_name);
         $update->bindValue(':lastname', $last_name);
         $update->bindValue(':email_confirmed', $email_confirmed, PDO::PARAM_BOOL);
         $update->bindValue(':id', $id);
-        $update->bindValue(':creator',$creator);
+        $update->bindValue(':creator', $creator);
         $update->execute();
     }
 
