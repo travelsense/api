@@ -15,11 +15,11 @@ $app['security.credentials'] = function () {
     return new Credentials();
 };
 
-$app['security.session_manager'] = function($app) {
+$app['security.session_manager'] = function ($app) {
     return new SessionManager($app['mapper.db.sessions']);
 };
 
-$app->on(KernelEvents::REQUEST, function(GetResponseEvent $event) use ($app) {
+$app->on(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
     $request = $event->getRequest();
     $route = $request->attributes->get('_route');
     if (in_array($route, $app['config']['security']['unsecured_routes'])) {
@@ -34,7 +34,7 @@ $app->on(KernelEvents::REQUEST, function(GetResponseEvent $event) use ($app) {
     $app['dispatcher']->dispatch($auth_event::NAME, $auth_event);
 });
 
-$app->on(AuthenticationEvent::NAME, function(AuthenticationEvent $event) use ($app) {
+$app->on(AuthenticationEvent::NAME, function (AuthenticationEvent $event) use ($app) {
     $user_id = $app['security.session_manager']->getUserId($event->getToken());
     if (empty($user_id)) {
         throw new ApiException('Invalid token', ApiException::INVALID_TOKEN);
@@ -42,7 +42,7 @@ $app->on(AuthenticationEvent::NAME, function(AuthenticationEvent $event) use ($a
     $app['security.credentials']->setUserId($user_id);
 });
 
-$app['user'] = function($app) {
+$app['user'] = function ($app) {
     /** @var \Api\Security\Credentials $credentials */
     $credentials = $app['security.credentials'];
     $id = $credentials->getUserId();
@@ -53,4 +53,3 @@ $app['user'] = function($app) {
     $user_mapper = $app['mapper.db.user'];
     return $user_mapper->fetchById($id);
 };
-
