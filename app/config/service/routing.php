@@ -1,11 +1,11 @@
 <?php
 // Routing
 
-$to_date = function (string $date): DateTime {
+$to_date = function (string $date) {
     return new DateTime($date);
 };
 
-$to_int = function (string $val): int {
+$to_int = function (string $val) {
     return intval($val);
 };
 
@@ -60,8 +60,10 @@ $app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
 $app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite')
     ->convert('id', $to_int);
 
-$app->post('/travel/comment/{id}/flag', function() { return [];}) // TODO Implement flagging
-    ->convert('id', $to_int);
+$app->post('/travel/comment/{id}/flag', function () {
+    return [];
+})// TODO Implement flagging
+->convert('id', $to_int);
 
 $app->get('/travel/{id}/comments', 'controller.comment:getAllByTravelId')
     ->convert('id', $to_int)
