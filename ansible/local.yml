@@ -29,6 +29,13 @@
   - include: tasks/install_composer.yml
   - include: tasks/update_composer.yml
 
+  - name: Install system utilities
+    apt: name={{ item }}
+    with_items:
+      - mc
+      - unzip
+      - htop
+
   - name: composer install
     shell: composer install
     args:
