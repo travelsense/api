@@ -73,8 +73,7 @@ class WegoFlights
         $user_country_code = 'US',
         $country_site_code = 'US',
         $lang = 'en'
-    )
-    {
+    ) {
         $query = [
             "trips"             => [
                 [
@@ -199,8 +198,7 @@ class WegoFlights
         array $departure_airports = [],
         array $arrival_airports = [],
         array $stopover_airports = []
-    )
-    {
+    ) {
         $this->setFilterArray('airline_codes', $airlines);
         $this->setFilterArray('provider_codes', $providers);
         $this->setFilterArray('designator_codes', $designators);
@@ -285,8 +283,7 @@ class WegoFlights
         $currency = 'USD',
         $page = 1,
         $per_page = 20
-    )
-    {
+    ) {
         $query = array_merge(
             [
                 'id'               => rand(), // A random string you need to assign for this query, used for debugging purposes

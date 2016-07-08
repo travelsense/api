@@ -26,13 +26,13 @@ class ClientControllerTest extends \PHPUnit_Framework_TestCase
             $this->controller->version("0.0.0")
         );
     }
-     
-     /**
-      * @expectedException  \Api\Exception\ApiException
-      * @expectedExceptionCode \Api\Exception\ApiException::RESOURCE_NOT_FOUND
-      */
-     public function testInvalidVersion()
-     { 
+
+    /**
+     * @expectedException  \Api\Exception\ApiException
+     * @expectedExceptionCode \Api\Exception\ApiException::RESOURCE_NOT_FOUND
+     */
+    public function testInvalidVersion()
+    {
         $this->controller->version(' ');
-     }
+    }
 }

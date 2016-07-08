@@ -46,5 +46,4 @@ class CategoriesControllerTest extends ControllerTestCase
             $this->controller->getCategories()
         );
     }
-
 }
