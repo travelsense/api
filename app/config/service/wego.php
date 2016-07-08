@@ -1,6 +1,6 @@
 <?php
-/** 
- * @var $app Api\Application  
+/**
+ * @var $app Api\Application
  */
 use Api\Wego\WegoHttpClient;
 use Api\Wego\WegoHotels;

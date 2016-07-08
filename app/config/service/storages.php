@@ -25,6 +25,6 @@ $app['db.main.migrator'] = function (Application $app) {
     return $migrator;
 };
 
-$app['storage.expirable_storage'] = function(Application $app) {
+$app['storage.expirable_storage'] = function (Application $app) {
     return new ExpirableStorage($app['db.main.pdo']);
 };

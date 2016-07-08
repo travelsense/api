@@ -13,7 +13,7 @@ class Credentials
     /**
      * @return int
      */
-    public function getUserId():int 
+    public function getUserId():int
     {
         if (empty($this->user_id)) {
             throw new LogicException('User id not set');
@@ -30,6 +30,4 @@ class Credentials
         $this->user_id = $user_id;
         return $this;
     }
-    
-
 }
