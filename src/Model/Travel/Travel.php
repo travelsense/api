@@ -139,7 +139,7 @@ class Travel
     /**
      * @return boolean
      */
-    public function isPublished(): bool 
+    public function isPublished(): bool
     {
         return $this->published;
     }
@@ -171,5 +171,4 @@ class Travel
         $this->creation_mode = $creation_mode;
         return $this;
     }
-
 }

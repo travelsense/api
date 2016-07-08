@@ -184,7 +184,7 @@ class ApiClient
     
     public function getTravelComments(int $id, int $limit, int $offset)
     {
-        $url = sprintf('/travel/%d/comments?', urlencode($id)) 
+        $url = sprintf('/travel/%d/comments?', urlencode($id))
             . http_build_query([
                 'limit' => $limit,
                 'offset' => $offset,

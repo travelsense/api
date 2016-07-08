@@ -47,5 +47,4 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
         };
         $this->assertEquals([$object_a, $object_b], $mapper->test());
     }
-
 }

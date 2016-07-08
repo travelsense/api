@@ -41,8 +41,7 @@ class UserController extends ApiController
         UserMapper $user_mapper,
         MailerService $mailer,
         ExpirableStorage $storage
-    )
-    {
+    ) {
         $this->user_mapper = $user_mapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
