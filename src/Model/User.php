@@ -164,7 +164,7 @@ class User
     /**
      * @return bool
      */
-    public function getCreator()
+    public function getCreator():bool
     {
         return $this->creator;
     }
