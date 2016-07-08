@@ -1,1 +1,1 @@
-ALTER users DROP COLUMN creator;
+ALTER TABLE users DROP COLUMN creator;
