@@ -49,8 +49,7 @@ class AuthController extends ApiController
         SessionManager $session_manager,
         Facebook $facebook,
         PasswordGeneratorInterface $pwd_generator
-    )
-    {
+    ) {
         $this->user_mapper = $user_mapper;
         $this->session_manager = $session_manager;
         $this->facebook = $facebook;
