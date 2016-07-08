@@ -21,7 +21,6 @@
     "phpunit/phpunit": "^5.1",
     "sorien/silex-pimple-dumper": "~2.0",
     "weew/php-http-server": "^1.0",
-    "squizlabs/php_codesniffer": "~2.5",
     "friendsofphp/php-cs-fixer": "^1.11"
   },
   "autoload": {
