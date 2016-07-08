@@ -6,7 +6,8 @@ The development cycle is similar to [Contributing to Open Source]( https://guide
 * Get an assignment to work on
 * Create a dedicated branch in your fork
 * Commit your work and push the changes
-* Open a pull request to the main project 
+* Open a pull request to the main project
+* When the PR is merged, [sync the fork](https://help.github.com/articles/syncing-a-fork/) and remove the branch
 
 ## Getting Vagrant running
 * install [Vagrant](https://www.vagrantup.com/). Do **not** run `vagrant init`.

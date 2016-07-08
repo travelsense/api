@@ -25,6 +25,15 @@
           file: /vagrant/db/ext/postgis.sql
 
   tasks:
+
+  - name: Install packages
+    apt: name={{ item }}
+    with_items:
+      - vim
+      - mc
+      - unzip
+      - htop
+
   - include: tasks/apt_autoremove.yml
   - include: tasks/install_composer.yml
   - include: tasks/update_composer.yml
