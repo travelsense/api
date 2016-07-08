@@ -125,7 +125,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     /**
      * TravelMapper
      */
-    public function testTravelMapperFavorites()//TODO: need to fix this test function to test the modified SQL-query
+    public function testTravelMapperFavorites()
     {
         $user_a = $this->createUser('a');
         $this->user_mapper->insert($user_a);
@@ -151,7 +151,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testTravelCategories()//TODO: need to fix this test function to test the modified SQL-query
+    public function testTravelCategories()
     {
         $user = $this->createUser('a');
         $this->user_mapper->insert($user);
@@ -367,7 +367,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         );
     }
     
-    public function testFetchById()//TODO: need to fix this test function to test the modified SQL-query
+    public function testFetchById()
     {
         $user = $this->createUser('testUser');
         $this->user_mapper->insert($user);
@@ -380,7 +380,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameTravels($travel_test, $travel);
     }
     
-    public function testFetchByAuthorId()//TODO: need to fix this test function to test the modified SQL-query
+    public function testFetchByAuthorId()
     {
         $user = $this->createUser('testUser');
         $this->user_mapper->insert($user);
@@ -393,7 +393,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameTravels($travel_list[0], $travel);
     }
 
-    public function testFetchPublishedByCategory()//TODO: need to fix this test function to test the modified SQL-query
+    public function testFetchPublishedByCategory()
     {
         $user = $this->createUser('testUser');
         $this->user_mapper->insert($user);
