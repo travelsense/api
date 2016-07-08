@@ -101,7 +101,7 @@ $app->post('/travel', 'controller.travel:createTravel');
 $app->get('/categories', 'controller.categories:getCategories') //TODO : remove in version 2.0
     ->bind('travel-category');
 
-$app->get('/travel//categories', 'controller.categories:getCategories')
+$app->get('/travel/categories', 'controller.categories:getCategories')
 ->bind('travel-category');
 
 // IATA entities
