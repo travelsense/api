@@ -91,7 +91,7 @@ SQL;
         $update->bindValue(':lastname', $last_name);
         $update->bindValue(':email_confirmed', $email_confirmed, PDO::PARAM_BOOL);
         $update->bindValue(':id', $id);
-        $update->bindValue(':creator', $creator);
+        $update->bindValue(':creator', $creator, PDO::PARAM_BOOL);
         $update->execute();
     }
 
