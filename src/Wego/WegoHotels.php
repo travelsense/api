@@ -53,8 +53,7 @@ class WegoHotels
         $guests = 2,
         $ip = 'direct',
         $country = 'US'
-    )
-    {
+    ) {
         $response = $this->http->get(
             '/hotels/api/search/new',
             [
@@ -125,8 +124,7 @@ class WegoHotels
         $popular_with = 'XX',
         $page = 1,
         $per_page = 20
-    )
-    {
+    ) {
         return $this->http->get(
             '/hotels/api/search/' . urlencode($id),
             [

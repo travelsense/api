@@ -188,5 +188,4 @@ SQL;
     {
         return sha1($password . $this->salt);
     }
-
 }

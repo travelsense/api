@@ -54,7 +54,7 @@ class CommentController extends ApiController
      * @param User $user
      * @return array
      */
-    public function deleteById(int $id, User $user): array 
+    public function deleteById(int $id, User $user): array
     {
         $comment = $this->comment_mapper->fetchBylId($id);
         if (empty($comment)) {

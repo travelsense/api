@@ -1,11 +1,11 @@
 <?php
 // Routing
 
-$to_date = function (string $date): DateTime {
+$to_date = function (string $date) {
     return new DateTime($date);
 };
 
-$to_int = function (string $val): int {
+$to_int = function (string $val) {
     return intval($val);
 };
 
@@ -54,14 +54,22 @@ $app->get('/travel/featured', 'controller.travel:getFeatured');
 
 $app->get('/travel/favorite', 'controller.travel:getFavorites');
 
-$app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')
+$app->post('/travel/favorite/{id}', 'controller.travel:addFavorite') //TODO : remove in version 2.0
     ->convert('id', $to_int);
 
-$app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite')
+$app->post('/travel/{id}/favorite', 'controller.travel:addFavorite')
     ->convert('id', $to_int);
 
-$app->post('/travel/comment/{id}/flag', function() { return [];}) // TODO Implement flagging
+$app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite') //TODO : remove in version 2.0
     ->convert('id', $to_int);
+
+$app->delete('/travel/{id}/favorite', 'controller.travel:removeFavorite')
+    ->convert('id', $to_int);
+
+$app->post('/travel/comment/{id}/flag', function () {
+    return [];
+})// TODO Implement flagging
+->convert('id', $to_int);
 
 $app->get('/travel/{id}/comments', 'controller.comment:getAllByTravelId')
     ->convert('id', $to_int)
@@ -90,8 +98,11 @@ $app->post('/travel', 'controller.travel:createTravel');
 
 // Travel categories
 
-$app->get('/categories', 'controller.categories:getCategories')
+$app->get('/categories', 'controller.categories:getCategories') //TODO : remove in version 2.0
     ->bind('travel-category');
+
+$app->get('/travel/categories', 'controller.categories:getCategories')
+->bind('travel-category');
 
 // IATA entities
 

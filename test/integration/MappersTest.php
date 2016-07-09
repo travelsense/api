@@ -58,7 +58,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
      * @var BookingMapper
      */
     private $booking_mapper;
-    
+
     public function setUp()
     {
         $app = Application::createByEnvironment('test');
@@ -173,8 +173,8 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameCategories($cat_a, $cat_list[0]);
 
         $this->assertEquals([], $this->travel_mapper->fetchByCategory($cat_b->getName(), 1, 0));
-        $trave_lList = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
-        $this->assertSameTravels($travel_a, $trave_lList[0]);
+        $travel_list = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
+        $this->assertSameTravels($travel_a, $travel_list[0]);
 
         $this->assertEquals(
             $cat_a->getId(),
@@ -345,5 +345,68 @@ class MappersTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals(0, $item['count']);
             }
         }
+    }
+
+    public function testMarkDeleted()
+    {
+        $user = $this->createUser('testUser');
+        $this->user_mapper->insert($user);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $this->travel_mapper->insert($travel);
+
+        $mapper = $this->travel_mapper;
+
+        $mapper->markDeleted($travel->getId(), $deleted = true);
+        $select = $this->pdo->prepare('SELECT id, deleted FROM travels WHERE deleted=true');
+        $select->execute();
+        $row = $select->fetch(PDO::FETCH_NAMED);
+        $this->assertEquals(
+            ['id' => $travel->getId(), 'deleted' => true],
+            $row
+        );
+    }
+    
+    public function testFetchById()
+    {
+        $user = $this->createUser('testUser');
+        $this->user_mapper->insert($user);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $this->travel_mapper->insert($travel);
+
+        $travel_test = $this->travel_mapper->fetchById($travel->getId());
+
+        $this->assertSameTravels($travel_test, $travel);
+    }
+    
+    public function testFetchByAuthorId()
+    {
+        $user = $this->createUser('testUser');
+        $this->user_mapper->insert($user);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $this->travel_mapper->insert($travel);
+
+        $travel_list = $this->travel_mapper->fetchByAuthorId($user->getId(), 1, 0);
+
+        $this->assertSameTravels($travel_list[0], $travel);
+    }
+
+    public function testFetchPublishedByCategory()
+    {
+        $user = $this->createUser('testUser');
+        $this->user_mapper->insert($user);
+
+        $cat = $this->createCategory('testCategory');
+        $this->category_mapper->insert($cat);
+
+        $travel = $this->createTravel($user, 'testTravel');
+        $travel->setCategoryId($cat->getId());
+        $this->travel_mapper->insert($travel);
+
+        $travel_list = $this->travel_mapper->fetchByCategory($cat->getName(), 1, 0);
+        
+        $this->assertSameTravels($travel_list[0], $travel);
     }
 }
