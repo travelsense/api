@@ -58,14 +58,14 @@ VALUES
 RETURNING id, created
 SQL;
         $insert = $this->pdo->prepare($sql);
-		$insert->bindValue('email', $user->getEmail(), PDO::PARAM_STR);
-		$insert->bindValue('password', $this->getPasswordHash($user->getPassword()), PDO::PARAM_STR);
-		$insert->bindValue('first_name', $user->getFirstName(), PDO::PARAM_STR);
-		$insert->bindValue('last_name', $user->getLastName(), PDO::PARAM_STR);
-		$insert->bindValue('picture', $user->getPicture(), PDO::PARAM_STR);
-		$insert->bindValue('creator', $user->getCreator(), PDO::PARAM_BOOL);
+	$insert->bindValue('email', $user->getEmail(), PDO::PARAM_STR);
+	$insert->bindValue('password', $this->getPasswordHash($user->getPassword()), PDO::PARAM_STR);
+	$insert->bindValue('first_name', $user->getFirstName(), PDO::PARAM_STR);
+	$insert->bindValue('last_name', $user->getLastName(), PDO::PARAM_STR);
+	$insert->bindValue('picture', $user->getPicture(), PDO::PARAM_STR);
+	$insert->bindValue('creator', $user->getCreator(), PDO::PARAM_BOOL);
        
-		$row = $insert->fetch(PDO::FETCH_ASSOC);
+	$row = $insert->fetch(PDO::FETCH_ASSOC);
         $user->setId($row['id']);
         $user->setCreated(new DateTime($row['created']));
     }
