@@ -32,6 +32,11 @@ class Travel
     private $category_id;
 
     /**
+     * @var array
+     */
+    private $categories_id;
+
+    /**
      * @var string
      */
     private $image;
@@ -101,11 +106,16 @@ class Travel
     }
 
     /**
-     * @return int
+     * @return int | array
      */
     public function getCategoryId()
     {
-        return $this->category_id;
+        if ($this->category_id) {
+            return $this->category_id;
+        }
+        if ($this->categories_id) {
+            return $this->categories_id;
+        }
     }
 
     /**
@@ -115,6 +125,16 @@ class Travel
     public function setCategoryId(int $category_id)
     {
         $this->category_id = $category_id;
+        return $this;
+    }
+
+    /**
+     * @param array $categories_id
+     * @return Travel
+     */
+    public function setCategoriesId(array $categories_id)
+    {
+        $this->categories_id = $categories_id;
         return $this;
     }
 

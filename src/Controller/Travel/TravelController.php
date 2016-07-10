@@ -59,7 +59,7 @@ class TravelController extends ApiController
             $travel->setCreationMode($json->get('creation_mode'));
         }
         $this->travel_mapper->insert($travel);
-        if ($json->has('category_id')) {
+        if ($json->has('category_id')) { // если заменить на while?
             $this->category_mapper->addTravelToCategory($travel->getId(), $json->get('category_id'));
         }
         if ($json->has('published')) {

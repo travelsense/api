@@ -36,7 +36,11 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function fetchByTravelId(int $travel_id): array
     {
-        $select = $this->pdo->prepare('SELECT c.* FROM travel_categories ct JOIN categories c ON ct.category_id = c.id WHERE ct.travel_id = :travel_id');
+        $select = $this->pdo->prepare('
+            SELECT c.* FROM travel_categories ct 
+            JOIN categories c ON ct.category_id = c.id 
+            WHERE ct.travel_id = :travel_id
+        ');
         $select->execute([
             'travel_id' => $travel_id,
         ]);
@@ -47,7 +51,7 @@ class CategoryMapper extends AbstractPDOMapper
      * @param int $id
      * @return Category
      */
-    public function fetchBylId(int $id): Category
+    public function fetchById(int $id): Category
     {
         $select = $this->pdo->prepare('SELECT * FROM categories WHERE id = :id');
         $select->execute([
@@ -80,6 +84,35 @@ class CategoryMapper extends AbstractPDOMapper
                     ':travel_id'   => $travel_id,
                     ':category_id' => $category_id,
                 ]);
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+        }
+    }
+
+    /**
+     * @param int $travel_id
+     * @param array $categories_id
+     */
+    public function addTravelToCategories(int $travel_id, array $categories_id)
+    {
+        try {
+            $this->pdo->beginTransaction();
+            $this->pdo
+            ->prepare('DELETE FROM travel_categories WHERE travel_id=:travel_id')
+                ->execute([
+                    ':travel_id' => $travel_id,
+                ]);
+
+            foreach ($categories_id as $category_id)
+            {
+                $this->pdo
+                    ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)')
+                    ->execute([
+                        ':travel_id'   => $travel_id,
+                        ':category_id' => $category_id,
+                    ]);
+            }
             $this->pdo->commit();
         } catch (PDOException $e) {
             $this->pdo->rollBack();
