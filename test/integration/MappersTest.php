@@ -119,7 +119,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($category->getId());
         $this->category_mapper->insert($category);
         $this->assertTrue(is_int($category->getId()));
-        $this->assertSameCategories($category, $this->category_mapper->fetchBylId($category->getId()));
+        $this->assertSameCategories($category, $this->category_mapper->fetchById($category->getId()));
     }
 
     /**
