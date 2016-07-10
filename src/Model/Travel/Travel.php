@@ -27,14 +27,9 @@ class Travel
     private $content;
 
     /**
-     * @var int
-     */
-    private $category_id;
-
-    /**
      * @var array
      */
-    private $categories_id;
+    private $category_ids;
 
     /**
      * @var string
@@ -106,35 +101,20 @@ class Travel
     }
 
     /**
-     * @return int | array
+     * @return array
      */
-    public function getCategoryId()
+    public function getCategoriesId()
     {
-        if ($this->category_id) {
-            return $this->category_id;
-        }
-        if ($this->categories_id) {
-            return $this->categories_id;
-        }
+        return $this->category_ids;
     }
 
     /**
-     * @param int $category_id
+     * @param array $category_ids
      * @return Travel
      */
-    public function setCategoryId(int $category_id)
+    public function setCategoriesId(array $category_ids)
     {
-        $this->category_id = $category_id;
-        return $this;
-    }
-
-    /**
-     * @param array $categories_id
-     * @return Travel
-     */
-    public function setCategoriesId(array $categories_id)
-    {
-        $this->categories_id = $categories_id;
+        $this->category_ids = $category_ids;
         return $this;
     }
 

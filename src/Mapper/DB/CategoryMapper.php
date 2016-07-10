@@ -66,9 +66,9 @@ class CategoryMapper extends AbstractPDOMapper
 
     /**
      * @param int $travel_id
-     * @param int $category_id
+     * @param array $category_ids
      */
-    public function addTravelToCategory(int $travel_id, int $category_id)
+    public function addTravelToCategories(int $travel_id, array $category_ids)
     {
         try {
             $this->pdo->beginTransaction();
@@ -78,40 +78,14 @@ class CategoryMapper extends AbstractPDOMapper
                     ':travel_id' => $travel_id,
                 ]);
 
-            $this->pdo
-                ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)')
-                ->execute([
+            $statement = $this->pdo
+                ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)');
+            foreach ($category_ids as $category_id)
+            {
+                $statement->execute([
                     ':travel_id'   => $travel_id,
                     ':category_id' => $category_id,
                 ]);
-            $this->pdo->commit();
-        } catch (PDOException $e) {
-            $this->pdo->rollBack();
-        }
-    }
-
-    /**
-     * @param int $travel_id
-     * @param array $categories_id
-     */
-    public function addTravelToCategories(int $travel_id, array $categories_id)
-    {
-        try {
-            $this->pdo->beginTransaction();
-            $this->pdo
-            ->prepare('DELETE FROM travel_categories WHERE travel_id=:travel_id')
-                ->execute([
-                    ':travel_id' => $travel_id,
-                ]);
-
-            foreach ($categories_id as $category_id)
-            {
-                $this->pdo
-                    ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)')
-                    ->execute([
-                        ':travel_id'   => $travel_id,
-                        ':category_id' => $category_id,
-                    ]);
             }
             $this->pdo->commit();
         } catch (PDOException $e) {

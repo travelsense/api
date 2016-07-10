@@ -95,8 +95,8 @@ class TravelMapper extends AbstractPDOMapper
         $travel->setId($row['id']);
         $travel->setCreated(new DateTime($row['created']));
 
-        if ($travel->getCategoryId()) {
-            is_array($travel->getCategoryId()) ? ($this->category_mapper->addTravelToCategories($travel->getId(), $travel->getCategoryId())) : ($this->category_mapper->addTravelToCategory($travel->getId(), $travel->getCategoryId()));
+        if ($travel->getCategoriesId()) {
+            $this->category_mapper->addTravelToCategories($travel->getId(), $travel->getCategoriesId());
         }
     }
 
@@ -245,9 +245,7 @@ class TravelMapper extends AbstractPDOMapper
             ->setUpdated(new DateTime($row['updated']))
             ->setCreationMode($row['creation_mode']);
         $categories = $this->category_mapper->fetchByTravelId($travel->getId());
-        if (count($categories) && (count($categories) == 1)) {
-            $travel->setCategoryId($categories[0]->getId());
-        } elseif (count($categories) && (count($categories) > 1)) {
+        if (count($categories)) {
             foreach ($categories as $category){
                 $travel->setCategoriesId($category->getId());
             }
