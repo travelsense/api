@@ -6,6 +6,7 @@ use Api\AbstractPDOMapper;
 use Api\Model\User;
 use DateTime;
 use PDO;
+use IdTrait;
 
 class UserMapper extends AbstractPDOMapper
 {
