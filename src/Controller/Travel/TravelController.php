@@ -60,13 +60,8 @@ class TravelController extends ApiController
         }
         $this->travel_mapper->insert($travel);
         if ($json->has('category_id')) {
-            if (is_array($json->get('category_id'))) {
-                $this->category_mapper->addTravelToCategories($travel->getId(), $json->get('category_id'));
-            }
-            if (is_int($json->get('category_id'))) {
-                $category_ids = [($json->get('category_id'))];
-                $this->category_mapper->addTravelToCategories($travel->getId(), $category_ids);
-            }
+            $ids = (array)$json->get('category_id');
+            $this->category_mapper->addTravelToCategories($travel->getId(), $ids);
         }
         if ($json->has('published')) {
             $travel->setPublished($json->get('published'));
@@ -214,13 +209,8 @@ class TravelController extends ApiController
             $travel->setCreationMode($json->get('creation_mode'));
         }
         if ($json->has('category_id')) {
-            if (is_array($json->get('category_id'))) {
-                $this->category_mapper->addTravelToCategories($id, $json->get('category_id'));
-            }
-            if (is_int($json->get('category_id'))) {
-                $category_ids = [($json->get('category_id'))];
-                $this->category_mapper->addTravelToCategories($id, $category_ids);
-            }
+            $ids = (array)$json->get('category_id');
+            $this->category_mapper->addTravelToCategories($travel->getId(), $ids);
         }
         $this->travel_mapper->update($travel);
 
@@ -271,7 +261,7 @@ class TravelController extends ApiController
             'content'     => $travel->getContent(),
             'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'category'    => $travel->getCategoriesId(),
+            'category'    => $travel->getCategoryIds(),
             'published'   => $travel->isPublished(),
             'creation_mode' => $travel->getCreationMode(),
         ];

@@ -103,7 +103,7 @@ class Travel
     /**
      * @return array
      */
-    public function getCategoriesId()
+    public function getCategoryIds()
     {
         return $this->category_ids;
     }
@@ -112,7 +112,7 @@ class Travel
      * @param array $category_ids
      * @return Travel
      */
-    public function setCategoriesId(array $category_ids)
+    public function setCategoryIds(array $category_ids)
     {
         $this->category_ids = $category_ids;
         return $this;

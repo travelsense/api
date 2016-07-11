@@ -164,24 +164,24 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
         $categories_a = [($cat_a->getId())];
         $travel_a = $this->createTravel($user, 'a');
-        $travel_a->setCategoriesId($categories_a);
+        $travel_a->setCategoryIds($categories_a);
         $this->travel_mapper->insert($travel_a);
         $travel_b = $this->createTravel($user, 'b');
-        $travel_b->setCategoriesId($categories_a);
+        $travel_b->setCategoryIds($categories_a);
         $this->travel_mapper->insert($travel_b);
 
         $cat_list = $this->category_mapper->fetchByTravelId($travel_a->getId());
         $this->assertSameCategories($cat_a, $cat_list[0]);
 
         $this->assertEquals([], $this->travel_mapper->fetchByCategory($cat_b->getName(), 1, 0));
-        $travel_List = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
-        $this->assertSameTravels($travel_a, $travel_List[0]);
+        $travel_list = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
+        $this->assertSameTravels($travel_a, $travel_list[0]);
 
         $this->assertEquals(
             $cat_a->getId(),
             $this->travel_mapper
                 ->fetchById($travel_a->getId())
-                ->getCategoriesId()
+                ->getCategoryIds()
         );
     }
 
@@ -217,7 +217,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($a->getAuthorId(), $b->getAuthorId());
         $this->assertEquals($a->getContent(), $b->getContent());
         $this->assertEquals($a->getTitle(), $b->getTitle());
-        $this->assertEquals($a->getCategoriesId(), $b->getCategoriesId());
+        $this->assertEquals($a->getCategoryIds(), $b->getCategoryIds());
     }
 
     /**
