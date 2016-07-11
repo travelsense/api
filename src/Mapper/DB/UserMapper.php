@@ -55,7 +55,7 @@ class UserMapper extends AbstractPDOMapper
 INSERT INTO users
   ("email", "password", "first_name", "last_name", "picture", "creator")
 VALUES
-  (:email, :password, :first_name, :last_name, :picture, :creator)
+  (email, password, first_name, last_name, picture, creator)
 RETURNING id, created
 SQL;
         $insert = $this->pdo->prepare($sql);
@@ -66,8 +66,8 @@ SQL;
         $insert->bindValue('picture', $user->getPicture(), PDO::PARAM_STR);
         $insert->bindValue('creator', $user->getCreator(), PDO::PARAM_BOOL);
         $row = $insert->fetch(PDO::FETCH_ASSOC);
-        $insert->setId($row['id']);
-        $insert->setCreated(new DateTime($row['created']));
+        $user->setId($row['id']);
+        $user->setCreated(new DateTime($row['created']));
     }
 
     /**
