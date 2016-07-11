@@ -64,8 +64,8 @@ class TravelController extends ApiController
                 $this->category_mapper->addTravelToCategories($travel->getId(), $json->get('category_id'));
             }
             if (is_int($json->get('category_id'))) {
-                $category_ids = [$json->get('category_id')];
-                $this->category_mapper->addTravelToCategory($travel->getId(), $category_ids);
+                $category_ids = [($json->get('category_id'))];
+                $this->category_mapper->addTravelToCategories($travel->getId(), $category_ids);
             }
         }
         if ($json->has('published')) {
@@ -214,7 +214,13 @@ class TravelController extends ApiController
             $travel->setCreationMode($json->get('creation_mode'));
         }
         if ($json->has('category_id')) {
-            $this->category_mapper->addTravelToCategory($id, $json->get('category_id'));
+            if (is_array($json->get('category_id'))) {
+                $this->category_mapper->addTravelToCategories($id, $json->get('category_id'));
+            }
+            if (is_int($json->get('category_id'))) {
+                $category_ids = [($json->get('category_id'))];
+                $this->category_mapper->addTravelToCategories($id, $category_ids);
+            }
         }
         $this->travel_mapper->update($travel);
 
@@ -265,7 +271,7 @@ class TravelController extends ApiController
             'content'     => $travel->getContent(),
             'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'category'    => $travel->getCategoryId(),
+            'category'    => $travel->getCategoriesId(),
             'published'   => $travel->isPublished(),
             'creation_mode' => $travel->getCreationMode(),
         ];
