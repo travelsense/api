@@ -167,7 +167,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $travel_a->setCategoryIds($categories_a);
         $this->travel_mapper->insert($travel_a);
         $travel_b = $this->createTravel($user, 'b');
-        $travel_b->setCategoryIds($categories_a);
+
         $this->travel_mapper->insert($travel_b);
 
         $cat_list = $this->category_mapper->fetchByTravelId($travel_a->getId());
@@ -178,7 +178,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameTravels($travel_a, $travel_list[0]);
 
         $this->assertEquals(
-            $cat_a->getId(),
+            [$cat_a->getId()],
             $this->travel_mapper
                 ->fetchById($travel_a->getId())
                 ->getCategoryIds()
