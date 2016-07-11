@@ -66,8 +66,8 @@ SQL;
         $insert->bindValue('picture', $user->getPicture(), PDO::PARAM_STR);
         $insert->bindValue('creator', $user->getCreator(), PDO::PARAM_BOOL);
         $row = $insert->fetch(PDO::FETCH_ASSOC);
-        $user->setId($row['id']);
-        $user->setCreated(new DateTime($row['created']));
+        $insert->setId($row['id']);
+        $insert->setCreated(new DateTime($row['created']));
     }
 
     /**
