@@ -80,8 +80,7 @@ class CategoryMapper extends AbstractPDOMapper
 
             $insert = $this->pdo
                 ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)');
-            foreach ($category_ids as $category_id)
-            {
+            foreach ($category_ids as $category_id) {
                 $insert->execute([
                     ':travel_id'   => $travel_id,
                     ':category_id' => $category_id,

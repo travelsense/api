@@ -246,7 +246,7 @@ class TravelMapper extends AbstractPDOMapper
             ->setCreationMode($row['creation_mode']);
         $categories = $this->category_mapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
-            foreach ($categories as $category){
+            foreach ($categories as $category) {
                 $category_ids[] = $category->getId();
             }
             $travel->setCategoryIds($category_ids);
