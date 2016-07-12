@@ -103,4 +103,24 @@ abstract class AbstractPDOMapper
         }
         return $row;
     }
+
+    protected function bindValues(PDOStatement $statement, array $values)
+    {
+        foreach ($values as $param => $value) {
+            switch (gettype($value)){
+                case "boolean":
+                    $statement->bindValue($param, $value, PDO::PARAM_BOOL);
+                    break;
+                case "NULL":
+                    $statement->bindValue($param, $value, PDO::PARAM_NULL);
+                    break;
+                case "integer":
+                    $statement->bindValue($param, $value, PDO::PARAM_INT);
+                    break;
+                case "string":
+                    $statement->bindValue($param, $value, PDO::PARAM_STR);
+                    break;
+            }
+        }
+    }
 }
