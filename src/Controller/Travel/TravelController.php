@@ -60,7 +60,7 @@ class TravelController extends ApiController
         }
         $this->travel_mapper->insert($travel);
         if ($json->has('category_id')) {
-            $ids = (array)$json->get('category_id');
+            $ids = (array) $json->get('category_id');
             $this->category_mapper->setTravelCategories($travel->getId(), $ids);
         }
         if ($json->has('published')) {

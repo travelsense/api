@@ -29,7 +29,7 @@ class Travel
     /**
      * @var array
      */
-    private $category_ids;
+    private $category_ids = [];
 
     /**
      * @var string
@@ -103,7 +103,7 @@ class Travel
     /**
      * @return array
      */
-    public function getCategoryIds()
+    public function getCategoryIds() : array
     {
         return $this->category_ids;
     }
