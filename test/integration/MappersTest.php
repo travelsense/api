@@ -162,9 +162,8 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $cat_b = $this->createCategory('b');
         $this->category_mapper->insert($cat_b);
 
-        $categories_a = [($cat_a->getId())];
         $travel_a = $this->createTravel($user, 'a');
-        $travel_a->setCategoryIds($categories_a);
+        $travel_a->setCategoryIds([$cat_a->getId()]);
         $this->travel_mapper->insert($travel_a);
         $travel_b = $this->createTravel($user, 'b');
 

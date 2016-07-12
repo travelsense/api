@@ -95,9 +95,7 @@ class TravelMapper extends AbstractPDOMapper
         $travel->setId($row['id']);
         $travel->setCreated(new DateTime($row['created']));
 
-        if ($travel->getCategoryIds()) {
-            $this->category_mapper->addTravelToCategories($travel->getId(), $travel->getCategoryIds());
-        }
+        $this->category_mapper->setTravelCategories($travel->getId(), $travel->getCategoryIds());
     }
 
     /**

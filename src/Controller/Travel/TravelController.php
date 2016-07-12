@@ -61,7 +61,7 @@ class TravelController extends ApiController
         $this->travel_mapper->insert($travel);
         if ($json->has('category_id')) {
             $ids = (array)$json->get('category_id');
-            $this->category_mapper->addTravelToCategories($travel->getId(), $ids);
+            $this->category_mapper->setTravelCategories($travel->getId(), $ids);
         }
         if ($json->has('published')) {
             $travel->setPublished($json->get('published'));
@@ -210,7 +210,7 @@ class TravelController extends ApiController
         }
         if ($json->has('category_id')) {
             $ids = (array) $json->get('category_id');
-            $this->category_mapper->addTravelToCategories($travel->getId(), $ids);
+            $this->category_mapper->setTravelCategories($travel->getId(), $ids);
         }
         $this->travel_mapper->update($travel);
 
@@ -261,7 +261,8 @@ class TravelController extends ApiController
             'content'     => $travel->getContent(),
             'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'category'    => $travel->getCategoryIds(),
+            'category'    => $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null,
+            'category_ids'    => $travel->getCategoryIds(),
             'published'   => $travel->isPublished(),
             'creation_mode' => $travel->getCreationMode(),
         ];

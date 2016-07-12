@@ -68,7 +68,7 @@ class CategoryMapper extends AbstractPDOMapper
      * @param int $travel_id
      * @param array $category_ids
      */
-    public function addTravelToCategories(int $travel_id, array $category_ids)
+    public function setTravelCategories(int $travel_id, array $category_ids)
     {
         try {
             $this->pdo->beginTransaction();
