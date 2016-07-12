@@ -1,4 +1,3 @@
--- Complaint about the commentary
 CREATE TABLE IF NOT EXISTS flagged_comments
 (
   comment_id INTEGER REFERENCES travel_comments (id) ON UPDATE CASCADE ON DELETE CASCADE,

@@ -45,7 +45,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchById(int $id)
     {
-        $select = $this->pdo->prepare('SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id');
+        $select = $this->pdo->prepare('SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id AND NOT deleted');
         $select->execute(['id' => $id]);
         $row = $select->fetch(PDO::FETCH_NAMED);
         if (empty($row)) {
@@ -65,7 +65,7 @@ class TravelMapper extends AbstractPDOMapper
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM travels t 
             JOIN users u ON t.author_id = u.id 
-            WHERE t.author_id = :userId 
+            WHERE t.author_id = :userId AND NOT deleted
             ORDER BY t.id DESC
             LIMIT :limit OFFSET :offset
         ');
@@ -147,7 +147,7 @@ class TravelMapper extends AbstractPDOMapper
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM  favorite_travels ft
-            JOIN travels t ON ft.travel_id = t.id
+            JOIN travels t ON ft.travel_id = t.id AND NOT t.deleted
             JOIN users u ON t.author_id = u.id
             WHERE ft.user_id = :user_id
             ');
@@ -165,7 +165,7 @@ class TravelMapper extends AbstractPDOMapper
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM travel_categories ct
-            JOIN travels t ON ct.travel_id = t.id
+            JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
             JOIN users u ON u.id = t.author_id
             WHERE c.name = :name
@@ -189,7 +189,7 @@ class TravelMapper extends AbstractPDOMapper
     {
         $select = $this->pdo->prepare('
             SELECT t.*, u.* FROM travel_categories ct
-            JOIN travels t ON ct.travel_id = t.id
+            JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
             JOIN users u ON u.id = t.author_id
             WHERE c.name = :name AND is_published
@@ -278,5 +278,18 @@ class TravelMapper extends AbstractPDOMapper
         list($travel, $author) = $this->createFromJoined($row, $this, $this->user_mapper);
         $travel->setAuthor($author);
         return $travel;
+    }
+
+    public function markDeleted(int $travelId, bool $deleted = true)
+    {
+        $update = $this->pdo->prepare('
+            UPDATE travels SET
+            deleted = :deleted
+            WHERE id = :id
+        ');
+
+        $update->bindValue('id', $travelId, PDO::PARAM_INT);
+        $update->bindValue('deleted', $deleted, PDO::PARAM_BOOL);
+        $update->execute();
     }
 }
