@@ -402,7 +402,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->category_mapper->insert($cat);
 
         $travel = $this->createTravel($user, 'testTravel');
-        $travel->setCategoryId($cat->getId());
+        $travel->setCategoryIds([$cat->getId()]);
         $this->travel_mapper->insert($travel);
 
         $travel_list = $this->travel_mapper->fetchByCategory($cat->getName(), 1, 0);
