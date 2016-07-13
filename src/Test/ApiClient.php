@@ -193,6 +193,11 @@ class ApiClient
         return $this->get($url);
     }
 
+    public function getCategories()
+    {
+        return $this->get('/travel/categories');
+    }
+
     /**
      * @param $id
      * @return mixed
