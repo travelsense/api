@@ -6,6 +6,7 @@ use Api\Model\Travel\Travel;
 use DateTime;
 use PDO;
 use PDOStatement;
+use IdTrait;
 
 /**
  * Class TravelMapper

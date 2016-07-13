@@ -6,6 +6,7 @@ use Api\AbstractPDOMapper;
 use Api\Model\User;
 use DateTime;
 use PDO;
+use IdTrait;
 
 class UserMapper extends AbstractPDOMapper
 {
@@ -52,21 +53,18 @@ class UserMapper extends AbstractPDOMapper
     {
         $sql = <<<SQL
 INSERT INTO users
-  ("email", "password", "first_name", "last_name", "picture")
+  ("email", "password", "first_name", "last_name", "picture", "creator")
 VALUES
-  (:email, :password, :first_name, :last_name, :picture)
+  (:email, :password, :first_name, :last_name, :picture, :creator)
 RETURNING id, created
 SQL;
         $insert = $this->pdo->prepare($sql);
-        $insert->execute(
-            [
-                ':email'      => $user->getEmail(),
-                ':password'   => $this->getPasswordHash($user->getPassword()),
-                ':first_name' => $user->getFirstName(),
-                ':last_name'  => $user->getLastName(),
-                ':picture'    => $user->getPicture(),
-            ]
-        );
+        $insert->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
+        $insert->bindValue(':password', $this->getPasswordHash($user->getPassword()), PDO::PARAM_STR);
+        $insert->bindValue(':first_name', $user->getFirstName(), PDO::PARAM_STR);
+        $insert->bindValue(':last_name', $user->getLastName(), PDO::PARAM_STR);
+        $insert->bindValue(':picture', $user->getPicture(), PDO::PARAM_STR);
+        $insert->bindValue(':creator', $user->getCreator(), PDO::PARAM_BOOL);
         $row = $insert->fetch(PDO::FETCH_ASSOC);
         $user->setId($row['id']);
         $user->setCreated(new DateTime($row['created']));
@@ -83,12 +81,14 @@ SQL;
         $last_name = $user->getLastName();
         $email_confirmed = $user->isEmailConfirmed();
         $id = $user->getId();
+        $creator = $user->getCreator();
         $update = $this->pdo->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
         $update->bindValue(':email', $email);
         $update->bindValue(':firstname', $first_name);
         $update->bindValue(':lastname', $last_name);
         $update->bindValue(':email_confirmed', $email_confirmed, PDO::PARAM_BOOL);
         $update->bindValue(':id', $id);
+        $update->bindValue(':creator', $creator, PDO::PARAM_BOOL);
         $update->execute();
     }
 
@@ -173,7 +173,8 @@ SQL;
             ->setLastName($row['last_name'])
             ->setPicture($row['picture'])
             ->setCreated(new DateTime($row['created']))
-            ->setEmailConfirmed($row['email_confirmed']);
+            ->setEmailConfirmed($row['email_confirmed'])
+            ->setCreator($row['creator']);
     }
 
     /**
