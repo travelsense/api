@@ -17,7 +17,7 @@ class CategoriesControllerTest extends ControllerTestCase
     public function setUp()
     {
         $this->category_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\CategoryMapper')
-            ->setMethods(['fetchAll'])
+            ->setMethods(['fetchAllByName'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -33,7 +33,7 @@ class CategoriesControllerTest extends ControllerTestCase
      */
     public function testGetCategories()
     {
-        $this->category_mapper->method('fetchAll')
+        $this->category_mapper->method('fetchAllByName')
             ->willReturn(
                 [$this->test_category]
             );
