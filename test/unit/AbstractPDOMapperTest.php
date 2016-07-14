@@ -55,7 +55,7 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
         return array(
             array($statement, ['integer' => 1]),
             array($statement, ['boolean' => true]),
-            array($statement, ['NULL' => NULL]),
+            array($statement, ['NULL' => null]),
             array($statement, ['string' => ""]),
         );
     }
