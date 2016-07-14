@@ -29,7 +29,7 @@ class CategoriesController extends ApiController
     public function getCategories(string $query = ''): array
     {
         $response = [];
-        foreach ($this->category_mapper->fetchAll($query) as $category) {
+        foreach ($this->category_mapper->fetchAllByName($query) as $category) {
             $response[] = [
                 'id'    => $category->getId(),
                 'title' => $category->getName(),
