@@ -2,6 +2,8 @@
 namespace Api;
 
 use LazyPDO\LazyPDO;
+use PDOStatement;
+use InvalidArgumentException;
 
 class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +22,7 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
             ->method('create')
             ->with(['a' => 'a', 'b' => 'b1'])
             ->willReturn($object_b);
-
+        
         $mapper = new class($mapper_a, $mapper_b) extends AbstractPDOMapper
         {
 
@@ -46,5 +48,17 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
             }
         };
         $this->assertEquals([$object_a, $object_b], $mapper->test());
+    }
+
+    public function testBindValues()
+    {
+        $mapper = $this->getMockForAbstractClass('\\Api\\AbstractPDOMapper', [new LazyPDO('')]);
+        $statement = new \PDOStatement();
+        $object = (object)[];
+        $values = [
+            'object' => $object
+        ];
+        $this->expectException(InvalidArgumentException::class);
+        $mapper->bindValues($statement, $values);
     }
 }
