@@ -108,7 +108,8 @@ abstract class AbstractPDOMapper
     public function bindValues(PDOStatement $statement, array $values)
     {
         foreach ($values as $param => $value) {
-            switch ($type = gettype($value)){
+            $type = gettype($value);
+            switch ($type){
                 case "boolean":
                     $statement->bindValue($param, $value, PDO::PARAM_BOOL);
                     break;
