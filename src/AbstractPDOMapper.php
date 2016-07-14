@@ -109,7 +109,7 @@ abstract class AbstractPDOMapper
     {
         foreach ($values as $param => $value) {
             $type = gettype($value);
-            switch ($type){
+            switch ($type) {
                 case "boolean":
                     $statement->bindValue($param, $value, PDO::PARAM_BOOL);
                     break;
