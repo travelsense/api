@@ -70,7 +70,7 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
         $arr_key = array_keys($value);
         $mapper = $this->getMockForAbstractClass('\\Api\\AbstractPDOMapper', [new LazyPDO('')]);
         $stmt = $this->getMockBuilder('PDOStatement')->getMock();
-        $stmt->expects($this->once())->method('bindValue')->with( $arr_key[0], $value[$arr_key[0]], $expected_type);
+        $stmt->expects($this->once())->method('bindValue')->with($arr_key[0], $value[$arr_key[0]], $expected_type);
         $mapper->bindValues($stmt, $value);
     }
     
