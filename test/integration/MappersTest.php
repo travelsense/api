@@ -184,6 +184,47 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testFetchAllCategories()
+    {
+        $cat_a = $this->createCategory('a');
+        $this->category_mapper->insert($cat_a);
+        $cat_b = $this->createCategory('b');
+        $this->category_mapper->insert($cat_b);
+
+        $categories = $this->category_mapper->fetchAll();
+        $cat_ids = [];
+        $cat_names = [];
+        foreach ($categories as $category) {
+            $cat_ids [] = $category->getId();
+            $cat_names [] = $category->getName();
+        }
+        $this->assertCount(2, $categories);
+        $this->assertEquals(1, $cat_ids[0]);
+        $this->assertEquals(2, $cat_ids[1]);
+        $this->assertEquals('a', $cat_names[0]);
+        $this->assertEquals('b', $cat_names[1]);
+
+    }
+
+    public function testFetchAllCategoriesByName()
+    {
+        $cat_a = $this->createCategory('a');
+        $this->category_mapper->insert($cat_a);
+        $cat_b = $this->createCategory('b');
+        $this->category_mapper->insert($cat_b);
+
+        $categories = $this->category_mapper->fetchAllByName('a');
+        $cat_ids = [];
+        $cat_names = [];
+        foreach ($categories as $category) {
+            $cat_ids [] = $category->getId();
+            $cat_names [] = $category->getName();
+        }
+        $this->assertCount(1, $categories);
+        $this->assertEquals(1, $cat_ids[0]);
+        $this->assertEquals('a', $cat_names[0]);
+
+    }
 
     private function assertSameCategories(Category $a, Category $b)
     {
