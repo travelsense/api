@@ -3,6 +3,7 @@ namespace Api;
 
 use LazyPDO\LazyPDO;
 use PDOStatement;
+use PDO;
 
 class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,24 +50,28 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([$object_a, $object_b], $mapper->test());
     }
 
-    public function addDataProvider()
+    public function dataProvider()
     {
-        $statement = new PDOStatement();
         return array(
-            array($statement, ['integer' => 1]),
-            array($statement, ['boolean' => true]),
-            array($statement, ['NULL' => null]),
-            array($statement, ['string' => ""]),
+            array(PDO::PARAM_INT, ['integer' => 1]),
+            array(PDO::PARAM_BOOL, ['boolean' => true]),
+            array(PDO::PARAM_NULL, ['NULL' => null]),
+            array(PDO::PARAM_STR, ['string' => ""]),
         );
     }
 
     /**
-     * @dataProvider addDataProvider
+     * @param string $expected_type
+     * @param array $value
+     * @dataProvider dataProvider
      */
-    public function testBindValuesRightWay($statement, $values)
+    public function testBindValuesRightWay($expected_type, $value)
     {
+        $arr_key = array_keys($value);
         $mapper = $this->getMockForAbstractClass('\\Api\\AbstractPDOMapper', [new LazyPDO('')]);
-        $mapper->bindValues($statement, $values);
+        $stmt = $this->getMockBuilder('PDOStatement')->getMock();
+        $stmt->expects($this->once())->method('bindValue')->with( $arr_key[0], $value[$arr_key[0]], $expected_type);
+        $mapper->bindValues($stmt, $value);
     }
     
     /**
