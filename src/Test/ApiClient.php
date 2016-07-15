@@ -196,7 +196,7 @@ class ApiClient
     /**
      * @return mixed
      */
-    public function getCategories()
+    public function getCategories(string $name = null)
     {
         return $this->get('/travel/categories');
     }

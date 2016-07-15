@@ -30,21 +30,13 @@ class CategoriesController extends ApiController
     {
         $response = [];
 
-        if ($name == null) {
-            foreach ($this->category_mapper->fetchAll() as $category) {
+        $categories = $name === null ? $this->category_mapper->fetchAll() : $this->category_mapper->fetchAllByName($name);
+        foreach ($categories as $category) {
                 $response[] = [
                     'id'    => $category->getId(),
                     'title' => $category->getName(),
                 ];
             }
-        } else {
-            foreach ($this->category_mapper->fetchAllByName($name) as $category) {
-                $response[] = [
-                    'id'    => $category->getId(),
-                    'title' => $category->getName(),
-                ];
-            }
-        }
         return $response;
     }
 }
