@@ -23,17 +23,27 @@ class CategoriesController extends ApiController
     }
 
     /**
-     * @param string $query
+     * @param string $name
      * @return array
      */
-    public function getCategories(string $query = ''): array
+    public function getCategories(string $name = null): array
     {
         $response = [];
-        foreach ($this->category_mapper->fetchAllByName($query) as $category) {
-            $response[] = [
-                'id'    => $category->getId(),
-                'title' => $category->getName(),
-            ];
+
+        if ($name == null) {
+            foreach ($this->category_mapper->fetchAll() as $category) {
+                $response[] = [
+                    'id'    => $category->getId(),
+                    'title' => $category->getName(),
+                ];
+            }
+        } else {
+            foreach ($this->category_mapper->fetchAllByName($name) as $category) {
+                $response[] = [
+                    'id'    => $category->getId(),
+                    'title' => $category->getName(),
+                ];
+            }
         }
         return $response;
     }

@@ -31,16 +31,16 @@ class CategoryMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param string $query
+     * @param string $name
      * @return Category[]
      */
-    public function fetchAllByName(string  $query): array
+    public function fetchAllByName(string  $name): array
     {
         $select = $this->pdo->prepare(
             'SELECT * FROM categories WHERE name LIKE :query ORDER BY name ASC'
         );
         $select->execute([
-            ':query' => '%' . $query . '%',
+            ':query' => '%' . $name . '%',
         ]);
 
         return $this->createAll($select);
