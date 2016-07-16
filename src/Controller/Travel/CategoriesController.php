@@ -3,6 +3,7 @@ namespace Api\Controller\Travel;
 
 use Api\Controller\ApiController;
 use Api\Mapper\DB\CategoryMapper;
+use Api\Model\Travel\Category;
 use Psr\Log\LoggerAwareTrait;
 
 class CategoriesController extends ApiController
@@ -22,12 +23,15 @@ class CategoriesController extends ApiController
     }
 
     /**
+     * @param string $name
      * @return array
      */
-    public function getCategories(): array
+    public function getCategories(string $name = null): array
     {
         $response = [];
-        foreach ($this->category_mapper->fetchAll() as $category) {
+
+        $categories = $name === null ? $this->category_mapper->fetchAll() : $this->category_mapper->fetchAllByName($name);
+        foreach ($categories as $category) {
             $response[] = [
                 'id'    => $category->getId(),
                 'title' => $category->getName(),
