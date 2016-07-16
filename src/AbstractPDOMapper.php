@@ -3,6 +3,7 @@ namespace Api;
 
 use PDO;
 use PDOStatement;
+use InvalidArgumentException;
 
 abstract class AbstractPDOMapper
 {
@@ -102,5 +103,30 @@ abstract class AbstractPDOMapper
             }
         }
         return $row;
+    }
+
+    public function bindValues(PDOStatement $statement, array $values)
+    {
+        foreach ($values as $param => $value) {
+            $type = gettype($value);
+            switch ($type) {
+                case "boolean":
+                    $statement->bindValue($param, $value, PDO::PARAM_BOOL);
+                    break;
+                case "NULL":
+                    $statement->bindValue($param, $value, PDO::PARAM_NULL);
+                    break;
+                case "integer":
+                    $statement->bindValue($param, $value, PDO::PARAM_INT);
+                    break;
+                case "string":
+                    $statement->bindValue($param, $value, PDO::PARAM_STR);
+                    break;
+                default:
+                    throw new InvalidArgumentException(
+                        "Cannot bind value of type '{$type}' to placeholder '{$param}'"
+                    );
+            }
+        }
     }
 }
