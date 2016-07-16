@@ -52,32 +52,33 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 
     public function dataProvider()
     {
-        return array(
-            array(PDO::PARAM_INT, ['integer' => 1]),
-            array(PDO::PARAM_BOOL, ['boolean' => true]),
-            array(PDO::PARAM_NULL, ['NULL' => null]),
-            array(PDO::PARAM_STR, ['string' => ""]),
-        );
+        return [
+            [PDO::PARAM_INT, 'integer', 1],
+            [PDO::PARAM_BOOL, 'boolean', true],
+            [PDO::PARAM_NULL, 'NULL', null],
+            [PDO::PARAM_STR, 'string', ""],
+        ];
     }
 
     /**
      * @param string $expected_type
+     * @param $placeholder
      * @param array $value
      * @dataProvider dataProvider
      */
-    public function testBindValuesRightWay($expected_type, $value)
+    public function testBindValuesHappyPath($expected_type, $placeholder, $value)
     {
-        $arr_key = array_keys($value);
         $mapper = $this->getMockForAbstractClass('\\Api\\AbstractPDOMapper', [new LazyPDO('')]);
         $stmt = $this->getMockBuilder('PDOStatement')->getMock();
-        $stmt->expects($this->once())->method('bindValue')->with($arr_key[0], $value[$arr_key[0]], $expected_type);
-        $mapper->bindValues($stmt, $value);
+        $stmt->expects($this->once())->method('bindValue')->with($placeholder, $value, $expected_type);
+        $mapper->bindValues($stmt, [$placeholder => $value]);
     }
     
     /**
      * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Cannot bind value of type 'object' to placeholder 'object'
      */
-    public function testBindValuesBadWay()
+    public function testBindValuesException()
     {
         $mapper = $this->getMockForAbstractClass('\\Api\\AbstractPDOMapper', [new LazyPDO('')]);
         $statement = new PDOStatement();
