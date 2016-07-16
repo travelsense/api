@@ -199,11 +199,8 @@ class MappersTest extends \PHPUnit_Framework_TestCase
             $cat_names [] = $category->getName();
         }
         $this->assertCount(2, $categories);
-        $this->assertEquals(1, $cat_ids[0]);
-        $this->assertEquals(2, $cat_ids[1]);
-        $this->assertEquals('a', $cat_names[0]);
-        $this->assertEquals('b', $cat_names[1]);
-
+        $this->assertEquals([$cat_a->getId(), $cat_b->getId()], $cat_ids);
+        $this->assertEquals(['a', 'b'], $cat_names);
     }
 
     public function testFetchAllCategoriesByName()
@@ -225,13 +222,8 @@ class MappersTest extends \PHPUnit_Framework_TestCase
             $cat_names [] = $category->getName();
         }
         $this->assertCount(3, $categories);
-        $this->assertEquals(1, $cat_ids[0]);
-        $this->assertEquals('ab', $cat_names[0]);
-        $this->assertEquals(2, $cat_ids[1]);
-        $this->assertEquals('abc', $cat_names[1]);
-        $this->assertEquals(3, $cat_ids[2]);
-        $this->assertEquals('abcd', $cat_names[2]);
-
+        $this->assertEquals([$cat_ab->getId(), $cat_abc->getId(), $cat_abcd->getId()], $cat_ids);
+        $this->assertEquals(['ab', 'abc', 'abcd'], $cat_names);
     }
 
     private function assertSameCategories(Category $a, Category $b)
