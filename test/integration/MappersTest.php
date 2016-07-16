@@ -208,8 +208,12 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchAllCategoriesByName()
     {
-        $cat_a = $this->createCategory('a');
-        $this->category_mapper->insert($cat_a);
+        $cat_ab = $this->createCategory('ab');
+        $this->category_mapper->insert($cat_ab);
+        $cat_abc = $this->createCategory('abc');
+        $this->category_mapper->insert($cat_abc);
+        $cat_abcd = $this->createCategory('abcd');
+        $this->category_mapper->insert($cat_abcd);
         $cat_b = $this->createCategory('b');
         $this->category_mapper->insert($cat_b);
 
@@ -220,9 +224,13 @@ class MappersTest extends \PHPUnit_Framework_TestCase
             $cat_ids [] = $category->getId();
             $cat_names [] = $category->getName();
         }
-        $this->assertCount(1, $categories);
+        $this->assertCount(3, $categories);
         $this->assertEquals(1, $cat_ids[0]);
-        $this->assertEquals('a', $cat_names[0]);
+        $this->assertEquals('ab', $cat_names[0]);
+        $this->assertEquals(2, $cat_ids[1]);
+        $this->assertEquals('abc', $cat_names[1]);
+        $this->assertEquals(3, $cat_ids[2]);
+        $this->assertEquals('abcd', $cat_names[2]);
 
     }
 

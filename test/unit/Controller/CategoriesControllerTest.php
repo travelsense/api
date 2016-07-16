@@ -54,10 +54,10 @@ class CategoriesControllerTest extends ControllerTestCase
     {
         $this->category_mapper->method('fetchAllByName')
             ->willReturn(
-                [$this->test_category]
+                [$this->test_category])
+            ->with($this->equalTo('te')
             );
 
-        //$rq = Request::create('/travel/category', Request::METHOD_GET, ['name' => 'tes']);
         $this->assertEquals(
             [[
                 'id' => 1,
