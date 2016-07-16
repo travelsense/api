@@ -62,8 +62,8 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $expected_type
-     * @param string $placeholder
-     * @param mixed $value
+     * @param $placeholder
+     * @param array $value
      * @dataProvider dataProvider
      */
     public function testBindValuesHappyPath(string $expected_type, string $placeholder, $value)

@@ -194,6 +194,18 @@ class ApiClient
     }
 
     /**
+     * @return mixed
+     */
+    public function getCategories(string $name = null)
+    {
+        $url = '/travel/categories';
+        if ($name !== null) {
+            $url .= '?' . http_build_query(['name' => $name]);
+        }
+        return $this->get($url);
+    }
+
+    /**
      * @param $id
      * @return mixed
      */

@@ -19,7 +19,7 @@ class CategoryMapper extends AbstractPDOMapper
         ]);
         $category->setId($insert->fetchColumn());
     }
-    
+
     /**
      * @return Category[]
      */
@@ -27,6 +27,22 @@ class CategoryMapper extends AbstractPDOMapper
     {
         $select = $this->pdo->prepare('SELECT * FROM categories ORDER BY id ASC');
         $select->execute();
+        return $this->createAll($select);
+    }
+
+    /**
+     * @param string $name
+     * @return Category[]
+     */
+    public function fetchAllByName(string $name): array
+    {
+        $select = $this->pdo->prepare(
+            'SELECT * FROM categories WHERE name LIKE :query ORDER BY name ASC'
+        );
+        $select->execute([
+            ':query' => '%' . $name . '%',
+        ]);
+
         return $this->createAll($select);
     }
 
