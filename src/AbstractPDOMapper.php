@@ -105,6 +105,10 @@ abstract class AbstractPDOMapper
         return $row;
     }
 
+    /**
+     * @param PDOStatement $statement
+     * @param array $values
+     */
     public function bindValues(PDOStatement $statement, array $values)
     {
         foreach ($values as $param => $value) {

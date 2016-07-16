@@ -62,11 +62,11 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $expected_type
-     * @param $placeholder
-     * @param array $value
+     * @param string $placeholder
+     * @param mixed $value
      * @dataProvider dataProvider
      */
-    public function testBindValuesHappyPath($expected_type, $placeholder, $value)
+    public function testBindValuesHappyPath(string $expected_type, string $placeholder, $value)
     {
         $mapper = $this->getMockForAbstractClass('\\Api\\AbstractPDOMapper', [new LazyPDO('')]);
         $stmt = $this->getMockBuilder('PDOStatement')->getMock();
