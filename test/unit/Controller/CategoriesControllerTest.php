@@ -53,8 +53,8 @@ class CategoriesControllerTest extends ControllerTestCase
     public function testGetCategoriesByName()
     {
         $this->category_mapper->method('fetchAllByName')
-            ->willReturn([$this->test_category])
-            ->with($this->equalTo('te'));
+            ->with($this->equalTo('te'))
+            ->willReturn([$this->test_category]);
 
         $this->assertEquals(
             [[
