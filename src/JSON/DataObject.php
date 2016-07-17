@@ -131,36 +131,31 @@ class DataObject
     }
 
     /**
-     * @param array $property
+     * @param string $property
      * @param null|mixed $constraint
      * @return array
-     * @throws ApiException
      */
-    public function getArray(array $property, $constraint = null):array
+    public function getArray(string $property, $constraint = null):array
     {
-        if(is_array($property)){
-            foreach ($property as $key => $value){
-                $this->get($value, $type=null, $constraint);
+        $values = $this->get($property, 'array');
+        if ($constraint) {
+            foreach ($values as $key => $value) {
+                $this->get($value, $type = null, $constraint);
             }
-            return $property;
-        } else{
-            $type = gettype($property);
-            $this->throwException(sprintf('This data is not array, but this is %s', $type));
         }
+        return $values;
     }
 
     /**
      * @param string $type
-     * @param array $property
+     * @param string $property
      * @return array
-     * @throws ApiException
      */
-    public function getArrayOf(string $type, array $property):array
+    public function getArrayOf(string $type, string $property):array
     {
-        foreach($property as $key => $value){
-            if(!(gettype($value) === $type))
-                $this->throwException(sprintf('One or elements of the array are not %s', $type));
-        }
-        return $property;
+        $constraint = function ($value) use ($type) {
+            return gettype($value) === $type;
+        };
+        return $this->getArray($property, $constraint);
     }
 }
