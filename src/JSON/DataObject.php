@@ -129,4 +129,38 @@ class DataObject
     {
         throw new ApiException($message, ApiException::VALIDATION);
     }
+
+    /**
+     * @param array $property
+     * @param null|mixed $constraint
+     * @return array
+     * @throws ApiException
+     */
+    public function getArray(array $property, $constraint = null):array
+    {
+        if(is_array($property)){
+            foreach ($property as $key => $value){
+                $this->get($value, $type=null, $constraint);
+            }
+            return $property;
+        } else{
+            $type = gettype($property);
+            $this->throwException(sprintf('This data is not array, but this is %s', $type));
+        }
+    }
+
+    /**
+     * @param string $type
+     * @param array $property
+     * @return array
+     * @throws ApiException
+     */
+    public function getArrayOf(string $type, array $property):array
+    {
+        foreach($property as $key => $value){
+            if(!(gettype($value) === $type))
+                $this->throwException(sprintf('One or elements of the array are not %s', $type));
+        }
+        return $property;
+    }
 }
