@@ -134,6 +134,7 @@ class DataObject
      * @param string $property
      * @param null|mixed $constraint
      * @return array
+     * @throws ApiException
      */
     public function getArray(string $property, $constraint = null):array
     {
@@ -141,8 +142,9 @@ class DataObject
         if (null !== $constraint) {
             if (is_callable($constraint)) {
                 foreach ($values as $value) {
-                    if (false !== $error = $constraint($value)) {
-                        $this->throwException(sprintf('Property %s is invalid: %s', $property, $error));
+                    $result = $constraint($value);
+                    if (false == $result) {
+                        $this->throwException(sprintf('Property %s is invalid: %s', $property, $result));
                     }
                 }
             } else {

@@ -102,4 +102,19 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('barx', $data->getString('foo', '/x/'));
 
     }
+
+    /**
+     * @expectedException \Api\Exception\ApiException
+     */
+    public function testGetArrayOfException()
+    {
+        $data = new DataObject((object)['a' => ['b' => 'c']]);
+        $data->getArrayOf('boolean', 'a');
+    }
+
+    public function testGetArrayOfHappyPath()
+    {
+        $data = new DataObject((object)['a' => ['b' => 'c']]);
+        $this->assertEquals(['b' => 'c'], $data->getArrayOf('string', 'a'));
+    }
 }
