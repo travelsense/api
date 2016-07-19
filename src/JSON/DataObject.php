@@ -131,43 +131,19 @@ class DataObject
     }
 
     /**
-     * @param string $property
-     * @param null|mixed $constraint
-     * @return array
-     * @throws ApiException
-     */
-    public function getArray(string $property, $constraint = null):array
-    {
-        $values = $this->get($property, 'array', $constraint);
-        if (null !== $constraint) {
-            if (is_callable($constraint)) {
-                foreach ($values as $value) {
-                    $result = $constraint($value);
-                    if (false == $result) {
-                        $this->throwException(sprintf('Property %s is invalid: %s', $property, $result));
-                    }
-                }
-            } else {
-                foreach ($values as $value) {
-                    if (0 === preg_match($constraint, $value)) {
-                        $this->throwException(sprintf('Property %s does not match %s', $property, $constraint));
-                    }
-                }
-            }
-            return $values;
-        }
-    }
-
-    /**
      * @param string $type
      * @param string $property
      * @return array
+     * @throws ApiException
      */
     public function getArrayOf(string $type, string $property):array
     {
-        $constraint = function ($value) use ($type) {
-            return gettype($value) === $type;
-        };
-        return $this->getArray($property, $constraint);
+        $values = $this->get($property, 'array');
+        foreach ($values as $value) {
+            if (!(gettype($value) === $type)) {
+                $this->throwException(sprintf('One or elements of the array are not %s', $type));
+            }
+        }
+        return $values;
     }
 }
