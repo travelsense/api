@@ -20,9 +20,9 @@
           roles: "LOGIN,CREATEDB,SUPERUSER"
       scripts:
         - db: api_dev
-          file: /vagrant/db/ext/postgis.sql
+          file: /vagrant/db/main/ext/postgis.sql
         - db: api_test
-          file: /vagrant/db/ext/postgis.sql
+          file: /vagrant/db/main/ext/postgis.sql
 
   tasks:
 
