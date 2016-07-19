@@ -28,7 +28,7 @@ class CategoriesController extends ApiController
      * @param Request $request
      * @return array
      */
-    public function createCategory(Request $request) : array
+    public function createCategory(Request $request, User $user) : array
     {
         $json = DataObject::createFromString($request->getContent());
 
