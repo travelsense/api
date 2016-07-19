@@ -47,7 +47,7 @@ $app->get('/stats', 'controller.booking:getStats');
 $app->post('/category', 'controller.categories:createCategory')
     ->bind('create-category');
 
-$app->get('/categories', 'controller.categories:getCategories')
+$app->get('/categories', 'controller.categories:getCategories') //TODO : remove in version 2.0
     ->bind('travel-category');
 
 $app->get('/travel/categories', 'controller.categories:getCategories')
