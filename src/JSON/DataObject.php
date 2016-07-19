@@ -137,13 +137,23 @@ class DataObject
      */
     public function getArray(string $property, $constraint = null):array
     {
-        $values = $this->get($property, 'array');
-        if ($constraint) {
-            foreach ($values as $key => $value) {
-                $this->get($value, $type = null, $constraint);
+        $values = $this->get($property, 'array', $constraint);
+        if (null !== $constraint) {
+            if (is_callable($constraint)) {
+                foreach ($values as $value) {
+                    if (false !== $error = $constraint($value)) {
+                        $this->throwException(sprintf('Property %s is invalid: %s', $property, $error));
+                    }
+                }
+            } else {
+                foreach ($values as $value) {
+                    if (0 === preg_match($constraint, $value)) {
+                        $this->throwException(sprintf('Property %s does not match %s', $property, $constraint));
+                    }
+                }
             }
+            return $values;
         }
-        return $values;
     }
 
     /**
