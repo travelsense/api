@@ -64,7 +64,7 @@ class TravelController extends ApiController
             $this->category_mapper->setTravelCategories($travel->getId(), $ids);
         }
         if ($json->has('category_ids')) {
-            $this->category_mapper->setTravelCategories($travel->getId(), $json->get('category_ids'));
+            $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('int', 'category_ids'));
         }
         if ($json->has('published')) {
             $travel->setPublished($json->get('published'));
@@ -216,7 +216,7 @@ class TravelController extends ApiController
             $this->category_mapper->setTravelCategories($travel->getId(), $ids);
         }
         if ($json->has('category_ids')) {
-            $this->category_mapper->setTravelCategories($travel->getId(), $json->get('category_ids'));
+            $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('int', 'category_ids'));
         }
         $this->travel_mapper->update($travel);
 
