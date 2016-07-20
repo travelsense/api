@@ -5,6 +5,7 @@ use Api\Controller\ApiController;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
+use Api\Model\User;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 

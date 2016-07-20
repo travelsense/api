@@ -34,6 +34,8 @@ class CategoriesControllerTest extends ControllerTestCase
      */
     public function testCreateCategory()
     {
+        $user = $this->buildUser();
+
         $json = json_encode([
             'name' => 'crazy fun',
         ]);
@@ -44,10 +46,17 @@ class CategoriesControllerTest extends ControllerTestCase
 
         $request->method('getContent')->willReturn($json);
 
-        $this->category_mapper->method('insert')
+        $category = $this->getMockBuilder('Api\\Model\\Travel\\Category')
+            ->setMethods(['getId', 'getName'])
+            ->getMock();
+
+        $this->category_mapper->expects($this->once())
+            ->method('insert')
             ->with($this->callback(function (Category $cat) {
                 return $cat->getName() === 'crazy fun';
             }));
+
+        $this->assertEquals(['id' => $category->getId()], $this->controller->createCategory($request, $user));
     }
 
     /**
