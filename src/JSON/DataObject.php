@@ -129,4 +129,21 @@ class DataObject
     {
         throw new ApiException($message, ApiException::VALIDATION);
     }
+
+    /**
+     * @param string $type
+     * @param string $property
+     * @return array
+     * @throws ApiException
+     */
+    public function getArrayOf(string $type, string $property): array
+    {
+        $values = $this->get($property, 'array');
+        foreach ($values as $value) {
+            if (!(gettype($value) === $type)) {
+                $this->throwException(sprintf('%s must be an array of %s', $property, $type));
+            }
+        }
+        return $values;
+    }
 }
