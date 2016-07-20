@@ -105,7 +105,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Api\Exception\ApiException
-     * @expectedExceptionMessage One or elements of the array are not boolean
+     * @expectedExceptionMessage a must be an array of boolean
      */
     public function testGetArrayOfException()
     {
