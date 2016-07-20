@@ -42,6 +42,14 @@ $app->get('/uber/price/{lat1}/{lon1}/{lat2}/{lon2}', 'controller.uber:getPriceEs
 
 $app->get('/stats', 'controller.booking:getStats');
 
+// Travel categories
+
+$app->get('/categories', 'controller.categories:getCategories') //TODO : remove in version 2.0
+    ->bind('travel-category');
+
+$app->get('/travel/categories', 'controller.categories:getCategories')
+    ->bind('travel-category');
+
 // Travel
 
 $app->get('/travel/by-user', 'controller.travel:getUserTravels')
@@ -95,14 +103,6 @@ $app->delete('/travel/{id}', 'controller.travel:deleteTravel')
     ->convert('id', $to_int);
 
 $app->post('/travel', 'controller.travel:createTravel');
-
-// Travel categories
-
-$app->get('/categories', 'controller.categories:getCategories') //TODO : remove in version 2.0
-    ->bind('travel-category');
-
-$app->get('/travel/categories', 'controller.categories:getCategories')
-->bind('travel-category');
 
 // IATA entities
 

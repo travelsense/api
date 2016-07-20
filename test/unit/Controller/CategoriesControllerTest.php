@@ -17,7 +17,7 @@ class CategoriesControllerTest extends ControllerTestCase
     public function setUp()
     {
         $this->category_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\CategoryMapper')
-            ->setMethods(['fetchAll'])
+            ->setMethods(['fetchAll', 'fetchAllByName'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -44,6 +44,24 @@ class CategoriesControllerTest extends ControllerTestCase
                 'title' => 'test_category',
             ]],
             $this->controller->getCategories()
+        );
+    }
+
+    /**
+     * getCategoriesByName
+     */
+    public function testGetCategoriesByName()
+    {
+        $this->category_mapper->method('fetchAllByName')
+            ->with($this->equalTo('te'))
+            ->willReturn([$this->test_category]);
+
+        $this->assertEquals(
+            [[
+                'id' => 1,
+                'title' => 'test_category',
+            ]],
+            $this->controller->getCategories('te')
         );
     }
 }

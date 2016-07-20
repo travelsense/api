@@ -219,7 +219,6 @@ class TravelMapper extends AbstractPDOMapper
             creation_mode = :creation_mode
             WHERE id = :id
         ');
-
         $this->bindCommonValues($update, $travel);
         $update->bindValue('id', $travel->getId(), PDO::PARAM_INT);
         $update->execute();
@@ -258,13 +257,16 @@ class TravelMapper extends AbstractPDOMapper
      */
     private function bindCommonValues(PDOStatement $statement, Travel $travel)
     {
-        $statement->bindValue('title', $travel->getTitle(), PDO::PARAM_STR);
-        $statement->bindValue('description', $travel->getDescription(), PDO::PARAM_STR);
-        $statement->bindValue('content', json_encode($travel->getContent()), PDO::PARAM_STR);
-        $statement->bindValue('published', $travel->isPublished(), PDO::PARAM_BOOL);
-        $statement->bindValue('image', $travel->getImage(), PDO::PARAM_STR);
-        $statement->bindValue('author_id', $travel->getAuthorId(), PDO::PARAM_INT);
-        $statement->bindValue('creation_mode', $travel->getCreationMode(), PDO::PARAM_STR);
+        $values = [
+            'title' => $travel->getTitle(),
+            'description' => $travel->getDescription(),
+            'content' => json_encode($travel->getContent()),
+            'published' => $travel->isPublished(),
+            'image' => $travel->getImage(),
+            'author_id' => $travel->getAuthorId(),
+            'creation_mode' => $travel->getCreationMode()
+        ];
+        $this->bindValues($statement, $values);
     }
 
     /**
@@ -285,9 +287,11 @@ class TravelMapper extends AbstractPDOMapper
             deleted = :deleted
             WHERE id = :id
         ');
-
-        $update->bindValue('id', $travelId, PDO::PARAM_INT);
-        $update->bindValue('deleted', $deleted, PDO::PARAM_BOOL);
+        $values = [
+            'id' => $travelId,
+            'deleted' => $deleted
+        ];
+        $this->bindValues($update, $values);
         $update->execute();
     }
 }
