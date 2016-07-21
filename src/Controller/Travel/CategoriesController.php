@@ -2,9 +2,12 @@
 namespace Api\Controller\Travel;
 
 use Api\Controller\ApiController;
+use Api\JSON\DataObject;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
+use Api\Model\User;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\HttpFoundation\Request;
 
 class CategoriesController extends ApiController
 {
@@ -20,6 +23,20 @@ class CategoriesController extends ApiController
     public function __construct(CategoryMapper $category_mapper)
     {
         $this->category_mapper = $category_mapper;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function createCategory(Request $request, User $user) : array
+    {
+        $json = DataObject::createFromString($request->getContent());
+
+        $category = new Category();
+        $category->setName($json->getString('name'));
+        $this->category_mapper->insert($category);
+        return ['id' => $category->getId()];
     }
 
     /**
