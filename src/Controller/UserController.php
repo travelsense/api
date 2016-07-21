@@ -59,6 +59,7 @@ class UserController extends ApiController
             'picture'   => $user->getPicture(),
             'firstName' => $user->getFirstName(),
             'lastName'  => $user->getLastName(),
+            'creator'   => $user->getCreator(),
             'created'   => $user->getCreated()->format(self::DATETIME_FORMAT),
         ];
     }
@@ -93,7 +94,8 @@ class UserController extends ApiController
             ->setPassword($json->getString('password'))
             ->setFirstName($json->getString('firstName'))
             ->setLastName($json->getString('lastName'))
-            ->setPicture($json->has('picture') ? $json->getString('picture') : '');
+            ->setPicture($json->has('picture') ? $json->getString('picture') : '')
+            ->setCreator($json->get('creator'));
 
         if ($this->user_mapper->emailExists($user->getEmail())) {
             throw new ApiException('Email already exists', ApiException::USER_EXISTS);
@@ -188,7 +190,8 @@ class UserController extends ApiController
         $user
             ->setEmail($json->getString('email'))
             ->setFirstName($json->getString('firstName'))
-            ->setLastName($json->getString('lastName'));
+            ->setLastName($json->getString('lastName'))
+            ->setCreator($json->get('creator'));
         if ($email_update) {
             $user->setEmailConfirmed(false);
         }
