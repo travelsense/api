@@ -47,6 +47,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
             'picture'   => 'http://pushkin.ru/sasha.jpg',
             'email'     => $email,
             'password'  => $password,
+            'creator'   => true,
         ]);
         $token = $this->client->getTokenByEmail($email, $password);
         $this->client->setAuthToken($token);
