@@ -74,7 +74,6 @@ class UserControllerTest extends ControllerTestCase
             'picture'   => 'http://example.com/user.jpg',
             'firstName' => 'Simple',
             'lastName'  => 'Tester',
-            'creator'   => false,
         ]);
 
         $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
@@ -93,8 +92,7 @@ class UserControllerTest extends ControllerTestCase
                 return $u->getEmail() === 'test@example.com'
                 && $u->getFirstName() === 'Simple'
                 && $u->getLastName() === 'Tester'
-                && $u->getPicture() === 'http://example.com/user.jpg'
-                && $u->isCreator() === false;
+                && $u->getPicture() === 'http://example.com/user.jpg';
             }));
 
         $this->storage->expects($this->once())

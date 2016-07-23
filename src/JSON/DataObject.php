@@ -107,6 +107,18 @@ class DataObject
     }
 
     /**
+     * Get boolean
+     * @param string          $property
+     * @param string|callable $constraint
+     * @return string
+     * @throws ApiException
+     */
+    public function getBoolean(string $property, $constraint = null): bool
+    {
+        return $this->get($property, 'boolean', $constraint);
+    }
+
+    /**
      * Get email
      * @param string $property
      * @return string
