@@ -113,9 +113,9 @@ class DataObject
      * @return string
      * @throws ApiException
      */
-    public function getBoolean(string $property, $constraint = null): bool
+    public function getBoolean(string $property): bool
     {
-        return $this->get($property, 'boolean', $constraint);
+        return $this->get($property, 'boolean');
     }
 
     /**
