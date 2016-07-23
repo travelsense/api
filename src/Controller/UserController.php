@@ -59,7 +59,7 @@ class UserController extends ApiController
             'picture'   => $user->getPicture(),
             'firstName' => $user->getFirstName(),
             'lastName'  => $user->getLastName(),
-            'creator'   => $user->getCreator(),
+            'creator'   => $user->isCreator(),
             'created'   => $user->getCreated()->format(self::DATETIME_FORMAT),
         ];
     }
@@ -95,7 +95,7 @@ class UserController extends ApiController
             ->setFirstName($json->getString('firstName'))
             ->setLastName($json->getString('lastName'))
             ->setPicture($json->has('picture') ? $json->getString('picture') : '')
-            ->setCreator($json->get('creator'));
+            ->setCreator($json->has('picture') ? $json->get('creator') : '');
 
         if ($this->user_mapper->emailExists($user->getEmail())) {
             throw new ApiException('Email already exists', ApiException::USER_EXISTS);

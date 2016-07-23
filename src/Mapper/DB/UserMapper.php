@@ -58,12 +58,15 @@ VALUES
 RETURNING id, created
 SQL;
         $insert = $this->pdo->prepare($sql);
-        $insert->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
-        $insert->bindValue(':password', $this->getPasswordHash($user->getPassword()), PDO::PARAM_STR);
-        $insert->bindValue(':first_name', $user->getFirstName(), PDO::PARAM_STR);
-        $insert->bindValue(':last_name', $user->getLastName(), PDO::PARAM_STR);
-        $insert->bindValue(':picture', $user->getPicture(), PDO::PARAM_STR);
-        $insert->bindValue(':creator', $user->getCreator(), PDO::PARAM_BOOL);
+        $values = [
+            ':email'      => $user->getEmail(),
+            ':password'   => $this->getPasswordHash($user->getPassword()),
+            ':first_name' => $user->getFirstName(),
+            ':last_name'  => $user->getLastName(),
+            ':picture'    => $user->getPicture(),
+            ':creator'    => $user->isCreator(),
+        ];
+        $this->bindValues($insert, $values);
         $insert->execute();
         $row = $insert->fetch(PDO::FETCH_ASSOC);
         $user->setId($row['id']);
@@ -80,15 +83,18 @@ SQL;
         $first_name = $user->getFirstName();
         $last_name = $user->getLastName();
         $email_confirmed = $user->isEmailConfirmed();
-        $creator = $user->getCreator();
+        $creator = $user->isCreator();
         $id = $user->getId();
         $update = $this->pdo->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed, creator = :creator WHERE id = :id');
-        $update->bindValue(':email', $email);
-        $update->bindValue(':firstname', $first_name);
-        $update->bindValue(':lastname', $last_name);
-        $update->bindValue(':email_confirmed', $email_confirmed, PDO::PARAM_BOOL);
-        $update->bindValue(':id', $id);
-        $update->bindValue(':creator', $creator, PDO::PARAM_BOOL);
+        $values = [
+            'email' => $email,
+            'firstname' => $first_name,
+            'lastname' => $last_name,
+            'email_confirmed' => $email_confirmed,
+            'id' => $id,
+            'creator' => $creator,
+        ];
+        $this->bindValues($update, $values);
         $update->execute();
     }
 

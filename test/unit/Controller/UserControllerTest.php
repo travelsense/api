@@ -94,7 +94,7 @@ class UserControllerTest extends ControllerTestCase
                 && $u->getFirstName() === 'Simple'
                 && $u->getLastName() === 'Tester'
                 && $u->getPicture() === 'http://example.com/user.jpg'
-                && $u->getCreator() === false;
+                && $u->isCreator() === false;
             }));
 
         $this->storage->expects($this->once())
