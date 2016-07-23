@@ -110,7 +110,7 @@ class DataObject
      * Get boolean
      * @param string          $property
      * @param string|callable $constraint
-     * @return string
+     * @return bool
      * @throws ApiException
      */
     public function getBoolean(string $property): bool
