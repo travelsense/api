@@ -191,7 +191,7 @@ class UserController extends ApiController
             ->setEmail($json->getString('email'))
             ->setFirstName($json->getString('firstName'))
             ->setLastName($json->getString('lastName'))
-            ->setCreator($json->get('creator'));
+            ->setCreator($json->has('creator') ? $json->get('creator') : '');
         if ($email_update) {
             $user->setEmailConfirmed(false);
         }
