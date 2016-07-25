@@ -12,13 +12,14 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
     protected function buildUser()
     {
         $user = $this->getMockBuilder('Api\\Model\\User')
-            ->setMethods(['getEmail', 'getPicture', 'getFirstName', 'getLastName', 'getId', 'getCreated'])
+            ->setMethods(['getEmail', 'getPicture', 'getFirstName', 'getLastName', 'getId', 'isCreator', 'getCreated'])
             ->getMock();
         $user->method('getEmail')->willReturn('user1@example.com');
         $user->method('getPicture')->willReturn('http://example.com/user1.jpg');
         $user->method('getFirstName')->willReturn('User1');
         $user->method('getLastName')->willReturn('Tester');
         $user->method('getId')->willReturn(1);
+        $user->method('isCreator')->willReturn(false);
         $user->method('getCreated')->willReturn(new DateTime('2000-01-01'));
         return $user;
     }

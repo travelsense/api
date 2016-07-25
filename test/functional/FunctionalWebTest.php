@@ -16,6 +16,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Pushkin', $user->lastName);
         $this->assertEquals('sasha@pushkin.ru', $user->email);
         $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
+        $this->assertEquals(true, $user->creator);
 
         $this->client->updateUser([
             'id'        => 1,
@@ -23,6 +24,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'lastName'  => 'Pushkina',
             'picture'   => 'http://pushkin.ru/sasha.jpg',
             'email'     => 'sasha@pushkin.ru',
+            'creator'   => false,
         ]);
         $user = $this->client->getCurrentUser();
 
@@ -30,6 +32,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Pushkina', $user->lastName);
         $this->assertEquals('sasha@pushkin.ru', $user->email);
         $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
+        $this->assertEquals(false, $user->creator);
     }
     
     public function testTravelCreationAndRetrieval()
