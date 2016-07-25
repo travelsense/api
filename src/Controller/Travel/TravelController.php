@@ -118,6 +118,16 @@ class TravelController extends ApiController
     }
 
     /**
+     * @param int  $travel_id
+     * @param int $user_id
+     * @return bool
+     */
+    public function isFavorited(int $travel_id, int $user_id) : bool
+    {
+        return $this->travel_mapper->isFavorited($travel_id, $user_id);
+    }
+
+    /**
      * @param User $user
      * @return array
      */
@@ -265,6 +275,7 @@ class TravelController extends ApiController
         ];
 
         if ($author) {
+            $view = ['is_favorited' => $this->isFavorited($travel->getId(), $author->getId())];
             $view['author'] = [
                 'id'        => $author->getId(),
                 'firstName' => $author->getFirstName(),
