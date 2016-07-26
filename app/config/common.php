@@ -45,6 +45,7 @@ return [
             'travel-by-category',
             'travel-by-id',
             'travel-category',
+            'travel-category-new',
             'travel-comment',
             'version',
         ],
