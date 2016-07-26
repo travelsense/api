@@ -86,15 +86,15 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->createAndLoginUser();
 
         $app = Application::createByEnvironment('test');
-        self::resetDatabase($app);
 
         $this->category_mapper = $app['mapper.db.category'];
         $this->pdo = $app['db.main.pdo'];
 
-        $category = new Category();
-        $cat_a = $category->setName('a');
+        $cat_a = new Category();
+        $cat_a = $cat_a->setName('a');
         $this->category_mapper->insert($cat_a);
-        $cat_b = $category->setName('b');
+        $cat_b = new Category();
+        $cat_b = $cat_b->setName('b');
         $this->category_mapper->insert($cat_b);
 
         $cats = $this->client->getCategories();
