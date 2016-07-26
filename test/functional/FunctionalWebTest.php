@@ -1,11 +1,30 @@
 <?php
 namespace Test;
 
+use Api\Application;
+use Api\Controller\Travel\CategoriesController;
+use Api\Mapper\DB\CategoryMapper;
+use Api\Model\Travel\Category;
 use Api\Test\ApiClientException;
 use Api\Test\FunctionalTestCase;
+use PDO;
 
 class FunctionalWebTest extends FunctionalTestCase
 {
+    /**
+     * @var CategoryMapper
+     */
+    private $category_mapper;
+
+    /**
+     * @var PDO
+     */
+    private $pdo;
+    /**
+     * @var CategoriesController
+     */
+    private $controller;
+
     public function testUpdateUserDetails()
     {
         $this->createAndLoginUser();
@@ -60,6 +79,45 @@ class FunctionalWebTest extends FunctionalTestCase
 
         $this->checkDeleteTravel(1);
         $this->checkDeleteTravel(2);
+    }
+
+    public function testTravelCategoryGetting()
+    {
+        $this->createAndLoginUser();
+
+        $app = Application::createByEnvironment('test');
+
+        $this->category_mapper = $app['mapper.db.category'];
+        $this->pdo = $app['db.main.pdo'];
+
+        $cat_a = new Category();
+        $cat_a = $cat_a->setName('a');
+        $this->category_mapper->insert($cat_a);
+        $cat_b = new Category();
+        $cat_b = $cat_b->setName('b');
+        $this->category_mapper->insert($cat_b);
+
+        $cats = $this->client->getCategories();
+        $cat_ids = [];
+        $cat_names = [];
+        foreach ($cats as $category) {
+            $cat_ids[] = $category->id;
+            $cat_names[] = $category->title;
+        }
+        $this->assertCount(2, $cats);
+        $this->assertEquals([$cat_a->getId(), $cat_b->getId()], $cat_ids);
+        $this->assertEquals(['a', 'b'], $cat_names);
+
+        $travel_cats = $this->client->getTravelCategories();
+        $tcat_ids = [];
+        $tcat_names = [];
+        foreach ($travel_cats as $category) {
+            $tcat_ids[] = $category->id;
+            $tcat_names[] = $category->title;
+        }
+        $this->assertCount(2, $travel_cats);
+        $this->assertEquals([$cat_a->getId(), $cat_b->getId()], $tcat_ids);
+        $this->assertEquals(['a', 'b'], $tcat_names);
     }
 
     public function testBookingStats()
