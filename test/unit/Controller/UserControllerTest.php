@@ -57,7 +57,7 @@ class UserControllerTest extends ControllerTestCase
                 'firstName' => 'User1',
                 'lastName'  => 'Tester',
                 'creator'   => false,
-                'created'   => '2000-01-01T00:00:00+00:00',
+                'created'   => '2000-01-01T00:00:00+02:00',
             ],
             $this->controller->getUser($this->test_user)
         );
@@ -72,8 +72,8 @@ class UserControllerTest extends ControllerTestCase
             'email'     => 'test@example.com',
             'password'  => 'my_pass',
             'picture'   => 'http://example.com/user.jpg',
-            'firstName' => 'Simple',
-            'lastName'  => 'Tester',
+            'first_name' => 'Simple',
+            'last_name'  => 'Tester',
         ]);
 
         $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')

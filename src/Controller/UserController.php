@@ -31,6 +31,11 @@ class UserController extends ApiController
     private $storage;
 
     /**
+     * @var string
+     */
+    private $user_json_schema_for_registration = '/../../src/JSON/user_json_schema_for_registration.json';
+
+    /**
      * UserController constructor.
      *
      * @param UserMapper       $user_mapper
@@ -86,14 +91,14 @@ class UserController extends ApiController
      */
     public function createUser(Request $request): array
     {
-        $json = DataObject::createFromString($request->getContent());
+        $json = DataObject::createFromString($request->getContent(), $this->user_json_schema_for_registration);
 
         $user = new User();
         $user
             ->setEmail($json->getString('email'))
             ->setPassword($json->getString('password'))
-            ->setFirstName($json->getString('firstName'))
-            ->setLastName($json->getString('lastName'))
+            ->setFirstName($json->getString('first_name'))
+            ->setLastName($json->getString('last_name'))
             ->setPicture($json->has('picture') ? $json->getString('picture') : '')
             ->setCreator($json->has('creator') ? $json->getBoolean('creator') : false);
 
