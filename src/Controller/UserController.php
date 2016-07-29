@@ -9,6 +9,10 @@ use Api\Model\User;
 use Api\Service\Mailer\MailerService;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
+use JsonSchema\RefResolver;
+use JsonSchema\Uri\UriRetriever;
+use JsonSchema\Uri\UriResolver;
+use JsonSchema\Validator;
 
 /**
  * User API controller
@@ -33,7 +37,7 @@ class UserController extends ApiController
     /**
      * @var string
      */
-    private $user_json_schema_for_registration = '/../../src/JSON/user_json_schema_for_registration.json';
+    private $user_json_schema_for_registration = '/../../app/json-schema/user_json_schema_for_registration.json';
 
     /**
      * UserController constructor.
@@ -83,6 +87,29 @@ class UserController extends ApiController
     }
 
     /**
+     * Validation of user json-data
+     *
+     * @param string $json
+     * @return bool
+     * @throws ApiException
+     */
+    public function isValidUser(string $json): bool
+    {
+        $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
+        $data = json_decode($json);
+        $schema = $refResolver->resolve('file://'. realpath(__DIR__ . $this->user_json_schema_for_registration));
+        $validator = new Validator();
+        $validator->check($data, $schema);
+        if($validator->isValid())
+            return true;
+        else
+            throw new ApiException(
+                'Received json-data does not correspond to the above json-schema',
+                ApiException::VALIDATION
+            );
+    }
+
+    /**
      * Start email-based registration. Send a confirmation email.
      *
      * @param  Request $request
@@ -91,14 +118,14 @@ class UserController extends ApiController
      */
     public function createUser(Request $request): array
     {
-        $json = DataObject::createFromString($request->getContent(), $this->user_json_schema_for_registration);
-
+        $this->isValidUser($request->getContent());
+        $json = DataObject::createFromString($request->getContent());
         $user = new User();
         $user
             ->setEmail($json->getString('email'))
             ->setPassword($json->getString('password'))
-            ->setFirstName($json->getString('first_name'))
-            ->setLastName($json->getString('last_name'))
+            ->setFirstName($json->getString('firstName'))
+            ->setLastName($json->getString('lastName'))
             ->setPicture($json->has('picture') ? $json->getString('picture') : '')
             ->setCreator($json->has('creator') ? $json->getBoolean('creator') : false);
 
