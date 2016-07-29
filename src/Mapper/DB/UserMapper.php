@@ -52,21 +52,22 @@ class UserMapper extends AbstractPDOMapper
     {
         $sql = <<<SQL
 INSERT INTO users
-  ("email", "password", "first_name", "last_name", "picture")
+  ("email", "password", "first_name", "last_name", "picture", "creator")
 VALUES
-  (:email, :password, :first_name, :last_name, :picture)
+  (:email, :password, :first_name, :last_name, :picture, :creator)
 RETURNING id, created
 SQL;
         $insert = $this->pdo->prepare($sql);
-        $insert->execute(
-            [
-                ':email'      => $user->getEmail(),
-                ':password'   => $this->getPasswordHash($user->getPassword()),
-                ':first_name' => $user->getFirstName(),
-                ':last_name'  => $user->getLastName(),
-                ':picture'    => $user->getPicture(),
-            ]
-        );
+        $values = [
+            ':email'      => $user->getEmail(),
+            ':password'   => $this->getPasswordHash($user->getPassword()),
+            ':first_name' => $user->getFirstName(),
+            ':last_name'  => $user->getLastName(),
+            ':picture'    => $user->getPicture(),
+            ':creator'    => $user->isCreator(),
+        ];
+        $this->bindValues($insert, $values);
+        $insert->execute();
         $row = $insert->fetch(PDO::FETCH_ASSOC);
         $user->setId($row['id']);
         $user->setCreated(new DateTime($row['created']));
@@ -82,14 +83,16 @@ SQL;
         $first_name = $user->getFirstName();
         $last_name = $user->getLastName();
         $email_confirmed = $user->isEmailConfirmed();
+        $creator = $user->isCreator();
         $id = $user->getId();
-        $update = $this->pdo->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed WHERE id = :id');
+        $update = $this->pdo->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed, creator = :creator WHERE id = :id');
         $values = [
             'email' => $email,
             'firstname' => $first_name,
             'lastname' => $last_name,
             'email_confirmed' => $email_confirmed,
-            'id' => $id
+            'id' => $id,
+            'creator' => $creator,
         ];
         $this->bindValues($update, $values);
         $update->execute();
@@ -175,6 +178,7 @@ SQL;
             ->setFirstName($row['first_name'])
             ->setLastName($row['last_name'])
             ->setPicture($row['picture'])
+            ->setCreator($row['creator'])
             ->setCreated(new DateTime($row['created']))
             ->setEmailConfirmed($row['email_confirmed']);
     }

@@ -37,6 +37,11 @@ class User
     private $password;
 
     /**
+     * @var bool
+     */
+    private $creator = false;
+
+    /**
      * @return string
      */
     public function getEmail()
@@ -143,6 +148,24 @@ class User
     public function setPassword(string $password)
     {
         $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCreator() : bool
+    {
+        return $this->creator;
+    }
+
+    /**
+     * @param bool $creator
+     * @return User
+     */
+    public function setCreator(bool $creator)
+    {
+        $this->creator = $creator;
         return $this;
     }
 }

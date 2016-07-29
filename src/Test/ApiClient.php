@@ -194,6 +194,17 @@ class ApiClient
     }
 
     /**
+     * Create a new Category
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function createCategory(string $name)
+    {
+        return $this->post('/category', ['name' => $name,])->id;
+    }
+
+    /**
      * @return mixed
      */
     public function getCategories(string $name = null)
