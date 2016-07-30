@@ -119,7 +119,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($category->getId());
         $this->category_mapper->insert($category);
         $this->assertTrue(is_int($category->getId()));
-        $this->assertSameCategories($category, $this->category_mapper->fetchBylId($category->getId()));
+        $this->assertSameCategories($category, $this->category_mapper->fetchById($category->getId()));
     }
 
     /**
@@ -163,10 +163,10 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->category_mapper->insert($cat_b);
 
         $travel_a = $this->createTravel($user, 'a');
-        $travel_a->setCategoryId($cat_a->getId());
+        $travel_a->setCategoryIds([$cat_a->getId()]);
         $this->travel_mapper->insert($travel_a);
-
         $travel_b = $this->createTravel($user, 'b');
+
         $this->travel_mapper->insert($travel_b);
 
         $cat_list = $this->category_mapper->fetchByTravelId($travel_a->getId());
@@ -177,10 +177,10 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameTravels($travel_a, $travel_list[0]);
 
         $this->assertEquals(
-            $cat_a->getId(),
+            [$cat_a->getId()],
             $this->travel_mapper
                 ->fetchById($travel_a->getId())
-                ->getCategoryId()
+                ->getCategoryIds()
         );
     }
 
@@ -257,7 +257,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($a->getAuthorId(), $b->getAuthorId());
         $this->assertEquals($a->getContent(), $b->getContent());
         $this->assertEquals($a->getTitle(), $b->getTitle());
-        $this->assertEquals($a->getCategoryId(), $b->getCategoryId());
+        $this->assertEquals($a->getCategoryIds(), $b->getCategoryIds());
     }
 
     /**
@@ -443,7 +443,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->category_mapper->insert($cat);
 
         $travel = $this->createTravel($user, 'testTravel');
-        $travel->setCategoryId($cat->getId());
+        $travel->setCategoryIds([$cat->getId()]);
         $this->travel_mapper->insert($travel);
 
         $travel_list = $this->travel_mapper->fetchByCategory($cat->getName(), 1, 0);
