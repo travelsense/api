@@ -51,7 +51,7 @@ $app->get('/categories', 'controller.categories:getCategories') //TODO : remove 
     ->bind('travel-category');
 
 $app->get('/travel/categories', 'controller.categories:getCategories')
-    ->bind('travel-category');
+    ->bind('travel-category-new');
 
 // Travel
 
