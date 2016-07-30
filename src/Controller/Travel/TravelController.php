@@ -70,7 +70,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @param User $user
      * @return array
      * @throws ApiException
@@ -81,7 +81,7 @@ class TravelController extends ApiController
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        return $this->buildTravelView($travel, (($user !== null) ? $user->getId() : null));
+        return $this->buildTravelView($travel, ($user ? $user->getId() : null));
     }
 
     /**
@@ -178,7 +178,7 @@ class TravelController extends ApiController
     public function getTravelsByCategory(string $name, User $user = null, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travel_mapper->fetchByCategory($name, $limit, $offset);
-        return $this->buildTravelSetView($travels, (($user !== null) ? $user->getId() : null));
+        return $this->buildTravelSetView($travels, ($user ? $user->getId() : null));
     }
 
     /**
@@ -248,9 +248,8 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param int $user_id
      * @param Travel $travel
-     * @param User $user
+     * @param int $user_id
      * @return array
      */
     private function buildTravelView(Travel $travel, int $user_id = null): array
@@ -269,8 +268,15 @@ class TravelController extends ApiController
             'creation_mode' => $travel->getCreationMode(),
         ];
         if ($user_id !== null) {
-            $view['is_favorited'] = $this->travel_mapper->isFavorite($travel->getId(), $user_id);
-        } elseif ($user_id === null) {
+            $favorites = $this->travel_mapper->fetchFavoriteIds($user_id);
+            foreach ($favorites as $favorite) {
+                if (in_array($travel->getId(), $favorite)) {
+                    $view['is_favorited'] = true;
+                } else {
+                    $view['is_favorited'] = false;
+                }
+            }
+        } else {
             $view['is_favorited'] = false;
         }
         if ($author) {
