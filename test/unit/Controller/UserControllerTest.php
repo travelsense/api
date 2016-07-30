@@ -56,7 +56,6 @@ class UserControllerTest extends ControllerTestCase
                 'picture'   => 'http://example.com/user1.jpg',
                 'firstName' => 'User1',
                 'lastName'  => 'Tester',
-                'creator'   => false,
                 'created'   => '2000-01-01T00:00:00+00:00',
             ],
             $this->controller->getUser($this->test_user)
