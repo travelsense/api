@@ -133,12 +133,15 @@ class TravelMapper extends AbstractPDOMapper
     public function isFavorite(int $travel_id, int $user_id)
     {
         $select = $this->pdo->prepare('
-            SELECT * FROM  favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id
-            ')->execute([
-            ':user_id' => $user_id,
-            ':travel_id' => $travel_id,
-        ]);
-        if ($select) {
+            SELECT * FROM  favorite_travels
+            WHERE user_id = :user_id AND travel_id = :travel_id
+            ');
+        $select->execute([
+            'user_id' => $user_id,
+            'travel_id' => $travel_id,
+            ]);
+        $row = $select->fetch(PDO::FETCH_NAMED);
+        if ($row) {
             return true;
         } else {
             return false;

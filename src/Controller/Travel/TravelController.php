@@ -71,16 +71,17 @@ class TravelController extends ApiController
 
     /**
      * @param $id
+     * @param User $user
      * @return array
      * @throws ApiException
      */
-    public function getTravel(int $id): array
+    public function getTravel(int $id, User $user = null): array
     {
         $travel = $this->travel_mapper->fetchById($id);
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        return $this->buildTravelView($travel);
+        return $this->buildTravelView($travel, (($user !== null) ? $user->getId() : null));
     }
 
     /**
@@ -115,16 +116,6 @@ class TravelController extends ApiController
     {
         $this->travel_mapper->removeFavorite($id, $user->getId());
         return [];
-    }
-
-    /**
-     * @param int  $travel_id
-     * @param int  $user_id
-     * @return bool
-     */
-    public function isFavorite(int $travel_id, int $user_id) : bool
-    {
-        return $this->travel_mapper->isFavorite($travel_id, $user_id);
     }
 
     /**
@@ -179,14 +170,15 @@ class TravelController extends ApiController
 
     /**
      * @param string $name
+     * @param User $user
      * @param int    $limit
      * @param int    $offset
      * @return array
      */
-    public function getTravelsByCategory(string $name, int $limit = 10, int $offset = 0): array
+    public function getTravelsByCategory(string $name, User $user = null, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travel_mapper->fetchByCategory($name, $limit, $offset);
-        return $this->buildTravelSetView($travels);
+        return $this->buildTravelSetView($travels, (($user !== null) ? $user->getId() : null));
     }
 
     /**
@@ -226,7 +218,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param      $id
+     * @param int  $id
      * @param User $user
      * @return array
      */
@@ -256,12 +248,14 @@ class TravelController extends ApiController
     }
 
     /**
+     * @param int $user_id
      * @param Travel $travel
      * @param User $user
      * @return array
      */
-    private function buildTravelView(Travel $travel, User $user = null): array
+    private function buildTravelView(Travel $travel, int $user_id = null): array
     {
+
         $author = $travel->getAuthor();
         $view = [
             'id'          => $travel->getId(),
@@ -274,8 +268,10 @@ class TravelController extends ApiController
             'published'   => $travel->isPublished(),
             'creation_mode' => $travel->getCreationMode(),
         ];
-        if ($user !== null) {
-            $view['is_favorited'] = $this->isFavorite($travel->getId(), $user->getId());
+        if ($user_id !== null) {
+            $view['is_favorited'] = $this->travel_mapper->isFavorite($travel->getId(), $user_id);
+        } elseif ($user_id === null) {
+            $view['is_favorited'] = false;
         }
         if ($author) {
             $view['author'] = [
@@ -289,15 +285,15 @@ class TravelController extends ApiController
     }
 
     /**
+     * @param int $user_id
      * @param Travel[] $travels
-     * @param  User $user
      * @return array
      */
-    private function buildTravelSetView(array $travels, User $user): array
+    private function buildTravelSetView(array $travels, int $user_id = null): array
     {
         $view = [];
         foreach ($travels as $travel) {
-            $view[] = $this->buildTravelView($travel, $user);
+            $view[] = $this->buildTravelView($travel, $user_id);
         }
         return $view;
     }
