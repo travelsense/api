@@ -20,10 +20,6 @@ class FunctionalWebTest extends FunctionalTestCase
      * @var PDO
      */
     private $pdo;
-    /**
-     * @var CategoriesController
-     */
-    private $controller;
 
     public function testUpdateUserDetails()
     {
