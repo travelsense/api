@@ -269,12 +269,10 @@ class TravelController extends ApiController
         ];
         if ($user_id !== null) {
             $favorites = $this->travel_mapper->fetchFavoriteIds($user_id);
-            foreach ($favorites as $favorite) {
-                if (in_array($travel->getId(), $favorite)) {
-                    $view['is_favorited'] = true;
-                } else {
-                    $view['is_favorited'] = false;
-                }
+            if (in_array($travel->getId(), $favorites)) {
+                $view['is_favorited'] = true;
+            } else {
+                $view['is_favorited'] = false;
             }
         } else {
             $view['is_favorited'] = false;
