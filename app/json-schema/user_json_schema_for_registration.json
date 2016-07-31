@@ -10,13 +10,13 @@
     "picture": {
       "format": "uri"
     },
-    "first_name": {
+    "firstName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 128,
       "pattern": "^[a-zA-Z0-9_-]+$"
     },
-    "last_name": {
+    "lastName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 128,
@@ -31,6 +31,6 @@
       "maxLength": 256
     }
   },
-  "required": ["email", "password", "first_name", "last_name"],
+  "required": ["email", "password", "firstName", "lastName"],
   "additionalProperties": false
 }

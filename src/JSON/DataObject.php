@@ -31,23 +31,11 @@ class DataObject
     /**
      * Create object $json from string $json
      * @param string $json
-     * @param string $validation_schema
      * @return DataObject
      */
-    public static function createFromString(string $json, string $validation_schema): self
+    public static function createFromString(string $json): self
     {
-        $refResolver = new JsonSchema\RefResolver(new JsonSchema\Uri\UriRetriever(), new JsonSchema\Uri\UriResolver());
-        $data = json_decode($json);
-        $schema = $refResolver->resolve('file://'. realpath(__DIR__ . $validation_schema));
-        $validator = new JsonSchema\Validator();
-        $validator->check($data, $schema);
-        if($validator->isValid())
             return new self(json_decode($json));
-        else
-            throw new ApiException(
-                'Received json-data does not correspond to the above json-schema',
-                ApiException::VALIDATION
-            );
     }
 
     /**

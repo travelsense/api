@@ -13,6 +13,7 @@ return [
         __DIR__ . '/service/routing.php',
         __DIR__ . '/service/security.php',
         __DIR__ . '/service/storages.php',
+        __DIR__ . '/service/validator.php',
         __DIR__ . '/service/wego.php',
     ],
     'debug' => false,
@@ -77,6 +78,9 @@ return [
     ],
     'booking' => [
         'reward_point_price' => 0.1, // 10 cents
+    ],
+    'json_schema' => [
+        'user_json_schema_for_registration' => '/../../app/json-schema/user_json_schema_for_registration.json',
     ],
     
 ];

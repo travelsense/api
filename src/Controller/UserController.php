@@ -35,9 +35,14 @@ class UserController extends ApiController
     private $storage;
 
     /**
+     * @var Validator
+     */
+    private $validator;
+
+    /**
      * @var string
      */
-    private $user_json_schema_for_registration = '/../../app/json-schema/user_json_schema_for_registration.json';
+    private $user_json_schema_for_registration;
 
     /**
      * UserController constructor.
@@ -45,15 +50,21 @@ class UserController extends ApiController
      * @param UserMapper       $user_mapper
      * @param MailerService    $mailer
      * @param ExpirableStorage $storage
+     * @param Validator        $validator
+     * @param                  $user_json_schema_for_registration
      */
     public function __construct(
         UserMapper $user_mapper,
         MailerService $mailer,
-        ExpirableStorage $storage
+        ExpirableStorage $storage,
+        Validator $validator,
+        $user_json_schema_for_registration
     ) {
         $this->user_mapper = $user_mapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
+        $this->validator = $validator;
+        $this->user_json_schema_for_registration = $user_json_schema_for_registration;
     }
 
     /**
@@ -98,9 +109,8 @@ class UserController extends ApiController
         $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
         $data = json_decode($json);
         $schema = $refResolver->resolve('file://'. realpath(__DIR__ . $this->user_json_schema_for_registration));
-        $validator = new Validator();
-        $validator->check($data, $schema);
-        if($validator->isValid())
+        $this->validator->check($data, $schema);
+        if($this->validator->isValid())
             return true;
         else
             throw new ApiException(

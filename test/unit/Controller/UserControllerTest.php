@@ -4,12 +4,15 @@ namespace Api\Controller;
 use Api\Exception\ApiException;
 use Api\Model\User;
 use Api\Test\ControllerTestCase;
+use JsonSchema\Validator;
 
 class UserControllerTest extends ControllerTestCase
 {
     private $user_mapper;
     private $mailer;
     private $storage;
+    private $validator;
+    private $user_json_schema_for_registration = '/../../app/json-schema/user_json_schema_for_registration.json';
 
     /**
      * @var UserController
@@ -35,10 +38,14 @@ class UserControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->validator = new Validator();
+
         $this->controller = new UserController(
             $this->user_mapper,
             $this->mailer,
-            $this->storage
+            $this->storage,
+            $this->validator,
+            $this->user_json_schema_for_registration
         );
 
         $this->test_user = $this->buildUser();
@@ -57,7 +64,7 @@ class UserControllerTest extends ControllerTestCase
                 'firstName' => 'User1',
                 'lastName'  => 'Tester',
                 'creator'   => false,
-                'created'   => '2000-01-01T00:00:00+02:00',
+                'created'   => '2000-01-01T00:00:00+00:00',
             ],
             $this->controller->getUser($this->test_user)
         );
@@ -72,8 +79,8 @@ class UserControllerTest extends ControllerTestCase
             'email'     => 'test@example.com',
             'password'  => 'my_pass',
             'picture'   => 'http://example.com/user.jpg',
-            'first_name' => 'Simple',
-            'last_name'  => 'Tester',
+            'firstName' => 'Simple',
+            'lastName'  => 'Tester',
         ]);
 
         $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
