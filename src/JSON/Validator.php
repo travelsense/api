@@ -4,40 +4,42 @@ namespace Api\JSON;
 
 use Api\Exception\ApiException;
 use JsonSchema\RefResolver;
-use JsonSchema\Validator;
+use JsonSchema\Validator as JsonSchemaValidator;
 use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
 use stdClass;
 
 
-class JsonSchemaValidator
+class Validator
 {
 
     /**
-     * @var Validator $validator
+     * @var JsonSchemaValidator $validator
      */
     private $validator;
 
     /**
-     * @var string $path_to_schema_folder
+     * @var string $schema_path
      */
-    private $path_to_schema_folder;
+    private $schema_path;
 
     /**
-     * @var string $validate_user_schema
+     * @var RefResolver
      */
-    private $validate_user_schema = 'validate_user_schema.json';
+    private $refResolver;
 
     /**
      * Validator constructor.
      *
-     * @param Validator $validator
-     * @param string $path_to_schema_folder
+     * @param JsonSchemaValidator $validator
+     * @param string $schema_path
      */
-    public function __construct(Validator $validator, string $path_to_schema_folder)
+    public function __construct(JsonSchemaValidator $validator, string $schema_path)
     {
         $this->validator = $validator;
-        $this->path_to_schema_folder = $path_to_schema_folder;
+        $this->schema_path = $schema_path;
+        $this->refResolver = new RefResolver(new UriRetriever(), new UriResolver());
+
     }
 
     /**
@@ -45,14 +47,11 @@ class JsonSchemaValidator
      * @return bool
      * @throws ApiException
      */
-    public function validateUser(stdClass $json): bool
+    public function validateUser(stdClass $json)
     {
-        $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
-        $schema = $refResolver->resolve('file://'. realpath(__DIR__ . $this->path_to_schema_folder. $this->validate_user_schema));
+        $schema = $this->refResolver->resolve('file://'. realpath(__DIR__ . $this->schema_path. 'validate_user_schema.json'));
         $this->validator->check($json, $schema);
-        if($this->validator->isValid())
-            return true;
-        else {
+        if(!$this->validator->isValid()) {
             $message = "JSON does not validate. Violations:\n";
             foreach ($this->validator->getErrors() as $error) {
                 $message = $message . sprintf("[%s] %s\n", $error['property'], $error['message']);
