@@ -81,7 +81,7 @@ class TravelController extends ApiController
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        return $this->buildTravelView($travel, ($user ? $user->getId() : null));
+        return $this->buildTravelView($travel, $user ? $user->getId() : null);
     }
 
     /**
@@ -178,7 +178,7 @@ class TravelController extends ApiController
     public function getTravelsByCategory(string $name, User $user = null, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travel_mapper->fetchByCategory($name, $limit, $offset);
-        return $this->buildTravelSetView($travels, ($user ? $user->getId() : null));
+        return $this->buildTravelSetView($travels, $user ? $user->getId() : null);
     }
 
     /**
@@ -269,11 +269,7 @@ class TravelController extends ApiController
         ];
         if ($user_id !== null) {
             $favorites = $this->travel_mapper->fetchFavoriteIds($user_id);
-            if (in_array($travel->getId(), $favorites)) {
-                $view['is_favorited'] = true;
-            } else {
-                $view['is_favorited'] = false;
-            }
+            $view['is_favorited'] = array_key_exists($travel->getId(), $favorites);
         } else {
             $view['is_favorited'] = false;
         }
