@@ -143,9 +143,9 @@ class TravelMapper extends AbstractPDOMapper
             return null;
         }
         foreach ($rows as $row) {
-            $ids [] = $row[0];
+            $ids [$row[0]] = $row[0];
         }
-        return array_flip($ids);
+        return $ids;
     }
 
     /**

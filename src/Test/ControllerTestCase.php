@@ -36,4 +36,23 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
         $category->method('getName')->willReturn('test_category');
         return $category;
     }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function buildTravel()
+    {
+        $travel = $this->getMockBuilder('Api\\Model\\Travel\\Travel')
+            ->setMethods(['getId', 'getTitle', 'getDescription', 'isPublished', 'getImage', 'getContent', 'getCreationMode'])
+            ->getMock();
+        $travel->method('getId')->willReturn(1);
+        $travel->method('getTitle')->willReturn('test_travel');
+        $travel->method('getDescription')->willReturn('To make sure ids work properly');
+        $travel->method('isPublished')->willReturn(true);
+        $travel->method('getImage')->willReturn('https://host.com/image.jpg');
+        $travel->method('getContent')->willReturn(['foo' => 'bar']);
+        $travel->method('getCreationMode')->willReturn('Travel test mode');
+
+        return $travel;
+    }
 }
