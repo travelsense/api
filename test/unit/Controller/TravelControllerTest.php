@@ -1,7 +1,6 @@
 <?php
 namespace Api\Controller;
 
-
 use Api\Controller\Travel\TravelController;
 use Api\Model\Travel\Travel;
 use Api\Test\ControllerTestCase;
