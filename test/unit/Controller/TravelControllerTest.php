@@ -95,5 +95,4 @@ class TravelControllerTest extends ControllerTestCase
             $this->controller->getTravel(1)
         );
     }
-
 }
