@@ -40,7 +40,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function createAndLoginUser($email = 'sasha@pushkin.ru')
     {
-        $password = '123';
+        $password = '1234';
         $this->client->registerUser([
             'firstName' => 'Alexander',
             'lastName'  => 'Pushkin',

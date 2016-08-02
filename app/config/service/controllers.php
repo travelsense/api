@@ -35,6 +35,7 @@ $app['controller.user'] = function ($app) {
         $app['mapper.db.user'],
         $app['email.service'],
         $app['storage.expirable_storage'],
+        $app['validator'],
         $app['password_generator']
     );
     $controller->setLogger($app['monolog']);

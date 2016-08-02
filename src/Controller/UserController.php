@@ -9,6 +9,7 @@ use Api\Model\User;
 use Api\Service\Mailer\MailerService;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
+use Api\JSON\Validator;
 
 /**
  * User API controller
@@ -31,20 +32,33 @@ class UserController extends ApiController
     private $storage;
 
     /**
+     * @var JsonSchemaValidator
+     */
+    private $validator;
+
+    /**
+     * @var string
+     */
+    private $validate_user_schema;
+
+    /**
      * UserController constructor.
      *
      * @param UserMapper       $user_mapper
      * @param MailerService    $mailer
      * @param ExpirableStorage $storage
+     * @param Validator        $validator
      */
     public function __construct(
         UserMapper $user_mapper,
         MailerService $mailer,
-        ExpirableStorage $storage
+        ExpirableStorage $storage,
+        Validator $validator
     ) {
         $this->user_mapper = $user_mapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
+        $this->validator = $validator;
     }
 
     /**
@@ -75,7 +89,7 @@ class UserController extends ApiController
         }
         $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
     }
-
+    
     /**
      * Start email-based registration. Send a confirmation email.
      *
@@ -85,8 +99,8 @@ class UserController extends ApiController
      */
     public function createUser(Request $request): array
     {
+        $this->validator->validateUser(json_decode($request->getContent()));
         $json = DataObject::createFromString($request->getContent());
-
         $user = new User();
         $user
             ->setEmail($json->getString('email'))

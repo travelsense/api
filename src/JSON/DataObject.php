@@ -2,6 +2,7 @@
 namespace Api\JSON;
 
 use Api\Exception\ApiException;
+use JsonSchema;
 use stdClass;
 
 /**
@@ -34,7 +35,7 @@ class DataObject
      */
     public static function createFromString(string $json): self
     {
-        return new self(json_decode($json));
+            return new self(json_decode($json));
     }
 
     /**

@@ -4,12 +4,15 @@ namespace Api\Controller;
 use Api\Exception\ApiException;
 use Api\Model\User;
 use Api\Test\ControllerTestCase;
+use Api\JSON\Validator;
 
 class UserControllerTest extends ControllerTestCase
 {
     private $user_mapper;
     private $mailer;
     private $storage;
+    private $validator;
+    private $json_schema_validator;
 
     /**
      * @var UserController
@@ -17,6 +20,11 @@ class UserControllerTest extends ControllerTestCase
     private $controller;
 
     private $test_user;
+
+    private $schema_path;
+
+    private $ref_resolver;
+
 
     public function setUp()
     {
@@ -34,11 +42,20 @@ class UserControllerTest extends ControllerTestCase
             ->setMethods(['store'])
             ->disableOriginalConstructor()
             ->getMock();
+        
+        $this->json_schema_validator = new \JsonSchema\Validator();
+
+        $this->schema_path = '/../../app/json-schema/';
+
+        $this->ref_resolver = new \JsonSchema\RefResolver(new \JsonSchema\Uri\UriRetriever(), new \JsonSchema\Uri\UriResolver());
+
+        $this->validator = new Validator($this->json_schema_validator, $this->schema_path, $this->ref_resolver);
 
         $this->controller = new UserController(
             $this->user_mapper,
             $this->mailer,
-            $this->storage
+            $this->storage,
+            $this->validator
         );
 
         $this->test_user = $this->buildUser();
