@@ -4,6 +4,10 @@ namespace Api\JSON;
 
 use Api\Exception\ApiException;
 use PHPUnit_Framework_TestCase;
+use JsonSchema\RefResolver;
+use JsonSchema\Uri\UriResolver;
+use JsonSchema\Uri\UriRetriever;
+
 
 class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
 {
@@ -21,10 +25,10 @@ class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->path_to_schema_folder = '/../../app/json-schema/';
 
-        $this->json_schema_validator = new \Api\JSON\Validator($this->validator, $this->path_to_schema_folder);
-
+        $ref_resolver = new \JsonSchema\RefResolver(new \JsonSchema\Uri\UriRetriever(), new \JsonSchema\Uri\UriResolver());
+        
+        $this->json_schema_validator = new \Api\JSON\Validator($this->validator, $this->path_to_schema_folder, $ref_resolver);
     }
-
 
     public function testValidateUser()
     {
@@ -45,6 +49,12 @@ class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Api\Exception\ApiException
+     * @expectedExceptionMessage JSON does not validate. Violations:
+    [email] The property email is required
+    [password] The property password is required
+    [firstName] The property firstName is required
+    [lastName] The property lastName is required
+    [] The property something_wrong_properties is not defined and the definition does not allow additional properties
      */
     public function testValidateUserException()
     {

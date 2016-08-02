@@ -79,8 +79,5 @@ return [
     'booking' => [
         'reward_point_price' => 0.1, // 10 cents
     ],
-    'json_schema' => [
-        'user_json_schema_for_registration' => '/../../app/json-schema/user_json_schema_for_registration.json',
-    ],
-    
+    'schema_path' =>'/../../app/json-schema/',
 ];

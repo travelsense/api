@@ -9,10 +9,7 @@ use Api\Model\User;
 use Api\Service\Mailer\MailerService;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
-use JsonSchema\RefResolver;
-use JsonSchema\Uri\UriRetriever;
-use JsonSchema\Uri\UriResolver;
-use JsonSchema\Validator;
+use Api\JSON\Validator; 
 
 /**
  * User API controller
@@ -35,14 +32,14 @@ class UserController extends ApiController
     private $storage;
 
     /**
-     * @var Validator
+     * @var JsonSchemaValidator
      */
     private $validator;
 
     /**
      * @var string
      */
-    private $user_json_schema_for_registration;
+    private $validate_user_schema;
 
     /**
      * UserController constructor.
@@ -51,20 +48,17 @@ class UserController extends ApiController
      * @param MailerService    $mailer
      * @param ExpirableStorage $storage
      * @param Validator        $validator
-     * @param                  $user_json_schema_for_registration
      */
     public function __construct(
         UserMapper $user_mapper,
         MailerService $mailer,
         ExpirableStorage $storage,
-        Validator $validator,
-        $user_json_schema_for_registration
+        Validator $validator
     ) {
         $this->user_mapper = $user_mapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
         $this->validator = $validator;
-        $this->user_json_schema_for_registration = $user_json_schema_for_registration;
     }
 
     /**
@@ -96,29 +90,7 @@ class UserController extends ApiController
         }
         $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
     }
-
-    /**
-     * Validation of user json-data
-     *
-     * @param string $json
-     * @return bool
-     * @throws ApiException
-     */
-    public function isValidUser(string $json): bool
-    {
-        $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
-        $data = json_decode($json);
-        $schema = $refResolver->resolve('file://'. realpath(__DIR__ . $this->user_json_schema_for_registration));
-        $this->validator->check($data, $schema);
-        if($this->validator->isValid())
-            return true;
-        else
-            throw new ApiException(
-                'Received json-data does not correspond to the above json-schema',
-                ApiException::VALIDATION
-            );
-    }
-
+    
     /**
      * Start email-based registration. Send a confirmation email.
      *
@@ -128,7 +100,7 @@ class UserController extends ApiController
      */
     public function createUser(Request $request): array
     {
-        $this->isValidUser($request->getContent());
+        $this->validator->validateUser(json_decode($request->getContent()));
         $json = DataObject::createFromString($request->getContent());
         $user = new User();
         $user

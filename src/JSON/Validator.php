@@ -26,7 +26,7 @@ class Validator
     /**
      * @var RefResolver
      */
-    private $refResolver;
+    private $ref_resolver;
 
     /**
      * Validator constructor.
@@ -34,12 +34,11 @@ class Validator
      * @param JsonSchemaValidator $validator
      * @param string $schema_path
      */
-    public function __construct(JsonSchemaValidator $validator, string $schema_path)
+    public function __construct(JsonSchemaValidator $validator, string $schema_path, RefResolver $ref_resolver)
     {
         $this->validator = $validator;
         $this->schema_path = $schema_path;
-        $this->refResolver = new RefResolver(new UriRetriever(), new UriResolver());
-
+        $this->ref_resolver = $ref_resolver;
     }
 
     /**
@@ -49,7 +48,7 @@ class Validator
      */
     public function validateUser(stdClass $json)
     {
-        $schema = $this->refResolver->resolve('file://'. realpath(__DIR__ . $this->schema_path. 'validate_user_schema.json'));
+        $schema = $this->ref_resolver->resolve('file://'. realpath(__DIR__ . $this->schema_path. 'validate_user_schema.json'));
         $this->validator->check($json, $schema);
         if(!$this->validator->isValid()) {
             $message = "JSON does not validate. Violations:\n";
@@ -63,4 +62,6 @@ class Validator
         }
 
     }
+    
+    
 }
