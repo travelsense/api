@@ -37,7 +37,6 @@ $app['controller.user'] = function ($app) {
         $app['storage.expirable_storage'],
         $app['password_generator'],
         $app['validator']
-        
     );
     $controller->setLogger($app['monolog']);
     return $controller;

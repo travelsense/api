@@ -9,7 +9,6 @@ use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
 use stdClass;
 
-
 class Validator
 {
 
@@ -50,7 +49,7 @@ class Validator
     {
         $schema = $this->ref_resolver->resolve('file://'. realpath(__DIR__ . $this->schema_path. 'validate_user_schema.json'));
         $this->validator->check($json, $schema);
-        if(!$this->validator->isValid()) {
+        if (!$this->validator->isValid()) {
             $message = "JSON does not validate. Violations:\n";
             foreach ($this->validator->getErrors() as $error) {
                 $message = $message . sprintf("[%s] %s\n", $error['property'], $error['message']);
@@ -62,6 +61,4 @@ class Validator
         }
 
     }
-    
-    
 }

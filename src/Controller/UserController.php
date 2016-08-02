@@ -9,7 +9,7 @@ use Api\Model\User;
 use Api\Service\Mailer\MailerService;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
-use Api\JSON\Validator; 
+use Api\JSON\Validator;
 
 /**
  * User API controller

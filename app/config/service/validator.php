@@ -23,7 +23,7 @@ $app['ref_uri_retriever'] = function ($app) {
 };
 
 $app['ref_ref_resolver'] = function ($app) {
-    return new RefResolver($app['ref_uri_retriever'],$app['ref_uri_resolver']);
+    return new RefResolver($app['ref_uri_retriever'], $app['ref_uri_resolver']);
 };
 
 $app['validator'] = function ($app) {

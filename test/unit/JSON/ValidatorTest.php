@@ -8,7 +8,6 @@ use JsonSchema\RefResolver;
 use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
 
-
 class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
 {
 
@@ -66,5 +65,4 @@ class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
 
         $this->json_schema_validator->validateUser($json_object);
     }
-
 }
