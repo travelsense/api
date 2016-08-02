@@ -27,9 +27,9 @@ class Travel
     private $content;
 
     /**
-     * @var int
+     * @var array
      */
-    private $category_id;
+    private $category_ids = [];
 
     /**
      * @var string
@@ -101,20 +101,20 @@ class Travel
     }
 
     /**
-     * @return int
+     * @return array
      */
-    public function getCategoryId()
+    public function getCategoryIds() : array
     {
-        return $this->category_id;
+        return $this->category_ids;
     }
 
     /**
-     * @param int $category_id
+     * @param array $category_ids
      * @return Travel
      */
-    public function setCategoryId(int $category_id)
+    public function setCategoryIds(array $category_ids)
     {
-        $this->category_id = $category_id;
+        $this->category_ids = $category_ids;
         return $this;
     }
 

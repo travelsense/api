@@ -43,6 +43,7 @@ return [
             'reset-password',
             'send-password-reset-link',
             'travel-category',
+            'travel-category-new',
             'travel-comment',
             'version',
         ],

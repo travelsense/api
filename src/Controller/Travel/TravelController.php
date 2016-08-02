@@ -59,8 +59,12 @@ class TravelController extends ApiController
             $travel->setCreationMode($json->get('creation_mode'));
         }
         $this->travel_mapper->insert($travel);
-        if ($json->has('category_id')) {
-            $this->category_mapper->addTravelToCategory($travel->getId(), $json->get('category_id'));
+        if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
+            $ids = (array) $json->get('category_id');
+            $this->category_mapper->setTravelCategories($travel->getId(), $ids);
+        }
+        if ($json->has('category_ids')) {
+            $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
         }
         if ($json->has('published')) {
             $travel->setPublished($json->get('published'));
@@ -209,8 +213,12 @@ class TravelController extends ApiController
         if ($json->has('creation_mode')) {
             $travel->setCreationMode($json->get('creation_mode'));
         }
-        if ($json->has('category_id')) {
-            $this->category_mapper->addTravelToCategory($id, $json->get('category_id'));
+        if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
+            $ids = (array) $json->get('category_id');
+            $this->category_mapper->setTravelCategories($travel->getId(), $ids);
+        }
+        if ($json->has('category_ids')) {
+            $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
         }
         $this->travel_mapper->update($travel);
 
@@ -263,7 +271,8 @@ class TravelController extends ApiController
             'content'     => $travel->getContent(),
             'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'category'    => $travel->getCategoryId(),
+            'category'    => $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null,
+            'category_ids'    => $travel->getCategoryIds(),
             'published'   => $travel->isPublished(),
             'creation_mode' => $travel->getCreationMode(),
         ];

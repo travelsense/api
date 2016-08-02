@@ -53,7 +53,7 @@ class CommentMapper extends AbstractPDOMapper
      * @param int $id
      * @return Comment|null
      */
-    public function fetchBylId(int $id)
+    public function fetchById(int $id)
     {
         $select = $this->pdo->prepare('
             SELECT c.*, u.* FROM travel_comments c 
@@ -61,7 +61,7 @@ class CommentMapper extends AbstractPDOMapper
             WHERE c.id = :id 
         ');
         $select->execute([
-            ':id'     => $id,
+            ':id' => $id,
         ]);
 
         $row = $select->fetch(PDO::FETCH_NAMED);

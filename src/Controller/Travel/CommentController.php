@@ -56,7 +56,7 @@ class CommentController extends ApiController
      */
     public function deleteById(int $id, User $user): array
     {
-        $comment = $this->comment_mapper->fetchBylId($id);
+        $comment = $this->comment_mapper->fetchById($id);
         if (empty($comment)) {
             throw new ApiException('Comment not found', ApiException::RESOURCE_NOT_FOUND);
         }

@@ -1,11 +1,26 @@
 <?php
 namespace Test;
 
+use Api\Application;
+use Api\Controller\Travel\CategoriesController;
+use Api\Mapper\DB\CategoryMapper;
+use Api\Model\Travel\Category;
 use Api\Test\ApiClientException;
 use Api\Test\FunctionalTestCase;
+use PDO;
 
 class FunctionalWebTest extends FunctionalTestCase
 {
+    /**
+     * @var CategoryMapper
+     */
+    private $category_mapper;
+
+    /**
+     * @var PDO
+     */
+    private $pdo;
+
     public function testUpdateUserDetails()
     {
         $this->createAndLoginUser();
@@ -16,7 +31,6 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Pushkin', $user->lastName);
         $this->assertEquals('sasha@pushkin.ru', $user->email);
         $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
-        $this->assertEquals(true, $user->creator);
 
         $this->client->updateUser([
             'id'        => 1,
@@ -32,18 +46,21 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Pushkina', $user->lastName);
         $this->assertEquals('sasha@pushkin.ru', $user->email);
         $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
-        $this->assertEquals(false, $user->creator);
     }
     
     public function testTravelCreationAndRetrieval()
     {
         $this->createAndLoginUser();
+        $this->client->createCategory('test cat1');
+        $this->client->createCategory('test cat2');
+        $this->client->createCategory('test cat3');
         $id = $this->client->createTravel([
             'title'       => 'First Travel',
             'description' => 'To make sure ids work properly',
             'image'       => 'https://host.com/image.jpg',
             'content'     => ['foo' => 'bar'],
             'creation_mode' => 'First Travel test mode',
+            'category_ids' => [1, 2],
         ]);
         $this->assertEquals(1, $id);
         $id = $this->client->createTravel([
@@ -52,6 +69,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'image'       => 'https://host.com/image.jpg',
             'content'     => ['foo' => 'bar'],
             'creation_mode' => 'Hobbit test mode',
+            'category_ids' => [1, 2],
         ]);
         $this->assertEquals(2, $id);
 
@@ -65,15 +83,57 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->checkDeleteTravel(2);
     }
 
+    public function testTravelCategoryGetting()
+    {
+        $this->createAndLoginUser();
+
+        $app = Application::createByEnvironment('test');
+
+        $this->category_mapper = $app['mapper.db.category'];
+        $this->pdo = $app['db.main.pdo'];
+
+        $cat_a = new Category();
+        $cat_a = $cat_a->setName('a');
+        $this->category_mapper->insert($cat_a);
+        $cat_b = new Category();
+        $cat_b = $cat_b->setName('b');
+        $this->category_mapper->insert($cat_b);
+
+        $cats = $this->client->getCategories();
+        $cat_ids = [];
+        $cat_names = [];
+        foreach ($cats as $category) {
+            $cat_ids[] = $category->id;
+            $cat_names[] = $category->title;
+        }
+        $this->assertCount(2, $cats);
+        $this->assertEquals([$cat_a->getId(), $cat_b->getId()], $cat_ids);
+        $this->assertEquals(['a', 'b'], $cat_names);
+
+        $travel_cats = $this->client->getTravelCategories();
+        $tcat_ids = [];
+        $tcat_names = [];
+        foreach ($travel_cats as $category) {
+            $tcat_ids[] = $category->id;
+            $tcat_names[] = $category->title;
+        }
+        $this->assertCount(2, $travel_cats);
+        $this->assertEquals([$cat_a->getId(), $cat_b->getId()], $tcat_ids);
+        $this->assertEquals(['a', 'b'], $tcat_names);
+    }
+
     public function testBookingStats()
     {
         $this->createAndLoginUser();
+        $this->client->createCategory('test cat1');
+        $this->client->createCategory('test cat2');
         $id = $this->client->createTravel([
             'title'       => 'First Travel',
             'description' => 'To make sure ids work properly',
             'image'       => 'https://host.com/image.jpg',
             'content'     => ['foo' => 'bar'],
             'creation_mode' => 'First Travel test mode',
+            'category_ids' => [1, 2],
         ]);
 
         $this->client->registerBooking($id);
@@ -101,6 +161,7 @@ class FunctionalWebTest extends FunctionalTestCase
 
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
         $this->assertEquals((object)['foo' => 'bar'], $travel->content);
+        $this->assertEquals([1, 2], $travel->category_ids);
 
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
             $this->assertObjectHasAttribute($attr, $author);
@@ -116,6 +177,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'published'   => true,
             'content'     => ['pew' => 'boom'],
             'creation_mode' => 'Two Towers test mode',
+            'category_ids' => [1, 3],
         ]);
         $travel = $this->client->getTravel($id);
         $this->assertEquals('Two Towers', $travel->title);
@@ -124,6 +186,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals(true, $travel->published);
         $this->assertEquals((object)['pew' => 'boom'], $travel->content);
         $this->assertEquals('Two Towers test mode', $travel->creation_mode);
+        $this->assertEquals([1, 3], $travel->category_ids);
     }
 
     private function checkDeleteTravel(int $id)
