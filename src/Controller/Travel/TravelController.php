@@ -7,7 +7,9 @@ use Api\Exception\ApiException;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
+use Api\Mapper\DB\ActionMapper;
 use Api\Model\Travel\Travel;
+use Api\Model\Travel\Action;
 use Api\Model\User;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,15 +29,21 @@ class TravelController extends ApiController
     private $category_mapper;
 
     /**
+     * @var ActionMapper
+     */
+    private $action_mapper;
+
+    /**
      * TravelController constructor.
      *
      * @param TravelMapper   $travel_mapper
      * @param CategoryMapper $category_mapper
      */
-    public function __construct(TravelMapper $travel_mapper, CategoryMapper $category_mapper)
+    public function __construct(TravelMapper $travel_mapper, CategoryMapper $category_mapper, ActionMapper $action_mapper)
     {
         $this->travel_mapper = $travel_mapper;
         $this->category_mapper = $category_mapper;
+		$this->action_mapper = $action_mapper;
     }
 
     /**
@@ -51,7 +59,6 @@ class TravelController extends ApiController
         $travel->setAuthor($user);
         $travel->setTitle($json->getString('title'));
         $travel->setDescription($json->getString('description'));
-        $travel->setContent($json->get('content'));
         if ($json->has('image')) {
             $travel->setImage($json->get('image'));
         }
@@ -59,6 +66,11 @@ class TravelController extends ApiController
             $travel->setCreationMode($json->get('creation_mode'));
         }
         $this->travel_mapper->insert($travel);
+        
+        $actions = $this->createActions( (array) $json->get('content'),$travel->getId());
+        $travel->setActions($actions);
+        $this->action_mapper->insertActions($travel->getActions());
+
         if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
             $ids = (array) $json->get('category_id');
             $this->category_mapper->setTravelCategories($travel->getId(), $ids);
@@ -72,6 +84,34 @@ class TravelController extends ApiController
 
         return ['id' => $travel->getId()];
     }
+
+    public function createActions(array $actionsJSON, int $travel_id): array
+    {
+        $actions = array();
+        foreach ($actionsJSON as $action) {
+            $actions[] = $this->createAction($action, $travel_id);
+        }
+        return $actions;
+    }
+
+	public function createAction($json, int $travel_id): Action
+    {
+        // print_r($json);
+		$action = new Action();
+		$action->setTravelId($travel_id);
+        $action->setOffsetStart($json->offsetStart);
+        $action->setOffsetEnd($json->offsetEnd);
+        if (property_exists($json, 'car')) {
+            $action->setCar($json->car);
+        } else {
+            $action->setCar(false);
+        }
+        $action->setAirports($json->airports);
+        $action->setHotels($json->hotels);
+        $action->setSightseeings($json->sightseeings);
+        $action->setType($json->type);
+        return $action;
+	}
 
     /**
      * @param $id
@@ -200,7 +240,10 @@ class TravelController extends ApiController
             $travel->setDescription($json->getString('description'));
         }
         if ($json->has('content')) {
-            $travel->setContent($json->get('content'));
+            $actions = $this->createActions((array)$json->get('content'),$id);
+            $travel->setActions($actions);
+            $this->action_mapper->deleteTravelActions($id);
+            $this->action_mapper->insertActions($travel->getActions());
         }
         if ($json->has('image')) {
             $travel->setImage($json->get('image'));
@@ -222,6 +265,7 @@ class TravelController extends ApiController
 
         return [];
     }
+
 
     /**
      * @param      $id
@@ -264,7 +308,7 @@ class TravelController extends ApiController
             'id'          => $travel->getId(),
             'title'       => $travel->getTitle(),
             'description' => $travel->getDescription(),
-            'content'     => $travel->getContent(),
+            'content'     => count($travel->getActions())?$this->buildActionsView($travel->getActions()):$travel->getContent(),
             'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
             'category'    => $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null,
@@ -281,6 +325,38 @@ class TravelController extends ApiController
                 'picture'   => $author->getPicture(),
             ];
         }
+        return $view;
+    }
+
+   /**
+     * @param Action[] $actions
+     * @return array
+     */
+    private function buildActionsView(array $actions): array
+    {
+        $actionsJSON = array();
+        foreach ($actions as $action) {
+            $actionsJSON[] = $this->buildActionView($action);
+        }
+        return $actionsJSON;
+    }
+
+    /**
+     * @param Action $action
+     * @return array
+     */
+    private function buildActionView(Action $action): array
+    {
+        $view = [
+            'id'            => $action->getId(),
+            'offsetStart'   => $action->getOffsetStart(),
+            'offsetEnd'     => $action->getOffsetEnd(),
+            'car'           => $action->getCar(),
+            'airports'      => $action->getAirports(),
+            'hotels'        => $action->getHotels(),
+            'sightseeings'  => $action->getSightseeings(),
+            'type'          => $action->getType()
+        ];
         return $view;
     }
 

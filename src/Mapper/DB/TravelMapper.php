@@ -24,6 +24,11 @@ class TravelMapper extends AbstractPDOMapper
     private $category_mapper;
 
     /**
+     * @var ActionMapper
+     */
+    private $action_mapper;
+
+    /**
      * @param UserMapper $user_mapper
      */
     public function setUserMapper(UserMapper $user_mapper)
@@ -40,6 +45,14 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
+     * @param ActionMapper $action_mapper
+     */
+    public function setActionMapper($action_mapper)
+    {
+        $this->action_mapper = $action_mapper;
+    }
+
+    /**
      * @param int $id
      * @return Travel|null
      */
@@ -51,7 +64,9 @@ class TravelMapper extends AbstractPDOMapper
         if (empty($row)) {
             return null;
         }
-        return $this->build($row);
+        $travel = $this->build($row);
+        $travel->setActions($this->action_mapper->fetchActionsForTravel($id));
+        return $travel;
     }
 
     /**

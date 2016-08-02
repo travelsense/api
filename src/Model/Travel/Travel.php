@@ -4,6 +4,7 @@ namespace Api\Model\Travel;
 use Api\Model\AuthorTrait;
 use Api\Model\IdTrait;
 use Api\Model\TimestampTrait;
+// use Api\Model\Action;
 
 class Travel
 {
@@ -45,6 +46,11 @@ class Travel
      * @var string
      */
     private $creation_mode;
+
+    /**
+     * @var array
+     */
+    private $actions = [];
 
     /**
      * @return string
@@ -169,6 +175,24 @@ class Travel
     public function setCreationMode($creation_mode)
     {
         $this->creation_mode = $creation_mode;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActions()
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @param array $actions
+     * @return Travel
+     */
+    public function setActions($actions)
+    {
+        $this->actions = $actions;
         return $this;
     }
 }
