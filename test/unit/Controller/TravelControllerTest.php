@@ -73,7 +73,7 @@ class TravelControllerTest extends ControllerTestCase
     }
 
     /**
-     * getCategories
+     * getTravel
      */
     public function testGetTravel()
     {
