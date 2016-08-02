@@ -47,7 +47,7 @@ class TravelControllerTest extends ControllerTestCase
         $json = json_encode([
             'title' => 'test_travel',
             'description' => 'To make sure ids work properly',
-            'published'   => true,
+            'published'   => false,
             'image' => 'https://host.com/image.jpg',
             'content'     => ['foo' => 'bar'],
             'creation_mode' => 'Travel test mode'
@@ -66,7 +66,11 @@ class TravelControllerTest extends ControllerTestCase
         $this->travel_mapper->expects($this->once())
             ->method('insert')
             ->with($this->callback(function (Travel $travel) {
-                return $travel->getTitle() === 'test_travel';
+                return $travel->getTitle() === 'test_travel'
+                    && $travel->getDescription() === 'To make sure ids work properly'
+                    && $travel->isPublished() === false
+                    && $travel->getImage() === 'https://host.com/image.jpg'
+                    && $travel->getCreationMode() === 'Travel test mode';
             }));
 
         $this->assertEquals(['id' => $travel->getId()], $this->controller->createTravel($request, $user));

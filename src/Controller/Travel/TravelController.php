@@ -262,7 +262,6 @@ class TravelController extends ApiController
      */
     private function buildTravelView(Travel $travel, int $user_id = null): array
     {
-
         $author = $travel->getAuthor();
         $view = [
             'id'          => $travel->getId(),
