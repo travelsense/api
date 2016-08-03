@@ -68,7 +68,7 @@ class TravelController extends ApiController
         $this->travel_mapper->insert($travel);
         
         $actions = $this->createActions((array) $json->get('content'), $travel->getId());
-        $travel->setActions($actions)
+        $travel->setActions($actions);
         $this->action_mapper->insertActions($travel->getActions());
 
         if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
