@@ -49,14 +49,14 @@ class ActionMapper extends AbstractPDOMapper
     {
         $update = $this->pdo->prepare('
             UPDATE actions SET
-			travel_id = :travel_id, 
-			offset_start = :offset_start, 
-			offset_end = :offset_end, 
-			car = :car,
-			airports = :airports, 
-			hotels = :hotels,
-			sightseeings = :sightseeings,
-			type = :type
+            travel_id = :travel_id, 
+            offset_start = :offset_start, 
+            offset_end = :offset_end, 
+            car = :car,
+            airports = :airports, 
+            hotels = :hotels,
+            sightseeings = :sightseeings,
+            type = :type
             WHERE id = :id
         ');
         $this->bindCommonValues($update, $action);
@@ -116,7 +116,7 @@ class ActionMapper extends AbstractPDOMapper
         $select->execute(['travel_id' => $travel_id]);
         return $this->buildAll($select);
     }
-	
+    
     /**
      * @param int $travel_id
      */
@@ -126,7 +126,7 @@ class ActionMapper extends AbstractPDOMapper
             ->prepare("DELETE FROM actions WHERE travel_id = :travel_id")
             ->execute([':travel_id' => $travel_id]);
     }
-	
+    
     /**
      * Insert into DB, update id
      *
@@ -135,7 +135,7 @@ class ActionMapper extends AbstractPDOMapper
     public function insertActions(array $actions)
     {
         foreach ($actions as $action) {
-			$this->insert($action);
-		}
+            $this->insert($action);
+        }
     }
- }
+}

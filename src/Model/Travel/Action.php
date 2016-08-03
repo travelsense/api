@@ -46,7 +46,7 @@ class Action
      * @var string
      */
     private $type;
-	
+    
     /**
      * @return int
      */
@@ -154,7 +154,7 @@ class Action
         $this->hotels = $hotels;
         return $this;
     }
-	
+    
     /**
      * @return string
      */
@@ -172,7 +172,7 @@ class Action
         $this->sightseeings = $sightseeings;
         return $this;
     }
-	
+    
     /**
      * @return string
      */

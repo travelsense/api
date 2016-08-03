@@ -43,7 +43,7 @@ class TravelController extends ApiController
     {
         $this->travel_mapper = $travel_mapper;
         $this->category_mapper = $category_mapper;
-		$this->action_mapper = $action_mapper;
+        $this->action_mapper = $action_mapper;
     }
 
     /**
@@ -67,8 +67,8 @@ class TravelController extends ApiController
         }
         $this->travel_mapper->insert($travel);
         
-        $actions = $this->createActions( (array) $json->get('content'),$travel->getId());
-        $travel->setActions($actions);
+        $actions = $this->createActions((array) $json->get('content'), $travel->getId());
+        $travel->setActions($actions)
         $this->action_mapper->insertActions($travel->getActions());
 
         if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
@@ -94,11 +94,11 @@ class TravelController extends ApiController
         return $actions;
     }
 
-	public function createAction($json, int $travel_id): Action
+    public function createAction($json, int $travel_id): Action
     {
         // print_r($json);
-		$action = new Action();
-		$action->setTravelId($travel_id);
+        $action = new Action();
+        $action->setTravelId($travel_id);
         $action->setOffsetStart($json->offsetStart);
         $action->setOffsetEnd($json->offsetEnd);
         if (property_exists($json, 'car')) {
@@ -111,7 +111,7 @@ class TravelController extends ApiController
         $action->setSightseeings($json->sightseeings);
         $action->setType($json->type);
         return $action;
-	}
+    }
 
     /**
      * @param $id

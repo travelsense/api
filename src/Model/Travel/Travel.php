@@ -4,7 +4,6 @@ namespace Api\Model\Travel;
 use Api\Model\AuthorTrait;
 use Api\Model\IdTrait;
 use Api\Model\TimestampTrait;
-// use Api\Model\Action;
 
 class Travel
 {
