@@ -43,7 +43,7 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
     protected function buildTravel()
     {
         $travel = $this->getMockBuilder('Api\\Model\\Travel\\Travel')
-            ->setMethods(['getId', 'getTitle', 'getDescription', 'isPublished', 'getImage', 'getContent', 'getCreationMode'])
+            ->setMethods(['getId', 'getTitle', 'getDescription', 'isPublished', 'getImage', 'getContent', 'getCreationMode', 'getCreated', 'getAuthor'])
             ->getMock();
         $travel->method('getId')->willReturn(1);
         $travel->method('getTitle')->willReturn('test_travel');
@@ -52,7 +52,8 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
         $travel->method('getImage')->willReturn('https://host.com/image.jpg');
         $travel->method('getContent')->willReturn(['foo' => 'bar']);
         $travel->method('getCreationMode')->willReturn('Travel test mode');
-
+        $travel->method('getCreated')->willReturn(new DateTime('2000-01-01'));
+        $travel->method('getAuthor')->willReturn($this->buildUser());
         return $travel;
     }
 }

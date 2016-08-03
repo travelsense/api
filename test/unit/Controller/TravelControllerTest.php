@@ -4,6 +4,7 @@ namespace Api\Controller;
 use Api\Controller\Travel\TravelController;
 use Api\Model\Travel\Travel;
 use Api\Test\ControllerTestCase;
+use DateTime;
 
 class TravelControllerTest extends ControllerTestCase
 {
@@ -20,7 +21,7 @@ class TravelControllerTest extends ControllerTestCase
     public function setUp()
     {
         $this->travel_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\TravelMapper')
-            ->setMethods(['insert', 'fetchById', 'update', 'bindCommonValues'])
+            ->setMethods(['insert', 'fetchById', 'fetchByAuthorId', 'update', 'bindCommonValues'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -45,6 +46,7 @@ class TravelControllerTest extends ControllerTestCase
         $user = $this->buildUser();
 
         $json = json_encode([
+            'id' => 1,
             'title' => 'test_travel',
             'description' => 'To make sure ids work properly',
             'published'   => false,
@@ -81,11 +83,9 @@ class TravelControllerTest extends ControllerTestCase
      */
     public function testGetTravel()
     {
-        $this->travel_mapper->method('fetchById')
-            ->willReturn(
-                [$this->test_travel]
-            );
-
+        $this->travel_mapper->expects($this->any())
+            ->method('fetchById')
+            ->will($this->returnValue($this->test_travel));
         $this->assertEquals(
             [
                 'id' => 1,
@@ -94,9 +94,54 @@ class TravelControllerTest extends ControllerTestCase
                 'published'   => true,
                 'image' => 'https://host.com/image.jpg',
                 'content'     => ['foo' => 'bar'],
-                'creation_mode' => 'Travel test mode'
+                'creation_mode' => 'Travel test mode',
+                'created' => '2000-01-01T00:00:00+00:00',
+                'category' => null,
+                'category_ids' => [],
+                'is_favorited' => false,
+                'author' => [
+                    'id' => 1,
+                    'firstName' => 'User1',
+                    'lastName' => 'Tester',
+                    'picture' => 'http://example.com/user1.jpg'
+                ]
             ],
             $this->controller->getTravel(1)
+        );
+    }
+
+    /*
+     * getUserTravel
+     */
+    public function testGetUserTravel()
+    {
+        $user = $this->buildUser();
+
+        $this->travel_mapper->method('fetchByAuthorId')
+            ->willReturn(
+                [$this->test_travel]
+            );
+        $this->assertEquals(
+            [[
+                'id' => 1,
+                'title' => 'test_travel',
+                'description' => 'To make sure ids work properly',
+                'published'   => true,
+                'image' => 'https://host.com/image.jpg',
+                'content'     => ['foo' => 'bar'],
+                'creation_mode' => 'Travel test mode',
+                'created' => '2000-01-01T00:00:00+00:00',
+                'category' => null,
+                'category_ids' => [],
+                'is_favorited' => false,
+                'author' => [
+        'id' => 1,
+        'firstName' => 'User1',
+        'lastName' => 'Tester',
+        'picture' => 'http://example.com/user1.jpg'
+    ]
+            ]],
+            $this->controller->getUserTravels($user)
         );
     }
 }
