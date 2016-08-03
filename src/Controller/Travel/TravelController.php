@@ -96,20 +96,31 @@ class TravelController extends ApiController
 
     public function createAction($json, int $travel_id): Action
     {
-        // print_r($json);
         $action = new Action();
         $action->setTravelId($travel_id);
-        $action->setOffsetStart($json->offsetStart);
-        $action->setOffsetEnd($json->offsetEnd);
+        if($json->has('offsetStart')) {
+            $action->setOffsetStart($json->offsetStart);
+        }
+        if($json->has('offsetEnd')) {
+            $action->setOffsetEnd($json->offsetEnd);
+        }
         if (property_exists($json, 'car')) {
             $action->setCar($json->car);
         } else {
             $action->setCar(false);
         }
-        $action->setAirports($json->airports);
-        $action->setHotels($json->hotels);
-        $action->setSightseeings($json->sightseeings);
-        $action->setType($json->type);
+        if($json->has('airports')) {
+            $action->setAirports($json->airports);
+        }
+        if($json->has('hotels')) {
+            $action->setHotels($json->hotels);
+        }
+        if($json->has('sightseeings')) {
+            $action->setSightseeings($json->sightseeings);
+        }
+        if($json->has('type')) {
+            $action->setType($json->type);
+        }
         return $action;
     }
 
