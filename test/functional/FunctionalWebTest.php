@@ -152,7 +152,7 @@ class FunctionalWebTest extends FunctionalTestCase
     private function checkGetTravel(int $id)
     {
         $travel = $this->client->getTravel($id);
-        $author = $travel->author;
+        $author = $travel->getAuthor();
         $this->assertEquals('Hobbit', $travel->title);
         $this->assertEquals('There and back again', $travel->description);
         $this->assertEquals('https://host.com/image.jpg', $travel->image);
