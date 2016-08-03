@@ -98,10 +98,10 @@ class TravelController extends ApiController
     {
         $action = new Action();
         $action->setTravelId($travel_id);
-        if ($json->has('offsetStart')) {
+        if (property_exists($json, 'offsetStart')) {
             $action->setOffsetStart($json->offsetStart);
         }
-        if ($json->has('offsetEnd')) {
+        if (property_exists($json, 'offsetEnd')) {
             $action->setOffsetEnd($json->offsetEnd);
         }
         if (property_exists($json, 'car')) {
@@ -109,16 +109,16 @@ class TravelController extends ApiController
         } else {
             $action->setCar(false);
         }
-        if ($json->has('airports')) {
+        if (property_exists($json, 'airports')) {
             $action->setAirports($json->airports);
         }
-        if ($json->has('hotels')) {
+        if (property_exists($json, 'hotels')) {
             $action->setHotels($json->hotels);
         }
-        if ($json->has('sightseeings')) {
+        if (property_exists($json, 'sightseeings')) {
             $action->setSightseeings($json->sightseeings);
         }
-        if ($json->has('type')) {
+        if (property_exists($json, 'type')) {
             $action->setType($json->type);
         }
         return $action;
