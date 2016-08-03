@@ -240,7 +240,7 @@ class TravelController extends ApiController
             $travel->setDescription($json->getString('description'));
         }
         if ($json->has('content')) {
-            $actions = $this->createActions((array)$json->get('content'),$id);
+            $actions = $this->createActions((array)$json->get('content'), $id);
             $travel->setActions($actions);
             $this->action_mapper->deleteTravelActions($id);
             $this->action_mapper->insertActions($travel->getActions());
