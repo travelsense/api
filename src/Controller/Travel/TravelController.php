@@ -135,7 +135,7 @@ class TravelController extends ApiController
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        return $this->buildTravelView($travel, true);
+        return $this->buildTravelView($travel);
     }
 
     /**
