@@ -135,7 +135,7 @@ class TravelController extends ApiController
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        return $this->buildTravelView($travel);
+        return $this->buildTravelView($travel, true);
     }
 
     /**
@@ -220,6 +220,18 @@ class TravelController extends ApiController
         }
         $result['categories'] = $featured_categories;
         return $result;
+    }
+
+   /**
+     * @param int   $author_id
+     * @param int   $limit
+     * @param int   $offset
+     * @return array
+     */
+    public function getTravels(int $id, int $limit = 10, int $offset = 0): array
+    {
+        $travels = $this->travel_mapper->fetchByAuthorId($id, $limit, $offset);
+        return $this->buildTravelSetView($travels, true);
     }
 
     /**
@@ -312,23 +324,26 @@ class TravelController extends ApiController
      * @param Travel $travel
      * @return array
      */
-    private function buildTravelView(Travel $travel): array
-    {
-        $author = $travel->getAuthor();
-        $view = [
-            'id'          => $travel->getId(),
-            'title'       => $travel->getTitle(),
-            'description' => $travel->getDescription(),
-            'content'     => count($travel->getActions())?$this->buildActionsView($travel->getActions()):$travel->getContent(),
-            'image'       => $travel->getImage(),
-            'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'category'    => $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null,
-            'category_ids'    => $travel->getCategoryIds(),
-            'published'   => $travel->isPublished(),
-            'creation_mode' => $travel->getCreationMode(),
-        ];
+    private function buildTravelView(Travel $travel, bool $minimized = false): array
+    {   
+        $view = array();     
+        $view['id']            = $travel->getId();
+        $view['title']         = $travel->getTitle();
+        if (!$minimized) {
+            $view['description']   = $travel->getDescription();
+            $view['content']       = count($travel->getActions())?$this->buildActionsView($travel->getActions()):$travel->getContent();
+            $view['created']       = $travel->getCreated()->format(self::DATETIME_FORMAT);
+            $view['category']      = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
+            $view['category_ids']  = $travel->getCategoryIds();
+            $view['published']     = $travel->isPublished();
+            $view['creation_mode'] = $travel->getCreationMode();
+        }
+        $view['image']          = $travel->getImage();
+        $view['places_count']   = count($travel->getActions());
+        $view['days_count']     = $this->daysCount($travel);
 
-        if ($author) {
+        $author = $travel->getAuthor();
+        if ($author && !$minimized) {
             $view['author'] = [
                 'id'        => $author->getId(),
                 'firstName' => $author->getFirstName(),
@@ -337,6 +352,22 @@ class TravelController extends ApiController
             ];
         }
         return $view;
+    }
+
+    /**
+     * @param Travel $travel
+     * @return int
+     */
+    private function daysCount(Travel $travel): int
+    {
+        $offsetStart = 100;
+        $offsetEnd = 0;
+
+        foreach ($travel->getActions() as $action) {
+            $offsetStart = ($offsetStart > $action->getOffsetStart())?$action->getOffsetStart():$offsetStart;
+            $offsetEnd = ($offsetEnd < $action->getOffsetEnd())?$action->getOffsetEnd():$offsetEnd;
+        }
+        return $offsetEnd - $offsetStart;
     }
 
    /**
@@ -375,11 +406,11 @@ class TravelController extends ApiController
      * @param Travel[] $travels
      * @return array
      */
-    private function buildTravelSetView(array $travels): array
+    private function buildTravelSetView(array $travels, bool $minimized = false): array
     {
         $view = [];
         foreach ($travels as $travel) {
-            $view[] = $this->buildTravelView($travel);
+            $view[] = $this->buildTravelView($travel, $minimized);
         }
         return $view;
     }

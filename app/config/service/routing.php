@@ -22,6 +22,9 @@ $app->get('/user', 'controller.user:getUser');
 
 $app->put('/user', 'controller.user:updateUser');
 
+$app->get('/user/{id}/travels', 'controller.travel:getTravels')
+    ->convert('id', $to_int);
+
 $app->post('/email/confirm/{token}', 'controller.user:confirmEmail')
     ->bind('confirm-email');
 
