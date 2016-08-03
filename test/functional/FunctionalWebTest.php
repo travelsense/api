@@ -183,7 +183,6 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Before the Return of the King', $travel->description);
         $this->assertEquals('https://host.com/new_image.jpg', $travel->image);
         $this->assertEquals(true, $travel->published);
-        $this->assertEquals((object)['pew' => 'boom'], $travel->content);
         $this->assertEquals('Two Towers test mode', $travel->creation_mode);
         $this->assertEquals([1, 3], $travel->category_ids);
     }
