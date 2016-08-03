@@ -325,8 +325,8 @@ class TravelController extends ApiController
      * @return array
      */
     private function buildTravelView(Travel $travel, bool $minimized = false): array
-    {   
-        $view = array();     
+    {
+        $view = array();
         $view['id']            = $travel->getId();
         $view['title']         = $travel->getTitle();
         if (!$minimized) {
