@@ -135,11 +135,11 @@ class TravelControllerTest extends ControllerTestCase
                 'category_ids' => [],
                 'is_favorited' => false,
                 'author' => [
-        'id' => 1,
-        'firstName' => 'User1',
-        'lastName' => 'Tester',
-        'picture' => 'http://example.com/user1.jpg'
-    ]
+                    'id' => 1,
+                    'firstName' => 'User1',
+                    'lastName' => 'Tester',
+                    'picture' => 'http://example.com/user1.jpg'
+                ]
             ]],
             $this->controller->getUserTravels($user)
         );
