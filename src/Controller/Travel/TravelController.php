@@ -11,6 +11,7 @@ use Api\Mapper\DB\ActionMapper;
 use Api\Model\Travel\Travel;
 use Api\Model\Travel\Action;
 use Api\Model\User;
+use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -86,50 +87,50 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param DataObject[]  $actionObjects
-     * @param int           $travelId
-     * @return array
+     * @param DataObject[]  $action_objects
+     * @param int           $travel_id
+     * @return Action[]
      */
-    public function createActions(array $actionObjects, int $travelId): array
+    public function createActions(array $action_objects, int $travel_id): array
     {
         $actions = [];
-        foreach ($actionObjects as $action) {
-            $actions[] = $this->createAction($action, $travelId);
+        foreach ($action_objects as $action) {
+            $actions[] = $this->createAction(new DataObject($action), $travel_id);
         }
         return $actions;
     }
 
     /**
-     * @param array     $actionsJSON
-     * @param int       $travelId
-     * @return array
+     * @param DataObject    $object
+     * @param int           $travelId
+     * @return Action
      */
     public function createAction(DataObject $object, int $travelId): Action
     {
         $action = new Action();
         $action->setTravelId($travelId);
-        if (property_exists($object, 'offsetStart')) {
-            $action->setOffsetStart($object->offsetStart);
+        if ($object->has('offsetStart')) {
+            $action->setOffsetStart($object->get('offsetStart', 'integer'));
         }
-        if (property_exists($object, 'offsetEnd')) {
-            $action->setOffsetEnd($object->offsetEnd);
+        if ($object->has('offsetEnd')) {
+            $action->setOffsetEnd($object->get('offsetEnd', 'integer'));
         }
-        if (property_exists($object, 'car')) {
-            $action->setCar($object->car);
+        if ($object->has('car')) {
+            $action->setCar($object->get('car'));
         } else {
             $action->setCar(false);
         }
-        if (property_exists($object, 'airports')) {
-            $action->setAirports($object->airports);
+        if ($object->has('airports')) {
+            $action->setAirports($object->get('airports'));
         }
-        if (property_exists($object, 'hotels')) {
-            $action->setHotels($object->hotels);
+        if ($object->has('hotels')) {
+            $action->setHotels($object->get('hotels'));
         }
-        if (property_exists($object, 'sightseeings')) {
-            $action->setSightseeings($object->sightseeings);
+        if ($object->has('sightseeings')) {
+            $action->setSightseeings($object->get('sightseeings'));
         }
-        if (property_exists($object, 'type')) {
-            $action->setType($object->type);
+        if ($object->has('type')) {
+            $action->setType($object->get('type'));
         }
         return $action;
     }
