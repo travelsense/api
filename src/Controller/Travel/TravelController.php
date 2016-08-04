@@ -411,8 +411,8 @@ class TravelController extends ApiController
         $offsetEnd = 0;
 
         foreach ($travel->getActions() as $action) {
-            $offsetStart = ($offsetStart > $action->getOffsetStart()) ? $action->getOffsetStart() : $offsetStart;
-            $offsetEnd = ($offsetEnd < $action->getOffsetEnd()) ? $action->getOffsetEnd() : $offsetEnd;
+            $offsetStart = min($action->getOffsetStart(), $offsetStart);
+            $offsetEnd = max($action->getOffsetEnd(), $offsetEnd);
         }
         return $offsetEnd - $offsetStart;
     }
