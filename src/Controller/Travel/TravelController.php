@@ -429,37 +429,6 @@ class TravelController extends ApiController
         return $offsetEnd - $offsetStart;
     }
 
-   /**
-     * @param Action[] $actions
-     * @return array
-     */
-    private function buildActionsView(array $actions): array
-    {
-        $actions_json = [];
-        foreach ($actions as $action) {
-            $actions_json[] = $this->buildActionView($action);
-        }
-        return $actions_json;
-    }
-
-    /**
-     * @param Action $action
-     * @return array
-     */
-    private function buildActionView(Action $action): array
-    {
-        return [
-            'id'            => $action->getId(),
-            'offsetStart'   => $action->getOffsetStart(),
-            'offsetEnd'     => $action->getOffsetEnd(),
-            'car'           => $action->getCar(),
-            'airports'      => $action->getAirports(),
-            'hotels'        => $action->getHotels(),
-            'sightseeings'  => $action->getSightseeings(),
-            'type'          => $action->getType()
-        ];
-    }
-
     /**
      * @param Travel[] $travels
      * @return array
