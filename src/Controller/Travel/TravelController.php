@@ -8,7 +8,6 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
-use Api\Mapper\DB\ActionMapper;
 use Api\Model\Travel\Travel;
 use Api\Model\Travel\Action;
 use Api\Model\User;
