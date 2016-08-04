@@ -104,7 +104,6 @@ class AuthControllerTest extends ControllerTestCase
 
         $response = $this->controller->create($this->request);
         $this->assertEquals(["token" => "token1"], $response);
-
     }
 
     public function testCreateByEmail404()
@@ -122,7 +121,6 @@ class AuthControllerTest extends ControllerTestCase
             $this->assertEquals(ApiException::INVALID_EMAIL_PASSWORD, $e->getCode());
         }
     }
-
 
     public function testCreateByFacebookForExistingUser()
     {
