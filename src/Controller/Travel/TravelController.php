@@ -5,10 +5,13 @@ namespace Api\Controller\Travel;
 use Api\Controller\ApiController;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
+use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Model\Travel\Travel;
+use Api\Model\Travel\Action;
 use Api\Model\User;
+use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,15 +30,21 @@ class TravelController extends ApiController
     private $category_mapper;
 
     /**
+     * @var ActionMapper
+     */
+    private $action_mapper;
+
+    /**
      * TravelController constructor.
      *
      * @param TravelMapper   $travel_mapper
      * @param CategoryMapper $category_mapper
      */
-    public function __construct(TravelMapper $travel_mapper, CategoryMapper $category_mapper)
+    public function __construct(TravelMapper $travel_mapper, CategoryMapper $category_mapper, ActionMapper $action_mapper)
     {
         $this->travel_mapper = $travel_mapper;
         $this->category_mapper = $category_mapper;
+        $this->action_mapper = $action_mapper;
     }
 
     /**
@@ -51,7 +60,6 @@ class TravelController extends ApiController
         $travel->setAuthor($user);
         $travel->setTitle($json->getString('title'));
         $travel->setDescription($json->getString('description'));
-        $travel->setContent($json->get('content'));
         if ($json->has('image')) {
             $travel->setImage($json->get('image'));
         }
@@ -59,6 +67,11 @@ class TravelController extends ApiController
             $travel->setCreationMode($json->get('creation_mode'));
         }
         $this->travel_mapper->insert($travel);
+        
+        $actions = $this->createActions((array) $json->get('content'), $travel->getId());
+        $travel->setActions($actions);
+        $this->action_mapper->insertActions($travel->getActions());
+
         if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
             $ids = (array) $json->get('category_id');
             $this->category_mapper->setTravelCategories($travel->getId(), $ids);
@@ -71,6 +84,55 @@ class TravelController extends ApiController
         }
 
         return ['id' => $travel->getId()];
+    }
+
+    /**
+     * @param DataObject[]  $action_objects
+     * @param int           $travel_id
+     * @return Action[]
+     */
+    public function createActions(array $action_objects, int $travel_id): array
+    {
+        $actions = [];
+        foreach ($action_objects as $action) {
+            $actions[] = $this->createAction(new DataObject($action), $travel_id);
+        }
+        return $actions;
+    }
+
+    /**
+     * @param DataObject    $object
+     * @param int           $travelId
+     * @return Action
+     */
+    public function createAction(DataObject $object, int $travelId): Action
+    {
+        $action = new Action();
+        $action->setTravelId($travelId);
+        if ($object->has('offsetStart')) {
+            $action->setOffsetStart($object->get('offsetStart', 'integer'));
+        }
+        if ($object->has('offsetEnd')) {
+            $action->setOffsetEnd($object->get('offsetEnd', 'integer'));
+        }
+        if ($object->has('car')) {
+            $action->setCar($object->get('car'));
+        } else {
+            $action->setCar(false);
+        }
+        if ($object->has('airports')) {
+            $action->setAirports($object->get('airports'));
+        }
+        if ($object->has('hotels')) {
+            $action->setHotels($object->get('hotels'));
+        }
+        if ($object->has('sightseeings')) {
+            $action->setSightseeings($object->get('sightseeings'));
+        }
+        if ($object->has('type')) {
+            $action->setType($object->get('type'));
+        }
+        return $action;
     }
 
     /**
@@ -200,7 +262,10 @@ class TravelController extends ApiController
             $travel->setDescription($json->getString('description'));
         }
         if ($json->has('content')) {
-            $travel->setContent($json->get('content'));
+            $actions = $this->createActions((array) $json->get('content'), $id);
+            $travel->setActions($actions);
+            $this->action_mapper->deleteTravelActions($id);
+            $this->action_mapper->insertActions($travel->getActions());
         }
         if ($json->has('image')) {
             $travel->setImage($json->get('image'));
@@ -222,6 +287,7 @@ class TravelController extends ApiController
 
         return [];
     }
+
 
     /**
      * @param      $id
@@ -264,7 +330,7 @@ class TravelController extends ApiController
             'id'          => $travel->getId(),
             'title'       => $travel->getTitle(),
             'description' => $travel->getDescription(),
-            'content'     => $travel->getContent(),
+            'content'     => count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent(),
             'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
             'category'    => $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null,
@@ -282,6 +348,37 @@ class TravelController extends ApiController
             ];
         }
         return $view;
+    }
+
+   /**
+     * @param Action[] $actions
+     * @return array
+     */
+    private function buildActionsView(array $actions): array
+    {
+        $actions_json = [];
+        foreach ($actions as $action) {
+            $actions_json[] = $this->buildActionView($action);
+        }
+        return $actions_json;
+    }
+
+    /**
+     * @param Action $action
+     * @return array
+     */
+    private function buildActionView(Action $action): array
+    {
+        return [
+            'id'            => $action->getId(),
+            'offsetStart'   => $action->getOffsetStart(),
+            'offsetEnd'     => $action->getOffsetEnd(),
+            'car'           => $action->getCar(),
+            'airports'      => $action->getAirports(),
+            'hotels'        => $action->getHotels(),
+            'sightseeings'  => $action->getSightseeings(),
+            'type'          => $action->getType()
+        ];
     }
 
     /**
