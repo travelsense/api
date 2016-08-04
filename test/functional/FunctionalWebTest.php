@@ -25,15 +25,16 @@ class FunctionalWebTest extends FunctionalTestCase
     /**
      * @var array
      */
-    private $airportAction = array("action" => 0,
+    private $airportAction = array(
         "offsetStart" => 0,
         "hotels" => [],
-        "id" => "2981516807",
+        "id" => "2",
         "airports" => [],
-        "carRentals" => [],
         "offsetEnd" => 0,
         "type" => "flight",
-        "sightseeings" => []);
+        "sightseeings" => [],
+        "car" => false
+    );
     
     public function testUpdateUserDetails()
     {
