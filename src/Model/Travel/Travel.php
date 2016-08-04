@@ -200,7 +200,7 @@ class Travel
      */
     public function getDaysCount(): int
     {
-        $offsetStart = 100;
+        $offsetStart = PHP_INT_MAX;
         $offsetEnd = 0;
 
         foreach ($this->getActions() as $action) {
