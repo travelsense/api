@@ -87,7 +87,10 @@ $app['controller.wego'] = function ($app) {
 };
 
 $app['controller.health'] = function ($app) {
-    return new HealthCheckController($app['db.main.migrator']);
+    return new HealthCheckController(
+        $app['db.migrator.factory'],
+        array_keys($app['config']['db'])
+    );
 };
 
 $app['controller.iata'] = function ($app) {
