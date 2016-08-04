@@ -207,6 +207,6 @@ class Travel
             $offsetStart = min($action->getOffsetStart(), $offsetStart);
             $offsetEnd = max($action->getOffsetEnd(), $offsetEnd);
         }
-        return max($offsetEnd - $offsetStart,0);
+        return max($offsetEnd - $offsetStart, 0);
     }
 }
