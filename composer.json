@@ -6,6 +6,7 @@
     "php": "^7.0",
     "f3ath/simpleuber": "^1.0",
     "lazypdo/lazypdo": "^1.0",
+    "lazypdo/migrator": "^1.0",
     "facebook/php-sdk-v4" : "~5.0",
     "hackzilla/password-generator": "^1.1",
     "monolog/monolog": "^1.17",
@@ -20,7 +21,7 @@
   "require-dev": {
     "phpunit/phpunit": "^5.1",
     "sorien/silex-pimple-dumper": "~2.0",
-    "weew/php-http-server": "^1.0",
+    "weew/http-server": "^1.1",
     "squizlabs/php_codesniffer": "~2.5",
     "friendsofphp/php-cs-fixer": "^1.11"
   },
