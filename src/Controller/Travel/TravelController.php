@@ -82,7 +82,7 @@ class TravelController extends ApiController
         if ($json->has('published')) {
             $travel->setPublished($json->get('published'));
         }
-
+        1/0;
         return ['id' => $travel->getId()];
     }
 
