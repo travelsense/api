@@ -5,6 +5,7 @@ namespace Api\Controller\Travel;
 use Api\Controller\ApiController;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
+use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\ActionMapper;
@@ -342,7 +343,7 @@ class TravelController extends ApiController
         $view['title']         = $travel->getTitle();
         if (!$minimized) {
             $view['description']   = $travel->getDescription();
-            $view['content']       = count($travel->getActions())?$this->buildActionsView($travel->getActions()):$travel->getContent();
+            $view['content']       = count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent(),;
             $view['created']       = $travel->getCreated()->format(self::DATETIME_FORMAT);
             $view['category']      = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
             $view['category_ids']  = $travel->getCategoryIds();
@@ -366,6 +367,37 @@ class TravelController extends ApiController
             ];
         }
         return $view;
+    }
+
+   /**
+     * @param Action[] $actions
+     * @return array
+     */
+    private function buildActionsView(array $actions): array
+    {
+        $actions_json = [];
+        foreach ($actions as $action) {
+            $actions_json[] = $this->buildActionView($action);
+        }
+        return $actions_json;
+    }
+
+    /**
+     * @param Action $action
+     * @return array
+     */
+    private function buildActionView(Action $action): array
+    {
+        return [
+            'id'            => $action->getId(),
+            'offsetStart'   => $action->getOffsetStart(),
+            'offsetEnd'     => $action->getOffsetEnd(),
+            'car'           => $action->getCar(),
+            'airports'      => $action->getAirports(),
+            'hotels'        => $action->getHotels(),
+            'sightseeings'  => $action->getSightseeings(),
+            'type'          => $action->getType()
+        ];
     }
 
     /**
