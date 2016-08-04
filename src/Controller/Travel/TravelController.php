@@ -343,7 +343,7 @@ class TravelController extends ApiController
         $view['title']         = $travel->getTitle();
         if (!$minimized) {
             $view['description']   = $travel->getDescription();
-            $view['content']       = count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent(),;
+            $view['content']       = count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent();
             $view['created']       = $travel->getCreated()->format(self::DATETIME_FORMAT);
             $view['category']      = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
             $view['category_ids']  = $travel->getCategoryIds();
