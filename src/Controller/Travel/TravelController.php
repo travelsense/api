@@ -349,6 +349,9 @@ class TravelController extends ApiController
             $view['published']     = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
         }
+        if (count($travel->getContent())) {
+            $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
+        }
         $view['image']          = $travel->getImage();
         $view['places_count']   = count($travel->getActions());
         $view['days_count']     = $this->daysCount($travel);
@@ -363,6 +366,20 @@ class TravelController extends ApiController
             ];
         }
         return $view;
+    }
+
+    /**
+     * @param string $json_string
+     * @return DataObject[]
+     */
+    private function parseContentsString(string $json_string): array
+    {
+        $result_array = [];
+        $array = json_decode($json_string, true);
+        foreach ($array as $item) {
+            $result_array[] = new DataObject($item);
+        }
+        return $result_array;
     }
 
     /**
