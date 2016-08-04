@@ -33,7 +33,6 @@ class HealthCheckController extends ApiController
     {
         $db = [];
         foreach ($this->database_names as $name) {
-            $versions = [];
             list ($versions['min'], $versions['current'], $versions['max']) = $this->migrator_factory
                 ->getMigrator($name)
                 ->getVersionRange();
