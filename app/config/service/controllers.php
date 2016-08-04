@@ -55,7 +55,8 @@ $app['controller.auth'] = function ($app) {
 $app['controller.travel'] = function ($app) {
     $controller = new TravelController(
         $app['mapper.db.travel'],
-        $app['mapper.db.category']
+        $app['mapper.db.category'],
+        $app['mapper.db.action']
     );
     $controller->setLogger($app['monolog']);
     return $controller;

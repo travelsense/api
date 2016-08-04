@@ -21,6 +21,21 @@ class FunctionalWebTest extends FunctionalTestCase
      */
     private $pdo;
 
+
+    /**
+     * @var array
+     */
+    private $airportAction = array(
+        "offsetStart" => 0,
+        "hotels" => [],
+        "id" => 2,
+        "airports" => [],
+        "offsetEnd" => 0,
+        "type" => "flight",
+        "sightseeings" => [],
+        "car" => false
+    );
+    
     public function testUpdateUserDetails()
     {
         $this->createAndLoginUser();
@@ -58,7 +73,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'title'       => 'First Travel',
             'description' => 'To make sure ids work properly',
             'image'       => 'https://host.com/image.jpg',
-            'content'     => ['foo' => 'bar'],
+            'content'     => [$this->airportAction],
             'creation_mode' => 'First Travel test mode',
             'category_ids' => [1, 2],
         ]);
@@ -67,7 +82,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'title'       => 'Hobbit',
             'description' => 'There and back again',
             'image'       => 'https://host.com/image.jpg',
-            'content'     => ['foo' => 'bar'],
+            'content'     => [$this->airportAction],
             'creation_mode' => 'Hobbit test mode',
             'category_ids' => [1, 2],
         ]);
@@ -131,7 +146,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'title'       => 'First Travel',
             'description' => 'To make sure ids work properly',
             'image'       => 'https://host.com/image.jpg',
-            'content'     => ['foo' => 'bar'],
+            'content'     => [$this->airportAction],
             'creation_mode' => 'First Travel test mode',
             'category_ids' => [1, 2],
         ]);
@@ -160,7 +175,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Hobbit test mode', $travel->creation_mode);
 
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
-        $this->assertEquals((object)['foo' => 'bar'], $travel->content);
+        $this->assertEquals([(object) $this->airportAction], $travel->content);
         $this->assertEquals([1, 2], $travel->category_ids);
 
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
@@ -175,7 +190,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'description' => 'Before the Return of the King',
             'image'       => 'https://host.com/new_image.jpg',
             'published'   => true,
-            'content'     => ['pew' => 'boom'],
+            'content'     => [$this->airportAction],
             'creation_mode' => 'Two Towers test mode',
             'category_ids' => [1, 3],
         ]);
@@ -184,7 +199,6 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Before the Return of the King', $travel->description);
         $this->assertEquals('https://host.com/new_image.jpg', $travel->image);
         $this->assertEquals(true, $travel->published);
-        $this->assertEquals((object)['pew' => 'boom'], $travel->content);
         $this->assertEquals('Two Towers test mode', $travel->creation_mode);
         $this->assertEquals([1, 3], $travel->category_ids);
     }

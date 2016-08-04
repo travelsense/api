@@ -47,6 +47,11 @@ class Travel
     private $creation_mode;
 
     /**
+     * @var Action[]
+     */
+    private $actions = [];
+
+    /**
      * @return string
      */
     public function getDescription()
@@ -169,6 +174,24 @@ class Travel
     public function setCreationMode($creation_mode)
     {
         $this->creation_mode = $creation_mode;
+        return $this;
+    }
+
+    /**
+     * @return Action[]
+     */
+    public function getActions()
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @param Action[] $actions
+     * @return Travel
+     */
+    public function setActions(array $actions)
+    {
+        $this->actions = $actions;
         return $this;
     }
 }
