@@ -65,7 +65,6 @@ class TravelMapper extends AbstractPDOMapper
             return null;
         }
         $travel = $this->build($row);
-        $travel->setActions($this->action_mapper->fetchActionsForTravel($id));
         return $travel;
     }
 
@@ -292,6 +291,7 @@ class TravelMapper extends AbstractPDOMapper
     {
         list($travel, $author) = $this->createFromJoined($row, $this, $this->user_mapper);
         $travel->setAuthor($author);
+        $travel->setActions($this->action_mapper->fetchActionsForTravel($travel->getId()));
         return $travel;
     }
 
