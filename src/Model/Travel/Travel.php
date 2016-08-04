@@ -126,7 +126,7 @@ class Travel
     /**
      * @return string
      */
-    public function getImage() : string
+    public function getImage()
     {
         return $this->image;
     }
@@ -162,7 +162,7 @@ class Travel
     /**
      * @return string
      */
-    public function getCreationMode() : string
+    public function getCreationMode()
     {
         return $this->creation_mode;
     }
@@ -180,7 +180,7 @@ class Travel
     /**
      * @return Action[]
      */
-    public function getActions() : array
+    public function getActions()
     {
         return $this->actions;
     }
