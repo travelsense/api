@@ -6,8 +6,9 @@
 
 use Api\Application;
 use Api\ExpirableStorage;
-use Api\Migrator\Migrator;
 use LazyPDO\LazyPDO;
+use Migrator\VersionLog\DatabaseLog;
+use Migrator\VersionLog\DatabaseLogAdapter\Factory;
 
 $app['db.main.pdo'] = function (Application $app) {
     $main = $app['config']['db']['main'];
@@ -19,12 +20,15 @@ $app['db.main.pdo'] = function (Application $app) {
     );
 };
 
-$app['db.main.migrator'] = function (Application $app) {
-    $migrator = new Migrator($app['db.main.pdo'], 'main', $app['config']['migrations']);
-    $migrator->init();
-    return $migrator;
-};
-
 $app['storage.expirable_storage'] = function (Application $app) {
     return new ExpirableStorage($app['db.main.pdo']);
+};
+
+$app['db.migrator.factory'] = function (Application $app) {
+    return new \Api\Migrator\Factory($app);
+};
+$app['db.migrator.log'] = function (Application $app) {
+    return new DatabaseLog(
+        new Factory('__history')
+    );
 };

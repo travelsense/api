@@ -16,7 +16,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertEquals('baz', $app['config']['foo']['bar']);
-
     }
 
     public function testSecureConfig()
