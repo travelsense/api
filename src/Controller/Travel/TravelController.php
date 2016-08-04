@@ -365,7 +365,7 @@ class TravelController extends ApiController
         }
         $view['image']          = $travel->getImage();
         $view['places_count']   = count($travel->getActions());
-        $view['days_count']     = $this->daysCount($travel);
+        $view['days_count']     = $travel->getDaysCount();
 
         return $view;
     }
@@ -399,22 +399,6 @@ class TravelController extends ApiController
             'sightseeings'  => $action->getSightseeings(),
             'type'          => $action->getType()
         ];
-    }
-
-     /**
-     * @param Travel $travel
-     * @return int
-     */
-    private function daysCount(Travel $travel): int
-    {
-        $offsetStart = 100;
-        $offsetEnd = 0;
-
-        foreach ($travel->getActions() as $action) {
-            $offsetStart = min($action->getOffsetStart(), $offsetStart);
-            $offsetEnd = max($action->getOffsetEnd(), $offsetEnd);
-        }
-        return $offsetEnd - $offsetStart;
     }
 
     /**
