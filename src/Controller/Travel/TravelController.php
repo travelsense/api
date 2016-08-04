@@ -330,7 +330,7 @@ class TravelController extends ApiController
             'id'          => $travel->getId(),
             'title'       => $travel->getTitle(),
             'description' => $travel->getDescription(),
-            'content'     => count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent();
+            'content'     => count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent(),
             'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
             'category'    => $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null,
