@@ -227,6 +227,7 @@ class TravelController extends ApiController
             $featured_categories[] = [
                 'title'   => $name,
                 'travels' => $this->buildTravelSetView($travels),
+                'category' => $name,
             ];
         }
         $result['categories'] = $featured_categories;
@@ -239,9 +240,9 @@ class TravelController extends ApiController
      * @param int   $offset
      * @return array
      */
-    public function getTravels(int $id, int $limit = 10, int $offset = 0): array
+    public function getTravels(int $author_id, int $limit = 10, int $offset = 0): array
     {
-        $travels = $this->travel_mapper->fetchByAuthorId($id, $limit, $offset);
+        $travels = $this->travel_mapper->fetchByAuthorId($author_id, $limit, $offset);
         return $this->buildTravelSetView($travels, true);
     }
 
@@ -337,7 +338,7 @@ class TravelController extends ApiController
      */
     private function buildTravelView(Travel $travel, bool $minimized = false): array
     {
-        $view = array();
+        $view = [];
         $view['id']            = $travel->getId();
         $view['title']         = $travel->getTitle();
         if (!$minimized) {
@@ -348,6 +349,16 @@ class TravelController extends ApiController
             $view['category_ids']  = $travel->getCategoryIds();
             $view['published']     = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
+
+            $author = $travel->getAuthor();
+            if ($author) {
+                $view['author'] = [
+                    'id'        => $author->getId(),
+                    'firstName' => $author->getFirstName(),
+                    'lastName'  => $author->getLastName(),
+                    'picture'   => $author->getPicture()
+                ];
+            }
         }
         if (count($travel->getContent())) {
             $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
@@ -356,15 +367,6 @@ class TravelController extends ApiController
         $view['places_count']   = count($travel->getActions());
         $view['days_count']     = $this->daysCount($travel);
 
-        $author = $travel->getAuthor();
-        if ($author && !$minimized) {
-            $view['author'] = [
-                'id'        => $author->getId(),
-                'firstName' => $author->getFirstName(),
-                'lastName'  => $author->getLastName(),
-                'picture'   => $author->getPicture(),
-            ];
-        }
         return $view;
     }
 
@@ -399,21 +401,7 @@ class TravelController extends ApiController
         ];
     }
 
-    /**
-     * @param string $json_string
-     * @return DataObject[]
-     */
-    private function parseContentsString(string $json_string): array
-    {
-        $result_array = [];
-        $array = json_decode($json_string, true);
-        foreach ($array as $item) {
-            $result_array[] = new DataObject($item);
-        }
-        return $result_array;
-    }
-
-    /**
+     /**
      * @param Travel $travel
      * @return int
      */
