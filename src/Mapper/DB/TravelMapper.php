@@ -39,7 +39,7 @@ class TravelMapper extends AbstractPDOMapper
     /**
      * @param CategoryMapper $category_mapper
      */
-    public function setCategoryMapper($category_mapper)
+    public function setCategoryMapper(CategoryMapper $category_mapper)
     {
         $this->category_mapper = $category_mapper;
     }
@@ -47,7 +47,7 @@ class TravelMapper extends AbstractPDOMapper
     /**
      * @param ActionMapper $action_mapper
      */
-    public function setActionMapper($action_mapper)
+    public function setActionMapper(ActionMapper $action_mapper)
     {
         $this->action_mapper = $action_mapper;
     }

@@ -21,6 +21,20 @@ class FunctionalWebTest extends FunctionalTestCase
      */
     private $pdo;
 
+
+    /**
+     * @var array
+     */
+    private $airportAction = array("action" => 0,
+        "offsetStart" => 0,
+        "hotels" => [],
+        "id" => "2981516807",
+        "airports" => [],
+        "carRentals" => [],
+        "offsetEnd" => 0,
+        "type" => "flight",
+        "sightseeings" => []);
+    
     public function testUpdateUserDetails()
     {
         $this->createAndLoginUser();
@@ -58,7 +72,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'title'       => 'First Travel',
             'description' => 'To make sure ids work properly',
             'image'       => 'https://host.com/image.jpg',
-            'content'     => ['foo' => 'bar'],
+            'content'     => [$this->airportAction],
             'creation_mode' => 'First Travel test mode',
             'category_ids' => [1, 2],
         ]);
@@ -67,7 +81,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'title'       => 'Hobbit',
             'description' => 'There and back again',
             'image'       => 'https://host.com/image.jpg',
-            'content'     => ['foo' => 'bar'],
+            'content'     => [$this->airportAction],
             'creation_mode' => 'Hobbit test mode',
             'category_ids' => [1, 2],
         ]);
@@ -131,7 +145,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'title'       => 'First Travel',
             'description' => 'To make sure ids work properly',
             'image'       => 'https://host.com/image.jpg',
-            'content'     => ['foo' => 'bar'],
+            'content'     => [$this->airportAction],
             'creation_mode' => 'First Travel test mode',
             'category_ids' => [1, 2],
         ]);
@@ -160,6 +174,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Hobbit test mode', $travel->creation_mode);
 
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
+        $this->assertEquals($this->airportAction, $travel->content);
         $this->assertEquals([1, 2], $travel->category_ids);
 
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {

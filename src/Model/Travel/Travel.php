@@ -47,7 +47,7 @@ class Travel
     private $creation_mode;
 
     /**
-     * @var array
+     * @var Action[]
      */
     private $actions = [];
 
@@ -126,7 +126,7 @@ class Travel
     /**
      * @return string
      */
-    public function getImage()
+    public function getImage() : string
     {
         return $this->image;
     }
@@ -162,7 +162,7 @@ class Travel
     /**
      * @return string
      */
-    public function getCreationMode()
+    public function getCreationMode() : string
     {
         return $this->creation_mode;
     }
@@ -178,18 +178,18 @@ class Travel
     }
 
     /**
-     * @return array
+     * @return Action[]
      */
-    public function getActions()
+    public function getActions() : array
     {
         return $this->actions;
     }
 
     /**
-     * @param array $actions
+     * @param Action[] $actions
      * @return Travel
      */
-    public function setActions($actions)
+    public function setActions(array $actions)
     {
         $this->actions = $actions;
         return $this;

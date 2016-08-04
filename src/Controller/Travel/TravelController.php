@@ -85,41 +85,51 @@ class TravelController extends ApiController
         return ['id' => $travel->getId()];
     }
 
-    public function createActions(array $actionsJSON, int $travel_id): array
+    /**
+     * @param DataObject[]  $actionObjects
+     * @param int           $travelId
+     * @return array
+     */
+    public function createActions(array $actionObjects, int $travelId): array
     {
-        $actions = array();
-        foreach ($actionsJSON as $action) {
-            $actions[] = $this->createAction($action, $travel_id);
+        $actions = [];
+        foreach ($actionObjects as $action) {
+            $actions[] = $this->createAction($action, $travelId);
         }
         return $actions;
     }
 
-    public function createAction($json, int $travel_id): Action
+    /**
+     * @param array     $actionsJSON
+     * @param int       $travelId
+     * @return array
+     */
+    public function createAction(DataObject $object, int $travelId): Action
     {
         $action = new Action();
-        $action->setTravelId($travel_id);
-        if (property_exists($json, 'offsetStart')) {
-            $action->setOffsetStart($json->offsetStart);
+        $action->setTravelId($travelId);
+        if (property_exists($object, 'offsetStart')) {
+            $action->setOffsetStart($object->offsetStart);
         }
-        if (property_exists($json, 'offsetEnd')) {
-            $action->setOffsetEnd($json->offsetEnd);
+        if (property_exists($object, 'offsetEnd')) {
+            $action->setOffsetEnd($object->offsetEnd);
         }
-        if (property_exists($json, 'car')) {
-            $action->setCar($json->car);
+        if (property_exists($object, 'car')) {
+            $action->setCar($object->car);
         } else {
             $action->setCar(false);
         }
-        if (property_exists($json, 'airports')) {
-            $action->setAirports($json->airports);
+        if (property_exists($object, 'airports')) {
+            $action->setAirports($object->airports);
         }
-        if (property_exists($json, 'hotels')) {
-            $action->setHotels($json->hotels);
+        if (property_exists($object, 'hotels')) {
+            $action->setHotels($object->hotels);
         }
-        if (property_exists($json, 'sightseeings')) {
-            $action->setSightseeings($json->sightseeings);
+        if (property_exists($object, 'sightseeings')) {
+            $action->setSightseeings($object->sightseeings);
         }
-        if (property_exists($json, 'type')) {
-            $action->setType($json->type);
+        if (property_exists($object, 'type')) {
+            $action->setType($object->type);
         }
         return $action;
     }
@@ -251,7 +261,7 @@ class TravelController extends ApiController
             $travel->setDescription($json->getString('description'));
         }
         if ($json->has('content')) {
-            $actions = $this->createActions((array)$json->get('content'), $id);
+            $actions = $this->createActions((array) $json->get('content'), $id);
             $travel->setActions($actions);
             $this->action_mapper->deleteTravelActions($id);
             $this->action_mapper->insertActions($travel->getActions());
@@ -345,11 +355,11 @@ class TravelController extends ApiController
      */
     private function buildActionsView(array $actions): array
     {
-        $actionsJSON = array();
+        $actions_json = [];
         foreach ($actions as $action) {
-            $actionsJSON[] = $this->buildActionView($action);
+            $actions_json[] = $this->buildActionView($action);
         }
-        return $actionsJSON;
+        return $actions_json;
     }
 
     /**
@@ -358,7 +368,7 @@ class TravelController extends ApiController
      */
     private function buildActionView(Action $action): array
     {
-        $view = [
+        return [
             'id'            => $action->getId(),
             'offsetStart'   => $action->getOffsetStart(),
             'offsetEnd'     => $action->getOffsetEnd(),
@@ -368,7 +378,6 @@ class TravelController extends ApiController
             'sightseeings'  => $action->getSightseeings(),
             'type'          => $action->getType()
         ];
-        return $view;
     }
 
     /**

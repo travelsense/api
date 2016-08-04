@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS actions
   offset_start INTEGER,
   offset_end INTEGER,
   car BOOLEAN,
-  airports TEXT,
-  hotels TEXT,
-  sightseeings TEXT,
+  airports JSON,
+  hotels JSON,
+  sightseeings JSON,
   type TEXT
 );
