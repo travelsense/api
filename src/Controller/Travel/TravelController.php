@@ -227,10 +227,23 @@ class TravelController extends ApiController
             $featured_categories[] = [
                 'title'   => $name,
                 'travels' => $this->buildTravelSetView($travels),
+                'category' => $name,
             ];
         }
         $result['categories'] = $featured_categories;
         return $result;
+    }
+
+   /**
+     * @param int   $author_id
+     * @param int   $limit
+     * @param int   $offset
+     * @return array
+     */
+    public function getTravels(int $author_id, int $limit = 10, int $offset = 0): array
+    {
+        $travels = $this->travel_mapper->fetchByAuthorId($author_id, $limit, $offset);
+        return $this->buildTravelSetView($travels, true);
     }
 
     /**
@@ -323,30 +336,37 @@ class TravelController extends ApiController
      * @param Travel $travel
      * @return array
      */
-    private function buildTravelView(Travel $travel): array
+    private function buildTravelView(Travel $travel, bool $minimized = false): array
     {
-        $author = $travel->getAuthor();
-        $view = [
-            'id'          => $travel->getId(),
-            'title'       => $travel->getTitle(),
-            'description' => $travel->getDescription(),
-            'content'     => count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent(),
-            'image'       => $travel->getImage(),
-            'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
-            'category'    => $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null,
-            'category_ids'    => $travel->getCategoryIds(),
-            'published'   => $travel->isPublished(),
-            'creation_mode' => $travel->getCreationMode(),
-        ];
+        $view = [];
+        $view['id']            = $travel->getId();
+        $view['title']         = $travel->getTitle();
+        if (!$minimized) {
+            $view['description']   = $travel->getDescription();
+            $view['content']       = count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent();
+            $view['created']       = $travel->getCreated()->format(self::DATETIME_FORMAT);
+            $view['category']      = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
+            $view['category_ids']  = $travel->getCategoryIds();
+            $view['published']     = $travel->isPublished();
+            $view['creation_mode'] = $travel->getCreationMode();
 
-        if ($author) {
-            $view['author'] = [
-                'id'        => $author->getId(),
-                'firstName' => $author->getFirstName(),
-                'lastName'  => $author->getLastName(),
-                'picture'   => $author->getPicture(),
-            ];
+            $author = $travel->getAuthor();
+            if ($author) {
+                $view['author'] = [
+                    'id'        => $author->getId(),
+                    'firstName' => $author->getFirstName(),
+                    'lastName'  => $author->getLastName(),
+                    'picture'   => $author->getPicture()
+                ];
+            }
         }
+        if (count($travel->getContent())) {
+            $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
+        }
+        $view['image']          = $travel->getImage();
+        $view['places_count']   = count($travel->getActions());
+        $view['days_count']     = $travel->getDaysCount();
+
         return $view;
     }
 
@@ -385,11 +405,11 @@ class TravelController extends ApiController
      * @param Travel[] $travels
      * @return array
      */
-    private function buildTravelSetView(array $travels): array
+    private function buildTravelSetView(array $travels, bool $minimized = false): array
     {
         $view = [];
         foreach ($travels as $travel) {
-            $view[] = $this->buildTravelView($travel);
+            $view[] = $this->buildTravelView($travel, $minimized);
         }
         return $view;
     }

@@ -194,4 +194,19 @@ class Travel
         $this->actions = $actions;
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getDaysCount(): int
+    {
+        $offsetStart = PHP_INT_MAX;
+        $offsetEnd = 0;
+
+        foreach ($this->getActions() as $action) {
+            $offsetStart = min($action->getOffsetStart(), $offsetStart);
+            $offsetEnd = max($action->getOffsetEnd(), $offsetEnd);
+        }
+        return max($offsetEnd - $offsetStart, 0);
+    }
 }

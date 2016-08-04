@@ -59,6 +59,7 @@ class Action
      * @param int $travel_id
      * @return Action
      */
+
     public function setTravelId(int $travel_id)
     {
         $this->travel_id = $travel_id;
