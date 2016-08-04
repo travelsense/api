@@ -28,7 +28,7 @@ class FunctionalWebTest extends FunctionalTestCase
     private $airportAction = array(
         "offsetStart" => 0,
         "hotels" => [],
-        "id" => "2",
+        "id" => 2,
         "airports" => [],
         "offsetEnd" => 0,
         "type" => "flight",
@@ -190,7 +190,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'description' => 'Before the Return of the King',
             'image'       => 'https://host.com/new_image.jpg',
             'published'   => true,
-            'content'     => ['pew' => 'boom'],
+            'content'     => [$this->airportAction],
             'creation_mode' => 'Two Towers test mode',
             'category_ids' => [1, 3],
         ]);
