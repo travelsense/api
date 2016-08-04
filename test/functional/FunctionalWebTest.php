@@ -174,7 +174,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Hobbit test mode', $travel->creation_mode);
 
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
-        $this->assertEquals($this->airportAction, $travel->content);
+        $this->assertEquals([$this->airportAction], $travel->content);
         $this->assertEquals([1, 2], $travel->category_ids);
 
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
