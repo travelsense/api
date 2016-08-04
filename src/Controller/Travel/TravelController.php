@@ -5,9 +5,9 @@ namespace Api\Controller\Travel;
 use Api\Controller\ApiController;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
+use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
-use Api\Mapper\DB\ActionMapper;
 use Api\Model\Travel\Travel;
 use Api\Model\Travel\Action;
 use Api\Model\User;
@@ -330,7 +330,7 @@ class TravelController extends ApiController
             'id'          => $travel->getId(),
             'title'       => $travel->getTitle(),
             'description' => $travel->getDescription(),
-            'content'     => count($travel->getActions())?$this->buildActionsView($travel->getActions()):$travel->getContent(),
+            'content'     => count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent();
             'image'       => $travel->getImage(),
             'created'     => $travel->getCreated()->format(self::DATETIME_FORMAT),
             'category'    => $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null,
