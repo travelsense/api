@@ -98,9 +98,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
     public function testGetString()
     {
         $data = new DataObject((object)['foo' => 'barx']);
-
         $this->assertEquals('barx', $data->getString('foo', '/x/'));
-
     }
 
     /**

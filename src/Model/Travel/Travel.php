@@ -47,7 +47,7 @@ class Travel
     private $creation_mode;
 
     /**
-     * @var array
+     * @var Action[]
      */
     private $actions = [];
 
@@ -178,7 +178,7 @@ class Travel
     }
 
     /**
-     * @return array
+     * @return Action[]
      */
     public function getActions()
     {
@@ -186,10 +186,10 @@ class Travel
     }
 
     /**
-     * @param array $actions
+     * @param Action[] $actions
      * @return Travel
      */
-    public function setActions($actions)
+    public function setActions(array $actions)
     {
         $this->actions = $actions;
         return $this;

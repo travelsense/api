@@ -61,6 +61,5 @@ $app['mapper.db.booking'] = function ($app) {
 };
 
 $app['mapper.db.action'] = function ($app) {
-    $mapper = new ActionMapper($app['db.main.pdo']);
-    return $mapper;
+    return new ActionMapper($app['db.main.pdo']);
 };

@@ -134,8 +134,14 @@ class ActionMapper extends AbstractPDOMapper
      */
     public function insertActions(array $actions)
     {
-        foreach ($actions as $action) {
-            $this->insert($action);
+        try {
+            $this->pdo->beginTransaction();
+            foreach ($actions as $action) {
+                $this->insert($action);
+            }
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
         }
     }
 }
