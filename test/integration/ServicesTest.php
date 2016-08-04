@@ -13,6 +13,7 @@ class ServicesTest extends PHPUnit_Framework_TestCase
             ['controller.travel'],
             ['controller.uber'],
             ['controller.wego'],
+            ['controller.health'],
         ];
     }
 
