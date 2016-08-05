@@ -37,11 +37,6 @@ class UserController extends ApiController
     private $validator;
 
     /**
-     * @var string
-     */
-    private $validate_user_schema;
-
-    /**
      * UserController constructor.
      *
      * @param UserMapper       $user_mapper

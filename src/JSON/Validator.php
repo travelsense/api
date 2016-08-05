@@ -11,7 +11,6 @@ use stdClass;
 
 class Validator
 {
-
     /**
      * @var JsonSchemaValidator $validator
      */
@@ -32,6 +31,7 @@ class Validator
      *
      * @param JsonSchemaValidator $validator
      * @param string $schema_path
+     * @param RefResolver $ref_resolver
      */
     public function __construct(JsonSchemaValidator $validator, string $schema_path, RefResolver $ref_resolver)
     {
@@ -42,23 +42,33 @@ class Validator
 
     /**
      * @param stdClass $json
-     * @return bool
+     * @param stdClass $schema
+     * @return void
      * @throws ApiException
      */
-    public function validateUser(stdClass $json)
+    private function validate(stdClass $json, stdClass $schema)
     {
-        $schema = $this->ref_resolver->resolve('file://'. realpath(__DIR__ . $this->schema_path. 'validate_user_schema.json'));
         $this->validator->check($json, $schema);
-        if (!$this->validator->isValid()) {
-            $message = "JSON does not validate. Violations:\n";
+        if ($this->validator->isValid()) {
+            return;
+        } else {
+            $message = "Invalid JSON:\n";
             foreach ($this->validator->getErrors() as $error) {
-                $message = $message . sprintf("[%s] %s\n", $error['property'], $error['message']);
+                $message .= sprintf("[%s] %s\n", $error['property'], $error['message']);
             }
             throw new ApiException(
                 $message,
                 ApiException::VALIDATION
             );
         }
-
+    }
+    
+    /**
+     * @param stdClass $json
+     */
+    public function validateUser(stdClass $json)
+    {
+        $schema = $this->ref_resolver->resolve('file://'.realpath(__DIR__.$this->schema_path. 'validate_user_schema.json'));
+        $this->validate($json, $schema);
     }
 }

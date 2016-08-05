@@ -35,7 +35,7 @@ class DataObject
      */
     public static function createFromString(string $json): self
     {
-            return new self(json_decode($json));
+        return new self(json_decode($json));
     }
 
     /**
@@ -110,7 +110,6 @@ class DataObject
     /**
      * Get boolean
      * @param string          $property
-     * @param string|callable $constraint
      * @return bool
      * @throws ApiException
      */

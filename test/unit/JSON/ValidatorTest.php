@@ -48,7 +48,7 @@ class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Api\Exception\ApiException
-     * @expectedExceptionMessage JSON does not validate. Violations:
+     * @expectedExceptionMessage Invalid JSON:
     [email] The property email is required
     [password] The property password is required
     [firstName] The property firstName is required

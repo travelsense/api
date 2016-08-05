@@ -10,22 +10,22 @@ use JsonSchema\Validator as JsonSchemaValidator;
 use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
 
-$app['json_schema_validator'] = function ($app) {
+$app['validator.json_schema_validator'] = function ($app) {
     return new JsonSchemaValidator();
 };
 
-$app['ref_uri_resolver'] = function ($app) {
+$app['validator.ref_uri_resolver'] = function ($app) {
     return new UriResolver();
 };
 
-$app['ref_uri_retriever'] = function ($app) {
+$app['validator.ref_uri_retriever'] = function ($app) {
     return new UriRetriever();
 };
 
-$app['ref_ref_resolver'] = function ($app) {
-    return new RefResolver($app['ref_uri_retriever'], $app['ref_uri_resolver']);
+$app['validator.ref_ref_resolver'] = function ($app) {
+    return new RefResolver($app['validator.ref_uri_retriever'], $app['validator.ref_uri_resolver']);
 };
 
-$app['validator'] = function ($app) {
-    return new Validator($app['json_schema_validator'], $app['config']['schema_path'], $app['ref_ref_resolver']);
+$app['validator.validator'] = function ($app) {
+    return new Validator($app['validator.json_schema_validator'], $app['config']['schema_path'], $app['validator.ref_ref_resolver']);
 };
