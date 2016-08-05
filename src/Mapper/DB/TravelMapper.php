@@ -122,6 +122,28 @@ class TravelMapper extends AbstractPDOMapper
             ->prepare("DELETE FROM travels WHERE id = :id")
             ->execute([':id' => $id]);
     }
+    /**
+     * @param int $user_id
+     * @return mixed
+     */
+    public function fetchFavoriteIds(int $user_id): array
+    {
+        $select = $this->pdo->prepare('
+            SELECT travel_id FROM  favorite_travels
+            WHERE user_id = :user_id
+            ');
+        $select->execute([
+            ':user_id' => $user_id,
+        ]);
+        $rows = $select->fetchAll(PDO::FETCH_NUM);
+        if (empty($rows)) {
+            return null;
+        }
+        foreach ($rows as $row) {
+            $ids [$row[0]] = $row[0];
+        }
+        return $ids;
+    }
 
     /**
      * @param int $travel_id
