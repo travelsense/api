@@ -63,29 +63,29 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getPositiveTestData
-     * @param $json
-     * @param $property
-     * @param $type
-     * @param $constraint
-     * @param $result
+     * @param array $json
+     * @param string $property
+     * @param string|array $type
+     * @param mixed $constraint
+     * @param mixed $result
      */
-    public function testGetWithPositive($json, $property, $type, $constraint, $result)
+    public function testGetWithPositive(array $json, string $property, $type, $constraint, $result)
     {
-        $data = new DataObject((object)$json);
+        $data = new DataObject((object) $json);
         $this->assertEquals($result, $data->get($property, $type, $constraint));
     }
 
     /**
      * @dataProvider getNegativeTestData
-     * @param $json
-     * @param $property
-     * @param $type
+     * @param array $json
+     * @param string $property
+     * @param string|array $type
      * @param $constraint
      * @param $exception
      */
-    public function testGetWithException($json, $property, $type, $constraint, $exception)
+    public function testGetWithException(array $json, string $property, $type, $constraint, $exception)
     {
-        $data = new DataObject((object)$json);
+        $data = new DataObject((object) $json);
         try {
             $data->get($property, $type, $constraint);
             $this->fail('Exception expected');
@@ -97,7 +97,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 
     public function testGetString()
     {
-        $data = new DataObject((object)['foo' => 'barx']);
+        $data = new DataObject((object) ['foo' => 'barx']);
         $this->assertEquals('barx', $data->getString('foo', '/x/'));
     }
 
@@ -107,13 +107,20 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
      */
     public function testGetArrayOfException()
     {
-        $data = new DataObject((object)['a' => ['b' => 'c']]);
+        $data = new DataObject((object) ['a' => ['b' => 'c']]);
         $data->getArrayOf('boolean', 'a');
     }
 
     public function testGetArrayOfHappyPath()
     {
-        $data = new DataObject((object)['a' => ['b' => 'c']]);
+        $data = new DataObject((object) ['a' => ['b' => 'c']]);
         $this->assertEquals(['b' => 'c'], $data->getArrayOf('string', 'a'));
+    }
+
+    public function testNullValue()
+    {
+        $data = new DataObject((object) ['a' => null]);
+        $this->assertTrue($data->has('a'));
+        $this->assertNull($data->get('a'));
     }
 }
