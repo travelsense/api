@@ -64,7 +64,7 @@ class DataObject
      */
     public function get(string $property, $types = null, $constraint = null)
     {
-        if (false === isset($this->data->$property)) {
+        if (false === $this->has($property)) {
             $this->throwException(sprintf('Property does not exist: %s', $property));
         }
 
