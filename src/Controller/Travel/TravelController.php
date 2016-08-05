@@ -355,13 +355,6 @@ class TravelController extends ApiController
             $view['published']     = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
 
-            if ($user_id !== null) {
-                $far = $this->travel_mapper->fetchFavoriteIds($user_id);
-                $view['is_favorited'] = array_key_exists($travel->getId(), $far);
-            } else {
-                $view['is_favorited'] = false;
-            }
-
             $author = $travel->getAuthor();
             if ($author) {
                 $view['author'] = [
@@ -371,6 +364,12 @@ class TravelController extends ApiController
                     'picture'   => $author->getPicture()
                 ];
             }
+        }
+        if ($user_id !== null) {
+            $far = $this->travel_mapper->fetchFavoriteIds($user_id);
+            $view['is_favorited'] = array_key_exists($travel->getId(), $far);
+        } else {
+            $view['is_favorited'] = false;
         }
         if (count($travel->getContent())) {
             $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
