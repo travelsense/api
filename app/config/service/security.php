@@ -4,6 +4,7 @@
  */
 
 use Api\Exception\ApiException;
+use Api\Security\Access\AccessManager;
 use Api\Security\AuthenticationEvent;
 use Api\Security\Credentials;
 use Api\Security\SessionManager;
@@ -17,6 +18,12 @@ $app['security.credentials'] = function () {
 
 $app['security.session_manager'] = function ($app) {
     return new SessionManager($app['mapper.db.sessions']);
+};
+
+$app['security.access_manager'] = function ($app) {
+    return new AccessManager(
+        $app['mapper.db.user_role']
+    );
 };
 
 $app->on(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {

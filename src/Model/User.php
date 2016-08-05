@@ -1,7 +1,9 @@
 <?php
 namespace Api\Model;
 
-class User
+use Api\Security\Access\ActorInterface;
+
+class User implements ActorInterface
 {
     use IdTrait;
     use TimestampTrait;
@@ -154,7 +156,7 @@ class User
     /**
      * @return bool
      */
-    public function isCreator() : bool
+    public function isCreator(): bool
     {
         return $this->creator;
     }

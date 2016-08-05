@@ -11,6 +11,7 @@ use Api\Mapper\DB\TravelMapper;
 use Api\Model\Travel\Travel;
 use Api\Model\Travel\Action;
 use Api\Model\User;
+use Api\Security\Access\AccessManager;
 use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,16 +36,27 @@ class TravelController extends ApiController
     private $action_mapper;
 
     /**
+     * @var AccessManager
+     */
+    private $access_manager;
+
+    /**
      * TravelController constructor.
-     *
      * @param TravelMapper   $travel_mapper
      * @param CategoryMapper $category_mapper
+     * @param ActionMapper   $action_mapper
+     * @param AccessManager  $access_manager
      */
-    public function __construct(TravelMapper $travel_mapper, CategoryMapper $category_mapper, ActionMapper $action_mapper)
-    {
+    public function __construct(
+        TravelMapper $travel_mapper,
+        CategoryMapper $category_mapper,
+        ActionMapper $action_mapper,
+        AccessManager $access_manager
+    ) {
         $this->travel_mapper = $travel_mapper;
         $this->category_mapper = $category_mapper;
         $this->action_mapper = $action_mapper;
+        $this->access_manager = $access_manager;
     }
 
     /**
@@ -304,7 +316,7 @@ class TravelController extends ApiController
 
 
     /**
-     * @param      $id
+     * @param int $id
      * @param User $user
      * @return array
      */
@@ -335,6 +347,7 @@ class TravelController extends ApiController
 
     /**
      * @param Travel $travel
+     * @param bool   $minimized
      * @return array
      */
     private function buildTravelView(Travel $travel, bool $minimized = false): array
@@ -373,7 +386,7 @@ class TravelController extends ApiController
 
    /**
      * @param Action[] $actions
-     * @return array
+     * @return array[]
      */
     private function buildActionsView(array $actions): array
     {
@@ -404,6 +417,7 @@ class TravelController extends ApiController
 
     /**
      * @param Travel[] $travels
+     * @param bool     $minimized
      * @return array
      */
     private function buildTravelSetView(array $travels, bool $minimized = false): array

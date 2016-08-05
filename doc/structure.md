@@ -44,3 +44,9 @@ Mappers is the layer responsible for CRUD operations on models. The storage-spec
 
 ## Controllers and routing
 Refer to [Silex routing documentation](http://silex.sensiolabs.org/doc/master/usage.html) to get the general idea. The routing is configured in [routing.php](../app/config/service/routing.php). The route parameters and HTTP GET parameters are passed to controller methods as arguments.
+
+## Access Rights Management
+
+See [Access](../src/Security/Access).
+Actors (ActorInterface) can perform Actions (Action) on Subjects (Subject). 
+The Access Manager (Manager) decides if a certain action is permitted.
