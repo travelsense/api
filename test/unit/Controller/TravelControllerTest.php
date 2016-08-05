@@ -66,7 +66,7 @@ class TravelControllerTest extends ControllerTestCase
                 'id' => 1,
                 'title' => 'test_travel',
                 'description' => 'To make sure ids work properly',
-                'content'     => [$this->airportAction],
+                'content'     => $this->airportAction,
                 'created' => '2000-01-01T00:00:00+00:00',
                 'category' => null,
                 'category_ids' => [],
@@ -80,8 +80,8 @@ class TravelControllerTest extends ControllerTestCase
                 ],
                 'is_favorited' => false,
                 'image' => 'https://host.com/image.jpg',
-                'places_count' => null,
-                'days_count' => null
+                'places_count' => 8,
+                'days_count' => 0
             ],
             $this->controller->getTravel(1)
         );
