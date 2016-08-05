@@ -135,12 +135,10 @@ class TravelMapper extends AbstractPDOMapper
         $select->execute([
             ':user_id' => $user_id,
         ]);
-        $rows = $select->fetchAll(PDO::FETCH_NUM);
-        if (empty($rows)) {
-            return null;
-        }
-        foreach ($rows as $row) {
-            $ids [$row[0]] = $row[0];
+
+        $ids = [];
+        while (false !== $id = $select->fetchColumn()) {
+            $ids[$id] = $id;
         }
         return $ids;
     }
