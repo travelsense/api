@@ -39,6 +39,7 @@ class TravelController extends ApiController
      *
      * @param TravelMapper   $travel_mapper
      * @param CategoryMapper $category_mapper
+     * @param ActionMapper $action_mapper
      */
     public function __construct(TravelMapper $travel_mapper, CategoryMapper $category_mapper, ActionMapper $action_mapper)
     {
@@ -147,7 +148,7 @@ class TravelController extends ApiController
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        return $this->buildTravelView($travel, false, $user->getId());
+        return $this->buildTravelView($travel, false, $user ? $user->getId() : null);
     }
 
     /**
@@ -180,7 +181,7 @@ class TravelController extends ApiController
      */
     public function removeFavorite(int $id, User $user): array
     {
-        $this->travel_mapper->removeFavorite($id, $user->getId());
+        $this->travel_mapper->removeFavorite($id, $user ? $user->getId() : null);
         return [];
     }
 
@@ -245,7 +246,7 @@ class TravelController extends ApiController
     public function getTravels(int $author_id, User $user = null, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travel_mapper->fetchByAuthorId($author_id, $limit, $offset);
-        return $this->buildTravelSetView($travels, true, $user->getId());
+        return $this->buildTravelSetView($travels, true, $user ? $user->getId() : null);
     }
 
     /**
