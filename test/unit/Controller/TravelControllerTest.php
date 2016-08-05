@@ -86,4 +86,25 @@ class TravelControllerTest extends ControllerTestCase
             $this->controller->getTravel(1)
         );
     }
+
+    /**
+     * getTravels
+     */
+    public function testGetTravels()
+    {
+        $this->travel_mapper->expects($this->once())
+            ->method('fetchByAuthorId')
+            ->willReturn([$this->test_travel]);
+        $this->assertEquals(
+            [[
+                'id' => 1,
+                'title' => 'test_travel',
+                'is_favorited' => false,
+                'image' => 'https://host.com/image.jpg',
+                'places_count' => 8,
+                'days_count' => 0
+            ]],
+            $this->controller->getTravels(1)
+        );
+    }
 }
