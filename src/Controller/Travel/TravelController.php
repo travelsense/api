@@ -181,7 +181,7 @@ class TravelController extends ApiController
      */
     public function removeFavorite(int $id, User $user): array
     {
-        $this->travel_mapper->removeFavorite($id, $user ? $user->getId() : null);
+        $this->travel_mapper->removeFavorite($id, $user->getId());
         return [];
     }
 
@@ -259,7 +259,7 @@ class TravelController extends ApiController
     public function getTravelsByCategory(string $name, User $user = null, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travel_mapper->fetchByCategory($name, $limit, $offset);
-        return $this->buildTravelSetView($travels, false, $user->getId());
+        return $this->buildTravelSetView($travels, false, $user ? $user->getId() : null);
     }
 
     /**
@@ -367,8 +367,8 @@ class TravelController extends ApiController
             }
         }
         if ($user_id !== null) {
-            $far = $this->travel_mapper->fetchFavoriteIds($user_id);
-            $view['is_favorited'] = array_key_exists($travel->getId(), $far);
+            $favorite = $this->travel_mapper->fetchFavoriteIds($user_id);
+            $view['is_favorited'] = array_key_exists($travel->getId(), $favorite);
         } else {
             $view['is_favorited'] = false;
         }

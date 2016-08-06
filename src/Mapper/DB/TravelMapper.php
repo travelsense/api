@@ -124,7 +124,7 @@ class TravelMapper extends AbstractPDOMapper
     }
     /**
      * @param int $user_id
-     * @return mixed
+     * @return int[]
      */
     public function fetchFavoriteIds(int $user_id): array
     {

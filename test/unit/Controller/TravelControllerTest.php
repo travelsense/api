@@ -3,6 +3,7 @@ namespace Api\Controller;
 
 use Api\Controller\Travel\TravelController;
 use Api\Test\ControllerTestCase;
+use DateTime;
 
 class TravelControllerTest extends ControllerTestCase
 {
@@ -106,5 +107,34 @@ class TravelControllerTest extends ControllerTestCase
             ]],
             $this->controller->getTravels(1)
         );
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function buildTravel()
+    {
+        $travel = $this->getMockBuilder('Api\\Model\\Travel\\Travel')
+            ->setMethods(['getId', 'getTitle', 'getDescription', 'isPublished', 'getImage', 'getContent', 'getCreationMode', 'getCreated', 'getAuthor'])
+            ->getMock();
+        $travel->method('getId')->willReturn(1);
+        $travel->method('getTitle')->willReturn('test_travel');
+        $travel->method('getDescription')->willReturn('To make sure ids work properly');
+        $travel->method('isPublished')->willReturn(true);
+        $travel->method('getImage')->willReturn('https://host.com/image.jpg');
+        $travel->method('getContent')->willReturn([
+            "offsetStart" => 0,
+            "hotels" => [],
+            "id" => 2,
+            "airports" => [],
+            "offsetEnd" => 0,
+            "type" => "flight",
+            "sightseeings" => [],
+            "car" => false
+        ]);
+        $travel->method('getCreationMode')->willReturn('Travel test mode');
+        $travel->method('getCreated')->willReturn(new DateTime('2000-01-01'));
+        $travel->method('getAuthor')->willReturn($this->buildUser());
+        return $travel;
     }
 }
