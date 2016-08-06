@@ -70,27 +70,46 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
+     * @param int  $author_id
+     * @param int  $limit
+     * @param int  $offset
+     * @param bool $is_published
+     * @return Travel[]
+     */
+    public function fetchByAuthorId(int $author_id, int $limit, int $offset, bool $is_published = null): array
+    {
+        $select = $this->pdo->prepare(
+            'SELECT t.*, u.* FROM travels t '
+            . 'JOIN users u ON t.author_id = u.id '
+            . 'WHERE t.author_id = :userId AND NOT deleted '
+            . ($is_published !== null ? 'AND is_published = :is_published ' : '')
+            . 'ORDER BY t.id DESC '
+            . 'LIMIT :limit OFFSET :offset'
+        );
+
+        $params = [
+            'userId'  => $author_id,
+            ':limit'  => $limit,
+            ':offset' => $offset,
+        ];
+        if ($is_published !== null) {
+            $params['is_published'] = $is_published;
+        }
+        $select->execute($params);
+        return $this->buildAll($select);
+    }
+
+    /**
+     * Fetch published travels of the given author
      * @param int $author_id
      * @param int $limit
      * @param int $offset
      * @return Travel[]
      */
-    public function fetchByAuthorId(int $author_id, int $limit, int $offset): array
+    public function fetchPublishedByAuthorId(int $author_id, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare('
-            SELECT t.*, u.* FROM travels t 
-            JOIN users u ON t.author_id = u.id 
-            WHERE t.author_id = :userId AND NOT deleted
-            ORDER BY t.id DESC
-            LIMIT :limit OFFSET :offset
-        ');
-
-        $select->execute([
-            'userId'  => $author_id,
-            ':limit'  => $limit,
-            ':offset' => $offset,
-        ]);
-        return $this->buildAll($select);
+        $is_published = true;
+        return $this->fetchByAuthorId($author_id, $limit, $offset, $is_published);
     }
 
     /**
