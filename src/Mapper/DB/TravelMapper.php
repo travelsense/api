@@ -181,7 +181,7 @@ class TravelMapper extends AbstractPDOMapper
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
             JOIN users u ON u.id = t.author_id
-            WHERE c.name = :name
+            WHERE c.name = :name AND t.is_published
             LIMIT :limit OFFSET :offset
         ');
         $select->execute([
