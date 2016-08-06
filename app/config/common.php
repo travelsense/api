@@ -42,7 +42,6 @@ return [
             'iata-by-code',
             'reset-password',
             'send-password-reset-link',
-            'travel-by-author',
             'travel-by-category',
             'travel-by-id',
             'travel-category',
