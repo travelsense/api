@@ -68,7 +68,7 @@ class Validator
      */
     public function validateUser(stdClass $json)
     {
-        $schema = $this->ref_resolver->resolve('file://'.realpath(__DIR__.$this->schema_path. 'validate_user_schema.json'));
+        $schema = $this->ref_resolver->resolve('file://'.realpath($this->schema_path. 'validate_user_schema.json'));
         $this->validate($json, $schema);
     }
 }

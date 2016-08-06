@@ -45,7 +45,7 @@ class UserControllerTest extends ControllerTestCase
         
         $this->json_schema_validator = new \JsonSchema\Validator();
 
-        $this->schema_path = '/../../app/json-schema/';
+        $this->schema_path = __DIR__.'/../../../app/json-schema/';
 
         $this->ref_resolver = new \JsonSchema\RefResolver(new \JsonSchema\Uri\UriRetriever(), new \JsonSchema\Uri\UriResolver());
 

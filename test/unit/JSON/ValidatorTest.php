@@ -22,7 +22,7 @@ class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
     {
         $this->validator = new \JsonSchema\Validator();
 
-        $this->path_to_schema_folder = '/../../app/json-schema/';
+        $this->path_to_schema_folder = __DIR__.'/../../../app/json-schema/';
 
         $ref_resolver = new \JsonSchema\RefResolver(new \JsonSchema\Uri\UriRetriever(), new \JsonSchema\Uri\UriResolver());
         
