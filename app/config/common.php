@@ -79,5 +79,5 @@ return [
     'booking' => [
         'reward_point_price' => 0.1, // 10 cents
     ],
-    'schema_path' =>__DIR__.'/../../app/json-schema/',
+    'schema_path' =>__DIR__ . '/../../app/json-schema/',
 ];

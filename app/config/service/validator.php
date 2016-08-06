@@ -10,15 +10,15 @@ use JsonSchema\Validator as JsonSchemaValidator;
 use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
 
-$app['validator.json_schema_validator'] = function ($app) {
+$app['validator.json_schema_validator'] = function () {
     return new JsonSchemaValidator();
 };
 
-$app['validator.ref_uri_resolver'] = function ($app) {
+$app['validator.ref_uri_resolver'] = function () {
     return new UriResolver();
 };
 
-$app['validator.ref_uri_retriever'] = function ($app) {
+$app['validator.ref_uri_retriever'] = function () {
     return new UriRetriever();
 };
 

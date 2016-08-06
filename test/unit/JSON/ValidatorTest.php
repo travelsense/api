@@ -2,13 +2,9 @@
 
 namespace Api\JSON;
 
-use Api\Exception\ApiException;
 use PHPUnit_Framework_TestCase;
-use JsonSchema\RefResolver;
-use JsonSchema\Uri\UriResolver;
-use JsonSchema\Uri\UriRetriever;
 
-class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
+class ValidatorTest extends PHPUnit_Framework_TestCase
 {
 
     private $validator;
@@ -17,44 +13,74 @@ class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
 
     private $json_schema_validator;
 
+    private $ref_resolver;
+
+    private $schema_object;
+
 
     public function setUp()
     {
         $this->validator = new \JsonSchema\Validator();
-
-        $this->path_to_schema_folder = __DIR__.'/../../../app/json-schema/';
-
-        $ref_resolver = new \JsonSchema\RefResolver(new \JsonSchema\Uri\UriRetriever(), new \JsonSchema\Uri\UriResolver());
-        
-        $this->json_schema_validator = new \Api\JSON\Validator($this->validator, $this->path_to_schema_folder, $ref_resolver);
+        $this->path_to_schema_folder = __DIR__ . '/../../../app/json-schema/';
+        $this->ref_resolver = $this->getMockBuilder('\\JsonSchema\\RefResolver')->disableOriginalConstructor()->setMethods(['resolve'])->getMock();
+        $this->json_schema_validator = new \Api\JSON\Validator($this->validator, $this->path_to_schema_folder, $this->ref_resolver);
+        $schema = [
+            "id" => "http =>//json-schema.org/draft-04/schema#",
+            "comment" => "Schema for user validation during registration",
+            "type" => "object",
+            "properties" => [
+                "email" => [
+                    "format" => "email"
+                ],
+                "picture" => [
+                    "format" => "uri"
+                ],
+                "firstName" => [
+                    "type" => "string",
+                    "minLength" => 1,
+                    "maxLength" => 128,
+                    "pattern" => "^[a-zA-Z0-9_-]+$"
+                ],
+                "lastName" => [
+                    "type" => "string",
+                    "minLength" => 1,
+                    "maxLength" => 128,
+                    "pattern" => "^[a-zA-Z0-9_-]+$"
+                ],
+                "creator" => [
+                    "type" => "boolean"
+                ],
+                "password" => [
+                    "type" => "string",
+                    "minLength" => 4,
+                    "maxLength" => 256
+                ]
+            ],
+            "required" => ["email", "password", "firstName", "lastName"],
+            "additionalProperties" => false
+        ];
+        $this->schema_object = (object)$schema;
     }
 
     public function testValidateUser()
     {
         $json = [
             "email" => "email_example@site-name.domain-name",
-                "password" => "abc123$%^",
-                "firstName" => "John",
-                "lastName" => "Doe",
-                "picture" => "some-protocol://site_example.com/file_name.some_extension"
+            "password" => "abc123$%^",
+            "firstName" => "John",
+            "lastName" => "Doe",
+            "picture" => "some-protocol://site_example.com/file_name.some_extension"
         ];
-        
+
         $json_object = (object) $json;
+        $this->ref_resolver->method('resolve')
+            ->with('file://' . realpath($this->path_to_schema_folder . 'validate_user_schema.json'))
+            ->willReturn($this->schema_object);
 
         $this->json_schema_validator->validateUser($json_object);
-
         $this->assertTrue(!$this->validator->getErrors());
     }
 
-    /**
-     * @expectedException \Api\Exception\ApiException
-     * @expectedExceptionMessage Invalid JSON:
-    [email] The property email is required
-    [password] The property password is required
-    [firstName] The property firstName is required
-    [lastName] The property lastName is required
-    [] The property something_wrong_properties is not defined and the definition does not allow additional properties
-     */
     public function testValidateUserException()
     {
         $json = [
@@ -63,6 +89,16 @@ class JsonSchemaValidatorTest extends PHPUnit_Framework_TestCase
 
         $json_object = (object) $json;
 
-        $this->json_schema_validator->validateUser($json_object);
+        $message = "Invalid JSON:\n[email] The property email is required\n[password] The property password is required\n[firstName] The property firstName is required\n[lastName] The property lastName is required\n[] The property something_wrong_properties is not defined and the definition does not allow additional properties\n";
+
+        $this->ref_resolver->method('resolve')
+            ->with('file://' . realpath($this->path_to_schema_folder . 'validate_user_schema.json'))
+            ->willReturn($this->schema_object);
+
+        try {
+            $this->json_schema_validator->validateUser($json_object);
+        } catch (\Api\Exception\ApiException $e) {
+            $this->assertEquals($message, $e->getMessage());
+        }
     }
 }

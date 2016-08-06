@@ -5,8 +5,6 @@ namespace Api\JSON;
 use Api\Exception\ApiException;
 use JsonSchema\RefResolver;
 use JsonSchema\Validator as JsonSchemaValidator;
-use JsonSchema\Uri\UriResolver;
-use JsonSchema\Uri\UriRetriever;
 use stdClass;
 
 class Validator
@@ -68,7 +66,7 @@ class Validator
      */
     public function validateUser(stdClass $json)
     {
-        $schema = $this->ref_resolver->resolve('file://'.realpath($this->schema_path. 'validate_user_schema.json'));
+        $schema = $this->ref_resolver->resolve('file://' . realpath($this->schema_path . 'validate_user_schema.json'));
         $this->validate($json, $schema);
     }
 }
