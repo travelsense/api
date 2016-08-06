@@ -272,7 +272,8 @@ class MappersTest extends \PHPUnit_Framework_TestCase
             ->setAuthor($author)
             ->setContent($token)
             ->setTitle($token)
-            ->setDescription($token);
+            ->setDescription($token)
+            ->setPublished(true);
         return $travel;
     }
     
