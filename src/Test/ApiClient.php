@@ -332,7 +332,11 @@ class ApiClient
         }
         $error = @json_decode($response->getBody());
         if (!empty($error)) {
-            throw new ApiClientException($error->error, $error->code);
+            $message = $error->error;
+            if(FunctionalTestCase::INTERNAL_SERVER_ERROR == $error->error) {
+                $message .= FunctionalTestCase::tailServerLog();
+            }
+            throw new ApiClientException($message, $error->code);
         }
         $message = "HTTP ERROR {$response->getCode()}\n"
             . implode("\n", $response->getHeaders())

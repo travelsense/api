@@ -13,9 +13,13 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $client;
     
+    const SERVER_LOG            = '/tmp/php-server.log';
+    const TAIL_NUM_LINES        = 10;
+    const INTERNAL_SERVER_ERROR = 'Internal Server Error';
+
     public static function setUpBeforeClass()
     {
-        self::startServer('/tmp/php-server.log');
+        self::startServer(self::SERVER_LOG);
     }
 
     public static function tearDownAfterClass()
@@ -51,5 +55,19 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
         ]);
         $token = $this->client->getTokenByEmail($email, $password);
         $this->client->setAuthToken($token);
+    }
+
+    /**
+     * Tail server log file defined in SERVER_LOG
+     * @param int $nun_lines
+     * @return string
+     */
+    public static function tailServerLog(int $nun_lines = self::TAIL_NUM_LINES)
+    {
+        $output = "";
+        if(file_exists(self::SERVER_LOG)) {
+            $output .= "\n" . shell_exec('exec tail -n' . $nun_lines . ' ' . self::SERVER_LOG);
+        }
+        return $output;
     }
 }
