@@ -97,6 +97,7 @@ class ValidatorTest extends PHPUnit_Framework_TestCase
 
         try {
             $this->json_schema_validator->validateUser($json_object);
+            $this->fail('No exception thrown');
         } catch (\Api\Exception\ApiException $e) {
             $this->assertEquals($message, $e->getMessage());
         }
