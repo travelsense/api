@@ -96,7 +96,7 @@ class TravelController extends ApiController
     {
         $actions = [];
         foreach ($action_objects as $action) {
-            $actions[] = $this->createAction(new DataObject((object)$action), $travel_id);
+            $actions[] = $this->createAction(new DataObject($action), $travel_id);
         }
         return $actions;
     }

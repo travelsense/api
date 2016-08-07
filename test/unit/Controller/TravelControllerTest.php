@@ -18,20 +18,6 @@ class TravelControllerTest extends ControllerTestCase
 
     private $test_travel;
 
-    /**
-     * @var array
-     */
-    private $airportAction = array(
-        "offsetStart" => 0,
-        "hotels" => [],
-        "id" => 2,
-        "airports" => [],
-        "offsetEnd" => 0,
-        "type" => "flight",
-        "sightseeings" => [],
-        "car" => false
-    );
-
     public function setUp()
     {
         $this->travel_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\TravelMapper')
@@ -67,7 +53,7 @@ class TravelControllerTest extends ControllerTestCase
                 'id' => 1,
                 'title' => 'test_travel',
                 'description' => 'To make sure ids work properly',
-                'content'     => $this->airportAction,
+                'content'     => null,
                 'created' => '2000-01-01T00:00:00+00:00',
                 'category' => null,
                 'category_ids' => [],
@@ -81,7 +67,7 @@ class TravelControllerTest extends ControllerTestCase
                 ],
                 'is_favorited' => false,
                 'image' => 'https://host.com/image.jpg',
-                'places_count' => 8,
+                'places_count' => 0,
                 'days_count' => 0
             ],
             $this->controller->getTravel(1)
@@ -91,10 +77,10 @@ class TravelControllerTest extends ControllerTestCase
     /**
      * getTravels
      */
-    public function testGetTravels()
+    public function testGetfetchPublishedTravelsByAuthorId()
     {
         $this->travel_mapper->expects($this->once())
-            ->method('fetchByAuthorId')
+            ->method('fetchByAuthorId', 'fetchPublishedByAuthorId')
             ->willReturn([$this->test_travel]);
         $this->assertEquals(
             [[
@@ -102,10 +88,10 @@ class TravelControllerTest extends ControllerTestCase
                 'title' => 'test_travel',
                 'is_favorited' => false,
                 'image' => 'https://host.com/image.jpg',
-                'places_count' => 8,
+                'places_count' => 0,
                 'days_count' => 0
             ]],
-            $this->controller->getTravels(1)
+            $this->controller->getPublishedByAuthor(1)
         );
     }
 
@@ -122,16 +108,7 @@ class TravelControllerTest extends ControllerTestCase
         $travel->method('getDescription')->willReturn('To make sure ids work properly');
         $travel->method('isPublished')->willReturn(true);
         $travel->method('getImage')->willReturn('https://host.com/image.jpg');
-        $travel->method('getContent')->willReturn([
-            "offsetStart" => 0,
-            "hotels" => [],
-            "id" => 2,
-            "airports" => [],
-            "offsetEnd" => 0,
-            "type" => "flight",
-            "sightseeings" => [],
-            "car" => false
-        ]);
+        $travel->method('getContent')->willReturn(null);
         $travel->method('getCreationMode')->willReturn('Travel test mode');
         $travel->method('getCreated')->willReturn(new DateTime('2000-01-01'));
         $travel->method('getAuthor')->willReturn($this->buildUser());
