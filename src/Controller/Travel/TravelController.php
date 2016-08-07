@@ -157,7 +157,7 @@ class TravelController extends ApiController
      * @param int  $offset
      * @return array
      */
-    public function getUserTravels(User $user, int $limit = 10, int $offset = 0): array
+    public function getMyTravels(User $user, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travel_mapper->fetchByAuthorId($user->getId(), $limit, $offset);
         return $this->buildTravelSetView($travels);
@@ -243,10 +243,11 @@ class TravelController extends ApiController
      * @param int   $offset
      * @return array
      */
-    public function getTravels(int $author_id, User $user = null, int $limit = 10, int $offset = 0): array
+    public function getPublishedByAuthor(int $author_id, User $user = null, int $limit = 10, int $offset = 0): array
     {
-        $travels = $this->travel_mapper->fetchByAuthorId($author_id, $limit, $offset);
-        return $this->buildTravelSetView($travels, true, $user ? $user->getId() : null);
+        $travels = $this->travel_mapper->fetchPublishedByAuthorId($author_id, $limit, $offset);
+        $minimized = true;
+        return $this->buildTravelSetView($travels, $minimized, $user ? $user->getId() : null);
     }
 
     /**
@@ -258,7 +259,7 @@ class TravelController extends ApiController
      */
     public function getTravelsByCategory(string $name, User $user = null, int $limit = 10, int $offset = 0): array
     {
-        $travels = $this->travel_mapper->fetchByCategory($name, $limit, $offset);
+        $travels = $this->travel_mapper->fetchPublishedByCategory($name, $limit, $offset);
         return $this->buildTravelSetView($travels, false, $user ? $user->getId() : null);
     }
 
