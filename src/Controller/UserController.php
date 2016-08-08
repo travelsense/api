@@ -59,6 +59,7 @@ class UserController extends ApiController
             'picture'   => $user->getPicture(),
             'firstName' => $user->getFirstName(),
             'lastName'  => $user->getLastName(),
+            'creator'   => $user->isCreator(),
             'created'   => $user->getCreated()->format(self::DATETIME_FORMAT),
         ];
     }
