@@ -1,7 +1,9 @@
 <?php
 namespace Api;
 
+use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
+use Api\Security\SessionManager;
 use Symfony\Component\HttpFoundation\Request;
 
 class ApplicationTest extends \PHPUnit_Framework_TestCase
@@ -44,14 +46,14 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testArgumentResolve()
     {
         $user = new User();
-        $sec_manager = $this->getMockBuilder('Api\\Security\\SessionManager')
+        $sec_manager = $this->getMockBuilder(SessionManager::class)
             ->disableOriginalConstructor()
             ->getMock();
         $sec_manager->method('getUserId')
             ->with('xxx')
             ->willReturn(42);
 
-        $user_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
+        $user_mapper = $this->getMockBuilder(UserMapper::class)
             ->disableOriginalConstructor()
             ->getMock();
 

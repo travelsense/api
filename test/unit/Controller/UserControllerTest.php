@@ -2,8 +2,12 @@
 namespace Api\Controller;
 
 use Api\Exception\ApiException;
+use Api\ExpirableStorage;
+use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
+use Api\Service\Mailer\MailerService;
 use Api\Test\ControllerTestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class UserControllerTest extends ControllerTestCase
 {
@@ -20,17 +24,17 @@ class UserControllerTest extends ControllerTestCase
 
     public function setUp()
     {
-        $this->user_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
+        $this->user_mapper = $this->getMockBuilder(UserMapper::class)
             ->setMethods(['insert', 'emailExists'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->mailer = $this->getMockBuilder('Api\\Service\\Mailer\\MailerService')
+        $this->mailer = $this->getMockBuilder(MailerService::class)
             ->setMethods(['sendAccountConfirmationMessage'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->storage = $this->getMockBuilder('Api\\ExpirableStorage')
+        $this->storage = $this->getMockBuilder(ExpirableStorage::class)
             ->setMethods(['store'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -75,7 +79,7 @@ class UserControllerTest extends ControllerTestCase
             'lastName'  => 'Tester',
         ]);
 
-        $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
+        $request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
         
@@ -118,7 +122,7 @@ class UserControllerTest extends ControllerTestCase
         $json = json_encode([
             'ololo' => 'invalid stuff',
         ]);
-            $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
+            $request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
         
