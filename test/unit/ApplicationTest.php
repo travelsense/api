@@ -33,16 +33,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('secret', $app['config']['foo']['bar']);
     }
 
-    public function testServices()
-    {
-        $app = new Application([
-            'service' => [
-                __DIR__ . '/ApplicationTest/service.php',
-            ],
-        ]);
-        $this->assertEquals('my service', $app['my.service']);
-    }
-
     public function testArgumentResolve()
     {
         $user = new User();

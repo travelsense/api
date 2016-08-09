@@ -27,7 +27,7 @@ class Application extends \Silex\Application
         //load service
         $app = $this; // used in includes
         foreach ($config['service'] as $serviceLoader) {
-            include $serviceLoader;
+            include __DIR__ . '/../app/config/service/' . $serviceLoader;
         }
     }
 
