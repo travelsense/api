@@ -12,7 +12,7 @@ use Api\Model\Travel\Travel;
 use Api\Model\Travel\Action;
 use Api\Model\User;
 use Api\Security\Access\AccessManager;
-use stdClass;
+use Api\Security\Access\Action as AccessAction;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -96,55 +96,6 @@ class TravelController extends ApiController
         }
 
         return ['id' => $travel->getId()];
-    }
-
-    /**
-     * @param DataObject[]  $action_objects
-     * @param int           $travel_id
-     * @return Action[]
-     */
-    public function createActions(array $action_objects, int $travel_id): array
-    {
-        $actions = [];
-        foreach ($action_objects as $action) {
-            $actions[] = $this->createAction(new DataObject($action), $travel_id);
-        }
-        return $actions;
-    }
-
-    /**
-     * @param DataObject    $object
-     * @param int           $travelId
-     * @return Action
-     */
-    public function createAction(DataObject $object, int $travelId): Action
-    {
-        $action = new Action();
-        $action->setTravelId($travelId);
-        if ($object->has('offsetStart')) {
-            $action->setOffsetStart($object->get('offsetStart', 'integer'));
-        }
-        if ($object->has('offsetEnd')) {
-            $action->setOffsetEnd($object->get('offsetEnd', 'integer'));
-        }
-        if ($object->has('car')) {
-            $action->setCar($object->get('car'));
-        } else {
-            $action->setCar(false);
-        }
-        if ($object->has('airports')) {
-            $action->setAirports($object->get('airports'));
-        }
-        if ($object->has('hotels')) {
-            $action->setHotels($object->get('hotels'));
-        }
-        if ($object->has('sightseeings')) {
-            $action->setSightseeings($object->get('sightseeings'));
-        }
-        if ($object->has('type')) {
-            $action->setType($object->get('type'));
-        }
-        return $action;
     }
 
     /**
@@ -279,7 +230,7 @@ class TravelController extends ApiController
      */
     public function updateTravel(int $id, Request $request, User $user): array
     {
-        $travel = $this->getOwnedTravel($id, $user);
+        $travel = $this->getTravelForModification($id, $user);
         $json = DataObject::createFromString($request->getContent());
         if ($json->has('title')) {
             $travel->setTitle($json->getString('title'));
@@ -322,7 +273,7 @@ class TravelController extends ApiController
      */
     public function deleteTravel(int $id, User $user): array
     {
-        $travel = $this->getOwnedTravel($id, $user);
+        $travel = $this->getTravelForModification($id, $user);
         $this->travel_mapper->delete($travel->getId());
         return [];
     }
@@ -333,16 +284,16 @@ class TravelController extends ApiController
      * @return Travel
      * @throws ApiException
      */
-    private function getOwnedTravel(int $id, User $user): Travel
+    private function getTravelForModification(int $id, User $user): Travel
     {
         $travel = $this->travel_mapper->fetchById($id);
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        if ($travel->getAuthorId() !== $user->getId()) {
-            throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
+        if ($this->access_manager->isGranted($user, AccessAction::WRITE, $travel)) {
+            return $travel;
         }
-        return $travel;
+        throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
     }
 
     /**
@@ -427,5 +378,54 @@ class TravelController extends ApiController
             $view[] = $this->buildTravelView($travel, $minimized);
         }
         return $view;
+    }
+
+    /**
+     * @param DataObject[]  $action_objects
+     * @param int           $travel_id
+     * @return Action[]
+     */
+    private function createActions(array $action_objects, int $travel_id): array
+    {
+        $actions = [];
+        foreach ($action_objects as $action) {
+            $actions[] = $this->createAction(new DataObject($action), $travel_id);
+        }
+        return $actions;
+    }
+
+    /**
+     * @param DataObject    $object
+     * @param int           $travelId
+     * @return Action
+     */
+    private function createAction(DataObject $object, int $travelId): Action
+    {
+        $action = new Action();
+        $action->setTravelId($travelId);
+        if ($object->has('offsetStart')) {
+            $action->setOffsetStart($object->get('offsetStart', 'integer'));
+        }
+        if ($object->has('offsetEnd')) {
+            $action->setOffsetEnd($object->get('offsetEnd', 'integer'));
+        }
+        if ($object->has('car')) {
+            $action->setCar($object->get('car'));
+        } else {
+            $action->setCar(false);
+        }
+        if ($object->has('airports')) {
+            $action->setAirports($object->get('airports'));
+        }
+        if ($object->has('hotels')) {
+            $action->setHotels($object->get('hotels'));
+        }
+        if ($object->has('sightseeings')) {
+            $action->setSightseeings($object->get('sightseeings'));
+        }
+        if ($object->has('type')) {
+            $action->setType($object->get('type'));
+        }
+        return $action;
     }
 }
