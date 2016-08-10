@@ -6,7 +6,6 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
 use Api\Model\User;
-use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class CategoriesController extends ApiController
@@ -45,9 +44,12 @@ class CategoriesController extends ApiController
      */
     public function getCategories(string $name = null): array
     {
+        if ($name === null) {
+            $categories = $this->category_mapper->fetchAll();
+        } else {
+            $categories = $this->category_mapper->fetchAllByName($name);
+        }
         $response = [];
-
-        $categories = $name === null ? $this->category_mapper->fetchAll() : $this->category_mapper->fetchAllByName($name);
         foreach ($categories as $category) {
             $response[] = [
                 'id'    => $category->getId(),

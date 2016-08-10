@@ -20,10 +20,20 @@ class ActionMapper extends AbstractPDOMapper
      */
     public function insert(Action $action)
     {
-        $insert = $this->pdo->prepare('
-            INSERT INTO actions (travel_id, offset_start, offset_end, car,  airports, hotels, sightseeings, type)
-            VALUES (:travel_id, :offset_start, :offset_end, :car, :airports::JSON, :hotels::JSON, :sightseeings::JSON, :type) RETURNING id
-        ');
+        $insert = $this->pdo->prepare(
+            'INSERT INTO actions (travel_id, offset_start, offset_end, car,  airports, hotels, sightseeings, type)
+            VALUES (
+              :travel_id, 
+              :offset_start, 
+              :offset_end, 
+              :car, 
+              :airports::JSON, 
+              :hotels::JSON, 
+              :sightseeings::JSON, 
+              :type
+            ) 
+            RETURNING id'
+        );
         $this->bindCommonValues($insert, $action);
         $insert->execute();
         $row = $insert->fetch(PDO::FETCH_ASSOC);

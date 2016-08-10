@@ -9,14 +9,14 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateFromJoined()
     {
-        $mapper_a = $this->getMockForAbstractClass('Api\\AbstractPDOMapper', [new LazyPDO('')]);
+        $mapper_a = $this->getMockForAbstractClass(AbstractPDOMapper::class, [new LazyPDO('')]);
         $object_a = (object)[];
         $mapper_a->expects($this->once())
             ->method('create')
             ->with(['a' => 'a', 'b' => 'b0'])
             ->willReturn($object_a);
 
-        $mapper_b = $this->getMockForAbstractClass('Api\\AbstractPDOMapper', [new LazyPDO('')]);
+        $mapper_b = $this->getMockForAbstractClass(AbstractPDOMapper::class, [new LazyPDO('')]);
         $object_b = (object)[];
         $mapper_b->expects($this->once())
             ->method('create')
@@ -68,19 +68,19 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testBindValuesHappyPath(string $expected_type, string $placeholder, $value)
     {
-        $mapper = $this->getMockForAbstractClass('Api\\AbstractPDOMapper', [new LazyPDO('')]);
+        $mapper = $this->getMockForAbstractClass(AbstractPDOMapper::class, [new LazyPDO('')]);
         $stmt = $this->getMockBuilder('PDOStatement')->getMock();
         $stmt->expects($this->once())->method('bindValue')->with($placeholder, $value, $expected_type);
         $mapper->bindValues($stmt, [$placeholder => $value]);
     }
     
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Cannot bind value of type 'object' to placeholder 'object'
      */
     public function testBindValuesException()
     {
-        $mapper = $this->getMockForAbstractClass('Api\\AbstractPDOMapper', [new LazyPDO('')]);
+        $mapper = $this->getMockForAbstractClass(AbstractPDOMapper::class, [new LazyPDO('')]);
         $statement = new PDOStatement();
         $object = (object)[];
         $values = [

@@ -37,7 +37,9 @@ class IATAMapper extends AbstractPDOMapper
      */
     public function fetchAll(string $type, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare("SELECT * FROM {$this->table[$type]} ORDER BY code ASC LIMIT :limit OFFSET :offset");
+        $select = $this->pdo->prepare(
+            "SELECT * FROM {$this->table[$type]} ORDER BY code ASC LIMIT :limit OFFSET :offset"
+        );
         $select->execute([
             ':limit'  => $limit,
             ':offset' => $offset,

@@ -1,8 +1,10 @@
 <?php
 namespace Api\Controller\Travel;
 
+use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
 use Api\Test\ControllerTestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class CategoriesControllerTest extends ControllerTestCase
 {
@@ -17,7 +19,7 @@ class CategoriesControllerTest extends ControllerTestCase
 
     public function setUp()
     {
-        $this->category_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\CategoryMapper')
+        $this->category_mapper = $this->getMockBuilder(CategoryMapper::class)
             ->setMethods(['insert', 'fetchAll', 'fetchAllByName'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -40,13 +42,13 @@ class CategoriesControllerTest extends ControllerTestCase
             'name' => 'crazy fun',
         ]);
 
-        $request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
+        $request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
 
         $request->method('getContent')->willReturn($json);
 
-        $category = $this->getMockBuilder('Api\\Model\\Travel\\Category')
+        $category = $this->getMockBuilder(Category::class)
             ->setMethods(['getId', 'getName'])
             ->getMock();
 
