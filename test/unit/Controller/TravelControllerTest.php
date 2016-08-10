@@ -185,7 +185,10 @@ class TravelControllerTest extends ControllerTestCase
     protected function buildTravel()
     {
         $travel = $this->getMockBuilder(Travel::class)
-            ->setMethods(['getId', 'getTitle', 'getDescription', 'isPublished', 'getImage', 'getContent', 'getCreationMode', 'getCreated', 'getAuthor'])
+            ->setMethods([
+                'getId', 'getTitle', 'getDescription', 'isPublished', 'getImage',
+                'getContent', 'getCreationMode', 'getCreated', 'getAuthor'
+            ])
             ->getMock();
         $travel->method('getId')->willReturn(1);
         $travel->method('getTitle')->willReturn('test_travel');
