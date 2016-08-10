@@ -2,8 +2,16 @@
 namespace Api\Controller;
 
 use Api\Exception\ApiException;
+use Api\Mapper\DB\SessionMapper;
+use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
+use Api\Security\SessionManager;
 use Api\Test\ControllerTestCase;
+use Facebook\Facebook;
+use Facebook\GraphNodes\GraphPicture;
+use Facebook\GraphNodes\GraphUser;
+use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthControllerTest extends ControllerTestCase
 {
@@ -23,7 +31,7 @@ class AuthControllerTest extends ControllerTestCase
      */
     public function setUp()
     {
-        $this->user_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\UserMapper')
+        $this->user_mapper = $this->getMockBuilder(UserMapper::class)
             ->setMethods(['fetchByEmailAndPassword', 'insert', 'fetchByEmail'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -34,23 +42,23 @@ class AuthControllerTest extends ControllerTestCase
                 ['notfound@example.com', '123', null],
             ]);
 
-        $this->session_manager = $this->getMockBuilder('Api\\Security\\SessionManager')
+        $this->session_manager = $this->getMockBuilder(SessionManager::class)
             ->setMethods(['createSession'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->facebook = $this->getMockBuilder('Facebook\\Facebook')
+        $this->facebook = $this->getMockBuilder(Facebook::class)
             ->setMethods(['setDefaultAccessToken', 'get', 'getGraphUser'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $user_pic = $this->getMockBuilder('Facebook\\GraphNodes\\GraphPicture')
+        $user_pic = $this->getMockBuilder(GraphPicture::class)
             ->setMethods(['getUrl'])
             ->getMock();
         
         $user_pic->method('getUrl')->willReturn('https://pushkin.ru/pic.jpg');
 
-        $fb_user = $this->getMockBuilder('Facebook\\GraphNodes\\GraphUser')
+        $fb_user = $this->getMockBuilder(GraphUser::class)
             ->setMethods(['getFirstName', 'getLastName', 'getPicture', 'getEmail'])
             ->getMock();
         foreach ([
@@ -71,14 +79,14 @@ class AuthControllerTest extends ControllerTestCase
         $fb_user->method('getPicture')
             ->willReturn($user_pic);
 
-        $this->pw_gen = $this->getMockBuilder('Hackzilla\\PasswordGenerator\\Generator\\PasswordGeneratorInterface')
+        $this->pw_gen = $this->getMockBuilder(PasswordGeneratorInterface::class)
             ->setMethods(['generatePassword'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
         $this->pw_gen->method('generatePassword')->willReturn('test_generated_password');
 
-        $this->request = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\Request')
+        $this->request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
 

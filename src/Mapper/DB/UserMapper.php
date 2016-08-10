@@ -50,14 +50,13 @@ class UserMapper extends AbstractPDOMapper
      */
     public function insert(User $user)
     {
-        $sql = <<<SQL
-INSERT INTO users
-  ("email", "password", "first_name", "last_name", "picture", "creator")
-VALUES
-  (:email, :password, :first_name, :last_name, :picture, :creator)
-RETURNING id, created
-SQL;
-        $insert = $this->pdo->prepare($sql);
+        $insert = $this->pdo->prepare(
+            'INSERT INTO users
+              ("email", "password", "first_name", "last_name", "picture", "creator")
+            VALUES
+              (:email, :password, :first_name, :last_name, :picture, :creator)
+            RETURNING id, created'
+        );
         $values = [
             ':email'      => $user->getEmail(),
             ':password'   => $this->getPasswordHash($user->getPassword()),
@@ -85,7 +84,16 @@ SQL;
         $email_confirmed = $user->isEmailConfirmed();
         $creator = $user->isCreator();
         $id = $user->getId();
-        $update = $this->pdo->prepare('UPDATE users SET email = :email, first_name = :firstname, last_name = :lastname, email_confirmed = :email_confirmed, creator = :creator WHERE id = :id');
+        $update = $this->pdo->prepare(
+            'UPDATE users 
+            SET 
+              email = :email, 
+              first_name = :firstname, 
+              last_name = :lastname, 
+              email_confirmed = :email_confirmed, 
+              creator = :creator 
+            WHERE id = :id'
+        );
         $values = [
             'email' => $email,
             'firstname' => $first_name,

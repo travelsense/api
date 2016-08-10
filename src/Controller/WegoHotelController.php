@@ -69,9 +69,26 @@ class WegoHotelController extends ApiController
         foreach ($hotels as $hotel) {
             $hotel_id = $this->getHotelIdByWegoId($hotel['id']);
             if ($hotel_id !== false) {
-                $this->updateHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars'], $hotel_id);
+                $this->updateHotelData(
+                    $location,
+                    $hotel['name'],
+                    $hotel['address'],
+                    $hotel['latitude'],
+                    $hotel['longitude'],
+                    $hotel['desc'],
+                    $hotel['stars'],
+                    $hotel_id
+                );
             } else {
-                $hotel_id = $this->insertHotelData($location, $hotel['name'], $hotel['address'], $hotel['latitude'], $hotel['longitude'], $hotel['desc'], $hotel['stars']);
+                $hotel_id = $this->insertHotelData(
+                    $location,
+                    $hotel['name'],
+                    $hotel['address'],
+                    $hotel['latitude'],
+                    $hotel['longitude'],
+                    $hotel['desc'],
+                    $hotel['stars']
+                );
                 $this->addWegoIdForHotelId($hotel_id, $hotel['id']);
             }
         }
@@ -87,8 +104,15 @@ class WegoHotelController extends ApiController
      * @param int    $stars
      * @return int
      */
-    private function insertHotelData(string $location, string $name, string $address, float $lat, float $lon, string $desc, int $stars): int
-    {
+    private function insertHotelData(
+        string $location,
+        string $name,
+        string $address,
+        float $lat,
+        float $lon,
+        string $desc,
+        int $stars
+    ): int {
         $insert = $this->pdo->prepare(
             'INSERT INTO hotels
             (name, location, address, lat, lon, description, stars)
@@ -118,8 +142,16 @@ class WegoHotelController extends ApiController
      * @param int    $stars
      * @param int    $hotel_id
      */
-    private function updateHotelData(string $location, string $name, string $address, float $lat, float $lon, string $desc, int $stars, int $hotel_id)
-    {
+    private function updateHotelData(
+        string $location,
+        string $name,
+        string $address,
+        float $lat,
+        float $lon,
+        string $desc,
+        int $stars,
+        int $hotel_id
+    ) {
         $insert = $this->pdo->prepare(
             'UPDATE hotels SET
              name = :name, location = :location, address = :address,

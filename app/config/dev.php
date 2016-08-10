@@ -4,7 +4,7 @@ return array_replace_recursive(
     [
         'debug' => true, //used by error handler
         'service' => [
-            'email'       => __DIR__ . '/service/email.mock.php',
+            'email'       => 'email.mock.php',
         ],
         'log' => [
             'main' => [

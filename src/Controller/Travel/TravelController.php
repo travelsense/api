@@ -8,10 +8,11 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
-use Api\Model\Travel\Travel;
 use Api\Model\Travel\Action;
+use Api\Model\Travel\Travel;
 use Api\Model\User;
-use stdClass;
+use Api\Security\Access\AccessManager;
+use Api\Security\Access\Action as AccessAction;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -35,17 +36,27 @@ class TravelController extends ApiController
     private $action_mapper;
 
     /**
+     * @var AccessManager
+     */
+    private $access_manager;
+
+    /**
      * TravelController constructor.
-     *
      * @param TravelMapper   $travel_mapper
      * @param CategoryMapper $category_mapper
-     * @param ActionMapper $action_mapper
+     * @param ActionMapper   $action_mapper
+     * @param AccessManager  $access_manager
      */
-    public function __construct(TravelMapper $travel_mapper, CategoryMapper $category_mapper, ActionMapper $action_mapper)
-    {
+    public function __construct(
+        TravelMapper $travel_mapper,
+        CategoryMapper $category_mapper,
+        ActionMapper $action_mapper,
+        AccessManager $access_manager
+    ) {
         $this->travel_mapper = $travel_mapper;
         $this->category_mapper = $category_mapper;
         $this->action_mapper = $action_mapper;
+        $this->access_manager = $access_manager;
     }
 
     /**
@@ -88,56 +99,7 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param DataObject[]  $action_objects
-     * @param int           $travel_id
-     * @return Action[]
-     */
-    public function createActions(array $action_objects, int $travel_id): array
-    {
-        $actions = [];
-        foreach ($action_objects as $action) {
-            $actions[] = $this->createAction(new DataObject($action), $travel_id);
-        }
-        return $actions;
-    }
-
-    /**
-     * @param DataObject    $object
-     * @param int           $travelId
-     * @return Action
-     */
-    public function createAction(DataObject $object, int $travelId): Action
-    {
-        $action = new Action();
-        $action->setTravelId($travelId);
-        if ($object->has('offsetStart')) {
-            $action->setOffsetStart($object->get('offsetStart', 'integer'));
-        }
-        if ($object->has('offsetEnd')) {
-            $action->setOffsetEnd($object->get('offsetEnd', 'integer'));
-        }
-        if ($object->has('car')) {
-            $action->setCar($object->get('car'));
-        } else {
-            $action->setCar(false);
-        }
-        if ($object->has('airports')) {
-            $action->setAirports($object->get('airports'));
-        }
-        if ($object->has('hotels')) {
-            $action->setHotels($object->get('hotels'));
-        }
-        if ($object->has('sightseeings')) {
-            $action->setSightseeings($object->get('sightseeings'));
-        }
-        if ($object->has('type')) {
-            $action->setType($object->get('type'));
-        }
-        return $action;
-    }
-
-    /**
-     * @param $id
+     * @param int  $id
      * @param User $user
      * @return array
      * @throws ApiException
@@ -238,7 +200,7 @@ class TravelController extends ApiController
 
    /**
      * @param int   $author_id
-     * @param User $user
+     * @param User  $user
      * @param int   $limit
      * @param int   $offset
      * @return array
@@ -252,7 +214,7 @@ class TravelController extends ApiController
 
     /**
      * @param string $name
-     * @param User $user
+     * @param User   $user
      * @param int    $limit
      * @param int    $offset
      * @return array
@@ -271,7 +233,7 @@ class TravelController extends ApiController
      */
     public function updateTravel(int $id, Request $request, User $user): array
     {
-        $travel = $this->getOwnedTravel($id, $user);
+        $travel = $this->getTravelForModification($id, $user);
         $json = DataObject::createFromString($request->getContent());
         if ($json->has('title')) {
             $travel->setTitle($json->getString('title'));
@@ -308,13 +270,13 @@ class TravelController extends ApiController
 
 
     /**
-     * @param      $id
+     * @param int  $id
      * @param User $user
      * @return array
      */
     public function deleteTravel(int $id, User $user): array
     {
-        $travel = $this->getOwnedTravel($id, $user);
+        $travel = $this->getTravelForModification($id, $user);
         $this->travel_mapper->delete($travel->getId());
         return [];
     }
@@ -325,36 +287,37 @@ class TravelController extends ApiController
      * @return Travel
      * @throws ApiException
      */
-    private function getOwnedTravel(int $id, User $user): Travel
+    private function getTravelForModification(int $id, User $user): Travel
     {
         $travel = $this->travel_mapper->fetchById($id);
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        if ($travel->getAuthorId() !== $user->getId()) {
-            throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
+        if ($this->access_manager->isGranted($user, AccessAction::WRITE, $travel)) {
+            return $travel;
         }
-        return $travel;
+        throw new ApiException('Access denied', ApiException::ACCESS_DENIED);
     }
 
     /**
      * @param Travel $travel
-     * @param bool $minimized
-     * @param int $user_id
+     * @param bool   $minimized
+     * @param int    $user_id
      * @return array
      */
     private function buildTravelView(Travel $travel, bool $minimized = false, int $user_id = null): array
     {
         $view = [];
-        $view['id']            = $travel->getId();
-        $view['title']         = $travel->getTitle();
+        $view['id'] = $travel->getId();
+        $view['title'] = $travel->getTitle();
         if (!$minimized) {
-            $view['description']   = $travel->getDescription();
-            $view['content']       = count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent();
-            $view['created']       = $travel->getCreated()->format(self::DATETIME_FORMAT);
-            $view['category']      = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
-            $view['category_ids']  = $travel->getCategoryIds();
-            $view['published']     = $travel->isPublished();
+            $actions = $travel->getActions();
+            $view['description'] = $travel->getDescription();
+            $view['content'] = count($actions) ? $this->buildActionsView($actions) : $travel->getContent();
+            $view['created'] = $travel->getCreated()->format(self::DATETIME_FORMAT);
+            $view['category'] = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
+            $view['category_ids'] = $travel->getCategoryIds();
+            $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
 
             $author = $travel->getAuthor();
@@ -363,29 +326,31 @@ class TravelController extends ApiController
                     'id'        => $author->getId(),
                     'firstName' => $author->getFirstName(),
                     'lastName'  => $author->getLastName(),
-                    'picture'   => $author->getPicture()
+                    'picture'   => $author->getPicture(),
                 ];
             }
         }
+
         if ($user_id !== null) {
             $favorite = $this->travel_mapper->fetchFavoriteIds($user_id);
             $view['is_favorited'] = array_key_exists($travel->getId(), $favorite);
         } else {
             $view['is_favorited'] = false;
         }
-        if (count($travel->getContent())) {
+
+        if (count($travel->getContent())) { // TODO Refactor this logic. Move to Travel?
             $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
         }
-        $view['image']          = $travel->getImage();
-        $view['places_count']   = count($travel->getActions());
-        $view['days_count']     = $travel->getDaysCount();
+        $view['image'] = $travel->getImage();
+        $view['places_count'] = count($travel->getActions());
+        $view['days_count'] = $travel->getDaysCount();
 
         return $view;
     }
 
    /**
      * @param Action[] $actions
-     * @return array
+     * @return array[]
      */
     private function buildActionsView(array $actions): array
     {
@@ -416,8 +381,8 @@ class TravelController extends ApiController
 
     /**
      * @param Travel[] $travels
-     * @param bool $minimized
-     * @param int $user_id
+     * @param bool     $minimized
+     * @param int      $user_id
      * @return array
      */
     private function buildTravelSetView(array $travels, bool $minimized = false, int $user_id = null): array
@@ -427,5 +392,54 @@ class TravelController extends ApiController
             $view[] = $this->buildTravelView($travel, $minimized, $user_id);
         }
         return $view;
+    }
+
+    /**
+     * @param DataObject[]  $action_objects
+     * @param int           $travel_id
+     * @return Action[]
+     */
+    private function createActions(array $action_objects, int $travel_id): array
+    {
+        $actions = [];
+        foreach ($action_objects as $action) {
+            $actions[] = $this->createAction(new DataObject($action), $travel_id);
+        }
+        return $actions;
+    }
+
+    /**
+     * @param DataObject    $object
+     * @param int           $travelId
+     * @return Action
+     */
+    private function createAction(DataObject $object, int $travelId): Action
+    {
+        $action = new Action();
+        $action->setTravelId($travelId);
+        if ($object->has('offsetStart')) {
+            $action->setOffsetStart($object->get('offsetStart', 'integer'));
+        }
+        if ($object->has('offsetEnd')) {
+            $action->setOffsetEnd($object->get('offsetEnd', 'integer'));
+        }
+        if ($object->has('car')) {
+            $action->setCar($object->get('car'));
+        } else {
+            $action->setCar(false);
+        }
+        if ($object->has('airports')) {
+            $action->setAirports($object->get('airports'));
+        }
+        if ($object->has('hotels')) {
+            $action->setHotels($object->get('hotels'));
+        }
+        if ($object->has('sightseeings')) {
+            $action->setSightseeings($object->get('sightseeings'));
+        }
+        if ($object->has('type')) {
+            $action->setType($object->get('type'));
+        }
+        return $action;
     }
 }
