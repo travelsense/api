@@ -1,6 +1,11 @@
 <?php
 namespace Api\Controller;
 
+use Api\Mapper\DB\CategoryMapper;
+use Api\Mapper\DB\ActionMapper;
+use Api\Mapper\DB\TravelMapper;
+use Api\Model\Travel\Travel;
+use Api\Security\Access\AccessManager;
 use Api\Controller\Travel\TravelController;
 use Api\Test\ControllerTestCase;
 use DateTime;
@@ -10,6 +15,7 @@ class TravelControllerTest extends ControllerTestCase
     private $travel_mapper;
     private $category_mapper;
     private $action_mapper;
+    private $access_manager;
 
     /**
      * @var TravelController
@@ -34,22 +40,27 @@ class TravelControllerTest extends ControllerTestCase
 
     public function setUp()
     {
-        $this->travel_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\TravelMapper')
+        $this->travel_mapper = $this->getMockBuilder(TravelMapper::class)
             ->setMethods(['insert', 'fetchById', 'fetchFavoriteIds', 'fetchByAuthorId', 'fetchPublishedByAuthorId'])
             ->disableOriginalConstructor()
             ->getMock();
-        $this->category_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\CategoryMapper')
+        $this->category_mapper = $this->getMockBuilder(CategoryMapper::class)
             ->setMethods(['insert', 'fetchAll', 'fetchAllByName'])
             ->disableOriginalConstructor()
             ->getMock();
-        $this->action_mapper = $this->getMockBuilder('Api\\Mapper\\DB\\ActionMapper')
+        $this->action_mapper = $this->getMockBuilder(ActionMapper::class)
             ->setMethods(['insert', 'bindCommonValues', 'fetchActionsForTravel'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->access_manager = $this->getMockBuilder(AccessManager::class)
+            ->setMethods(['isGranted', 'hasWritePermission'])
             ->disableOriginalConstructor()
             ->getMock();
         $this->controller = new TravelController(
             $this->travel_mapper,
             $this->category_mapper,
-            $this->action_mapper
+            $this->action_mapper,
+            $this->access_manager
         );
         $this->test_travel = $this->buildTravel();
     }
@@ -173,7 +184,7 @@ class TravelControllerTest extends ControllerTestCase
      */
     protected function buildTravel()
     {
-        $travel = $this->getMockBuilder('Api\\Model\\Travel\\Travel')
+        $travel = $this->getMockBuilder(Travel::class)
             ->setMethods(['getId', 'getTitle', 'getDescription', 'isPublished', 'getImage', 'getContent', 'getCreationMode', 'getCreated', 'getAuthor'])
             ->getMock();
         $travel->method('getId')->willReturn(1);
