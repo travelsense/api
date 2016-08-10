@@ -8,7 +8,7 @@ with the following clarifications:
 * Array keys (including configuration) must be in `lower_snake_case`
 * Silex DI Container keys must follow this format: `section_name.subsection_name.long_key_name` eg `controller.user`
 
-To test the php code style, run `vendor/bin/phpcs --standard=PSR2 -n app/ bin/ public/ src/ test/`.
+To test the php code style, run `vendor/bin/phpcs --standard=PSR2 app/ bin/ public/ src/ test/`.
 
 ## Database schema
 * table and database names must be in `lower_snake_case`

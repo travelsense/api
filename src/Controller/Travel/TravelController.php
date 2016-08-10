@@ -8,8 +8,8 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
-use Api\Model\Travel\Travel;
 use Api\Model\Travel\Action;
+use Api\Model\Travel\Travel;
 use Api\Model\User;
 use Api\Security\Access\AccessManager;
 use Api\Security\Access\Action as AccessAction;
@@ -304,15 +304,16 @@ class TravelController extends ApiController
     private function buildTravelView(Travel $travel, bool $minimized = false): array
     {
         $view = [];
-        $view['id']            = $travel->getId();
-        $view['title']         = $travel->getTitle();
+        $view['id'] = $travel->getId();
+        $view['title'] = $travel->getTitle();
         if (!$minimized) {
-            $view['description']   = $travel->getDescription();
-            $view['content']       = count($travel->getActions()) ? $this->buildActionsView($travel->getActions()) : $travel->getContent();
-            $view['created']       = $travel->getCreated()->format(self::DATETIME_FORMAT);
-            $view['category']      = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
-            $view['category_ids']  = $travel->getCategoryIds();
-            $view['published']     = $travel->isPublished();
+            $actions = $travel->getActions();
+            $view['description'] = $travel->getDescription();
+            $view['content'] = count($actions) ? $this->buildActionsView($actions) : $travel->getContent();
+            $view['created'] = $travel->getCreated()->format(self::DATETIME_FORMAT);
+            $view['category'] = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
+            $view['category_ids'] = $travel->getCategoryIds();
+            $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
 
             $author = $travel->getAuthor();
@@ -321,16 +322,16 @@ class TravelController extends ApiController
                     'id'        => $author->getId(),
                     'firstName' => $author->getFirstName(),
                     'lastName'  => $author->getLastName(),
-                    'picture'   => $author->getPicture()
+                    'picture'   => $author->getPicture(),
                 ];
             }
         }
-        if (count($travel->getContent())) {
+        if (count($travel->getContent())) { // TODO Refactor this logic. Move to Travel?
             $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
         }
-        $view['image']          = $travel->getImage();
-        $view['places_count']   = count($travel->getActions());
-        $view['days_count']     = $travel->getDaysCount();
+        $view['image'] = $travel->getImage();
+        $view['places_count'] = count($travel->getActions());
+        $view['days_count'] = $travel->getDaysCount();
 
         return $view;
     }

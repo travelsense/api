@@ -59,7 +59,14 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             $args = func_get_args();
             return '';
         });
-        $rq = Request::create('/test_route', Request::METHOD_GET, ['foo' => 'foo_value'], [], [], ['HTTP_AUTHORIZATION' => 'Token xxx']);
+        $rq = Request::create(
+            '/test_route',
+            Request::METHOD_GET,
+            ['foo' => 'foo_value'],
+            [],
+            [],
+            ['HTTP_AUTHORIZATION' => 'Token xxx']
+        );
         $app->run($rq);
         $this->assertEquals([$user, 'foo_value'], $args);
     }
