@@ -286,7 +286,7 @@ class WegoFlights
     ) {
         $query = array_merge(
             [
-                'id'               => rand(), // A random string you need to assign for this query, used for debugging purposes
+                'id'               => rand(), // A random string. See the documentation
                 'fares_query_type' => 'route',
                 'search_id'        => $search_id,
                 'trip_id'          => $trip_id,

@@ -5,15 +5,15 @@
 return [
     'secure_json' => false,
     'service' => [
-        __DIR__ . '/service/app.php', // must be processed first
-        __DIR__ . '/service/controllers.php',
-        __DIR__ . '/service/email.php',
-        __DIR__ . '/service/mappers.php',
-        __DIR__ . '/service/misc.php',
-        __DIR__ . '/service/routing.php',
-        __DIR__ . '/service/security.php',
-        __DIR__ . '/service/storages.php',
-        __DIR__ . '/service/wego.php',
+        'app.php', // must be processed first
+        'controllers.php',
+        'email.php',
+        'mappers.php',
+        'misc.php',
+        'routing.php',
+        'security.php',
+        'storages.php',
+        'wego.php',
     ],
     'debug' => false,
     'log' => [

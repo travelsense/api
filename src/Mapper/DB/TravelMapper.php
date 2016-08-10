@@ -58,7 +58,9 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchById(int $id)
     {
-        $select = $this->pdo->prepare('SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id AND NOT deleted');
+        $select = $this->pdo->prepare(
+            'SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id AND NOT deleted'
+        );
         $select->execute(['id' => $id]);
         $row = $select->fetch(PDO::FETCH_NAMED);
         if (empty($row)) {
@@ -79,12 +81,11 @@ class TravelMapper extends AbstractPDOMapper
     public function fetchByAuthorId(int $author_id, int $limit, int $offset, bool $is_published = null): array
     {
         $select = $this->pdo->prepare(
-            'SELECT t.*, u.* FROM travels t '
-            . 'JOIN users u ON t.author_id = u.id '
-            . 'WHERE t.author_id = :userId AND NOT deleted '
+            'SELECT t.*, u.* FROM travels t
+             JOIN users u ON t.author_id = u.id
+             WHERE t.author_id = :userId AND NOT deleted '
             . ($is_published !== null ? 'AND is_published = :is_published ' : '')
-            . 'ORDER BY t.id DESC '
-            . 'LIMIT :limit OFFSET :offset'
+            . 'ORDER BY t.id DESC LIMIT :limit OFFSET :offset'
         );
 
         $params = [
@@ -119,10 +120,11 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function insert(Travel $travel)
     {
-        $insert = $this->pdo->prepare('
-            INSERT INTO travels (title, description, content, is_published, image, author_id, creation_mode)
-            VALUES (:title, :description, :content::JSON, :published, :image, :author_id, :creation_mode) RETURNING id, created
-        ');
+        $insert = $this->pdo->prepare(
+            'INSERT INTO travels (title, description, content, is_published, image, author_id, creation_mode)
+            VALUES (:title, :description, :content::JSON, :published, :image, :author_id, :creation_mode) 
+            RETURNING id, created'
+        );
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
         $row = $insert->fetch(PDO::FETCH_ASSOC);
@@ -148,10 +150,10 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function addFavorite(int $travel_id, int $user_id)
     {
-        $this->pdo->prepare('
-            INSERT INTO favorite_travels (user_id, travel_id)
-            VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING
-        ')->execute([
+        $this->pdo->prepare(
+            'INSERT INTO favorite_travels (user_id, travel_id)
+            VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING'
+        )->execute([
             ':user_id' => $user_id,
             ':travel_id' => $travel_id,
         ]);
@@ -177,12 +179,12 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchFavorites(int $user_id): array
     {
-        $select = $this->pdo->prepare('
-            SELECT t.*, u.* FROM  favorite_travels ft
+        $select = $this->pdo->prepare(
+            'SELECT t.*, u.* FROM  favorite_travels ft
             JOIN travels t ON ft.travel_id = t.id AND NOT t.deleted
             JOIN users u ON t.author_id = u.id
-            WHERE ft.user_id = :user_id
-            ');
+            WHERE ft.user_id = :user_id'
+        );
         $select->execute(['user_id' => $user_id]);
         return $this->buildAll($select);
     }
@@ -195,14 +197,14 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchByCategory(string $name, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare('
-            SELECT t.*, u.* FROM travel_categories ct
+        $select = $this->pdo->prepare(
+            'SELECT t.*, u.* FROM travel_categories ct
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
             JOIN users u ON u.id = t.author_id
             WHERE c.name = :name
-            LIMIT :limit OFFSET :offset
-        ');
+            LIMIT :limit OFFSET :offset'
+        );
         $select->execute([
             'name'    => $name,
             ':limit'  => $limit,
@@ -219,14 +221,14 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchPublishedByCategory(string $name, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare('
-            SELECT t.*, u.* FROM travel_categories ct
+        $select = $this->pdo->prepare(
+            'SELECT t.*, u.* FROM travel_categories ct
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
             JOIN users u ON u.id = t.author_id
             WHERE c.name = :name AND is_published
-            LIMIT :limit OFFSET :offset
-        ');
+            LIMIT :limit OFFSET :offset'
+        );
         $select->execute([
             'name'    => $name,
             ':limit'  => $limit,
@@ -242,8 +244,8 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function update(Travel $travel)
     {
-        $update = $this->pdo->prepare('
-            UPDATE travels SET
+        $update = $this->pdo->prepare(
+            'UPDATE travels SET
             title = :title,
             description = :description,
             content = :content::JSON,
@@ -251,8 +253,8 @@ class TravelMapper extends AbstractPDOMapper
             image = :image,
             author_id = :author_id,
             creation_mode = :creation_mode
-            WHERE id = :id
-        ');
+            WHERE id = :id'
+        );
         $this->bindCommonValues($update, $travel);
         $update->bindValue('id', $travel->getId(), PDO::PARAM_INT);
         $update->execute();
@@ -317,11 +319,11 @@ class TravelMapper extends AbstractPDOMapper
 
     public function markDeleted(int $travelId, bool $deleted = true)
     {
-        $update = $this->pdo->prepare('
-            UPDATE travels SET
-            deleted = :deleted
-            WHERE id = :id
-        ');
+        $update = $this->pdo->prepare(
+            'UPDATE travels SET
+              deleted = :deleted
+            WHERE id = :id'
+        );
         $values = [
             'id' => $travelId,
             'deleted' => $deleted

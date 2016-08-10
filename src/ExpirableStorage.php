@@ -69,8 +69,13 @@ class ExpirableStorage
         }
         list($token, $id) = str_split($key, self::SHA1_LENGTH);
 
-        $select = $this->pdo
-            ->prepare('SELECT serialized_object from expirable_storage WHERE id = :id AND token = :token AND (expires >= now() OR expires IS NULL)');
+        $select = $this->pdo->prepare(
+            'SELECT serialized_object FROM expirable_storage 
+            WHERE 
+              id = :id 
+              AND token = :token 
+              AND (expires >= now() OR expires IS NULL)'
+        );
         $select->execute(
             [
                 ':id'    => $id,
