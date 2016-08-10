@@ -10,6 +10,7 @@ use Api\Mapper\DB\IATAMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\CommentMapper;
+use Api\Mapper\DB\User\RoleMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\ActionMapper;
@@ -62,4 +63,8 @@ $app['mapper.db.booking'] = function ($app) {
 
 $app['mapper.db.action'] = function ($app) {
     return new ActionMapper($app['db.main.pdo']);
+};
+
+$app['mapper.db.user_role'] = function ($app) {
+    return new RoleMapper($app['db.main.pdo']);
 };

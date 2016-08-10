@@ -4,8 +4,9 @@ namespace Api\Model\Travel;
 use Api\Model\AuthorTrait;
 use Api\Model\IdTrait;
 use Api\Model\TimestampTrait;
+use Api\Security\Access\SubjectInterface;
 
-class Travel
+class Travel implements SubjectInterface
 {
     use IdTrait;
     use TimestampTrait;
