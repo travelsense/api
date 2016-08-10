@@ -65,7 +65,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
     public static function tailServerLog(int $nun_lines = self::TAIL_NUM_LINES)
     {
         $output = "";
-        if(file_exists(self::SERVER_LOG)) {
+        if (file_exists(self::SERVER_LOG)) {
             $output .= "\n" . shell_exec('exec tail -n' . $nun_lines . ' ' . self::SERVER_LOG);
         }
         return $output;

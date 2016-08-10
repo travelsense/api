@@ -333,7 +333,7 @@ class ApiClient
         $error = @json_decode($response->getBody());
         if (!empty($error)) {
             $message = $error->error;
-            if(FunctionalTestCase::INTERNAL_SERVER_ERROR == $error->error) {
+            if (FunctionalTestCase::INTERNAL_SERVER_ERROR == $error->error) {
                 $message .= FunctionalTestCase::tailServerLog();
             }
             throw new ApiClientException($message, $error->code);
