@@ -136,9 +136,9 @@ class TravelControllerTest extends ControllerTestCase
     }
 
     /**
-     * getFetchPublishedTravelsByAuthorId
+     * getPublishedTravelsByAuthorId
      */
-    public function testGetFetchPublishedTravelsByAuthorId()
+    public function testGetPublishedTravelsByAuthorId()
     {
         $this->travel_mapper->expects($this->once())
             ->method('fetchPublishedByAuthorId')
@@ -157,9 +157,9 @@ class TravelControllerTest extends ControllerTestCase
     }
 
     /**
-     * getFetchPublishedTravelsByAuthorId with User
+     * getPublishedTravelsByAuthorId with User
      */
-    public function testGetFetchPublishedTravelsByAuthorIdWithUser()
+    public function testGetPublishedTravelsByAuthorIdWithUser()
     {
         $user = $this->buildUser();
 
