@@ -317,7 +317,9 @@ class ApiClient
 
     private function addAuth(array $headers)
     {
-        $headers[] = 'Authorization: Token ' . $this->auth_token;
+        if (!empty($this->auth_token)) {
+            $headers[] = 'Authorization: Token ' . $this->auth_token;
+        }
         return $headers;
     }
 

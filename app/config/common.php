@@ -42,6 +42,8 @@ return [
             'iata-by-code',
             'reset-password',
             'send-password-reset-link',
+            'travel-by-id',
+            'travel-by-category',
             'travel-category',
             'travel-category-new',
             'travel-comment',

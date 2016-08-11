@@ -94,6 +94,9 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->checkAddRemoveComments(1);
         $this->checkGetMyTravels();
 
+        $this->checkGetTravelWithOutAuth(1);
+        $this->checkGetTravelWithOutAuth(2);
+
         $this->checkDeleteTravel(1);
         $this->checkDeleteTravel(2);
     }
@@ -161,6 +164,17 @@ class FunctionalWebTest extends FunctionalTestCase
             $total += $item->count;
         }
         $this->assertEquals(1, $total);
+    }
+
+    private function checkGetTravelWithOutAuth(int $id)
+    {
+        $this->client->addTravelToFavorites($id);
+        $this->client->setAuthToken('');
+
+        $travel = $this->client->getTravel($id);
+        $this->assertEquals(false, $travel->is_favorited);
+
+        $this->client->setAuthToken($this->client->getTokenByEmail('sasha@pushkin.ru', '123'));
     }
 
 
