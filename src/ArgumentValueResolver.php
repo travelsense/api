@@ -17,12 +17,14 @@ class ArgumentValueResolver implements ArgumentValueResolverInterface
     {
         $this->app = $app;
     }
-    
+
     public function supports(Request $request, ArgumentMetadata $argument)
     {
-        return $argument->getType() === User::class;
+        return
+            $argument->getType() === User::class
+            && $this->app['user'] instanceof User;
     }
-    
+
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
         yield $this->app['user'];
