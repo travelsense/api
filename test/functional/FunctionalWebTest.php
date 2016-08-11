@@ -169,7 +169,7 @@ class FunctionalWebTest extends FunctionalTestCase
     private function checkGetTravelWithOutAuth(int $id)
     {
         $this->client->addTravelToFavorites($id);
-        $this->client->setAuthToken('');
+        $this->client->setAuthToken(null);
 
         $travel = $this->client->getTravel($id);
         $this->assertEquals(false, $travel->is_favorited);

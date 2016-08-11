@@ -36,7 +36,7 @@ class ApiClient
     /**
      * @param string $auth_token
      */
-    public function setAuthToken(string $auth_token)
+    public function setAuthToken(string $auth_token = null)
     {
         $this->auth_token = $auth_token;
     }
