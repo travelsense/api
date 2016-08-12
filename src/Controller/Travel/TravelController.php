@@ -111,7 +111,7 @@ class TravelController extends ApiController
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
         $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
-        return $this->buildTravelView($travel, $favorite_ids, false);
+        return $this->buildTravelView($travel, array_key_exists($travel->getId(), $favorite_ids));
     }
 
     /**
@@ -225,7 +225,7 @@ class TravelController extends ApiController
     {
         $travels = $this->travel_mapper->fetchPublishedByCategory($name, $limit, $offset);
         $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
-        return $this->buildTravelSetView($travels, $favorite_ids, false);
+        return $this->buildTravelSetView($travels, $favorite_ids);
     }
 
     /**
@@ -304,11 +304,11 @@ class TravelController extends ApiController
 
     /**
      * @param Travel $travel
-     * @param array  $favorite_ids
+     * @param bool   $favorite_ids
      * @param bool   $minimized
      * @return array
      */
-    private function buildTravelView(Travel $travel, array $favorite_ids = [], bool $minimized = false): array
+    private function buildTravelView(Travel $travel, bool $favorite_ids, bool $minimized = false): array
     {
         $view = [];
         $view['id'] = $travel->getId();
@@ -333,7 +333,7 @@ class TravelController extends ApiController
                 ];
             }
         }
-        $view['is_favorited'] = array_key_exists($travel->getId(), $favorite_ids);
+        $view['is_favorited'] = $favorite_ids;
         if (count($travel->getContent())) { // TODO Refactor this logic. Move to Travel?
             $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
         }
@@ -385,7 +385,7 @@ class TravelController extends ApiController
     {
         $view = [];
         foreach ($travels as $travel) {
-            $view[] = $this->buildTravelView($travel, $favorite_ids, $minimized);
+            $view[] = $this->buildTravelView($travel, array_key_exists($travel->getId(), $favorite_ids), $minimized);
         }
         return $view;
     }
