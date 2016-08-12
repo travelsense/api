@@ -110,8 +110,8 @@ class TravelController extends ApiController
         if (!$travel) {
             throw new ApiException('Travel not found', ApiException::RESOURCE_NOT_FOUND);
         }
-        $favoriteIds = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : null;
-        return $this->buildTravelView($travel, false, $favoriteIds);
+        $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
+        return $this->buildTravelView($travel, $favorite_ids, false);
     }
 
     /**
@@ -210,8 +210,8 @@ class TravelController extends ApiController
     {
         $travels = $this->travel_mapper->fetchPublishedByAuthorId($author_id, $limit, $offset);
         $minimized = true;
-        $favoriteIds = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : null;
-        return $this->buildTravelSetView($travels, $minimized, $favoriteIds);
+        $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
+        return $this->buildTravelSetView($travels, $favorite_ids, $minimized);
     }
 
     /**
@@ -224,8 +224,8 @@ class TravelController extends ApiController
     public function getTravelsByCategory(string $name, User $user = null, int $limit = 10, int $offset = 0): array
     {
         $travels = $this->travel_mapper->fetchPublishedByCategory($name, $limit, $offset);
-        $favoriteIds = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : null;
-        return $this->buildTravelSetView($travels, false, $favoriteIds);
+        $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
+        return $this->buildTravelSetView($travels, $favorite_ids, false);
     }
 
     /**
@@ -304,11 +304,11 @@ class TravelController extends ApiController
 
     /**
      * @param Travel $travel
+     * @param array  $favorite_ids
      * @param bool   $minimized
-     * @param array  $favoriteIds
      * @return array
      */
-    private function buildTravelView(Travel $travel, bool $minimized = false, array $favoriteIds = null): array
+    private function buildTravelView(Travel $travel, array $favorite_ids = [], bool $minimized = false): array
     {
         $view = [];
         $view['id'] = $travel->getId();
@@ -333,13 +333,7 @@ class TravelController extends ApiController
                 ];
             }
         }
-
-        if ($favoriteIds !== null) {
-            $view['is_favorited'] = array_key_exists($travel->getId(), $favoriteIds);
-        } else {
-            $view['is_favorited'] = false;
-        }
-
+        $view['is_favorited'] = array_key_exists($travel->getId(), $favorite_ids);
         if (count($travel->getContent())) { // TODO Refactor this logic. Move to Travel?
             $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
         }
@@ -383,15 +377,15 @@ class TravelController extends ApiController
 
     /**
      * @param Travel[] $travels
+     * @param array    $favorite_ids
      * @param bool     $minimized
-     * @param array    $favoriteIds
      * @return array
      */
-    private function buildTravelSetView(array $travels, bool $minimized = false, array $favoriteIds = null): array
+    private function buildTravelSetView(array $travels, array $favorite_ids = [], bool $minimized = false): array
     {
         $view = [];
         foreach ($travels as $travel) {
-            $view[] = $this->buildTravelView($travel, $minimized, $favoriteIds);
+            $view[] = $this->buildTravelView($travel, $favorite_ids, $minimized);
         }
         return $view;
     }
