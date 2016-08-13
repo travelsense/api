@@ -304,11 +304,11 @@ class TravelController extends ApiController
 
     /**
      * @param Travel $travel
-     * @param bool   $favorite_ids
+     * @param bool   $is_favorite
      * @param bool   $minimized
      * @return array
      */
-    private function buildTravelView(Travel $travel, bool $favorite_ids, bool $minimized = false): array
+    private function buildTravelView(Travel $travel, bool $is_favorite, bool $minimized = false): array
     {
         $view = [];
         $view['id'] = $travel->getId();
@@ -333,7 +333,7 @@ class TravelController extends ApiController
                 ];
             }
         }
-        $view['is_favorited'] = $favorite_ids;
+        $view['is_favorited'] = $is_favorite;
         if (count($travel->getContent())) { // TODO Refactor this logic. Move to Travel?
             $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
         }
