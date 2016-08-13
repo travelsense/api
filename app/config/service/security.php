@@ -20,6 +20,8 @@ $app['security.access_manager'] = function ($app) {
     );
 };
 
+$app['user'] = null;
+
 $app->on(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
     $request = $event->getRequest();
     $route = $request->attributes->get('_route');

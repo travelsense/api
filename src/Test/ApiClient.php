@@ -36,7 +36,7 @@ class ApiClient
     /**
      * @param string $auth_token
      */
-    public function setAuthToken(string $auth_token)
+    public function setAuthToken(string $auth_token = null)
     {
         $this->auth_token = $auth_token;
     }
@@ -317,7 +317,9 @@ class ApiClient
 
     private function addAuth(array $headers)
     {
-        $headers[] = 'Authorization: Token ' . $this->auth_token;
+        if (!empty($this->auth_token)) {
+            $headers[] = 'Authorization: Token ' . $this->auth_token;
+        }
         return $headers;
     }
 

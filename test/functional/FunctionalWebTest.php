@@ -25,7 +25,7 @@ class FunctionalWebTest extends FunctionalTestCase
     /**
      * @var array
      */
-    private $airportAction = array(
+    private $airportAction = [
         "offsetStart" => 0,
         "hotels" => [],
         "id" => 2,
@@ -34,7 +34,7 @@ class FunctionalWebTest extends FunctionalTestCase
         "type" => "flight",
         "sightseeings" => [],
         "car" => false
-    );
+    ];
     
     public function testUpdateUserDetails()
     {
@@ -93,6 +93,9 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->checkUpdateTravel(2);
         $this->checkAddRemoveComments(1);
         $this->checkGetMyTravels();
+
+        $this->checkGetTravelWithOutAuth(1);
+        $this->checkGetTravelWithOutAuth(2);
 
         $this->checkDeleteTravel(1);
         $this->checkDeleteTravel(2);
@@ -163,9 +166,22 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals(1, $total);
     }
 
+    private function checkGetTravelWithOutAuth(int $id)
+    {
+        $this->client->addTravelToFavorites($id);
+        $this->client->setAuthToken(null);
+
+        $travel = $this->client->getTravel($id);
+        $this->assertEquals(false, $travel->is_favorited);
+
+        $this->client->setAuthToken($this->client->getTokenByEmail('sasha@pushkin.ru', '123'));
+    }
+
 
     private function checkGetTravel(int $id)
     {
+        $this->client->addTravelToFavorites($id);
+
         $travel = $this->client->getTravel($id);
         $author = $travel->author;
         $this->assertEquals('Hobbit', $travel->title);
@@ -181,10 +197,14 @@ class FunctionalWebTest extends FunctionalTestCase
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
             $this->assertObjectHasAttribute($attr, $author);
         }
+
+        $this->assertEquals(true, $travel->is_favorited);
     }
 
     private function checkUpdateTravel(int $id)
     {
+        $this->client->removeTravelFromFavorites($id);
+
         $this->client->updateTravel($id, [
             'title'       => 'Two Towers',
             'description' => 'Before the Return of the King',
@@ -201,6 +221,8 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals(true, $travel->published);
         $this->assertEquals('Two Towers test mode', $travel->creation_mode);
         $this->assertEquals([1, 3], $travel->category_ids);
+
+        $this->assertEquals(false, $travel->is_favorited);
     }
 
     private function checkDeleteTravel(int $id)

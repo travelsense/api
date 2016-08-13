@@ -19,10 +19,10 @@ use Api\Controller\WegoHotelController;
 
 $app['argument_value_resolvers'] = $app->extend('argument_value_resolvers', function (array $resolvers, $app) {
     return array_merge(
-        $resolvers,
         [
             new ArgumentValueResolver($app),
-        ]
+        ],
+        $resolvers
     );
 });
 
