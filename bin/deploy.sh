@@ -40,7 +40,7 @@ if [[ ! -d ${RELEASE} ]]; then
     mkdir ${WORKSPACE}
     git archive --format=tar ${TAG} | sudo tar -x -C ${WORKSPACE}
     pushd ${WORKSPACE} > /dev/null
-    composer install --no-dev -q
+    composer install --no-dev
     echo ${TAG} > VERSION
     printf "${TAG} ${USER}@${HOSTNAME} `date`\n\n`uname -a`\n\n`php -v`\n\n`composer -V`" > RELEASE
     popd > /dev/null
