@@ -59,6 +59,19 @@ class WegoHotelController extends ApiController
         return $response;
     }
 
+    /*
+     * Get details of a hotel (live search)
+     *
+     * @param string $id
+     * @param int $hotel_id
+     * @return array
+     */
+    public function getDetails(string $id, int $hotel_id, $currency = 'USD', $lang = 'en') : array
+    {
+        $response = $this->wego->getDetails($id, $hotel_id, $currency, $lang);
+        return $response;
+    }
+
     /**
      * @param array $response
      */
