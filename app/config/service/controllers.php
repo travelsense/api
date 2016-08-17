@@ -13,6 +13,7 @@ use Api\Controller\Travel\BookingController;
 use Api\Controller\Travel\CategoriesController;
 use Api\Controller\Travel\CommentController;
 use Api\Controller\Travel\TravelController;
+use Api\Controller\Travel\TravelBookingController;
 use Api\Controller\UberController;
 use Api\Controller\UserController;
 use Api\Controller\WegoHotelController;
@@ -105,5 +106,15 @@ $app['controller.client'] = function ($app) {
 $app['controller.booking'] = function ($app) {
     $controller = new BookingController($app['mapper.db.booking']);
     $controller->setPointPrice($app['config']['booking']['reward_point_price']);
+    return $controller;
+};
+
+$app['controller.travel-booking'] = function ($app) {
+    $controller = new TravelBookingController(
+        $app['mapper.db.travel'],
+        $app['mapper.db.action'],
+        $app['wego.hotels'],
+        $app['wego.flights']
+    );
     return $controller;
 };
