@@ -80,6 +80,9 @@ class CategoryMapper extends AbstractPDOMapper
         return $this->create($row);
     }
 
+    /**
+     * @return array
+     */
     public function fetchFeaturedCategoryNames() : array
     {
         $select = $this->pdo->prepare(

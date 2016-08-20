@@ -298,6 +298,9 @@ class ApiClient
         return $this->get('/travel/favorite');
     }
 
+    /**
+     * @return array
+     */
     public function getFeatured()
     {
         return $this->get('/travel/featured');
