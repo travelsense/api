@@ -16,6 +16,7 @@ use Api\Controller\Travel\TravelController;
 use Api\Controller\Travel\TravelBookingController;
 use Api\Controller\UberController;
 use Api\Controller\UserController;
+use Api\Controller\WegoFlightController;
 use Api\Controller\WegoHotelController;
 
 $app['argument_value_resolvers'] = $app->extend('argument_value_resolvers', function (array $resolvers, $app) {
@@ -86,6 +87,10 @@ $app['controller.uber'] = function ($app) {
 
 $app['controller.wego'] = function ($app) {
     return new WegoHotelController($app['wego.hotels'], $app['db.main.pdo']);
+};
+
+$app['controller.wego-flight'] = function ($app) {
+    return new WegoFlightController($app['wego.flights'], $app['db.main.pdo']);
 };
 
 $app['controller.health'] = function ($app) {
