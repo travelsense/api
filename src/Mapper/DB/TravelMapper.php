@@ -262,7 +262,7 @@ class TravelMapper extends AbstractPDOMapper
         $select = $this->pdo->prepare('SELECT title, subtitle, image, category FROM banners');
         $select->execute();
 
-        return $this->buildAll($select);
+        return $select->fetchAll(PDO::FETCH_NAMED);
     }
 
     /**
