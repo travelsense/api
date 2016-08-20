@@ -34,8 +34,12 @@ class WegoHttpClient
      * @param string     $url
      * @param HttpClient $http
      */
-    public function __construct($key, $ts_code, $url = 'http://api.wego.com', HttpClient $http = null)
-    {
+    public function __construct(
+        string $key,
+        string $ts_code,
+        string $url = 'http://api.wego.com',
+        HttpClient $http = null
+    ) {
         $this->key = $key;
         $this->ts_code = $ts_code;
         $this->url = $url;
@@ -49,7 +53,7 @@ class WegoHttpClient
      * @param  array  $query
      * @return array Parsed JSON response
      */
-    public function get($uri, array $query)
+    public function get(string $uri, array $query)
     {
         $query['api_key'] = $this->key;
         $query['ts_code'] = $this->ts_code;
@@ -65,7 +69,7 @@ class WegoHttpClient
      * @param  array  $request
      * @return array Parsed JSON response
      */
-    public function post($uri, array $request)
+    public function post(string $uri, array $request)
     {
         $query = [
             'api_key' => $this->key,
