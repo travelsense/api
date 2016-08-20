@@ -117,9 +117,7 @@ $app['controller.booking'] = function ($app) {
 $app['controller.travel-booking'] = function ($app) {
     $controller = new TravelBookingController(
         $app['mapper.db.travel'],
-        $app['mapper.db.action'],
-        $app['wego.hotels'],
-        $app['wego.flights']
+        $app['mapper.db.action']
     );
     return $controller;
 };

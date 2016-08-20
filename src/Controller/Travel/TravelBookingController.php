@@ -38,19 +38,13 @@ class TravelBookingController extends ApiController
      * TravelController constructor.
      * @param TravelMapper   $travel_mapper
      * @param ActionMapper   $action_mapper
-     * @param WegoHotels $wego_hotel
-     * @param WegoFlights $wego_flight
      */
     public function __construct(
         TravelMapper $travel_mapper,
-        ActionMapper $action_mapper,
-        WegoHotels $wego_hotel,
-        WegoFlights $wego_flight
+        ActionMapper $action_mapper
     ) {
         $this->travel_mapper = $travel_mapper;
         $this->action_mapper = $action_mapper;
-        $this->wego_hotel = $wego_hotel;
-        $this->wego_flight = $wego_flight;
     }
 
     public function setTravelActions(int $id)
