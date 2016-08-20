@@ -263,6 +263,19 @@ class TravelMapper extends AbstractPDOMapper
         return $this->buildAll($select);
     }
 
+    public function fetchFeaturedCategoryNames() : array
+    {
+        $select = $this->pdo->prepare(
+            'SELECT name FROM categories WHERE featured = true'
+        );
+
+        $featured_category_names = [];
+        while (false !== $featured = $select->fetchColumn()) {
+            $featured_category_names[] = $featured;
+        }
+        return $featured_category_names;
+    }
+
     /**
      * Update title and description in DB
      *

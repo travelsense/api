@@ -166,7 +166,7 @@ class TravelController extends ApiController
         $result = [
             'banners' => $this->travel_mapper->fetchBanners()
         ];
-        $featured_category_names = ['Featured', 'Romantic', 'Sports'];
+        $featured_category_names = $this->travel_mapper->fetchFeaturedCategoryNames();
         $featured_categories = [];
         foreach ($featured_category_names as $name) {
             $travels = $this->travel_mapper->fetchPublishedByCategory($name, 5, 0);
