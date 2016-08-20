@@ -164,26 +164,7 @@ class TravelController extends ApiController
     public function getFeatured(): array
     {
         $result = [
-            'banners' => [
-                [
-                    'title'    => 'Hawaii',
-                    'subtitle' => 'Popular Destinations',
-                    'image'    => 'http://www.astonhotels.com/assets/slides/690x380-Hawaii-Sunset.jpg',
-                    'category' => 'Hawaii',
-                ],
-                [
-                    'title'    => 'Mexico',
-                    'subtitle' => 'Authentic experience',
-                    'image'    => 'http://image1.masterfile.com/em_w/02/93/35/625-02933564em.jpg',
-                    'category' => 'Mexico',
-                ],
-                [
-                    'title'    => 'California',
-                    'subtitle' => 'Explore local experiences',
-                    'image'    => 'http://cdn.sheknows.com/articles/2012/02/southern-california-beach-horiz.jpg',
-                    'category' => 'California',
-                ],
-            ],
+            'banners' => $this->travel_mapper->fetchBanners()
         ];
         $featured_category_names = ['Featured', 'Romantic', 'Sports'];
         $featured_categories = [];
