@@ -5,6 +5,7 @@
  */
 
 use Api\ExpirableStorage;
+use Api\Mapper\DB\BannerMapper;
 use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\IATAMapper;
 use Api\Mapper\DB\SessionMapper;
@@ -63,6 +64,10 @@ $app['mapper.db.booking'] = function ($app) {
 
 $app['mapper.db.action'] = function ($app) {
     return new ActionMapper($app['db.main.pdo']);
+};
+
+$app['mapper.db.banner'] = function ($app) {
+    return new BannerMapper($app['db.main.pdo']);
 };
 
 $app['mapper.db.user_role'] = function ($app) {

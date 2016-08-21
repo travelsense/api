@@ -57,6 +57,7 @@ $app['controller.travel'] = function ($app) {
         $app['mapper.db.travel'],
         $app['mapper.db.category'],
         $app['mapper.db.action'],
+        $app['mapper.db.banner'],
         $app['security.access_manager']
     );
     $controller->setLogger($app['monolog']);

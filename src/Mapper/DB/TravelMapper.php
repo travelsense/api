@@ -258,17 +258,6 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @return array[]
-     */
-    public function fetchBanners() : array
-    {
-        $select = $this->pdo->prepare('SELECT title, subtitle, image, category FROM banners');
-        $select->execute();
-
-        return $select->fetchAll(PDO::FETCH_NAMED);
-    }
-
-    /**
      * Update title and description in DB
      *
      * @param Travel $travel
