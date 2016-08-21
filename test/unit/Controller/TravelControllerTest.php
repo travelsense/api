@@ -1,6 +1,7 @@
 <?php
 namespace Api\Controller;
 
+use Api\Mapper\DB\BannerMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\TravelMapper;
@@ -15,6 +16,7 @@ class TravelControllerTest extends ControllerTestCase
     private $travel_mapper;
     private $category_mapper;
     private $action_mapper;
+    private $banner_mapper;
     private $access_manager;
 
     /**
@@ -52,6 +54,10 @@ class TravelControllerTest extends ControllerTestCase
             ->setMethods(['insert', 'bindCommonValues', 'fetchActionsForTravel'])
             ->disableOriginalConstructor()
             ->getMock();
+        $this->banner_mapper = $this->getMockBuilder(BannerMapper::class)
+            ->setMethods(['fetchBanners'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->access_manager = $this->getMockBuilder(AccessManager::class)
             ->setMethods(['isGranted', 'hasWritePermission'])
             ->disableOriginalConstructor()
@@ -60,6 +66,7 @@ class TravelControllerTest extends ControllerTestCase
             $this->travel_mapper,
             $this->category_mapper,
             $this->action_mapper,
+            $this->banner_mapper,
             $this->access_manager
         );
         $this->test_travel = $this->buildTravel();
