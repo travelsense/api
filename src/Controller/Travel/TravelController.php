@@ -6,6 +6,7 @@ use Api\Controller\ApiController;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\ActionMapper;
+use Api\Mapper\DB\BannerMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Model\Travel\Action;
@@ -36,6 +37,11 @@ class TravelController extends ApiController
     private $action_mapper;
 
     /**
+     * @var BannerManager
+     */
+    private $banner_manager;
+
+    /**
      * @var AccessManager
      */
     private $access_manager;
@@ -45,17 +51,20 @@ class TravelController extends ApiController
      * @param TravelMapper   $travel_mapper
      * @param CategoryMapper $category_mapper
      * @param ActionMapper   $action_mapper
+     * @param BannerMapper   $banner_mapper
      * @param AccessManager  $access_manager
      */
     public function __construct(
         TravelMapper $travel_mapper,
         CategoryMapper $category_mapper,
         ActionMapper $action_mapper,
+        BannerMapper $banner_mapper,
         AccessManager $access_manager
     ) {
         $this->travel_mapper = $travel_mapper;
         $this->category_mapper = $category_mapper;
         $this->action_mapper = $action_mapper;
+        $this->banner_manager = $banner_mapper;
         $this->access_manager = $access_manager;
     }
 
@@ -164,28 +173,9 @@ class TravelController extends ApiController
     public function getFeatured(): array
     {
         $result = [
-            'banners' => [
-                [
-                    'title'    => 'Hawaii',
-                    'subtitle' => 'Popular Destinations',
-                    'image'    => 'http://www.astonhotels.com/assets/slides/690x380-Hawaii-Sunset.jpg',
-                    'category' => 'Hawaii',
-                ],
-                [
-                    'title'    => 'Mexico',
-                    'subtitle' => 'Authentic experience',
-                    'image'    => 'http://image1.masterfile.com/em_w/02/93/35/625-02933564em.jpg',
-                    'category' => 'Mexico',
-                ],
-                [
-                    'title'    => 'California',
-                    'subtitle' => 'Explore local experiences',
-                    'image'    => 'http://cdn.sheknows.com/articles/2012/02/southern-california-beach-horiz.jpg',
-                    'category' => 'California',
-                ],
-            ],
+            'banners' => $this->banner_manager->fetchBanners()
         ];
-        $featured_category_names = ['Featured', 'Romantic', 'Sports'];
+        $featured_category_names = $this->category_mapper->fetchFeaturedCategoryNames();
         $featured_categories = [];
         foreach ($featured_category_names as $name) {
             $travels = $this->travel_mapper->fetchPublishedByCategory($name, 5, 0);

@@ -81,6 +81,23 @@ class CategoryMapper extends AbstractPDOMapper
     }
 
     /**
+     * @return array
+     */
+    public function fetchFeaturedCategoryNames(): array
+    {
+        $select = $this->pdo->prepare(
+            'SELECT name FROM categories WHERE featured'
+        );
+        $select->execute();
+
+        $names = [];
+        while (false !== $featured = $select->fetchColumn()) {
+            $names[] = $featured;
+        }
+        return $names;
+    }
+
+    /**
      * @param int $travel_id
      * @param array $category_ids
      */

@@ -299,6 +299,14 @@ class ApiClient
     }
 
     /**
+     * @return array
+     */
+    public function getFeatured()
+    {
+        return $this->get('/travel/featured');
+    }
+
+    /**
      * @param int $id Travel id
      * @return mixed
      */
