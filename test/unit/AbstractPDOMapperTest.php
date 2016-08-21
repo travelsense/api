@@ -2,27 +2,27 @@
 namespace Api;
 
 use LazyPDO\LazyPDO;
-use PDOStatement;
 use PDO;
+use PDOStatement;
 
 class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateFromJoined()
     {
         $mapper_a = $this->getMockForAbstractClass(AbstractPDOMapper::class, [new LazyPDO('')]);
-        $object_a = (object)[];
+        $object_a = (object) [];
         $mapper_a->expects($this->once())
             ->method('create')
             ->with(['a' => 'a', 'b' => 'b0'])
             ->willReturn($object_a);
 
         $mapper_b = $this->getMockForAbstractClass(AbstractPDOMapper::class, [new LazyPDO('')]);
-        $object_b = (object)[];
+        $object_b = (object) [];
         $mapper_b->expects($this->once())
             ->method('create')
             ->with(['a' => 'a', 'b' => 'b1'])
             ->willReturn($object_b);
-        
+
         $mapper = new class($mapper_a, $mapper_b) extends AbstractPDOMapper
         {
 
@@ -62,8 +62,8 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $expected_type
-     * @param $placeholder
-     * @param array $value
+     * @param        $placeholder
+     * @param array  $value
      * @dataProvider dataProvider
      */
     public function testBindValuesHappyPath(string $expected_type, string $placeholder, $value)
@@ -73,7 +73,7 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
         $stmt->expects($this->once())->method('bindValue')->with($placeholder, $value, $expected_type);
         $mapper->bindValues($stmt, [$placeholder => $value]);
     }
-    
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Cannot bind value of type 'object' to placeholder 'object'
@@ -82,9 +82,9 @@ class AbstractPDOMapperTest extends \PHPUnit_Framework_TestCase
     {
         $mapper = $this->getMockForAbstractClass(AbstractPDOMapper::class, [new LazyPDO('')]);
         $statement = new PDOStatement();
-        $object = (object)[];
+        $object = (object) [];
         $values = [
-            'object' => $object
+            'object' => $object,
         ];
         $mapper->bindValues($statement, $values);
     }

@@ -63,6 +63,19 @@ class WegoHttpClient
     }
 
     /**
+     * @param HttpResponse $response
+     * @return array
+     */
+    private function parseResponse(HttpResponse $response)
+    {
+        $json = json_decode($response->getBody(), true);
+        if ($response->getCode() === 200) {
+            return $json;
+        }
+        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error', $response->getCode());
+    }
+
+    /**
      * Do HTTP POST
      *
      * @param  string $uri
@@ -78,18 +91,5 @@ class WegoHttpClient
         $full_url = $this->url . $uri . '?' . http_build_query($query);
         $response = $this->http->post($full_url, json_encode($request));
         return $this->parseResponse($response);
-    }
-
-    /**
-     * @param HttpResponse $response
-     * @return array
-     */
-    private function parseResponse(HttpResponse $response)
-    {
-        $json = json_decode($response->getBody(), true);
-        if ($response->getCode() === 200) {
-            return $json;
-        }
-        throw new WegoApiException(isset($json['error']) ? $json['error'] : 'Unknown error', $response->getCode());
     }
 }

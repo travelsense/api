@@ -141,7 +141,7 @@ class Travel implements SubjectInterface
         $this->image = $image;
         return $this;
     }
-    
+
     /**
      * @return boolean
      */
@@ -179,6 +179,21 @@ class Travel implements SubjectInterface
     }
 
     /**
+     * @return int
+     */
+    public function getDaysCount(): int
+    {
+        $offsetStart = PHP_INT_MAX;
+        $offsetEnd = 0;
+
+        foreach ($this->getActions() as $action) {
+            $offsetStart = min($action->getOffsetStart(), $offsetStart);
+            $offsetEnd = max($action->getOffsetEnd(), $offsetEnd);
+        }
+        return max($offsetEnd - $offsetStart, 0);
+    }
+
+    /**
      * @return Action[]
      */
     public function getActions()
@@ -194,20 +209,5 @@ class Travel implements SubjectInterface
     {
         $this->actions = $actions;
         return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDaysCount(): int
-    {
-        $offsetStart = PHP_INT_MAX;
-        $offsetEnd = 0;
-
-        foreach ($this->getActions() as $action) {
-            $offsetStart = min($action->getOffsetStart(), $offsetStart);
-            $offsetEnd = max($action->getOffsetEnd(), $offsetEnd);
-        }
-        return max($offsetEnd - $offsetStart, 0);
     }
 }

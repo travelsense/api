@@ -73,6 +73,15 @@ class UserMapper extends AbstractPDOMapper
     }
 
     /**
+     * @param string $password
+     * @return string
+     */
+    private function getPasswordHash(string $password): string
+    {
+        return sha1($password . $this->salt);
+    }
+
+    /**
      * @param User $user
      * @return void
      */
@@ -95,12 +104,12 @@ class UserMapper extends AbstractPDOMapper
             WHERE id = :id'
         );
         $values = [
-            'email' => $email,
-            'firstname' => $first_name,
-            'lastname' => $last_name,
+            'email'           => $email,
+            'firstname'       => $first_name,
+            'lastname'        => $last_name,
             'email_confirmed' => $email_confirmed,
-            'id' => $id,
-            'creator' => $creator,
+            'id'              => $id,
+            'creator'         => $creator,
         ];
         $this->bindValues($update, $values);
         $update->execute();
@@ -123,6 +132,24 @@ class UserMapper extends AbstractPDOMapper
         );
         $row = $select->fetch(PDO::FETCH_NAMED);
         return $row ? $this->create($row) : null;
+    }
+
+    /**
+     * @param array $row
+     * @return User
+     */
+    protected function create(array $row): User
+    {
+        $user = new User();
+        return $user
+            ->setId($row['id'])
+            ->setEmail($row['email'])
+            ->setFirstName($row['first_name'])
+            ->setLastName($row['last_name'])
+            ->setPicture($row['picture'])
+            ->setCreator($row['creator'])
+            ->setCreated(new DateTime($row['created']))
+            ->setEmailConfirmed($row['email_confirmed']);
     }
 
     /**
@@ -171,32 +198,5 @@ class UserMapper extends AbstractPDOMapper
                 ':password' => $this->getPasswordHash($password),
             ]
         );
-    }
-
-    /**
-     * @param array $row
-     * @return User
-     */
-    protected function create(array $row): User
-    {
-        $user = new User();
-        return $user
-            ->setId($row['id'])
-            ->setEmail($row['email'])
-            ->setFirstName($row['first_name'])
-            ->setLastName($row['last_name'])
-            ->setPicture($row['picture'])
-            ->setCreator($row['creator'])
-            ->setCreated(new DateTime($row['created']))
-            ->setEmailConfirmed($row['email_confirmed']);
-    }
-
-    /**
-     * @param string $password
-     * @return string
-     */
-    private function getPasswordHash(string $password): string
-    {
-        return sha1($password . $this->salt);
     }
 }

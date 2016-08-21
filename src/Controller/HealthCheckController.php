@@ -17,7 +17,7 @@ class HealthCheckController extends ApiController
 
     /**
      * HealthCheckController constructor.
-     * @param Factory   $migrator_factory
+     * @param Factory  $migrator_factory
      * @param string[] $database_names
      */
     public function __construct(Factory $migrator_factory, array $database_names)
@@ -40,7 +40,7 @@ class HealthCheckController extends ApiController
         }
         return [
             'env' => getenv('APP_ENV'),
-            'db' => $db,
+            'db'  => $db,
         ];
     }
 }

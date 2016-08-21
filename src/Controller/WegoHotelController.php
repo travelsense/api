@@ -95,41 +95,14 @@ class WegoHotelController extends ApiController
     }
 
     /**
-     * @param string $location
-     * @param string $name
-     * @param string $address
-     * @param float  $lat
-     * @param float  $lon
-     * @param string $desc
-     * @param int    $stars
-     * @return int
+     * @param int $wego_id
+     * @return int|false
      */
-    private function insertHotelData(
-        string $location,
-        string $name,
-        string $address,
-        float $lat,
-        float $lon,
-        string $desc,
-        int $stars
-    ): int {
-        $insert = $this->pdo->prepare(
-            'INSERT INTO hotels
-            (name, location, address, lat, lon, description, stars)
-             VALUES
-            (:name, :location, :address, :lat, :lon, :description, :stars) RETURNING id'
-        );
-        $insert->execute([
-            ':name'        => $name,
-            ':location'    => $location,
-            ':address'     => $address,
-            ':lat'         => $lat,
-            ':lon'         => $lon,
-            ':description' => $desc,
-            ':stars'       => $stars,
-        ]);
-        $id = $insert->fetchColumn();
-        return $id;
+    private function getHotelIdByWegoId(int $wego_id)
+    {
+        $select = $this->pdo->prepare('SELECT hotel_id FROM wego_hotels WHERE wego_hotel_id = :wego_hotel_id');
+        $select->execute([':wego_hotel_id' => $wego_id]);
+        return $select->fetchColumn();
     }
 
     /**
@@ -171,6 +144,45 @@ class WegoHotelController extends ApiController
     }
 
     /**
+     * @param string $location
+     * @param string $name
+     * @param string $address
+     * @param float  $lat
+     * @param float  $lon
+     * @param string $desc
+     * @param int    $stars
+     * @return int
+     */
+    private function insertHotelData(
+        string $location,
+        string $name,
+        string $address,
+        float $lat,
+        float $lon,
+        string $desc,
+        int $stars
+    ): int
+    {
+        $insert = $this->pdo->prepare(
+            'INSERT INTO hotels
+            (name, location, address, lat, lon, description, stars)
+             VALUES
+            (:name, :location, :address, :lat, :lon, :description, :stars) RETURNING id'
+        );
+        $insert->execute([
+            ':name'        => $name,
+            ':location'    => $location,
+            ':address'     => $address,
+            ':lat'         => $lat,
+            ':lon'         => $lon,
+            ':description' => $desc,
+            ':stars'       => $stars,
+        ]);
+        $id = $insert->fetchColumn();
+        return $id;
+    }
+
+    /**
      * @param int $hotel_id
      * @param int $wego_id
      */
@@ -185,16 +197,5 @@ class WegoHotelController extends ApiController
             ':id'            => $hotel_id,
             ':wego_hotel_id' => $wego_id,
         ]);
-    }
-
-    /**
-     * @param int $wego_id
-     * @return int|false
-     */
-    private function getHotelIdByWegoId(int $wego_id)
-    {
-        $select = $this->pdo->prepare('SELECT hotel_id FROM wego_hotels WHERE wego_hotel_id = :wego_hotel_id');
-        $select->execute([':wego_hotel_id' => $wego_id]);
-        return $select->fetchColumn();
     }
 }

@@ -53,7 +53,8 @@ class WegoHotels
         int $guests = 2,
         string $ip = 'direct',
         string $country = 'US'
-    ): string {
+    ): string
+    {
         $response = $this->http->get(
             '/hotels/api/search/new',
             [
@@ -62,8 +63,8 @@ class WegoHotels
                 'check_out'             => $check_out->format(self::DATE_FORMAT),
                 'user_ip'               => $ip,
                 'country_code_for_site' => $country,
-                'rooms'                 => (int)$rooms,
-                'quests'                => (int)$guests,
+                'rooms'                 => (int) $rooms,
+                'quests'                => (int) $guests,
             ]
         );
 
@@ -92,8 +93,8 @@ class WegoHotels
             [
                 'q'        => $query,
                 'lang'     => $lang,
-                'page'     => (int)$page,
-                'per_page' => (int)$per_page,
+                'page'     => (int) $page,
+                'per_page' => (int) $per_page,
             ]
         );
     }

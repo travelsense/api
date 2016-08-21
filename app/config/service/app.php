@@ -20,13 +20,13 @@ foreach (['debug', 'env'] as $key) {
 $app->error(function (Throwable $e) use ($app) {
     if ($e instanceof ApiException) {
         $map = [
-            ApiException::VALIDATION => Response::HTTP_FORBIDDEN,
-            ApiException::USER_EXISTS => Response::HTTP_FORBIDDEN,
-            ApiException::AUTH_REQUIRED => Response::HTTP_UNAUTHORIZED,
+            ApiException::VALIDATION             => Response::HTTP_FORBIDDEN,
+            ApiException::USER_EXISTS            => Response::HTTP_FORBIDDEN,
+            ApiException::AUTH_REQUIRED          => Response::HTTP_UNAUTHORIZED,
             ApiException::INVALID_EMAIL_PASSWORD => Response::HTTP_UNAUTHORIZED,
-            ApiException::INVALID_TOKEN => Response::HTTP_UNAUTHORIZED,
-            ApiException::RESOURCE_NOT_FOUND => Response::HTTP_NOT_FOUND,
-            ApiException::ACCESS_DENIED => Response::HTTP_FORBIDDEN,
+            ApiException::INVALID_TOKEN          => Response::HTTP_UNAUTHORIZED,
+            ApiException::RESOURCE_NOT_FOUND     => Response::HTTP_NOT_FOUND,
+            ApiException::ACCESS_DENIED          => Response::HTTP_FORBIDDEN,
         ];
         $code = $e->getCode();
         $message = $e->getMessage();
@@ -44,7 +44,7 @@ $app->error(function (Throwable $e) use ($app) {
     }
     return $app->json(
         [
-            'code' => $code,
+            'code'  => $code,
             'error' => $message,
         ],
         $status
@@ -79,8 +79,8 @@ $app->register(new TwigServiceProvider, [
 // Monolog
 $app->register(new MonologServiceProvider, [
     'monolog.logfile' => $app['config']['log']['main']['file'],
-    'monolog.level' => $app['config']['log']['main']['level'],
-    'monolog.name' => 'api',
+    'monolog.level'   => $app['config']['log']['main']['level'],
+    'monolog.name'    => 'api',
 ]);
 
 // Pimple dumper

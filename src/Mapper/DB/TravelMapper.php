@@ -72,6 +72,31 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
+     * @param array $row
+     * @return Travel
+     */
+    protected function build(array $row): Travel
+    {
+        list($travel, $author) = $this->createFromJoined($row, $this, $this->user_mapper);
+        $travel->setAuthor($author);
+        $travel->setActions($this->action_mapper->fetchActionsForTravel($travel->getId()));
+        return $travel;
+    }
+
+    /**
+     * Fetch published travels of the given author
+     * @param int $author_id
+     * @param int $limit
+     * @param int $offset
+     * @return Travel[]
+     */
+    public function fetchPublishedByAuthorId(int $author_id, int $limit, int $offset): array
+    {
+        $is_published = true;
+        return $this->fetchByAuthorId($author_id, $limit, $offset, $is_published);
+    }
+
+    /**
      * @param int  $author_id
      * @param int  $limit
      * @param int  $offset
@@ -101,19 +126,6 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * Fetch published travels of the given author
-     * @param int $author_id
-     * @param int $limit
-     * @param int $offset
-     * @return Travel[]
-     */
-    public function fetchPublishedByAuthorId(int $author_id, int $limit, int $offset): array
-    {
-        $is_published = true;
-        return $this->fetchByAuthorId($author_id, $limit, $offset, $is_published);
-    }
-
-    /**
      * Insert into DB, update id
      *
      * @param Travel $travel
@@ -135,6 +147,24 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
+     * @param PDOStatement $statement
+     * @param Travel       $travel
+     */
+    private function bindCommonValues(PDOStatement $statement, Travel $travel)
+    {
+        $values = [
+            'title'         => $travel->getTitle(),
+            'description'   => $travel->getDescription(),
+            'content'       => json_encode($travel->getContent()),
+            'published'     => $travel->isPublished(),
+            'image'         => $travel->getImage(),
+            'author_id'     => $travel->getAuthorId(),
+            'creation_mode' => $travel->getCreationMode(),
+        ];
+        $this->bindValues($statement, $values);
+    }
+
+    /**
      * @param int $id
      */
     public function delete(int $id)
@@ -143,6 +173,7 @@ class TravelMapper extends AbstractPDOMapper
             ->prepare("DELETE FROM travels WHERE id = :id")
             ->execute([':id' => $id]);
     }
+
     /**
      * @param int $user_id
      * @return int[]
@@ -174,7 +205,7 @@ class TravelMapper extends AbstractPDOMapper
             'INSERT INTO favorite_travels (user_id, travel_id)
             VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING'
         )->execute([
-            ':user_id' => $user_id,
+            ':user_id'   => $user_id,
             ':travel_id' => $travel_id,
         ]);
     }
@@ -188,7 +219,7 @@ class TravelMapper extends AbstractPDOMapper
         $this->pdo
             ->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id')
             ->execute([
-                ':user_id' => $user_id,
+                ':user_id'   => $user_id,
                 ':travel_id' => $travel_id,
             ]);
     }
@@ -280,6 +311,21 @@ class TravelMapper extends AbstractPDOMapper
         $update->execute();
     }
 
+    public function markDeleted(int $travelId, bool $deleted = true)
+    {
+        $update = $this->pdo->prepare(
+            'UPDATE travels SET
+              deleted = :deleted
+            WHERE id = :id'
+        );
+        $values = [
+            'id'      => $travelId,
+            'deleted' => $deleted,
+        ];
+        $this->bindValues($update, $values);
+        $update->execute();
+    }
+
     /**
      * @param array $row
      * @return Travel
@@ -305,50 +351,5 @@ class TravelMapper extends AbstractPDOMapper
             $travel->setCategoryIds($category_ids);
         }
         return $travel;
-    }
-
-    /**
-     * @param PDOStatement $statement
-     * @param Travel $travel
-     */
-    private function bindCommonValues(PDOStatement $statement, Travel $travel)
-    {
-        $values = [
-            'title' => $travel->getTitle(),
-            'description' => $travel->getDescription(),
-            'content' => json_encode($travel->getContent()),
-            'published' => $travel->isPublished(),
-            'image' => $travel->getImage(),
-            'author_id' => $travel->getAuthorId(),
-            'creation_mode' => $travel->getCreationMode()
-        ];
-        $this->bindValues($statement, $values);
-    }
-
-    /**
-     * @param array $row
-     * @return Travel
-     */
-    protected function build(array $row): Travel
-    {
-        list($travel, $author) = $this->createFromJoined($row, $this, $this->user_mapper);
-        $travel->setAuthor($author);
-        $travel->setActions($this->action_mapper->fetchActionsForTravel($travel->getId()));
-        return $travel;
-    }
-
-    public function markDeleted(int $travelId, bool $deleted = true)
-    {
-        $update = $this->pdo->prepare(
-            'UPDATE travels SET
-              deleted = :deleted
-            WHERE id = :id'
-        );
-        $values = [
-            'id' => $travelId,
-            'deleted' => $deleted
-        ];
-        $this->bindValues($update, $values);
-        $update->execute();
     }
 }

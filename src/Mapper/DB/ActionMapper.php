@@ -3,7 +3,6 @@ namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
 use Api\Model\Travel\Action;
-use DateTime;
 use PDO;
 use PDOStatement;
 
@@ -13,33 +12,6 @@ use PDOStatement;
  */
 class ActionMapper extends AbstractPDOMapper
 {
-    /**
-     * Insert into DB, update id
-     *
-     * @param Action $action
-     */
-    public function insert(Action $action)
-    {
-        $insert = $this->pdo->prepare(
-            'INSERT INTO actions (travel_id, offset_start, offset_end, car,  airports, hotels, sightseeings, type)
-            VALUES (
-              :travel_id, 
-              :offset_start, 
-              :offset_end, 
-              :car, 
-              :airports::JSON, 
-              :hotels::JSON, 
-              :sightseeings::JSON, 
-              :type
-            ) 
-            RETURNING id'
-        );
-        $this->bindCommonValues($insert, $action);
-        $insert->execute();
-        $row = $insert->fetch(PDO::FETCH_ASSOC);
-        $action->setId($row['id']);
-    }
-
     /**
      * @param int $id
      */
@@ -75,40 +47,20 @@ class ActionMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param array $row
-     * @return Action
-     */
-    protected function create(array $row)
-    {
-        $action = new Action();
-        $action
-            ->setId($row['id'])
-            ->setTravelId($row['travel_id'])
-            ->setOffsetStart($row['offset_start'])
-            ->setOffsetEnd($row['offset_end'])
-            ->setCar($row['car'])
-            ->setAirports(json_decode($row['airports']))
-            ->setHotels(json_decode($row['hotels']))
-            ->setSightseeings(json_decode($row['sightseeings']))
-            ->setType($row['type']);
-        return $action;
-    }
-
-    /**
      * @param PDOStatement $statement
-     * @param Action $action
+     * @param Action       $action
      */
     private function bindCommonValues(PDOStatement $statement, Action $action)
     {
         $values = [
-            'travel_id' => $action->getTravelId(),
+            'travel_id'    => $action->getTravelId(),
             'offset_start' => $action->getOffsetStart(),
-            'offset_end' => $action->getOffsetEnd(),
-            'car' => $action->getCar(),
-            'airports' => json_encode($action->getAirports()),
-            'hotels' => json_encode($action->getHotels()),
+            'offset_end'   => $action->getOffsetEnd(),
+            'car'          => $action->getCar(),
+            'airports'     => json_encode($action->getAirports()),
+            'hotels'       => json_encode($action->getHotels()),
             'sightseeings' => json_encode($action->getSightseeings()),
-            'type' => $action->getType()
+            'type'         => $action->getType(),
         ];
         $this->bindValues($statement, $values);
     }
@@ -126,7 +78,7 @@ class ActionMapper extends AbstractPDOMapper
         $select->execute(['travel_id' => $travel_id]);
         return $this->buildAll($select);
     }
-    
+
     /**
      * @param int $travel_id
      */
@@ -136,7 +88,7 @@ class ActionMapper extends AbstractPDOMapper
             ->prepare("DELETE FROM actions WHERE travel_id = :travel_id")
             ->execute([':travel_id' => $travel_id]);
     }
-    
+
     /**
      * Insert into DB, update id
      *
@@ -153,5 +105,52 @@ class ActionMapper extends AbstractPDOMapper
         } catch (PDOException $e) {
             $this->pdo->rollBack();
         }
+    }
+
+    /**
+     * Insert into DB, update id
+     *
+     * @param Action $action
+     */
+    public function insert(Action $action)
+    {
+        $insert = $this->pdo->prepare(
+            'INSERT INTO actions (travel_id, offset_start, offset_end, car,  airports, hotels, sightseeings, type)
+            VALUES (
+              :travel_id, 
+              :offset_start, 
+              :offset_end, 
+              :car, 
+              :airports::JSON, 
+              :hotels::JSON, 
+              :sightseeings::JSON, 
+              :type
+            ) 
+            RETURNING id'
+        );
+        $this->bindCommonValues($insert, $action);
+        $insert->execute();
+        $row = $insert->fetch(PDO::FETCH_ASSOC);
+        $action->setId($row['id']);
+    }
+
+    /**
+     * @param array $row
+     * @return Action
+     */
+    protected function create(array $row)
+    {
+        $action = new Action();
+        $action
+            ->setId($row['id'])
+            ->setTravelId($row['travel_id'])
+            ->setOffsetStart($row['offset_start'])
+            ->setOffsetEnd($row['offset_end'])
+            ->setCar($row['car'])
+            ->setAirports(json_decode($row['airports']))
+            ->setHotels(json_decode($row['hotels']))
+            ->setSightseeings(json_decode($row['sightseeings']))
+            ->setType($row['type']);
+        return $action;
     }
 }

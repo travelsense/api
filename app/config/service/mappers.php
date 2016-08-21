@@ -5,16 +5,16 @@
  */
 
 use Api\ExpirableStorage;
+use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\BookingMapper;
+use Api\Mapper\DB\CategoryMapper;
+use Api\Mapper\DB\CommentMapper;
+use Api\Mapper\DB\FlaggedCommentMapper;
 use Api\Mapper\DB\IATAMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\TravelMapper;
-use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\User\RoleMapper;
 use Api\Mapper\DB\UserMapper;
-use Api\Mapper\DB\CategoryMapper;
-use Api\Mapper\DB\ActionMapper;
-use Api\Mapper\DB\FlaggedCommentMapper;
 
 $app['mapper.db.user'] = function ($app) {
     $mapper = new UserMapper($app['db.main.pdo']);

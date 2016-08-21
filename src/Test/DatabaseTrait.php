@@ -22,7 +22,7 @@ trait DatabaseTrait
             $app["db.$name.pdo"]->exec(file_get_contents(__DIR__ . "/../../db/{$name}/ext/postgis.sql"));
             /** @var Migrator $migrator */
             $migrator = $app["db.migrator.factory"]->getMigrator($name);
-            list(,, $highest) = $migrator->getVersionRange();
+            list(, , $highest) = $migrator->getVersionRange();
             $migrator->migrateTo($highest);
         }
     }

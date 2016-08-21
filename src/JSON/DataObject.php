@@ -47,12 +47,14 @@ class DataObject
     }
 
     /**
+     * Get boolean
      * @param string $property
      * @return bool
+     * @throws ApiException
      */
-    public function has($property): bool
+    public function getBoolean(string $property): bool
     {
-        return property_exists($this->data, $property);
+        return $this->get($property, 'boolean');
     }
 
     /**
@@ -70,13 +72,13 @@ class DataObject
 
         $value = $this->data->$property;
 
-        if (null !== $types && false === in_array(gettype($value), (array)$types)) {
+        if (null !== $types && false === in_array(gettype($value), (array) $types)) {
             $this->throwException(
                 sprintf(
                     'Property %s is of type %s, expected type(s): %s',
                     $property,
                     gettype($value),
-                    implode(', ', (array)$types)
+                    implode(', ', (array) $types)
                 )
             );
         }
@@ -95,26 +97,21 @@ class DataObject
     }
 
     /**
-     * Get string
-     * @param string          $property
-     * @param string|callable $constraint
-     * @return string
-     * @throws ApiException
+     * @param string $property
+     * @return bool
      */
-    public function getString(string $property, $constraint = null): string
+    public function has($property): bool
     {
-        return $this->get($property, 'string', $constraint);
+        return property_exists($this->data, $property);
     }
 
     /**
-     * Get boolean
-     * @param string          $property
-     * @return bool
+     * @param string $message
      * @throws ApiException
      */
-    public function getBoolean(string $property): bool
+    private function throwException(string $message)
     {
-        return $this->get($property, 'boolean');
+        throw new ApiException($message, ApiException::VALIDATION);
     }
 
     /**
@@ -133,12 +130,15 @@ class DataObject
     }
 
     /**
-     * @param string $message
+     * Get string
+     * @param string          $property
+     * @param string|callable $constraint
+     * @return string
      * @throws ApiException
      */
-    private function throwException(string $message)
+    public function getString(string $property, $constraint = null): string
     {
-        throw new ApiException($message, ApiException::VALIDATION);
+        return $this->get($property, 'string', $constraint);
     }
 
     /**

@@ -62,7 +62,7 @@ class CategoryMapper extends AbstractPDOMapper
         ]);
         return $this->createAll($select);
     }
-    
+
     /**
      * @param int $id
      * @return Category
@@ -81,7 +81,19 @@ class CategoryMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param int $travel_id
+     * @param array $row
+     * @return Category
+     */
+    protected function create(array $row): Category
+    {
+        $category = new Category();
+        return $category
+            ->setId($row['id'])
+            ->setName($row['name']);
+    }
+
+    /**
+     * @param int   $travel_id
      * @param array $category_ids
      */
     public function setTravelCategories(int $travel_id, array $category_ids)
@@ -106,17 +118,5 @@ class CategoryMapper extends AbstractPDOMapper
         } catch (PDOException $e) {
             $this->pdo->rollBack();
         }
-    }
-
-    /**
-     * @param array $row
-     * @return Category
-     */
-    protected function create(array $row): Category
-    {
-        $category = new Category();
-        return $category
-            ->setId($row['id'])
-            ->setName($row['name']);
     }
 }

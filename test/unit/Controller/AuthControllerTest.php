@@ -2,7 +2,6 @@
 namespace Api\Controller;
 
 use Api\Exception\ApiException;
-use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
@@ -55,7 +54,7 @@ class AuthControllerTest extends ControllerTestCase
         $user_pic = $this->getMockBuilder(GraphPicture::class)
             ->setMethods(['getUrl'])
             ->getMock();
-        
+
         $user_pic->method('getUrl')->willReturn('https://pushkin.ru/pic.jpg');
 
         $fb_user = $this->getMockBuilder(GraphUser::class)

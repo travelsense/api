@@ -22,7 +22,7 @@ class FlaggedCommentMapper extends AbstractPDOMapper
         ');
         $insert->execute([
             ':comment_id' => $comment_id,
-            ':user_id' => $user_id,
+            ':user_id'    => $user_id,
         ]);
     }
 

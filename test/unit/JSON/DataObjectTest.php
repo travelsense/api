@@ -8,7 +8,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 {
     public function testExists()
     {
-        $data = (object)[
+        $data = (object) [
             'a_string' => 'zzz',
             'a_null'   => null,
             'a_false'  => false,
@@ -22,7 +22,7 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 
     public function testGetRootObject()
     {
-        $data = (object)['a' => 'b'];
+        $data = (object) ['a' => 'b'];
         $json = new DataObject($data);
         $this->assertEquals($data, $json->getRootObject());
     }
@@ -63,11 +63,11 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getPositiveTestData
-     * @param array $json
-     * @param string $property
+     * @param array        $json
+     * @param string       $property
      * @param string|array $type
-     * @param mixed $constraint
-     * @param mixed $result
+     * @param mixed        $constraint
+     * @param mixed        $result
      */
     public function testGetWithPositive(array $json, string $property, $type, $constraint, $result)
     {
@@ -77,11 +77,11 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getNegativeTestData
-     * @param array $json
-     * @param string $property
+     * @param array        $json
+     * @param string       $property
      * @param string|array $type
-     * @param $constraint
-     * @param $exception
+     * @param              $constraint
+     * @param              $exception
      */
     public function testGetWithException(array $json, string $property, $type, $constraint, $exception)
     {

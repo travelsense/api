@@ -59,6 +59,40 @@ class ApiClient
         return $this->post('/user', $user);
     }
 
+    private function post($url, array $body = [], array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $response = $this->http->post($this->host . $url, json_encode($body), $headers);
+        return $this->parse($response);
+    }
+
+    private function addAuth(array $headers)
+    {
+        if (!empty($this->auth_token)) {
+            $headers[] = 'Authorization: Token ' . $this->auth_token;
+        }
+        return $headers;
+    }
+
+    /**
+     * @param HttpResponse $response
+     * @return mixed
+     */
+    private function parse(HttpResponse $response)
+    {
+        if ($response->getCode() === 200) {
+            return json_decode($response->getBody());
+        }
+        $error = @json_decode($response->getBody());
+        if (!empty($error)) {
+            throw new ApiClientException($error->error, $error->code);
+        }
+        $message = "HTTP ERROR {$response->getCode()}\n"
+            . implode("\n", $response->getHeaders())
+            . "\n\n" . $response->getBody();
+        throw new \RuntimeException($message, $response->getCode());
+    }
+
     /**
      * @param string $email
      * @param string $password
@@ -105,6 +139,13 @@ class ApiClient
         return $this->get('/user');
     }
 
+    private function get($url, array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $response = $this->http->get($this->host . $url, $headers);
+        return $this->parse($response);
+    }
+
     /**
      * Update user data
      *
@@ -114,6 +155,13 @@ class ApiClient
     public function updateUser(array $request)
     {
         return $this->put('/user', $request);
+    }
+
+    private function put($url, array $body = [], array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $response = $this->http->put($this->host . $url, json_encode($body), $headers);
+        return $this->parse($response);
     }
 
     public function getCabEstimates(float $lat1, float $lon1, float $lat2, float $lon2)
@@ -181,15 +229,22 @@ class ApiClient
     {
         return $this->delete(sprintf('/travel/comment/%s', urlencode($id)));
     }
-    
+
+    private function delete($url, array $headers = [])
+    {
+        $headers = $this->addAuth($headers);
+        $response = $this->http->delete($this->host . $url, $headers);
+        return $this->parse($response);
+    }
+
     public function getTravelComments(int $id, int $limit, int $offset)
     {
         $url = sprintf('/travel/%d/comments?', urlencode($id))
             . http_build_query([
-                'limit' => $limit,
+                'limit'  => $limit,
                 'offset' => $offset,
             ]);
-        
+
         return $this->get($url);
     }
 
@@ -255,7 +310,7 @@ class ApiClient
     }
 
     /**
-     * @param int $id
+     * @param int   $id
      * @param array $travel
      */
     public function updateTravel(int $id, array $travel)
@@ -313,60 +368,5 @@ class ApiClient
     public function getStats()
     {
         return $this->get('/stats');
-    }
-
-    private function addAuth(array $headers)
-    {
-        if (!empty($this->auth_token)) {
-            $headers[] = 'Authorization: Token ' . $this->auth_token;
-        }
-        return $headers;
-    }
-
-    /**
-     * @param HttpResponse $response
-     * @return mixed
-     */
-    private function parse(HttpResponse $response)
-    {
-        if ($response->getCode() === 200) {
-            return json_decode($response->getBody());
-        }
-        $error = @json_decode($response->getBody());
-        if (!empty($error)) {
-            throw new ApiClientException($error->error, $error->code);
-        }
-        $message = "HTTP ERROR {$response->getCode()}\n"
-            . implode("\n", $response->getHeaders())
-            . "\n\n" . $response->getBody();
-        throw new \RuntimeException($message, $response->getCode());
-    }
-
-    private function get($url, array $headers = [])
-    {
-        $headers = $this->addAuth($headers);
-        $response = $this->http->get($this->host . $url, $headers);
-        return $this->parse($response);
-    }
-
-    private function post($url, array $body = [], array $headers = [])
-    {
-        $headers = $this->addAuth($headers);
-        $response = $this->http->post($this->host . $url, json_encode($body), $headers);
-        return $this->parse($response);
-    }
-
-    private function put($url, array $body = [], array $headers = [])
-    {
-        $headers = $this->addAuth($headers);
-        $response = $this->http->put($this->host . $url, json_encode($body), $headers);
-        return $this->parse($response);
-    }
-
-    private function delete($url, array $headers = [])
-    {
-        $headers = $this->addAuth($headers);
-        $response = $this->http->delete($this->host . $url, $headers);
-        return $this->parse($response);
     }
 }

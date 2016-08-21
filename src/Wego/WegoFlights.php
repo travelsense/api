@@ -33,7 +33,6 @@ class WegoFlights
         $this->http = $http;
     }
 
-
     /**
      * Start a new flight search
      *
@@ -84,9 +83,9 @@ class WegoFlights
                     'arrival_city'   => $arrival_city,
                 ],
             ],
-            'adults_count'      => (int)$adults_count,
-            'children_count'    => (int)$children_count,
-            'infants_count'     => (int)$infants_count,
+            'adults_count'      => (int) $adults_count,
+            'children_count'    => (int) $children_count,
+            'infants_count'     => (int) $infants_count,
             'cabin'             => $cabin,
             'user_country_code' => $user_country_code,
             'country_site_code' => $country_site_code,
@@ -102,18 +101,16 @@ class WegoFlights
     }
 
     /**
-     * Add flight filters item as array if it's not empty
+     * Make filters block for flight search request - price
      *
-     * @param string $name  filter name
-     * @param array  $value filter data (probably empty)
+     * @param int $price_from min price or false if not set
+     * @param int $price_to   max price or false if not set
      *
      * @return void
      */
-    protected function setFilterArray(string $name, array $value)
+    public function setFilterPrice(int $price_from, int $price_to)
     {
-        if ($value) {
-            $this->flight_filters[$name] = $value;
-        }
+        $this->setFilterMinMax('price_min_usd', 'price_max_usd', (int) $price_from, (int) $price_to);
     }
 
     /**
@@ -143,19 +140,6 @@ class WegoFlights
     }
 
     /**
-     * Make filters block for flight search request - price
-     *
-     * @param int $price_from min price or false if not set
-     * @param int $price_to   max price or false if not set
-     *
-     * @return void
-     */
-    public function setFilterPrice(int $price_from, int $price_to)
-    {
-        $this->setFilterMinMax('price_min_usd', 'price_max_usd', (int)$price_from, (int)$price_to);
-    }
-
-    /**
      * Make filters block for flight search request - stops
      *
      * @param bool $none     if no stop available
@@ -177,6 +161,21 @@ class WegoFlights
             $types[] = 'two_plus';
         }
         $this->setFilterArray('stop_types', $types);
+    }
+
+    /**
+     * Add flight filters item as array if it's not empty
+     *
+     * @param string $name  filter name
+     * @param array  $value filter data (probably empty)
+     *
+     * @return void
+     */
+    protected function setFilterArray(string $name, array $value)
+    {
+        if ($value) {
+            $this->flight_filters[$name] = $value;
+        }
     }
 
     /**
@@ -222,14 +221,14 @@ class WegoFlights
         $this->setFilterMinMax(
             'duration_min',
             'duration_max',
-            (int)$min,
-            (int)$max
+            (int) $min,
+            (int) $max
         );
         $this->setFilterMinMax(
             'stopover_duration_min',
             'stopover_duration_max',
-            (int)$stopover_min,
-            (int)$stopover_max
+            (int) $stopover_min,
+            (int) $stopover_max
         );
     }
 
@@ -252,14 +251,14 @@ class WegoFlights
         $this->setFilterMinMax(
             'outbound_departure_day_time_min',
             'outbound_departure_day_time_max',
-            (int)$outbound_min,
-            (int)$outbound_max
+            (int) $outbound_min,
+            (int) $outbound_max
         );
         $this->setFilterMinMax(
             'inbound_departure_day_time_min',
             'inbound_departure_day_time_max',
-            (int)$inbound_min,
-            (int)$inbound_max
+            (int) $inbound_min,
+            (int) $inbound_max
         );
         $this->flight_filters['departure_day_time_filter_type'] = 'separate';
     }
@@ -296,8 +295,8 @@ class WegoFlights
                 'trip_id'          => $trip_id,
                 'sort'             => $sort,
                 'order'            => $order,
-                'page'             => (int)$page,
-                'per_page'         => (int)$per_page,
+                'page'             => (int) $page,
+                'per_page'         => (int) $per_page,
                 'currency_code'    => $currency,
             ],
             $this->flight_filters

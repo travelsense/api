@@ -11,42 +11,42 @@ class Action
      * @var int
      */
     private $travel_id;
- 
+
     /**
      * @var int
      */
     private $offset_start;
- 
+
     /**
      * @var int
      */
     private $offset_end;
- 
+
     /**
      * @var bool
      */
     private $car;
- 
+
     /**
      * @var string
      */
     private $airports;
- 
+
     /**
      * @var string
      */
     private $hotels;
- 
+
     /**
      * @var string
      */
     private $sightseeings;
- 
+
     /**
      * @var string
      */
     private $type;
-    
+
     /**
      * @return int
      */
@@ -65,7 +65,7 @@ class Action
         $this->travel_id = $travel_id;
         return $this;
     }
- 
+
     /**
      * @return int
      */
@@ -83,7 +83,7 @@ class Action
         $this->offset_start = $offset_start;
         return $this;
     }
- 
+
     /**
      * @return int
      */
@@ -101,7 +101,7 @@ class Action
         $this->offset_end = $offset_end;
         return $this;
     }
- 
+
     /**
      * @return bool
      */
@@ -119,7 +119,7 @@ class Action
         $this->car = $car;
         return $this;
     }
- 
+
     /**
      * @return string
      */
@@ -155,7 +155,7 @@ class Action
         $this->hotels = $hotels;
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -173,7 +173,7 @@ class Action
         $this->sightseeings = $sightseeings;
         return $this;
     }
-    
+
     /**
      * @return string
      */
