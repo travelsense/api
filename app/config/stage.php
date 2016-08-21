@@ -4,9 +4,9 @@ return array_replace_recursive(
     [
         'log' => [
             'main' => [
-                'file' => '/tmp/api_stage.log',
+                'file'  => '/tmp/api_stage.log',
                 'level' => 'debug',
-            ]
+            ],
         ],
     ]
 );

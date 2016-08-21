@@ -7,24 +7,21 @@ use Weew\HttpServer\HttpServer;
 trait PHPServerTrait
 {
     /**
-     * @var HttpServer
-     */
-    private static $server;
-
-    /**
      * @var int
      */
     protected static $port = 8888;
-
     /**
      * @var float
      */
     protected static $wait = 1.0;
-
     /**
      * @var string
      */
     protected static $host = 'localhost';
+    /**
+     * @var HttpServer
+     */
+    private static $server;
 
     /**
      * start the php dev server

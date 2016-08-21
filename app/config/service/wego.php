@@ -2,9 +2,9 @@
 /**
  * @var $app Api\Application
  */
-use Api\Wego\WegoHttpClient;
-use Api\Wego\WegoHotels;
 use Api\Wego\WegoFlights;
+use Api\Wego\WegoHotels;
+use Api\Wego\WegoHttpClient;
 
 $app['wego.http'] = function ($app) {
     return new WegoHttpClient($app['config']['wego']['key'], $app['config']['wego']['ts_code']);

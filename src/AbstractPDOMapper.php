@@ -1,9 +1,9 @@
 <?php
 namespace Api;
 
+use InvalidArgumentException;
 use PDO;
 use PDOStatement;
-use InvalidArgumentException;
 
 abstract class AbstractPDOMapper
 {
@@ -27,23 +27,29 @@ abstract class AbstractPDOMapper
         $this->pdo = $pdo;
     }
 
-    /**
-     * Create object by a DB row
-     *
-     * @param  array $row
-     * @return mixed
-     */
-    abstract protected function create(array $row);
-
-    /**
-     * Create object with all dependencies.
-     * This method is to be overloaded in child classes
-     * @param array $row
-     * @return mixed
-     */
-    protected function build(array $row)
+    public function bindValues(PDOStatement $statement, array $values)
     {
-        return $this->create($row);
+        foreach ($values as $param => $value) {
+            $type = gettype($value);
+            switch ($type) {
+                case "boolean":
+                    $statement->bindValue($param, $value, PDO::PARAM_BOOL);
+                    break;
+                case "NULL":
+                    $statement->bindValue($param, $value, PDO::PARAM_NULL);
+                    break;
+                case "integer":
+                    $statement->bindValue($param, $value, PDO::PARAM_INT);
+                    break;
+                case "string":
+                    $statement->bindValue($param, $value, PDO::PARAM_STR);
+                    break;
+                default:
+                    throw new InvalidArgumentException(
+                        "Cannot bind value of type '{$type}' to placeholder '{$param}'"
+                    );
+            }
+        }
     }
 
     /**
@@ -58,6 +64,25 @@ abstract class AbstractPDOMapper
         }
         return $list;
     }
+
+    /**
+     * Create object with all dependencies.
+     * This method is to be overloaded in child classes
+     * @param array $row
+     * @return mixed
+     */
+    protected function build(array $row)
+    {
+        return $this->create($row);
+    }
+
+    /**
+     * Create object by a DB row
+     *
+     * @param  array $row
+     * @return mixed
+     */
+    abstract protected function create(array $row);
 
     /**
      * @param PDOStatement $statement
@@ -103,30 +128,5 @@ abstract class AbstractPDOMapper
             }
         }
         return $row;
-    }
-
-    public function bindValues(PDOStatement $statement, array $values)
-    {
-        foreach ($values as $param => $value) {
-            $type = gettype($value);
-            switch ($type) {
-                case "boolean":
-                    $statement->bindValue($param, $value, PDO::PARAM_BOOL);
-                    break;
-                case "NULL":
-                    $statement->bindValue($param, $value, PDO::PARAM_NULL);
-                    break;
-                case "integer":
-                    $statement->bindValue($param, $value, PDO::PARAM_INT);
-                    break;
-                case "string":
-                    $statement->bindValue($param, $value, PDO::PARAM_STR);
-                    break;
-                default:
-                    throw new InvalidArgumentException(
-                        "Cannot bind value of type '{$type}' to placeholder '{$param}'"
-                    );
-            }
-        }
     }
 }

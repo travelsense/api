@@ -17,7 +17,7 @@ class BookingMapper extends AbstractPDOMapper
             'INSERT INTO bookings (user_id, travel_id) VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING'
         );
         $insert->execute([
-            ':user_id' => $user_id,
+            ':user_id'   => $user_id,
             ':travel_id' => $travel_id,
         ]);
     }

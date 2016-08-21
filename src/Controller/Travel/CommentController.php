@@ -8,7 +8,6 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\CommentMapper;
 use Api\Model\Travel\Comment;
 use Api\Model\User;
-use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -79,15 +78,15 @@ class CommentController extends ApiController
         foreach ($this->comment_mapper->fetchByTravelId($id, $limit, $offset) as $comment) {
             $author = $comment->getAuthor();
             $response[] = [
-                'id' => $comment->getId(),
+                'id'      => $comment->getId(),
                 'created' => $comment->getCreated()->format(self::DATETIME_FORMAT),
-                'text' => $comment->getText(),
-                'author' => [
+                'text'    => $comment->getText(),
+                'author'  => [
                     'id'        => $author->getId(),
                     'firstName' => $author->getFirstName(),
                     'lastName'  => $author->getLastName(),
                     'picture'   => $author->getPicture(),
-                ]
+                ],
             ];
         }
         return $response;

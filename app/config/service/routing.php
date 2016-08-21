@@ -42,8 +42,8 @@ $app->get('/stats', 'controller.booking:getStats');
 $app->post('/category', 'controller.categories:createCategory')
     ->bind('create-category');
 
-$app->get('/categories', 'controller.categories:getCategories') //TODO : remove in version 2.0
-    ->bind('travel-category');
+$app->get('/categories', 'controller.categories:getCategories')//TODO : remove in version 2.0
+->bind('travel-category');
 
 $app->get('/travel/categories', 'controller.categories:getCategories')
     ->bind('travel-category-new');
@@ -57,14 +57,14 @@ $app->get('/travel/featured', 'controller.travel:getFeatured');
 
 $app->get('/travel/favorite', 'controller.travel:getFavorites');
 
-$app->post('/travel/favorite/{id}', 'controller.travel:addFavorite') //TODO : remove in version 2.0
-    ->convert('id', $to_int);
+$app->post('/travel/favorite/{id}', 'controller.travel:addFavorite')//TODO : remove in version 2.0
+->convert('id', $to_int);
 
 $app->post('/travel/{id}/favorite', 'controller.travel:addFavorite')
     ->convert('id', $to_int);
 
-$app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite') //TODO : remove in version 2.0
-    ->convert('id', $to_int);
+$app->delete('/travel/favorite/{id}', 'controller.travel:removeFavorite')//TODO : remove in version 2.0
+->convert('id', $to_int);
 
 $app->delete('/travel/{id}/favorite', 'controller.travel:removeFavorite')
     ->convert('id', $to_int);

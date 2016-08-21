@@ -127,6 +127,37 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $token
+     * @return User
+     */
+    private function createUser(string $token): User
+    {
+        $user = new User();
+        $user
+            ->setEmail("$token@example.com")
+            ->setFirstName(ucfirst($token))
+            ->setLastName("Tester")
+            ->setPassword($token);
+        $this->user_mapper->insert($user);
+        return $user;
+    }
+
+    /**
+     * @param User $a
+     * @param User $b
+     */
+    private function assertSameUsers(User $a, User $b)
+    {
+        $this->assertTrue(
+            $a->getId() === $b->getId()
+            && $a->getEmail() === $b->getEmail()
+            && $a->getFirstName() === $b->getFirstName()
+            && $a->getLastName() === $b->getLastName()
+            && $a->isEmailConfirmed() === $b->isEmailConfirmed()
+        );
+    }
+
+    /**
      * CategoryMapper
      */
 
@@ -135,6 +166,31 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $category = $this->createCategory('a');
         $this->assertTrue(is_int($category->getId()));
         $this->assertSameCategories($category, $this->category_mapper->fetchById($category->getId()));
+    }
+
+    /**
+     * @param string $token
+     * @return Category
+     */
+    private function createCategory(string $token): Category
+    {
+        $category = new Category();
+        $category
+            ->setName($token);
+        $this->category_mapper->insert($category);
+        return $category;
+    }
+
+    /**
+     * @param Category $a
+     * @param Category $b
+     */
+    private function assertSameCategories(Category $a, Category $b)
+    {
+        $this->assertTrue(
+            $a->getId() === $b->getId()
+            && $a->getName() === $b->getName()
+        );
     }
 
     public function testCategoryMapperFetchAllCategories()
@@ -197,6 +253,37 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->assertSameTravels($travel, $favorites[0]);
     }
 
+    /**
+     * @param User   $author
+     * @param string $token
+     * @param int[]  $category_ids
+     * @return Travel
+     */
+    private function createTravel(User $author, string $token, array $category_ids = []): Travel
+    {
+        $travel = new Travel();
+        $travel
+            ->setAuthor($author)
+            ->setContent($token)
+            ->setTitle($token)
+            ->setDescription($token)
+            ->setCategoryIds($category_ids);
+        $this->travel_mapper->insert($travel);
+        return $travel;
+    }
+
+    /**
+     * @param Travel $a
+     * @param Travel $b
+     */
+    private function assertSameTravels(Travel $a, Travel $b)
+    {
+        $this->assertEquals($a->getId(), $b->getId());
+        $this->assertEquals($a->getAuthorId(), $b->getAuthorId());
+        $this->assertEquals($a->getContent(), $b->getContent());
+        $this->assertEquals($a->getTitle(), $b->getTitle());
+        $this->assertEquals($a->getCategoryIds(), $b->getCategoryIds());
+    }
 
     public function testTravelMapperTravelCategories()
     {
@@ -234,6 +321,10 @@ class MappersTest extends \PHPUnit_Framework_TestCase
             $row
         );
     }
+
+    /**
+     * Helpers
+     */
 
     public function testTravelMapperFetchById()
     {
@@ -281,9 +372,26 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param int    $author_id
+     * @param int    $travel_id
+     * @param string $text
+     * @return Comment
+     */
+    private function createComment(int $author_id, int $travel_id, string $text): Comment
+    {
+        $comment = new Comment();
+        $comment
+            ->setAuthorId($author_id)
+            ->setTravelId($travel_id)
+            ->setText($text);
+        $this->comment_mapper->insert($comment);
+        return $comment;
+    }
+
+    /**
      * BookingMapper
      */
-    
+
     public function testBookingMapper()
     {
         $author_a = $this->createUser('a');
@@ -333,7 +441,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                'admin' => 'admin',
+                'admin'     => 'admin',
                 'moderator' => 'moderator',
             ],
             $this->user_role_mapper->getRoles($user->getId())
@@ -347,118 +455,5 @@ class MappersTest extends \PHPUnit_Framework_TestCase
             ],
             $this->user_role_mapper->getRoles($user->getId())
         );
-    }
-
-    /**
-     * Helpers
-     */
-
-    /**
-     * @param Category $a
-     * @param Category $b
-     */
-    private function assertSameCategories(Category $a, Category $b)
-    {
-        $this->assertTrue(
-            $a->getId() === $b->getId()
-            && $a->getName() === $b->getName()
-        );
-    }
-
-    /**
-     * @param string $token
-     * @return Category
-     */
-    private function createCategory(string $token): Category
-    {
-        $category = new Category();
-        $category
-            ->setName($token)
-        ;
-        $this->category_mapper->insert($category);
-        return $category;
-    }
-
-    /**
-     * @param Travel $a
-     * @param Travel $b
-     */
-    private function assertSameTravels(Travel $a, Travel $b)
-    {
-        $this->assertEquals($a->getId(), $b->getId());
-        $this->assertEquals($a->getAuthorId(), $b->getAuthorId());
-        $this->assertEquals($a->getContent(), $b->getContent());
-        $this->assertEquals($a->getTitle(), $b->getTitle());
-        $this->assertEquals($a->getCategoryIds(), $b->getCategoryIds());
-    }
-
-    /**
-     * @param User   $author
-     * @param string $token
-     * @param int[]  $category_ids
-     * @return Travel
-     */
-    private function createTravel(User $author, string $token, array $category_ids = []): Travel
-    {
-        $travel = new Travel();
-        $travel
-            ->setAuthor($author)
-            ->setContent($token)
-            ->setTitle($token)
-            ->setDescription($token)
-            ->setCategoryIds($category_ids)
-        ;
-        $this->travel_mapper->insert($travel);
-        return $travel;
-    }
-
-    /**
-     * @param string $token
-     * @return User
-     */
-    private function createUser(string $token): User
-    {
-        $user = new User();
-        $user
-            ->setEmail("$token@example.com")
-            ->setFirstName(ucfirst($token))
-            ->setLastName("Tester")
-            ->setPassword($token)
-        ;
-        $this->user_mapper->insert($user);
-        return $user;
-    }
-
-    /**
-     * @param User $a
-     * @param User $b
-     */
-    private function assertSameUsers(User $a, User $b)
-    {
-        $this->assertTrue(
-            $a->getId() === $b->getId()
-            && $a->getEmail() === $b->getEmail()
-            && $a->getFirstName() === $b->getFirstName()
-            && $a->getLastName() === $b->getLastName()
-            && $a->isEmailConfirmed() === $b->isEmailConfirmed()
-        );
-    }
-
-    /**
-     * @param int $author_id
-     * @param int $travel_id
-     * @param string $text
-     * @return Comment
-     */
-    private function createComment(int $author_id, int $travel_id, string $text): Comment
-    {
-        $comment = new Comment();
-        $comment
-            ->setAuthorId($author_id)
-            ->setTravelId($travel_id)
-            ->setText($text)
-        ;
-        $this->comment_mapper->insert($comment);
-        return $comment;
     }
 }

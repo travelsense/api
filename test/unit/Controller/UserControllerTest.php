@@ -82,7 +82,7 @@ class UserControllerTest extends ControllerTestCase
         $request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
-        
+
         $request->method('getContent')->willReturn($json);
 
         $this->user_mapper->method('emailExists')
@@ -122,11 +122,11 @@ class UserControllerTest extends ControllerTestCase
         $json = json_encode([
             'ololo' => 'invalid stuff',
         ]);
-            $request = $this->getMockBuilder(Request::class)
+        $request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
-        
-        
+
+
         $request->method('getContent')->willReturn($json);
 
         try {

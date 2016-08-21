@@ -2,7 +2,6 @@
 namespace Test;
 
 use Api\Application;
-use Api\Controller\Travel\CategoriesController;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
 use Api\Test\ApiClientException;
@@ -26,16 +25,16 @@ class FunctionalWebTest extends FunctionalTestCase
      * @var array
      */
     private $airportAction = [
-        "offsetStart" => 0,
-        "hotels" => [],
-        "id" => 2,
-        "airports" => [],
-        "offsetEnd" => 0,
-        "type" => "flight",
+        "offsetStart"  => 0,
+        "hotels"       => [],
+        "id"           => 2,
+        "airports"     => [],
+        "offsetEnd"    => 0,
+        "type"         => "flight",
         "sightseeings" => [],
-        "car" => false
+        "car"          => false,
     ];
-    
+
     public function testUpdateUserDetails()
     {
         $this->createAndLoginUser();
@@ -62,7 +61,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('sasha@pushkin.ru', $user->email);
         $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
     }
-    
+
     public function testTravelCreationAndRetrieval()
     {
         $this->createAndLoginUser();
@@ -70,21 +69,21 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->client->createCategory('test cat2');
         $this->client->createCategory('test cat3');
         $id = $this->client->createTravel([
-            'title'       => 'First Travel',
-            'description' => 'To make sure ids work properly',
-            'image'       => 'https://host.com/image.jpg',
-            'content'     => [$this->airportAction],
+            'title'         => 'First Travel',
+            'description'   => 'To make sure ids work properly',
+            'image'         => 'https://host.com/image.jpg',
+            'content'       => [$this->airportAction],
             'creation_mode' => 'First Travel test mode',
-            'category_ids' => [1, 2],
+            'category_ids'  => [1, 2],
         ]);
         $this->assertEquals(1, $id);
         $id = $this->client->createTravel([
-            'title'       => 'Hobbit',
-            'description' => 'There and back again',
-            'image'       => 'https://host.com/image.jpg',
-            'content'     => [$this->airportAction],
+            'title'         => 'Hobbit',
+            'description'   => 'There and back again',
+            'image'         => 'https://host.com/image.jpg',
+            'content'       => [$this->airportAction],
             'creation_mode' => 'Hobbit test mode',
-            'category_ids' => [1, 2],
+            'category_ids'  => [1, 2],
         ]);
         $this->assertEquals(2, $id);
 
@@ -99,6 +98,125 @@ class FunctionalWebTest extends FunctionalTestCase
 
         $this->checkDeleteTravel(1);
         $this->checkDeleteTravel(2);
+    }
+
+    private function checkGetTravel(int $id)
+    {
+        $this->client->addTravelToFavorites($id);
+
+        $travel = $this->client->getTravel($id);
+        $author = $travel->author;
+        $this->assertEquals('Hobbit', $travel->title);
+        $this->assertEquals('There and back again', $travel->description);
+        $this->assertEquals('https://host.com/image.jpg', $travel->image);
+        $this->assertEquals(false, $travel->published);
+        $this->assertEquals('Hobbit test mode', $travel->creation_mode);
+
+        $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
+        $this->assertEquals([(object) $this->airportAction], $travel->content);
+        $this->assertEquals([1, 2], $travel->category_ids);
+
+        foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
+            $this->assertObjectHasAttribute($attr, $author);
+        }
+
+        $this->assertEquals(true, $travel->is_favorited);
+    }
+
+    private function checkAddRemoveFavorites(int $id)
+    {
+        $this->client->addTravelToFavorites($id);
+        $favorites = $this->client->getFavoriteTravels();
+        $this->assertEquals(1, count($favorites));
+        $travel = $favorites[0];
+        $this->assertEquals('Hobbit', $travel->title);
+        $this->assertEquals('There and back again', $travel->description);
+        $this->client->removeTravelFromFavorites($id);
+        $favorites = $this->client->getFavoriteTravels();
+        $this->assertEmpty($favorites);
+    }
+
+    private function checkUpdateTravel(int $id)
+    {
+        $this->client->removeTravelFromFavorites($id);
+
+        $this->client->updateTravel($id, [
+            'title'         => 'Two Towers',
+            'description'   => 'Before the Return of the King',
+            'image'         => 'https://host.com/new_image.jpg',
+            'published'     => true,
+            'content'       => [$this->airportAction],
+            'creation_mode' => 'Two Towers test mode',
+            'category_ids'  => [1, 3],
+        ]);
+        $travel = $this->client->getTravel($id);
+        $this->assertEquals('Two Towers', $travel->title);
+        $this->assertEquals('Before the Return of the King', $travel->description);
+        $this->assertEquals('https://host.com/new_image.jpg', $travel->image);
+        $this->assertEquals(true, $travel->published);
+        $this->assertEquals('Two Towers test mode', $travel->creation_mode);
+        $this->assertEquals([1, 3], $travel->category_ids);
+
+        $this->assertEquals(false, $travel->is_favorited);
+    }
+
+    private function checkAddRemoveComments($id)
+    {
+        $ids = [];
+        for ($i = 0; $i < 20; $i++) {
+            $ids[] = $this->client->addTravelComment($id, "Comment $i");
+        }
+
+        $limit = 3;
+        $offset = 5;
+        $comments = $this->client->getTravelComments($id, $limit, $offset);
+
+        $this->assertEquals($limit, count($comments));
+
+        // 19 (latest) - 5 (offset) = 14
+        $this->assertEquals('Comment 14', $comments[0]->text);
+        $this->assertEquals('Comment 13', $comments[1]->text);
+        $this->assertEquals('Comment 12', $comments[2]->text);
+
+        // Remove the last comment
+        $killMe = end($ids);
+        $this->client->deleteTravelComment($killMe);
+
+        $comments = $this->client->getTravelComments($id, $limit, $offset);
+
+        // 18 (latest) - 5 (offset) = 13
+        $this->assertEquals('Comment 13', $comments[0]->text);
+        $this->assertEquals('Comment 12', $comments[1]->text);
+        $this->assertEquals('Comment 11', $comments[2]->text);
+    }
+
+    private function checkGetMyTravels()
+    {
+        $travels = $this->client->getMyTravels();
+        $this->assertEquals(2, count($travels));
+    }
+
+    private function checkGetTravelWithOutAuth(int $id)
+    {
+        $this->client->addTravelToFavorites($id);
+        $this->client->setAuthToken(null);
+
+        $travel = $this->client->getTravel($id);
+        $this->assertEquals(false, $travel->is_favorited);
+
+        $this->client->setAuthToken($this->client->getTokenByEmail('sasha@pushkin.ru', '123'));
+    }
+
+    private function checkDeleteTravel(int $id)
+    {
+        $this->client->deleteTravel($id);
+        try {
+            $this->client->getTravel($id);
+            $this->fail("travel record still exists after deleteTravel()");
+        } catch (ApiClientException $e) {
+            $this->assertEquals(4000, $e->getCode());
+            $this->assertEquals('Travel not found', $e->getMessage());
+        }
     }
 
     public function testTravelCategoryGetting()
@@ -146,12 +264,12 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->client->createCategory('test cat1');
         $this->client->createCategory('test cat2');
         $id = $this->client->createTravel([
-            'title'       => 'First Travel',
-            'description' => 'To make sure ids work properly',
-            'image'       => 'https://host.com/image.jpg',
-            'content'     => [$this->airportAction],
+            'title'         => 'First Travel',
+            'description'   => 'To make sure ids work properly',
+            'image'         => 'https://host.com/image.jpg',
+            'content'       => [$this->airportAction],
             'creation_mode' => 'First Travel test mode',
-            'category_ids' => [1, 2],
+            'category_ids'  => [1, 2],
         ]);
 
         $this->client->registerBooking($id);
@@ -164,125 +282,5 @@ class FunctionalWebTest extends FunctionalTestCase
             $total += $item->count;
         }
         $this->assertEquals(1, $total);
-    }
-
-    private function checkGetTravelWithOutAuth(int $id)
-    {
-        $this->client->addTravelToFavorites($id);
-        $this->client->setAuthToken(null);
-
-        $travel = $this->client->getTravel($id);
-        $this->assertEquals(false, $travel->is_favorited);
-
-        $this->client->setAuthToken($this->client->getTokenByEmail('sasha@pushkin.ru', '123'));
-    }
-
-
-    private function checkGetTravel(int $id)
-    {
-        $this->client->addTravelToFavorites($id);
-
-        $travel = $this->client->getTravel($id);
-        $author = $travel->author;
-        $this->assertEquals('Hobbit', $travel->title);
-        $this->assertEquals('There and back again', $travel->description);
-        $this->assertEquals('https://host.com/image.jpg', $travel->image);
-        $this->assertEquals(false, $travel->published);
-        $this->assertEquals('Hobbit test mode', $travel->creation_mode);
-
-        $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
-        $this->assertEquals([(object) $this->airportAction], $travel->content);
-        $this->assertEquals([1, 2], $travel->category_ids);
-
-        foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
-            $this->assertObjectHasAttribute($attr, $author);
-        }
-
-        $this->assertEquals(true, $travel->is_favorited);
-    }
-
-    private function checkUpdateTravel(int $id)
-    {
-        $this->client->removeTravelFromFavorites($id);
-
-        $this->client->updateTravel($id, [
-            'title'       => 'Two Towers',
-            'description' => 'Before the Return of the King',
-            'image'       => 'https://host.com/new_image.jpg',
-            'published'   => true,
-            'content'     => [$this->airportAction],
-            'creation_mode' => 'Two Towers test mode',
-            'category_ids' => [1, 3],
-        ]);
-        $travel = $this->client->getTravel($id);
-        $this->assertEquals('Two Towers', $travel->title);
-        $this->assertEquals('Before the Return of the King', $travel->description);
-        $this->assertEquals('https://host.com/new_image.jpg', $travel->image);
-        $this->assertEquals(true, $travel->published);
-        $this->assertEquals('Two Towers test mode', $travel->creation_mode);
-        $this->assertEquals([1, 3], $travel->category_ids);
-
-        $this->assertEquals(false, $travel->is_favorited);
-    }
-
-    private function checkDeleteTravel(int $id)
-    {
-        $this->client->deleteTravel($id);
-        try {
-            $this->client->getTravel($id);
-            $this->fail("travel record still exists after deleteTravel()");
-        } catch (ApiClientException $e) {
-            $this->assertEquals(4000, $e->getCode());
-            $this->assertEquals('Travel not found', $e->getMessage());
-        }
-    }
-
-    private function checkAddRemoveFavorites(int $id)
-    {
-        $this->client->addTravelToFavorites($id);
-        $favorites = $this->client->getFavoriteTravels();
-        $this->assertEquals(1, count($favorites));
-        $travel = $favorites[0];
-        $this->assertEquals('Hobbit', $travel->title);
-        $this->assertEquals('There and back again', $travel->description);
-        $this->client->removeTravelFromFavorites($id);
-        $favorites = $this->client->getFavoriteTravels();
-        $this->assertEmpty($favorites);
-    }
-    
-    private function checkGetMyTravels()
-    {
-        $travels = $this->client->getMyTravels();
-        $this->assertEquals(2, count($travels));
-    }
-    
-    private function checkAddRemoveComments($id)
-    {
-        $ids = [];
-        for ($i = 0; $i < 20; $i++) {
-            $ids[] = $this->client->addTravelComment($id, "Comment $i");
-        }
-
-        $limit = 3;
-        $offset = 5;
-        $comments = $this->client->getTravelComments($id, $limit, $offset);
-
-        $this->assertEquals($limit, count($comments));
-
-        // 19 (latest) - 5 (offset) = 14
-        $this->assertEquals('Comment 14', $comments[0]->text);
-        $this->assertEquals('Comment 13', $comments[1]->text);
-        $this->assertEquals('Comment 12', $comments[2]->text);
-
-        // Remove the last comment
-        $killMe = end($ids);
-        $this->client->deleteTravelComment($killMe);
-
-        $comments = $this->client->getTravelComments($id, $limit, $offset);
-
-        // 18 (latest) - 5 (offset) = 13
-        $this->assertEquals('Comment 13', $comments[0]->text);
-        $this->assertEquals('Comment 12', $comments[1]->text);
-        $this->assertEquals('Comment 11', $comments[2]->text);
     }
 }

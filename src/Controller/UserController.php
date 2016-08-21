@@ -7,7 +7,6 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Service\Mailer\MailerService;
-use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -64,19 +63,6 @@ class UserController extends ApiController
     }
 
     /**
-     * Send account confirmation link
-     * @param User $user
-     */
-    public function sendConfirmationLink(User $user)
-    {
-        $token = $this->storage->store($user->getEmail());
-        if ($this->logger) {
-            $this->logger->info('Expirable token created', ['token' => $token]);
-        }
-        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
-    }
-
-    /**
      * Start email-based registration. Send a confirmation email.
      *
      * @param  Request $request
@@ -102,6 +88,19 @@ class UserController extends ApiController
         $this->user_mapper->insert($user);
         $this->sendConfirmationLink($user);
         return [];
+    }
+
+    /**
+     * Send account confirmation link
+     * @param User $user
+     */
+    public function sendConfirmationLink(User $user)
+    {
+        $token = $this->storage->store($user->getEmail());
+        if ($this->logger) {
+            $this->logger->info('Expirable token created', ['token' => $token]);
+        }
+        $this->mailer->sendAccountConfirmationMessage($user->getEmail(), $token);
     }
 
     /**

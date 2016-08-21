@@ -72,10 +72,12 @@ class CategoriesControllerTest extends ControllerTestCase
             );
 
         $this->assertEquals(
-            [[
-                'id' => 1,
-                'title' => 'test_category',
-            ]],
+            [
+                [
+                    'id'    => 1,
+                    'title' => 'test_category',
+                ],
+            ],
             $this->controller->getCategories()
         );
     }
@@ -90,10 +92,12 @@ class CategoriesControllerTest extends ControllerTestCase
             ->willReturn([$this->test_category]);
 
         $this->assertEquals(
-            [[
-                'id' => 1,
-                'title' => 'test_category',
-            ]],
+            [
+                [
+                    'id'    => 1,
+                    'title' => 'test_category',
+                ],
+            ],
             $this->controller->getCategories('te')
         );
     }

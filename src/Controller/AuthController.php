@@ -8,7 +8,6 @@ use Api\Model\User;
 use Api\Security\SessionManager;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
-use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -79,21 +78,6 @@ class AuthController extends ApiController
     }
 
     /**
-     * @param string $email
-     * @param string $password
-     * @return User
-     * @throws ApiException
-     */
-    protected function getUserByEmailPassword(string $email, string $password): User
-    {
-        $user = $this->user_mapper->fetchByEmailAndPassword($email, $password);
-        if (null === $user) {
-            throw new ApiException('Invalid email or password', ApiException::INVALID_EMAIL_PASSWORD);
-        }
-        return $user;
-    }
-
-    /**
      * @param string $token
      * @return User
      */
@@ -114,6 +98,21 @@ class AuthController extends ApiController
                 ->setPicture($pic ? $pic->getUrl() : null)
                 ->setPassword($this->pwd_generator->generatePassword());
             $this->user_mapper->insert($user);
+        }
+        return $user;
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return User
+     * @throws ApiException
+     */
+    protected function getUserByEmailPassword(string $email, string $password): User
+    {
+        $user = $this->user_mapper->fetchByEmailAndPassword($email, $password);
+        if (null === $user) {
+            throw new ApiException('Invalid email or password', ApiException::INVALID_EMAIL_PASSWORD);
         }
         return $user;
     }

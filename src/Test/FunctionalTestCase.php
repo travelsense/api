@@ -12,7 +12,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
      * @var ApiClient
      */
     protected $client;
-    
+
     public static function setUpBeforeClass()
     {
         self::startServer('/tmp/php-server.log');
@@ -22,7 +22,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
     {
         self::stopServer();
     }
-    
+
     public function setUp()
     {
         $app = Application::createByEnvironment();

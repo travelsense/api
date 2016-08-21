@@ -1,9 +1,6 @@
 <?php
 namespace Api\Controller;
 
-use Api\Controller\ClientController;
-use Api\Exception\ApiException;
-
 class ClientControllerTest extends \PHPUnit_Framework_TestCase
 {
     private $controller;
@@ -12,7 +9,7 @@ class ClientControllerTest extends \PHPUnit_Framework_TestCase
     {
         $this->controller = new ClientController();
     }
-    
+
     /**
      * client
      */

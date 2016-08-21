@@ -70,7 +70,16 @@ class CommentMapper extends AbstractPDOMapper
         }
         return $this->build($row);
     }
-    
+
+    protected function build(array $row)
+    {
+        /** @var Comment $comment */
+        /** @var User $author */
+        list($comment, $author) = $this->createFromJoined($row, $this, $this->user_mapper);
+        $comment->setAuthor($author);
+        return $comment;
+    }
+
     /**
      * Get all comments by travel id
      * @param int $travel_id
@@ -118,14 +127,5 @@ class CommentMapper extends AbstractPDOMapper
             ->setText($row['text'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']));
-    }
-
-    protected function build(array $row)
-    {
-        /** @var Comment $comment */
-        /** @var User $author */
-        list($comment, $author) = $this->createFromJoined($row, $this, $this->user_mapper);
-        $comment->setAuthor($author);
-        return $comment;
     }
 }

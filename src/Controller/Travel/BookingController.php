@@ -32,10 +32,10 @@ class BookingController
     {
         $this->point_price = $point_price;
     }
-    
+
     /**
      * @param User $user
-     * @param int $id Travel ID
+     * @param int  $id Travel ID
      * @return array
      */
     public function registerBooking(User $user, int $id)
@@ -53,8 +53,8 @@ class BookingController
     {
         $bookings_total = $this->booking_mapper->getBookingsTotal($user->getId());
         return [
-            'bookingsTotal' => $bookings_total,
-            'rewardTotal' => $bookings_total * $this->point_price,
+            'bookingsTotal'    => $bookings_total,
+            'rewardTotal'      => $bookings_total * $this->point_price,
             'bookingsLastWeek' => $this->booking_mapper->getStats($user->getId()),
         ];
     }

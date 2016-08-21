@@ -4,7 +4,7 @@
  */
 return [
     'secure_json' => false,
-    'service' => [
+    'service'     => [
         'app.php', // must be processed first
         'controllers.php',
         'email.php',
@@ -15,23 +15,23 @@ return [
         'storages.php',
         'wego.php',
     ],
-    'debug' => false,
-    'log' => [
+    'debug'       => false,
+    'log'         => [
         'main' => [
-            'file' => '/var/log/api.log',
+            'file'  => '/var/log/api.log',
             'level' => 'info',
         ],
     ],
-    'email' => [
-        'smtp_user' => 'noreply@hoptrip.us',
+    'email'       => [
+        'smtp_user'     => 'noreply@hoptrip.us',
         'smtp_password' => 'xxx',
-        'from_address' => 'noreply@hoptrip.us',
-        'from_name' => 'Hoptrip',
-        'base_url' => 'https://hoptrip.us',
-        'message_log' => '/tmp/email.log', // used in Api\Test\Mailer
+        'from_address'  => 'noreply@hoptrip.us',
+        'from_name'     => 'Hoptrip',
+        'base_url'      => 'https://hoptrip.us',
+        'message_log'   => '/tmp/email.log', // used in Api\Test\Mailer
     ],
-    'security' => [
-        'enabled' => true,
+    'security'    => [
+        'enabled'          => true,
         'unsecured_routes' => [
             'change-password',
             'confirm-email',
@@ -49,35 +49,35 @@ return [
             'travel-comment',
             'version',
         ],
-        'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
+        'password_salt'    => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],
-    'facebook' => [
-        'app_id' => 'xxx',
-        'app_secret' => 'xxx',
+    'facebook'    => [
+        'app_id'                => 'xxx',
+        'app_secret'            => 'xxx',
         'default_graph_version' => 'v2.5',
     ],
-    'db' => [
+    'db'          => [
         'main' => [
-            'driver' => 'pgsql',
-            'host' => 'localhost',
-            'user' => 'xxx',
+            'driver'   => 'pgsql',
+            'host'     => 'localhost',
+            'user'     => 'xxx',
             'database' => 'xxx',
             'password' => 'xxx',
-            'options' => [
+            'options'  => [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ],
         ],
     ],
-    'migrations' => __DIR__ . '/../../db',
-    'uber' => [
+    'migrations'  => __DIR__ . '/../../db',
+    'uber'        => [
         'server_token' => 'xxx',
     ],
-    'wego' => [
-        'key' => 'xxx',
+    'wego'        => [
+        'key'     => 'xxx',
         'ts_code' => 'xxx',
     ],
-    'booking' => [
+    'booking'     => [
         'reward_point_price' => 0.1, // 10 cents
     ],
-    
+
 ];

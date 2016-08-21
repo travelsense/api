@@ -51,7 +51,7 @@ class AccessManagerTest extends \PHPUnit_Framework_TestCase
         $this->roleMapper->method('getRoles')
             ->willReturnMap([
                 [1, []],
-                [2, [Role::MODERATOR]]
+                [2, [Role::MODERATOR]],
             ]);
 
         $this->assertTrue($this->manager->isGranted($author, Action::WRITE, $travel));

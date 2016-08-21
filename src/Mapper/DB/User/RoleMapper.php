@@ -22,7 +22,7 @@ class RoleMapper extends AbstractPDOMapper
             ':user_id' => $user_id,
         ]);
         $roles = [];
-        while (false !== $role =$select->fetchColumn()) {
+        while (false !== $role = $select->fetchColumn()) {
             $roles[$role] = $role;
         }
         return $roles;
@@ -37,8 +37,8 @@ class RoleMapper extends AbstractPDOMapper
     {
         $insert = $this->pdo->prepare('INSERT INTO user_roles (user_id, role) VALUES (:user_id, :role)');
         $insert->execute([
-           ':user_id' => $user_id,
-           ':role' => $role,
+            ':user_id' => $user_id,
+            ':role'    => $role,
         ]);
     }
 
@@ -51,8 +51,8 @@ class RoleMapper extends AbstractPDOMapper
     {
         $delete = $this->pdo->prepare('DELETE FROM user_roles WHERE user_id = :user_id AND role = :role');
         $delete->execute([
-           ':user_id' => $user_id,
-           ':role' => $role,
+            ':user_id' => $user_id,
+            ':role'    => $role,
         ]);
     }
 

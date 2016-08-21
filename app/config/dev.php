@@ -2,20 +2,20 @@
 return array_replace_recursive(
     require __DIR__ . '/common.php',
     [
-        'debug' => true, //used by error handler
-        'service' => [
-            'email'       => 'email.mock.php',
+        'debug'       => true, //used by error handler
+        'service'     => [
+            'email' => 'email.mock.php',
         ],
-        'log' => [
+        'log'         => [
             'main' => [
-                'file' => '/tmp/api_dev.log',
+                'file'  => '/tmp/api_dev.log',
                 'level' => 'debug',
-            ]
+            ],
         ],
         'secure_json' => __DIR__ . '/local.json',
-        'db' => [
+        'db'          => [
             'main' => [
-                'user' => 'api_dev',
+                'user'     => 'api_dev',
                 'database' => 'api_dev',
                 'password' => 'api_dev',
             ],

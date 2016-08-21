@@ -14,7 +14,7 @@ class ClientController
         $regex = '/^(\d+)\.(\d+)\.(\d+)$/';
         if (preg_match($regex, $version, $matches)) {
             return [
-                'version' => $version,
+                'version'   => $version,
                 'supported' => true,
             ];
         }
