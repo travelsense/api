@@ -10,12 +10,12 @@ class BannerMapper extends AbstractPDOMapper
     /**
      * @return array[]
      */
-    public function fetchBanners() : array
+    public function fetchBanners(): array
     {
         $select = $this->pdo->prepare('SELECT title, subtitle, image, category FROM banners');
         $select->execute();
 
-        return $select->fetchAll(PDO::FETCH_NAMED);
+        return $select->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**

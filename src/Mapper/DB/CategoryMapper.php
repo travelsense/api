@@ -90,11 +90,11 @@ class CategoryMapper extends AbstractPDOMapper
         );
         $select->execute();
 
-        $featured_category_names = [];
+        $names = [];
         while (false !== $featured = $select->fetchColumn()) {
-            $featured_category_names[] = $featured;
+            $names[] = $featured;
         }
-        return $featured_category_names;
+        return $names;
     }
 
     /**
