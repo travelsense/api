@@ -87,6 +87,10 @@ $app->post('/travel/{id}/book', 'controller.booking:registerBooking')
 $app->delete('/travel/comment/{id}', 'controller.comment:deleteById')
     ->convert('id', $to_int);
 
+$app->post('/travel/{id}/estimate', 'controller.travel-booking:getEstimate')
+    ->convert('id', $to_int)
+    ->bind('travel-by-id-estimate');
+
 $app->get('/travel/{id}', 'controller.travel:getTravel')
     ->convert('id', $to_int)
     ->bind('travel-by-id');
@@ -107,6 +111,8 @@ $app->get('/iata/{type}/all', 'controller.iata:getAll')
     ->assert('type', $iata_type)
     ->bind('iata-all');
 
+$app->post('/flights/api/k/2/searches', 'controller.wego-flight:startSearch');
+
 $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:startSearch')
     ->convert('in', $to_date)
     ->convert('out', $to_date)
@@ -114,6 +120,9 @@ $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:start
 
 $app->get('/hotel/search-results/{id}/{page}', 'controller.wego:getSearchResults')
     ->convert('page', $to_int);
+
+$app->get('/hotels/api/search/show/{id}', 'controller.wego:getDetails')
+    ->convert('id', $to_int);
 
 $app->get('/healthCheck', 'controller.health:healthCheck')
     ->bind('health-check');

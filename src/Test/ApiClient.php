@@ -147,6 +147,21 @@ class ApiClient
         return $this->get("/hotel/search-results/$id/$page");
     }
 
+    /*
+     * Get details of a hotel (live search)
+     *
+     * @param int $id wego search id
+     * @param int $hotel_id
+     */
+    public function getHotelDetails($id, $hotel_id)
+    {
+        $url = sprintf('/hotels/api/search/show/%d?', urlencode($id))
+            . http_build_query([
+                'hotel_id' => $hotel_id,
+            ]);
+        return $this->get($url);
+    }
+
     /**
      * Create a new Travel
      * @param array $travel
