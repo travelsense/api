@@ -31,7 +31,7 @@
   },
   "repositories": [
     {
-      "type": "git",
+      "type": "vcs",
       "no-api": true,
       "url":  "git@github.com:travelsense/lib-api-client.git"
     }

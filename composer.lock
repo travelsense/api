@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e8bdb2136797f8d67bf17e127a151561",
-    "content-hash": "a219a7ed37bf7b544ede855e31c4e7ad",
+    "hash": "51c07c9729047cadc06d3c13a97dec4a",
+    "content-hash": "22a8b800e88e82cdc59bd0245a0c72f4",
     "packages": [
         {
             "name": "f3ath/simpleuber",
@@ -1850,6 +1850,12 @@
                 "type": "git",
                 "url": "git@github.com:travelsense/lib-api-client.git",
                 "reference": "2fd1be529ac39261a4628525303a2f69fc99c2dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/travelsense/lib-api-client/zipball/2fd1be529ac39261a4628525303a2f69fc99c2dc",
+                "reference": "2fd1be529ac39261a4628525303a2f69fc99c2dc",
+                "shasum": ""
             },
             "require": {
                 "php": ">=7.0",
