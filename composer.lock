@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "44b6115f791065f054580f75e40fbfb3",
-    "content-hash": "66fe877b6bf13d2ca5891ebcf7e39460",
+    "hash": "e8bdb2136797f8d67bf17e127a151561",
+    "content-hash": "a219a7ed37bf7b544ede855e31c4e7ad",
     "packages": [
         {
             "name": "f3ath/simpleuber",
@@ -152,36 +152,6 @@
             ],
             "description": "Password Generator Library",
             "time": "2016-07-24 15:43:52"
-        },
-        {
-            "name": "hoptrip/lib-api-client",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:travelsense/lib-api-client.git",
-                "reference": "2fd1be529ac39261a4628525303a2f69fc99c2dc"
-            },
-            "require": {
-                "php": ">=7.0",
-                "phpcurl/curlhttp": "1.0.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "HopTrip\\ApiClient\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Alexey Karapetov",
-                    "email": "alexey@karapetov.com"
-                }
-            ],
-            "description": "PHP Client for HopTrip API",
-            "time": "2016-08-23 04:01:19"
         },
         {
             "name": "lazypdo/lazypdo",
@@ -1872,6 +1842,36 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "time": "2016-08-17 00:17:27"
+        },
+        {
+            "name": "hoptrip/lib-api-client",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:travelsense/lib-api-client.git",
+                "reference": "2fd1be529ac39261a4628525303a2f69fc99c2dc"
+            },
+            "require": {
+                "php": ">=7.0",
+                "phpcurl/curlhttp": "1.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HopTrip\\ApiClient\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Karapetov",
+                    "email": "alexey@karapetov.com"
+                }
+            ],
+            "description": "PHP Client for HopTrip API",
+            "time": "2016-08-23 04:01:19"
         },
         {
             "name": "myclabs/deep-copy",
