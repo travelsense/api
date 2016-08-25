@@ -2,6 +2,7 @@
 namespace Api\Test;
 
 use Api\Application;
+use HopTrip\ApiClient\ApiClient;
 
 abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 {
