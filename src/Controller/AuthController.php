@@ -8,6 +8,7 @@ use Api\Model\User;
 use Api\Security\SessionManager;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
