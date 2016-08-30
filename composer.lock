@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "51c07c9729047cadc06d3c13a97dec4a",
-    "content-hash": "22a8b800e88e82cdc59bd0245a0c72f4",
+    "hash": "98489d6eb715950c75fe7bac630cb9b7",
+    "content-hash": "272310413ff34ba763ee15d2a880a55f",
     "packages": [
         {
             "name": "f3ath/simpleuber",
@@ -56,16 +56,16 @@
             "time": "2016-02-04 06:54:07"
         },
         {
-            "name": "facebook/graph-sdk",
+            "name": "facebook/php-sdk-v4",
             "version": "5.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/facebook/php-graph-sdk.git",
+                "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
                 "reference": "7ed1ecdae6a5b2f8b8f60e132d06594b39b16fb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/7ed1ecdae6a5b2f8b8f60e132d06594b39b16fb1",
+                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/7ed1ecdae6a5b2f8b8f60e132d06594b39b16fb1",
                 "reference": "7ed1ecdae6a5b2f8b8f60e132d06594b39b16fb1",
                 "shasum": ""
             },
@@ -577,16 +577,16 @@
         },
         {
             "name": "silex/silex",
-            "version": "v2.0.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1"
+                "reference": "183e39aad0a3011fce6020a0b0067d6a730608d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1",
-                "reference": "fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/183e39aad0a3011fce6020a0b0067d6a730608d8",
+                "reference": "183e39aad0a3011fce6020a0b0067d6a730608d8",
                 "shasum": ""
             },
             "require": {
@@ -658,7 +658,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2016-08-22 17:50:21"
+            "time": "2016-08-17 14:48:15"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1842,42 +1842,6 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "time": "2016-08-17 00:17:27"
-        },
-        {
-            "name": "hoptrip/lib-api-client",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:travelsense/lib-api-client.git",
-                "reference": "2fd1be529ac39261a4628525303a2f69fc99c2dc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/travelsense/lib-api-client/zipball/2fd1be529ac39261a4628525303a2f69fc99c2dc",
-                "reference": "2fd1be529ac39261a4628525303a2f69fc99c2dc",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0",
-                "phpcurl/curlhttp": "1.0.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "HopTrip\\ApiClient\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Alexey Karapetov",
-                    "email": "alexey@karapetov.com"
-                }
-            ],
-            "description": "PHP Client for HopTrip API",
-            "time": "2016-08-23 04:01:19"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3602,7 +3566,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "silex/silex": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
