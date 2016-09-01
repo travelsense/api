@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "98489d6eb715950c75fe7bac630cb9b7",
-    "content-hash": "272310413ff34ba763ee15d2a880a55f",
+    "hash": "3fa1d516efe2af549c9eb76c724ce7c2",
+    "content-hash": "698e57bdcfd2976d93cff1535ead59ac",
     "packages": [
         {
             "name": "f3ath/simpleuber",
@@ -60,12 +60,12 @@
             "version": "5.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
+                "url": "https://github.com/facebook/php-graph-sdk.git",
                 "reference": "7ed1ecdae6a5b2f8b8f60e132d06594b39b16fb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/7ed1ecdae6a5b2f8b8f60e132d06594b39b16fb1",
+                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/7ed1ecdae6a5b2f8b8f60e132d06594b39b16fb1",
                 "reference": "7ed1ecdae6a5b2f8b8f60e132d06594b39b16fb1",
                 "shasum": ""
             },
@@ -110,6 +110,7 @@
                 "facebook",
                 "sdk"
             ],
+            "abandoned": "facebook/graph-sdk",
             "time": "2016-08-09 11:32:26"
         },
         {
@@ -152,6 +153,40 @@
             ],
             "description": "Password Generator Library",
             "time": "2016-07-24 15:43:52"
+        },
+        {
+            "name": "hoptrip/lib-api-client",
+            "version": "1.0",
+            "dist": {
+                "type": "path",
+                "url": "libs/api-client",
+                "reference": "c0cac54cf3ab4619e1d3493fefb95058a807e241",
+                "shasum": null
+            },
+            "require": {
+                "php": ">=7.0",
+                "phpcurl/curlhttp": "^1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5",
+                "squizlabs/php_codesniffer": "~2.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HopTrip\\ApiClient\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Karapetov",
+                    "email": "alexey@karapetov.com"
+                }
+            ],
+            "description": "PHP Client for HopTrip API"
         },
         {
             "name": "lazypdo/lazypdo",
@@ -577,16 +612,16 @@
         },
         {
             "name": "silex/silex",
-            "version": "dev-master",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "183e39aad0a3011fce6020a0b0067d6a730608d8"
+                "reference": "fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/183e39aad0a3011fce6020a0b0067d6a730608d8",
-                "reference": "183e39aad0a3011fce6020a0b0067d6a730608d8",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1",
+                "reference": "fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1",
                 "shasum": ""
             },
             "require": {
@@ -658,7 +693,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2016-08-17 14:48:15"
+            "time": "2016-08-22 17:50:21"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2339,16 +2374,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.5.2",
+            "version": "5.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "46ec2d1522ae8c9a12aca6b7650e0be78bbb0502"
+                "reference": "3e6e88e56c912133de6e99b87728cca7ed70c5f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/46ec2d1522ae8c9a12aca6b7650e0be78bbb0502",
-                "reference": "46ec2d1522ae8c9a12aca6b7650e0be78bbb0502",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3e6e88e56c912133de6e99b87728cca7ed70c5f5",
+                "reference": "3e6e88e56c912133de6e99b87728cca7ed70c5f5",
                 "shasum": ""
             },
             "require": {
@@ -2413,20 +2448,20 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-08-18 11:10:44"
+            "time": "2016-08-26 07:11:44"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "3.2.4",
+            "version": "3.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "4e83390f64e7ce04fcaec2ce95cd72823b431d19"
+                "reference": "46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/4e83390f64e7ce04fcaec2ce95cd72823b431d19",
-                "reference": "4e83390f64e7ce04fcaec2ce95cd72823b431d19",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49",
+                "reference": "46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49",
                 "shasum": ""
             },
             "require": {
@@ -2472,7 +2507,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2016-08-17 09:33:51"
+            "time": "2016-08-26 05:51:59"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -3566,9 +3601,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "silex/silex": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

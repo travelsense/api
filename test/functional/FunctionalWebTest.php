@@ -2,11 +2,10 @@
 namespace Test;
 
 use Api\Application;
-use Api\Controller\Travel\CategoriesController;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
-use Api\Test\ApiClientException;
 use Api\Test\FunctionalTestCase;
+use HopTrip\ApiClient\ApiClientException;
 use PDO;
 
 class FunctionalWebTest extends FunctionalTestCase
