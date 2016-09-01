@@ -32,13 +32,13 @@ To connect the database from the VM, use [psql](http://www.postgresql.org/docs/c
 e.g. `psql -U api_dev -h localhost api_dev`. To connect from your local box, use your [favorite client](https://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools) and connect to 172.16.0.101:5432.
 
 ## Making API calls
-Use [ApiClient](../src/Test/ApiClient.php) to make calls to the API. Consider the following example.
+Use [ApiClient](../libs/api-client/src/ApiClient.php) to make calls to the API. Consider the following example.
 Create a file named `example.php` in the project root:
 
 ```php
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-$api = new \Api\Test\ApiClient('http://172.16.0.101');
+$api = new \HopTrip\ApiClient\ApiClient('http://172.16.0.101');
 
 try {
     $api->registerUser([
@@ -47,7 +47,7 @@ try {
         'email' => 'john@example.com',
         'password' => '123',
     ]);
-} catch (\Api\Test\ApiClientException $e) {
+} catch (\HopTrip\ApiClient\ApiClientException $e) {
     if ($e->getCode() === \Api\Exception\ApiException::USER_EXISTS) {
         echo "User already registered\n";
     } else {
