@@ -9,8 +9,9 @@
     "lazypdo/migrator": "^1.0",
     "facebook/php-sdk-v4" : "~5.0",
     "hackzilla/password-generator": "^1.1",
+    "hoptrip/lib-api-client": "1.0",
     "monolog/monolog": "^1.17",
-    "silex/silex": "^2.0.3-dev",
+    "silex/silex": "^2.0.3",
     "swiftmailer/swiftmailer": "^5.0",
     "symfony/security": "^3.0",
     "symfony/translation": "^3.0",
@@ -27,5 +28,11 @@
   },
   "autoload": {
     "psr-4": {"Api\\": "src/"}
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url":  "libs/api-client"
+    }
+  ]
 }

@@ -1,8 +1,9 @@
 <?php
-namespace Api\Test;
+namespace HopTrip\ApiClient;
 
 use PHPCurl\CurlHttp\HttpClient;
 use PHPCurl\CurlHttp\HttpResponse;
+use RuntimeException;
 
 class ApiClient
 {
@@ -181,7 +182,7 @@ class ApiClient
     {
         return $this->delete(sprintf('/travel/comment/%s', urlencode($id)));
     }
-    
+
     public function getTravelComments(int $id, int $limit, int $offset)
     {
         $url = sprintf('/travel/%d/comments?', urlencode($id))
@@ -189,7 +190,7 @@ class ApiClient
                 'limit' => $limit,
                 'offset' => $offset,
             ]);
-        
+
         return $this->get($url);
     }
 
@@ -205,6 +206,7 @@ class ApiClient
     }
 
     /**
+     * @param string $name
      * @return mixed
      */
     public function getCategories(string $name = null)
@@ -217,6 +219,7 @@ class ApiClient
     }
 
     /**
+     * @param string $name
      * @return mixed
      */
     public function getTravelCategories(string $name = null)
@@ -312,7 +315,7 @@ class ApiClient
      */
     public function registerBooking(int $id)
     {
-        return $this->post("/travel/$id/book");
+        return $this->post(sprintf("/travel/%s/book", urldecode($id)));
     }
 
     /**
@@ -323,7 +326,7 @@ class ApiClient
         return $this->get('/stats');
     }
 
-    private function addAuth(array $headers)
+    private function addAuth(array $headers): array
     {
         if (!empty($this->auth_token)) {
             $headers[] = 'Authorization: Token ' . $this->auth_token;
@@ -347,7 +350,7 @@ class ApiClient
         $message = "HTTP ERROR {$response->getCode()}\n"
             . implode("\n", $response->getHeaders())
             . "\n\n" . $response->getBody();
-        throw new \RuntimeException($message, $response->getCode());
+        throw new RuntimeException($message, $response->getCode());
     }
 
     private function get($url, array $headers = [])
