@@ -181,7 +181,7 @@ class TravelController extends ApiController
             $travels = $this->travel_mapper->fetchPublishedByCategory($name, 5, 0);
             $featured_categories[] = [
                 'title'   => $name,
-                'travels' => $this->buildTravelSetView($travels),
+                'travels' => $this->buildTravelSetView($travels, [], true),
                 'category' => $name,
             ];
         }
