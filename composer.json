@@ -7,7 +7,7 @@
     "f3ath/simpleuber": "^1.0",
     "lazypdo/lazypdo": "^1.0",
     "lazypdo/migrator": "^1.0",
-    "facebook/php-sdk-v4" : "~5.0",
+    "facebook/graph-sdk" : "~5.0",
     "hackzilla/password-generator": "^1.1",
     "hoptrip/lib-api-client": "1.0",
     "monolog/monolog": "^1.17",

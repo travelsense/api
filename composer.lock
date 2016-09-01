@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3fa1d516efe2af549c9eb76c724ce7c2",
-    "content-hash": "698e57bdcfd2976d93cff1535ead59ac",
+    "hash": "2a00bfc15c3cc3ff38df33551e368c86",
+    "content-hash": "de0215772d5b056a27c6b502936d1fc6",
     "packages": [
         {
             "name": "f3ath/simpleuber",
@@ -56,7 +56,7 @@
             "time": "2016-02-04 06:54:07"
         },
         {
-            "name": "facebook/php-sdk-v4",
+            "name": "facebook/graph-sdk",
             "version": "5.3.1",
             "source": {
                 "type": "git",
@@ -110,7 +110,6 @@
                 "facebook",
                 "sdk"
             ],
-            "abandoned": "facebook/graph-sdk",
             "time": "2016-08-09 11:32:26"
         },
         {
@@ -241,16 +240,16 @@
         },
         {
             "name": "lazypdo/migrator",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lazypdo/migrator.git",
-                "reference": "d1a618a8d4856601c2f4892d1735856223de5e8a"
+                "reference": "3f01c194adab2fc42546250807bfc4d654474682"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lazypdo/migrator/zipball/d1a618a8d4856601c2f4892d1735856223de5e8a",
-                "reference": "d1a618a8d4856601c2f4892d1735856223de5e8a",
+                "url": "https://api.github.com/repos/lazypdo/migrator/zipball/3f01c194adab2fc42546250807bfc4d654474682",
+                "reference": "3f01c194adab2fc42546250807bfc4d654474682",
                 "shasum": ""
             },
             "require": {
@@ -288,7 +287,7 @@
                 "pdo",
                 "sql"
             ],
-            "time": "2016-08-03 07:26:23"
+            "time": "2016-09-01 17:22:16"
         },
         {
             "name": "monolog/monolog",
