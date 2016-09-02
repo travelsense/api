@@ -240,25 +240,30 @@
         },
         {
             "name": "lazypdo/migrator",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lazypdo/migrator.git",
-                "reference": "3f01c194adab2fc42546250807bfc4d654474682"
+                "reference": "80b57cf2fb63fd86544dc29ad999adab133e7297"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lazypdo/migrator/zipball/3f01c194adab2fc42546250807bfc4d654474682",
-                "reference": "3f01c194adab2fc42546250807bfc4d654474682",
+                "url": "https://api.github.com/repos/lazypdo/migrator/zipball/80b57cf2fb63fd86544dc29ad999adab133e7297",
+                "reference": "80b57cf2fb63fd86544dc29ad999adab133e7297",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4",
+                "php": ">=5.5",
                 "symfony/console": "^2.8 || ^3.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8 ||^5.0",
-                "squizlabs/php_codesniffer": "^2.0"
+                "satooshi/php-coveralls": "dev-master",
+                "squizlabs/php_codesniffer": "^2.0",
+                "symfony/yaml": "^3.1"
+            },
+            "suggest": {
+                "symfony/yaml": "Allows using YAML config files"
             },
             "bin": [
                 "migrator"
@@ -283,11 +288,13 @@
             "description": "A Simple Database Schema Migration Tool For PHP",
             "keywords": [
                 "database",
+                "db",
                 "migration",
                 "pdo",
+                "schema",
                 "sql"
             ],
-            "time": "2016-09-01 17:22:16"
+            "time": "2016-09-02 00:40:39"
         },
         {
             "name": "monolog/monolog",
@@ -1704,16 +1711,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.24.1",
+            "version": "v1.24.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512"
+                "reference": "33093f6e310e6976baeac7b14f3a6ec02f2d79b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3566d311a92aae4deec6e48682dc5a4528c4a512",
-                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/33093f6e310e6976baeac7b14f3a6ec02f2d79b7",
+                "reference": "33093f6e310e6976baeac7b14f3a6ec02f2d79b7",
                 "shasum": ""
             },
             "require": {
@@ -1761,7 +1768,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-05-30 09:11:59"
+            "time": "2016-09-01 17:50:53"
         }
     ],
     "packages-dev": [
@@ -3070,16 +3077,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "2.6.2",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "4edb770cb853def6e60c93abb088ad5ac2010c83"
+                "reference": "571e27b6348e5b3a637b2abc82ac0d01e6d7bbed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/4edb770cb853def6e60c93abb088ad5ac2010c83",
-                "reference": "4edb770cb853def6e60c93abb088ad5ac2010c83",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/571e27b6348e5b3a637b2abc82ac0d01e6d7bbed",
+                "reference": "571e27b6348e5b3a637b2abc82ac0d01e6d7bbed",
                 "shasum": ""
             },
             "require": {
@@ -3144,7 +3151,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2016-07-13 23:29:13"
+            "time": "2016-09-01 23:53:02"
         },
         {
             "name": "symfony/filesystem",
