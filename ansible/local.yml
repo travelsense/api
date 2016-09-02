@@ -44,6 +44,6 @@
       chdir: /vagrant
 
   - name: run migrations
-    shell: APP_ENV=dev bin/db.php up
+    shell: APP_ENV=dev bin/db.php migrate
     args:
       chdir: /vagrant
