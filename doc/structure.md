@@ -50,3 +50,8 @@ Refer to [Silex routing documentation](http://silex.sensiolabs.org/doc/master/us
 See [Access](../src/Security/Access).
 Actors (ActorInterface) can perform Actions (Action) on Subjects (Subject). 
 The Access Manager (Manager) decides if a certain action is permitted.
+
+# Servers
+* API production: https://api.hoptrip.us
+* API stage: http://api.stage.hoptrip.us:2280/
+* Web production: https://hoptrip.us
