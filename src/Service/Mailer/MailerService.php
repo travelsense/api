@@ -49,7 +49,7 @@ class MailerService
     {
         $template = $this->twig->loadTemplate('email/confirmation.twig');
 
-        $link = "https://travelsen.se/#confirm/$token";
+        $link = "https://hoptrip.us/email/confirm/$token";
 
         $message = Swift_Message::newInstance($template->renderBlock('subj', []))
             ->setBody($template->renderBlock('body', ['link' => $link]))
@@ -77,7 +77,7 @@ class MailerService
     {
         $template = $this->twig->loadTemplate('email/reset.twig');
 
-        $link = "https://travelsen.se/#reset/$token";
+        $link = "https://hoptrip.us/password/reset/$token";
 
         $message = Swift_Message::newInstance($template->renderBlock('subj', []))
             ->setBody($template->renderBlock('body', ['link' => $link]))
