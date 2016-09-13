@@ -20,8 +20,8 @@ return array_replace_recursive(
             ],
         ],
         'email' => [
-            'email_confirm' => 'https://example.com/email/confirm/',
-            'password_reset' => 'https://example.com/password/reset/',
+            'email_confirm' => 'https://example.com/email/confirm/%s',
+            'password_reset' => 'https://example.com/password/reset/%s',
         ],
     ]
 );

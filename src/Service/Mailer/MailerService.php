@@ -49,7 +49,7 @@ class MailerService
     {
         $template = $this->twig->loadTemplate('email/confirmation.twig');
 
-        $link = $this->conf['email_confirm'] . $token;
+        $link = sprintf($this->conf['email_confirm'], urlencode($token));
 
         $message = Swift_Message::newInstance($template->renderBlock('subj', []))
             ->setBody($template->renderBlock('body', ['link' => $link]))
@@ -77,7 +77,7 @@ class MailerService
     {
         $template = $this->twig->loadTemplate('email/reset.twig');
 
-        $link = $this->conf['password_reset'] . $token;
+        $link = sprintf($this->conf['password_reset'], urlencode($token));
 
         $message = Swift_Message::newInstance($template->renderBlock('subj', []))
             ->setBody($template->renderBlock('body', ['link' => $link]))

@@ -29,8 +29,8 @@ return [
         'from_name' => 'Hoptrip',
         'base_url' => 'https://hoptrip.us',
         'message_log' => '/tmp/email.log', // used in Api\Test\Mailer
-        'email_confirm' => 'https://hoptrip.us/email/confirm/',
-        'password_reset' => 'https://hoptrip.us/password/reset/',
+        'email_confirm' => 'https://hoptrip.us/email/confirm/%s',
+        'password_reset' => 'https://hoptrip.us/password/reset/%s',
     ],
     'security' => [
         'enabled' => true,
