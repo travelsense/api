@@ -26,7 +26,7 @@ class MailerTest extends PHPUnit_Framework_TestCase
         $test = $this;
         $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
             $test->assertEquals(
-                "Please follow the link to confirm your account: https://hoptrip.us/email/confirm/xxx\n",
+                "Please follow the link to confirm your account: https://example.com/email/confirm/xxx\n",
                 $msg->getBody()
             );
             $test->assertEquals(
@@ -43,7 +43,7 @@ class MailerTest extends PHPUnit_Framework_TestCase
         $test = $this;
         $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
             $test->assertEquals(
-                "Please follow the link to reset your password: https://hoptrip.us/password/reset/xxx\n",
+                "Please follow the link to reset your password: https://example.com/password/reset/xxx\n",
                 $msg->getBody()
             );
             $test->assertEquals(
