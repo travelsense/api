@@ -202,8 +202,8 @@ class TravelController extends ApiController
         User $user = null,
         bool $minimized = true,
         int $limit = 10,
-        int $offset = 0): array
-    {
+        int $offset = 0
+    ): array {
         $travels = $this->travel_mapper->fetchPublishedByAuthorId($author_id, $limit, $offset);
         $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
         return $this->buildTravelSetView($travels, $favorite_ids, $minimized);
