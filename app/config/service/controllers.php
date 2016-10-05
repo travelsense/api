@@ -17,7 +17,7 @@ use Api\Controller\UberController;
 use Api\Controller\UserController;
 use Api\Controller\WegoHotelController;
 
-$app['argument_value_resolvers'] = $app->extend('argument_value_resolvers', function (array $resolvers, $app) {
+$app->extend('argument_value_resolvers', function (array $resolvers, $app) {
     return array_merge(
         [
             new ArgumentValueResolver($app),

@@ -37,9 +37,9 @@ class TravelController extends ApiController
     private $action_mapper;
 
     /**
-     * @var BannerManager
+     * @var BannerMapper
      */
-    private $banner_manager;
+    private $banner_mapper;
 
     /**
      * @var AccessManager
@@ -64,7 +64,7 @@ class TravelController extends ApiController
         $this->travel_mapper = $travel_mapper;
         $this->category_mapper = $category_mapper;
         $this->action_mapper = $action_mapper;
-        $this->banner_manager = $banner_mapper;
+        $this->banner_mapper = $banner_mapper;
         $this->access_manager = $access_manager;
     }
 
@@ -173,7 +173,7 @@ class TravelController extends ApiController
     public function getFeatured(): array
     {
         $result = [
-            'banners' => $this->banner_manager->fetchBanners()
+            'banners' => $this->banner_mapper->fetchBanners()
         ];
         $featured_category_names = $this->category_mapper->fetchFeaturedCategoryNames();
         $featured_categories = [];

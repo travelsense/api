@@ -3,7 +3,6 @@ namespace Api\Mapper\DB;
 
 use Api\AbstractPDOMapper;
 use Api\Model\Travel\Action;
-use DateTime;
 use PDO;
 use PDOStatement;
 
