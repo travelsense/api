@@ -31,8 +31,8 @@ Database migration scripts are in [db](../db). The naming convention for migrati
 
 To manage the DB, use `bin/db.php`:
 * ` APP_ENV=dev php bin/db.php st main` - show status of db `main` in `dev` env
-* ` APP_ENV=stage php bin/db.php up main 123` - update db `main` to version 123 in `stage` env
-* ` APP_ENV=dev php bin/db.php up` - update the default database
+* ` APP_ENV=stage php bin/db.php migrate main 123` - migrate db `main` to version 123 in `stage` env
+* ` APP_ENV=dev php bin/db.php migrate` - migrate the default database to the highest available version
 
 Database is managed by [Migrator](https://github.com/lazypdo/migrator).
 
@@ -50,3 +50,8 @@ Refer to [Silex routing documentation](http://silex.sensiolabs.org/doc/master/us
 See [Access](../src/Security/Access).
 Actors (ActorInterface) can perform Actions (Action) on Subjects (Subject). 
 The Access Manager (Manager) decides if a certain action is permitted.
+
+# Servers
+* API production: https://api.hoptrip.us
+* API stage: http://api.stage.hoptrip.us:2280/
+* Web production: https://hoptrip.us
