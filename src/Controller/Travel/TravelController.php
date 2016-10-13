@@ -249,7 +249,12 @@ class TravelController extends ApiController
         User $user = null
     ): array {
         $travels = $this->travel_mapper->fetchTravelsByPriceByLength(
-            $price_greater, $price_less, $length_greater, $length_less, $limit, $offset
+            $price_greater,
+            $price_less,
+            $length_greater,
+            $length_less,
+            $limit,
+            $offset
         );
         $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
         return $this->buildTravelSetView($travels, $favorite_ids);
