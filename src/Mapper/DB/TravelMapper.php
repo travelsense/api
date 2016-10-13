@@ -266,19 +266,19 @@ class TravelMapper extends AbstractPDOMapper
     /**
      * Travels search by price and length
      *
-     * @param int $price_greater
-     * @param int $price_less
-     * @param int $length_greater
-     * @param int $length_less
+     * @param int $price_from
+     * @param int $price_to
+     * @param int $length_from
+     * @param int $length_to
      * @param int $limit
      * @param int $offset
      * @return Travel[]
      */
     public function fetchTravelsByPriceByLength(
-        int $price_greater = 0,
-        int $price_less = null,
-        int $length_greater = 0,
-        int $length_less = null,
+        int $price_from = 0,
+        int $price_to = null,
+        int $length_from = 0,
+        int $length_to = null,
         int $limit = 10,
         int $offset = 0
     ): array {
@@ -287,23 +287,23 @@ class TravelMapper extends AbstractPDOMapper
             JOIN users u ON t.author_id = u.id
             JOIN (SELECT travel_id, MAX(offset_end) AS days_count
             FROM actions GROUP BY travel_id) AS ac ON t.id = ac.travel_id
-            WHERE t.estimated_price >= :price_greater '
-            . ($price_less !== null ? 'AND t.estimated_price <= :price_less ' : '')
-            . 'AND ac.days_count >= :length_greater '
-            . ($length_less !== null ? 'AND ac.days_count <= :length_less ' : '')
+            WHERE t.estimated_price >= :price_from '
+            . ($price_to !== null ? 'AND t.estimated_price <= :price_to ' : '')
+            . 'AND ac.days_count >= :length_from '
+            . ($length_to !== null ? 'AND ac.days_count <= :length_to ' : '')
             . 'ORDER BY t.estimated_price DESC LIMIT :limit OFFSET :offset'
         );
         $params = [
-            ':price_greater' => $price_greater,
-            ':length_greater' => $length_greater,
+            ':price_from' => $price_from,
+            ':length_from' => $length_from,
             ':limit'  => $limit,
             ':offset' => $offset,
         ];
-        if ($price_less !== null) {
-            $params[':price_less'] = $price_less;
+        if ($price_to !== null) {
+            $params[':price_to'] = $price_to;
         }
-        if ($length_less !== null) {
-            $params[':length_less'] = $length_less;
+        if ($length_to !== null) {
+            $params[':length_to'] = $length_to;
         }
         $select->execute($params);
         return $this->buildAll($select);

@@ -279,28 +279,28 @@ class ApiClient
     }
 
     /**
-     * @param int $price_greater
-     * @param int|null $price_less
-     * @param int $length_greater
-     * @param int|null $length_less
+     * @param int $price_from
+     * @param int|null $price_to
+     * @param int $length_from
+     * @param int|null $length_to
      * @param int $limit
      * @param int $offset
      * @return mixed
      */
     public function searchTravels(
-        int $price_greater = 0,
-        int $price_less = null,
-        int $length_greater = 0,
-        int $length_less = null,
+        int $price_from = 0,
+        int $price_to = null,
+        int $length_from = 0,
+        int $length_to = null,
         int $limit = 10,
         int $offset = 0
     ) {
         $url = '/travel/search?'
             . http_build_query([
-                'price_greater' => $price_greater,
-                'price_less' => $price_less,
-                'length_greater' => $length_greater,
-                'length_less' => $length_less,
+                'price_from' => $price_from,
+                'price_to' => $price_to,
+                'length_from' => $length_from,
+                'length_to' => $length_to,
                 'limit' => $limit,
                 'offset' => $offset,
             ]);

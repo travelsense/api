@@ -229,10 +229,10 @@ class TravelController extends ApiController
     /**
      * Travels search by price and length
      *
-     * @param int $price_greater
-     * @param int $price_less
-     * @param int $length_greater
-     * @param int $length_less
+     * @param int $price_from
+     * @param int $price_to
+     * @param int $length_from
+     * @param int $length_to
      * @param int $limit
      * @param int $offset
      * @param User $user
@@ -240,19 +240,19 @@ class TravelController extends ApiController
      * @return array
      */
     public function searchTravels(
-        int $price_greater = 0,
-        int $price_less = null,
-        int $length_greater = 0,
-        int $length_less = null,
+        int $price_from = 0,
+        int $price_to = null,
+        int $length_from = 0,
+        int $length_to = null,
         int $limit = 10,
         int $offset = 0,
         User $user = null
     ): array {
         $travels = $this->travel_mapper->fetchTravelsByPriceByLength(
-            $price_greater,
-            $price_less,
-            $length_greater,
-            $length_less,
+            $price_from,
+            $price_to,
+            $length_from,
+            $length_to,
             $limit,
             $offset
         );
