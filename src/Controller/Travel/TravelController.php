@@ -239,7 +239,7 @@ class TravelController extends ApiController
      *
      * @return array
      */
-    public function getTravelsSearchByPriceByLength(
+    public function searchTravels(
         int $price_greater = 0,
         int $price_less = null,
         int $length_greater = 0,
@@ -357,7 +357,7 @@ class TravelController extends ApiController
             $view['category_ids'] = $travel->getCategoryIds();
             $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
-            $view['estimated_price'] = $travel->getEstimatedPrice() / 100;
+            $view['estimated_price'] = $travel->getEstimatedPrice();
 
             $author = $travel->getAuthor();
             if ($author) {

@@ -287,7 +287,7 @@ class ApiClient
      * @param int $offset
      * @return mixed
      */
-    public function getTravelsSearchByPriceByLength(
+    public function searchTravels(
         int $price_greater = 0,
         int $price_less = null,
         int $length_greater = 0,
