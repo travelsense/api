@@ -85,6 +85,9 @@ $app->post('/travel/{id}/comment', 'controller.comment:createTravelComment')
 $app->post('/travel/{id}/book', 'controller.booking:registerBooking')
     ->convert('id', $to_int);
 
+$app->get('/travel/search', 'controller.travel:getTravelsSearchByPriceByLength')
+    ->bind('travel-search-by-price-length');
+
 $app->delete('/travel/comment/{id}', 'controller.comment:deleteById')
     ->convert('id', $to_int);
 

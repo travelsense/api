@@ -87,6 +87,9 @@ class TravelController extends ApiController
         if ($json->has('creation_mode')) {
             $travel->setCreationMode($json->get('creation_mode'));
         }
+        if ($json->has('estimated_price')) {
+            $travel->setEstimatedPrice($json->get('estimated_price'));
+        }
         $this->travel_mapper->insert($travel);
         
         $actions = $this->createActions((array) $json->get('content'), $travel->getId());
@@ -224,6 +227,35 @@ class TravelController extends ApiController
     }
 
     /**
+     * Travels search by price and length
+     *
+     * @param int $price_greater
+     * @param int $price_less
+     * @param int $length_greater
+     * @param int $length_less
+     * @param int $limit
+     * @param int $offset
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getTravelsSearchByPriceByLength(
+        int $price_greater = 0,
+        int $price_less = null,
+        int $length_greater = 0,
+        int $length_less = null,
+        int $limit = 10,
+        int $offset = 0,
+        User $user = null
+    ): array {
+        $travels = $this->travel_mapper->fetchTravelsByPriceByLength(
+            $price_greater, $price_less, $length_greater, $length_less, $limit, $offset
+        );
+        $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
+        return $this->buildTravelSetView($travels, $favorite_ids);
+    }
+
+    /**
      * @param int     $id
      * @param Request $request
      * @param User    $user
@@ -260,6 +292,9 @@ class TravelController extends ApiController
         }
         if ($json->has('category_ids')) {
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
+        }
+        if ($json->has('estimated_price')) {
+            $travel->setEstimatedPrice($json->get('estimated_price'));
         }
         $this->travel_mapper->update($travel);
 
@@ -317,6 +352,7 @@ class TravelController extends ApiController
             $view['category_ids'] = $travel->getCategoryIds();
             $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
+            $view['estimated_price'] = $travel->getEstimatedPrice() / 100;
 
             $author = $travel->getAuthor();
             if ($author) {

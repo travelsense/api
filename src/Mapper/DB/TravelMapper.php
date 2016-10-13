@@ -121,9 +121,15 @@ class TravelMapper extends AbstractPDOMapper
     public function insert(Travel $travel)
     {
         $insert = $this->pdo->prepare(
-            'INSERT INTO travels (title, description, content, is_published, image, author_id, creation_mode)
-            VALUES (:title, :description, :content::JSON, :published, :image, :author_id, :creation_mode) 
-            RETURNING id, created'
+            'INSERT INTO travels (
+            title, description, content,
+            is_published, image, author_id,
+            creation_mode, estimated_price
+            ) VALUES (
+            :title, :description, :content::JSON,
+            :published, :image, :author_id,
+            :creation_mode, :estimated_price
+            ) RETURNING id, created'
         );
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
@@ -258,6 +264,52 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
+     * Travels search by price and length
+     *
+     * @param int $price_greater
+     * @param int $price_less
+     * @param int $length_greater
+     * @param int $length_less
+     * @param int $limit
+     * @param int $offset
+     * @return Travel[]
+     */
+    public function fetchTravelsByPriceByLength(
+        int $price_greater = 0,
+        int $price_less = null,
+        int $length_greater = 0,
+        int $length_less = null,
+        int $limit = 10,
+        int $offset = 0
+    ): array {
+        $select = $this->pdo->prepare(
+            'SELECT t.*, u.* FROM travels t
+            JOIN users u ON t.author_id = u.id
+            JOIN (SELECT travel_id, MAX(offset_end) AS days_count
+            FROM actions GROUP BY travel_id) AS ac ON t.id = ac.travel_id
+            WHERE t.estimated_price >= :price_greater '
+            . ($price_less !== null ? 'AND t.estimated_price <= :price_less ' : '')
+            . 'AND ac.days_count >= :length_greater '
+            . ($length_less !== null ? 'AND ac.days_count <= :length_less ' : '')
+            . 'ORDER BY t.estimated_price DESC LIMIT :limit OFFSET :offset'
+        );
+        $params = [
+            ':price_greater' => $price_greater,
+            ':length_greater' => $length_greater,
+            ':limit'  => $limit,
+            ':offset' => $offset,
+        ];
+        if ($price_less !== null) {
+            $params[':price_less'] = $price_less;
+        }
+        if ($length_less !== null) {
+            $params[':length_less'] = $length_less;
+        }
+        $select->execute($params);
+        return $this->buildAll($select);
+    }
+
+    /**
      * Update title and description in DB
      *
      * @param Travel $travel
@@ -272,7 +324,8 @@ class TravelMapper extends AbstractPDOMapper
             is_published = :published,
             image = :image,
             author_id = :author_id,
-            creation_mode = :creation_mode
+            creation_mode = :creation_mode,
+            estimated_price = :estimated_price
             WHERE id = :id'
         );
         $this->bindCommonValues($update, $travel);
@@ -296,7 +349,8 @@ class TravelMapper extends AbstractPDOMapper
             ->setImage($row['image'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']))
-            ->setCreationMode($row['creation_mode']);
+            ->setCreationMode($row['creation_mode'])
+            ->setEstimatedPrice($row['estimated_price']);
         $categories = $this->category_mapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
             foreach ($categories as $category) {
@@ -320,7 +374,8 @@ class TravelMapper extends AbstractPDOMapper
             'published' => $travel->isPublished(),
             'image' => $travel->getImage(),
             'author_id' => $travel->getAuthorId(),
-            'creation_mode' => $travel->getCreationMode()
+            'creation_mode' => $travel->getCreationMode(),
+            'estimated_price' => $travel->getEstimatedPrice()
         ];
         $this->bindValues($statement, $values);
     }

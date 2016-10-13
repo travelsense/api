@@ -47,6 +47,7 @@ return [
             'travel-by-category',
             'travel-by-id',
             'travel-published-by-author',
+            'travel-search-by-price-length',
             'travel-category',
             'travel-category-new',
             'travel-comment',

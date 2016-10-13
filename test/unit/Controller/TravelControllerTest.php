@@ -100,7 +100,8 @@ class TravelControllerTest extends ControllerTestCase
                 'is_favorited' => false,
                 'image' => 'https://host.com/image.jpg',
                 'places_count' => 1,
-                'days_count' => 0
+                'days_count' => 0,
+                'estimated_price' => 0
             ],
             $this->controller->getTravel(1)
         );
@@ -136,7 +137,8 @@ class TravelControllerTest extends ControllerTestCase
                 'is_favorited' => false,
                 'image' => 'https://host.com/image.jpg',
                 'places_count' => 1,
-                'days_count' => 0
+                'days_count' => 0,
+                'estimated_price' => 0
             ],
             $this->controller->getTravel(1, $user)
         );
