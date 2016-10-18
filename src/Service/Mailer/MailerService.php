@@ -96,4 +96,26 @@ class MailerService
             );
         }
     }
+
+    /**
+     * Send booking details to internal address
+     * @param string $details
+     */
+    public function sendBookingDetails(string $details)
+    {
+        $message = Swift_Message::newInstance('Hoptrip Booking Request')
+            ->setBody($details)
+            ->setFrom($this->conf['from_address'], $this->conf['from_name'])
+            ->setTo($this->conf['booking_details_receivers']);
+
+        $sent = $this->mailer->send($message);
+        if ($this->logger) {
+            $this->logger->info(
+                'Sending booking details',
+                [
+                    'sent' => $sent,
+                ]
+            );
+        }
+    }
 }
