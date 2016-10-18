@@ -58,6 +58,11 @@ class Travel implements SubjectInterface
     private $estimated_price;
 
     /**
+     * @var int
+     */
+    private $transportation;
+
+    /**
      * @return string
      */
     public function getDescription()
@@ -198,6 +203,24 @@ class Travel implements SubjectInterface
     public function setEstimatedPrice($estimated_price)
     {
         $this->estimated_price = $estimated_price;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransportation()
+    {
+        return $this->transportation;
+    }
+
+    /**
+     * @param int $transportation
+     * @return Travel
+     */
+    public function setTransportation($transportation)
+    {
+        $this->transportation = $transportation;
         return $this;
     }
 

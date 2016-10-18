@@ -283,6 +283,8 @@ class ApiClient
      * @param int|null $price_to
      * @param int $length_from
      * @param int|null $length_to
+     * @param int|null $category_id
+     * @param int|null $transportation
      * @param int $limit
      * @param int $offset
      * @return mixed
@@ -292,6 +294,8 @@ class ApiClient
         int $price_to = null,
         int $length_from = 0,
         int $length_to = null,
+        int $category_id = null,
+        int $transportation = null,
         int $limit = 10,
         int $offset = 0
     ) {
@@ -301,6 +305,8 @@ class ApiClient
                 'price_to' => $price_to,
                 'length_from' => $length_from,
                 'length_to' => $length_to,
+                'category_id' => $category_id,
+                'transportation' => $transportation,
                 'limit' => $limit,
                 'offset' => $offset,
             ]);

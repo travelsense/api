@@ -233,6 +233,8 @@ class TravelController extends ApiController
      * @param int $price_to
      * @param int $length_from
      * @param int $length_to
+     * @param int $category_id
+     * @param int $transportation
      * @param int $limit
      * @param int $offset
      * @param User $user
@@ -244,6 +246,8 @@ class TravelController extends ApiController
         int $price_to = null,
         int $length_from = 0,
         int $length_to = null,
+        int $category_id = null,
+        int $transportation = null,
         int $limit = 10,
         int $offset = 0,
         User $user = null
@@ -253,6 +257,8 @@ class TravelController extends ApiController
             $price_to,
             $length_from,
             $length_to,
+            $category_id,
+            $transportation,
             $limit,
             $offset
         );
