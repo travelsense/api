@@ -153,7 +153,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'category_ids' => [1, 2],
         ]);
 
-        $this->client->registerBooking($id);
+        $this->client->registerBooking($id, ['foo' => 'bar']);
         $stats = $this->client->getStats();
         $this->assertEquals(1, $stats->bookingsTotal);
         $this->assertEquals(0.1, $stats->rewardTotal);
