@@ -90,6 +90,9 @@ class TravelController extends ApiController
         if ($json->has('estimated_price')) {
             $travel->setEstimatedPrice($json->get('estimated_price'));
         }
+        if ($json->has('transportation')) {
+            $travel->setTransportation($json->get('transportation'));
+        }
         $this->travel_mapper->insert($travel);
         
         $actions = $this->createActions((array) $json->get('content'), $travel->getId());
@@ -307,6 +310,9 @@ class TravelController extends ApiController
         if ($json->has('estimated_price')) {
             $travel->setEstimatedPrice($json->get('estimated_price'));
         }
+        if ($json->has('transportation')) {
+            $travel->setTransportation($json->get('transportation'));
+        }
         $this->travel_mapper->update($travel);
 
         return [];
@@ -364,6 +370,7 @@ class TravelController extends ApiController
             $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
             $view['estimated_price'] = $travel->getEstimatedPrice();
+            $view['transportation'] = $travel->getTransportation();
 
             $author = $travel->getAuthor();
             if ($author) {

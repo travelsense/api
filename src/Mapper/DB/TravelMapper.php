@@ -124,11 +124,11 @@ class TravelMapper extends AbstractPDOMapper
             'INSERT INTO travels (
             title, description, content,
             is_published, image, author_id,
-            creation_mode, estimated_price
+            creation_mode, estimated_price,transportation
             ) VALUES (
             :title, :description, :content::JSON,
             :published, :image, :author_id,
-            :creation_mode, :estimated_price
+            :creation_mode, :estimated_price, :transportation
             ) RETURNING id, created'
         );
         $this->bindCommonValues($insert, $travel);
@@ -338,7 +338,8 @@ class TravelMapper extends AbstractPDOMapper
             image = :image,
             author_id = :author_id,
             creation_mode = :creation_mode,
-            estimated_price = :estimated_price
+            estimated_price = :estimated_price,
+            transportation = :transportation
             WHERE id = :id'
         );
         $this->bindCommonValues($update, $travel);
@@ -363,7 +364,8 @@ class TravelMapper extends AbstractPDOMapper
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']))
             ->setCreationMode($row['creation_mode'])
-            ->setEstimatedPrice($row['estimated_price']);
+            ->setEstimatedPrice($row['estimated_price'])
+            ->setTransportation($row['transportation']);
         $categories = $this->category_mapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
             foreach ($categories as $category) {
@@ -388,7 +390,8 @@ class TravelMapper extends AbstractPDOMapper
             'image' => $travel->getImage(),
             'author_id' => $travel->getAuthorId(),
             'creation_mode' => $travel->getCreationMode(),
-            'estimated_price' => $travel->getEstimatedPrice()
+            'estimated_price' => $travel->getEstimatedPrice(),
+            'transportation' => $travel->getTransportation()
         ];
         $this->bindValues($statement, $values);
     }
