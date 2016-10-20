@@ -25,7 +25,7 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function fetchAll(): array
     {
-        $select = $this->pdo->prepare('SELECT * FROM categories ORDER BY id ASC');
+        $select = $this->pdo->prepare('SELECT * FROM categories ORDER BY sort_order, id ASC');
         $select->execute();
         return $this->createAll($select);
     }
@@ -40,7 +40,7 @@ class CategoryMapper extends AbstractPDOMapper
             'SELECT * FROM categories WHERE name LIKE :query ORDER BY name ASC'
         );
         $select->execute([
-            ':query' => '%' . $name . '%',
+            ':query' => "%{$name}%",
         ]);
 
         return $this->createAll($select);
