@@ -87,6 +87,12 @@ class TravelController extends ApiController
         if ($json->has('creation_mode')) {
             $travel->setCreationMode($json->get('creation_mode'));
         }
+        if ($json->has('estimated_price')) {
+            $travel->setEstimatedPrice($json->get('estimated_price'));
+        }
+        if ($json->has('transportation')) {
+            $travel->setTransportation($json->get('transportation'));
+        }
         $this->travel_mapper->insert($travel);
         
         $actions = $this->createActions((array) $json->get('content'), $travel->getId());
@@ -224,6 +230,46 @@ class TravelController extends ApiController
     }
 
     /**
+     * Travels search by price and length
+     *
+     * @param int $price_from
+     * @param int $price_to
+     * @param int $length_from
+     * @param int $length_to
+     * @param int $category_id
+     * @param int $transportation
+     * @param int $limit
+     * @param int $offset
+     * @param User $user
+     *
+     * @return array
+     */
+    public function searchTravels(
+        int $price_from = 0,
+        int $price_to = null,
+        int $length_from = 0,
+        int $length_to = null,
+        int $category_id = null,
+        int $transportation = null,
+        int $limit = 10,
+        int $offset = 0,
+        User $user = null
+    ): array {
+        $travels = $this->travel_mapper->fetchTravelsByPriceByLength(
+            $price_from,
+            $price_to,
+            $length_from,
+            $length_to,
+            $category_id,
+            $transportation,
+            $limit,
+            $offset
+        );
+        $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
+        return $this->buildTravelSetView($travels, $favorite_ids);
+    }
+
+    /**
      * @param int     $id
      * @param Request $request
      * @param User    $user
@@ -260,6 +306,12 @@ class TravelController extends ApiController
         }
         if ($json->has('category_ids')) {
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
+        }
+        if ($json->has('estimated_price')) {
+            $travel->setEstimatedPrice($json->get('estimated_price'));
+        }
+        if ($json->has('transportation')) {
+            $travel->setTransportation($json->get('transportation'));
         }
         $this->travel_mapper->update($travel);
 
@@ -317,6 +369,8 @@ class TravelController extends ApiController
             $view['category_ids'] = $travel->getCategoryIds();
             $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
+            $view['estimated_price'] = $travel->getEstimatedPrice();
+            $view['transportation'] = $travel->getTransportation();
 
             $author = $travel->getAuthor();
             if ($author) {

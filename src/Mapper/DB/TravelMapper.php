@@ -121,9 +121,15 @@ class TravelMapper extends AbstractPDOMapper
     public function insert(Travel $travel)
     {
         $insert = $this->pdo->prepare(
-            'INSERT INTO travels (title, description, content, is_published, image, author_id, creation_mode)
-            VALUES (:title, :description, :content::JSON, :published, :image, :author_id, :creation_mode) 
-            RETURNING id, created'
+            'INSERT INTO travels (
+            title, description, content,
+            is_published, image, author_id,
+            creation_mode, estimated_price,transportation
+            ) VALUES (
+            :title, :description, :content::JSON,
+            :published, :image, :author_id,
+            :creation_mode, :estimated_price, :transportation
+            ) RETURNING id, created'
         );
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
@@ -258,6 +264,65 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
+     * Travels search by price and length
+     *
+     * @param int $price_from
+     * @param int $price_to
+     * @param int $length_from
+     * @param int $length_to
+     * @param int $category_id
+     * @param int $transportation
+     * @param int $limit
+     * @param int $offset
+     * @return Travel[]
+     */
+    public function fetchTravelsByPriceByLength(
+        int $price_from = 0,
+        int $price_to = null,
+        int $length_from = 0,
+        int $length_to = null,
+        int $category_id = null,
+        int $transportation = null,
+        int $limit = 10,
+        int $offset = 0
+    ): array {
+        $select = $this->pdo->prepare(
+            'SELECT t.*, u.* FROM travels t
+            JOIN users u ON t.author_id = u.id
+            JOIN travel_categories tc ON t.id = tc.travel_id
+            JOIN (SELECT travel_id, MAX(offset_end) AS days_count
+            FROM actions GROUP BY travel_id) AS ac ON t.id = ac.travel_id
+            WHERE t.estimated_price >= :price_from '
+            . ($price_to !== null ? 'AND t.estimated_price <= :price_to ' : '')
+            . 'AND ac.days_count >= :length_from '
+            . ($length_to !== null ? 'AND ac.days_count <= :length_to ' : '')
+            . ($category_id !== null ? 'AND tc.category_id = :category_id ' : '')
+            . ($transportation !== null ? 'AND t.transportation = :transportation ' : '')
+            . 'ORDER BY t.estimated_price DESC LIMIT :limit OFFSET :offset'
+        );
+        $params = [
+            ':price_from' => $price_from,
+            ':length_from' => $length_from,
+            ':limit'  => $limit,
+            ':offset' => $offset,
+        ];
+        if ($price_to !== null) {
+            $params[':price_to'] = $price_to;
+        }
+        if ($length_to !== null) {
+            $params[':length_to'] = $length_to;
+        }
+        if ($category_id !== null) {
+            $params[':category_id'] = $category_id;
+        }
+        if ($transportation !== null) {
+            $params[':transportation'] = $transportation;
+        }
+        $select->execute($params);
+        return $this->buildAll($select);
+    }
+
+    /**
      * Update title and description in DB
      *
      * @param Travel $travel
@@ -272,7 +337,9 @@ class TravelMapper extends AbstractPDOMapper
             is_published = :published,
             image = :image,
             author_id = :author_id,
-            creation_mode = :creation_mode
+            creation_mode = :creation_mode,
+            estimated_price = :estimated_price,
+            transportation = :transportation
             WHERE id = :id'
         );
         $this->bindCommonValues($update, $travel);
@@ -296,7 +363,9 @@ class TravelMapper extends AbstractPDOMapper
             ->setImage($row['image'])
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']))
-            ->setCreationMode($row['creation_mode']);
+            ->setCreationMode($row['creation_mode'])
+            ->setEstimatedPrice($row['estimated_price'])
+            ->setTransportation($row['transportation']);
         $categories = $this->category_mapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
             foreach ($categories as $category) {
@@ -320,7 +389,9 @@ class TravelMapper extends AbstractPDOMapper
             'published' => $travel->isPublished(),
             'image' => $travel->getImage(),
             'author_id' => $travel->getAuthorId(),
-            'creation_mode' => $travel->getCreationMode()
+            'creation_mode' => $travel->getCreationMode(),
+            'estimated_price' => $travel->getEstimatedPrice(),
+            'transportation' => $travel->getTransportation()
         ];
         $this->bindValues($statement, $values);
     }
