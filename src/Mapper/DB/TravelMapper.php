@@ -149,6 +149,7 @@ class TravelMapper extends AbstractPDOMapper
             ->prepare("DELETE FROM travels WHERE id = :id")
             ->execute([':id' => $id]);
     }
+
     /**
      * @param int $user_id
      * @return int[]
@@ -176,11 +177,11 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function addFavorite(int $travel_id, int $user_id)
     {
-        $this->pdo->prepare(
-            'INSERT INTO favorite_travels (user_id, travel_id)
-            VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING'
-        )->execute([
-            ':user_id' => $user_id,
+        $this->pdo->prepare('
+            INSERT INTO favorite_travels (user_id, travel_id)
+            VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING
+        ')->execute([
+            ':user_id'   => $user_id,
             ':travel_id' => $travel_id,
         ]);
     }
@@ -194,7 +195,7 @@ class TravelMapper extends AbstractPDOMapper
         $this->pdo
             ->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id')
             ->execute([
-                ':user_id' => $user_id,
+                ':user_id'   => $user_id,
                 ':travel_id' => $travel_id,
             ]);
     }
@@ -205,12 +206,12 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchFavorites(int $user_id): array
     {
-        $select = $this->pdo->prepare(
-            'SELECT t.*, u.* FROM  favorite_travels ft
+        $select = $this->pdo->prepare('
+            SELECT t.*, u.* FROM  favorite_travels ft
             JOIN travels t ON ft.travel_id = t.id AND NOT t.deleted
             JOIN users u ON t.author_id = u.id
-            WHERE ft.user_id = :user_id'
-        );
+            WHERE ft.user_id = :user_id
+        ');
         $select->execute(['user_id' => $user_id]);
         return $this->buildAll($select);
     }
@@ -223,14 +224,14 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchByCategory(string $name, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare(
-            'SELECT t.*, u.* FROM travel_categories ct
+        $select = $this->pdo->prepare('
+            SELECT t.*, u.* FROM travel_categories ct
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
             JOIN users u ON u.id = t.author_id
             WHERE c.name = :name
-            LIMIT :limit OFFSET :offset'
-        );
+            LIMIT :limit OFFSET :offset
+        ');
         $select->execute([
             'name'    => $name,
             ':limit'  => $limit,
@@ -247,14 +248,14 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchPublishedByCategory(string $name, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare(
-            'SELECT t.*, u.* FROM travel_categories ct
+        $select = $this->pdo->prepare('
+            SELECT t.*, u.* FROM travel_categories ct
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
             JOIN users u ON u.id = t.author_id
             WHERE c.name = :name AND is_published
-            LIMIT :limit OFFSET :offset'
-        );
+            LIMIT :limit OFFSET :offset
+        ');
         $select->execute([
             'name'    => $name,
             ':limit'  => $limit,
@@ -266,58 +267,79 @@ class TravelMapper extends AbstractPDOMapper
     /**
      * Travels search by price and length
      *
-     * @param int $price_from
-     * @param int $price_to
-     * @param int $length_from
-     * @param int $length_to
-     * @param int $category_id
-     * @param int $transportation
-     * @param int $limit
-     * @param int $offset
+     * @param int   $price_from
+     * @param int   $price_to
+     * @param int   $length_from
+     * @param int   $length_to
+     * @param array $category_ids
+     * @param int   $limit
+     * @param int   $offset
      * @return Travel[]
      */
     public function fetchTravelsByPriceByLength(
-        int $price_from = 0,
+        int $price_from = null,
         int $price_to = null,
-        int $length_from = 0,
+        int $length_from = null,
         int $length_to = null,
-        int $category_id = null,
-        int $transportation = null,
+        array $category_ids = [],
         int $limit = 10,
         int $offset = 0
-    ): array {
-        $select = $this->pdo->prepare(
-            'SELECT t.*, u.* FROM travels t
-            JOIN users u ON t.author_id = u.id
-            JOIN travel_categories tc ON t.id = tc.travel_id
-            JOIN (SELECT travel_id, MAX(offset_end) AS days_count
-            FROM actions GROUP BY travel_id) AS ac ON t.id = ac.travel_id
-            WHERE t.estimated_price >= :price_from '
-            . ($price_to !== null ? 'AND t.estimated_price <= :price_to ' : '')
-            . 'AND ac.days_count >= :length_from '
-            . ($length_to !== null ? 'AND ac.days_count <= :length_to ' : '')
-            . ($category_id !== null ? 'AND tc.category_id = :category_id ' : '')
-            . ($transportation !== null ? 'AND t.transportation = :transportation ' : '')
-            . 'ORDER BY t.estimated_price DESC LIMIT :limit OFFSET :offset'
-        );
+    ): array
+    {
         $params = [
-            ':price_from' => $price_from,
-            ':length_from' => $length_from,
             ':limit'  => $limit,
             ':offset' => $offset,
         ];
+        $tables = ['travels t', 'users u ON t.author_id = u.id'];
+        $order_items = ['t.estimated_price ASC'];
+        $conditions = [];
         if ($price_to !== null) {
             $params[':price_to'] = $price_to;
+            $conditions[] = 't.estimated_price <= :price_to';
+        }
+        if ($price_from !== null) {
+            $params[':price_from'] = $price_from;
+            $conditions[] = 't.estimated_price >= :price_from';
+        }
+        if ($length_from !== null) {
+            $params[':length_from'] = $length_from;
+            $conditions[] = 'days_count <= :length_from';
         }
         if ($length_to !== null) {
             $params[':length_to'] = $length_to;
+            $conditions[] = 'days_count >= :length_to';
         }
-        if ($category_id !== null) {
-            $params[':category_id'] = $category_id;
+        if ($category_ids) {
+            $sql_list = $this->generateInExpression($category_ids, 'cat', $params);
+            $tables[] = "
+            (
+                SELECT travel_id, COUNT(category_id) AS c
+                FROM travel_categories 
+                WHERE category_id IN $sql_list
+                GROUP BY travel_id
+            ) AS cat ON cat.travel_id = t.id 
+            ";
+            array_unshift($order_items, 'cat.c DESC');
         }
-        if ($transportation !== null) {
-            $params[':transportation'] = $transportation;
-        }
+
+        $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
+        $from = implode(' JOIN ', $tables);
+        $order = implode(', ', $order_items);
+        $select = $this->pdo->prepare("
+          SELECT 
+            t.*, 
+            u.*,
+            (
+              SELECT MAX(offset_end) 
+              FROM actions ac 
+              WHERE ac.travel_id = t.id
+            ) AS days_count 
+          FROM {$from}
+          {$where}
+          ORDER BY {$order} 
+          LIMIT :limit 
+          OFFSET :offset
+        ");
         $select->execute($params);
         return $this->buildAll($select);
     }
@@ -329,8 +351,8 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function update(Travel $travel)
     {
-        $update = $this->pdo->prepare(
-            'UPDATE travels SET
+        $update = $this->pdo->prepare('
+            UPDATE travels SET
             title = :title,
             description = :description,
             content = :content::JSON,
@@ -340,8 +362,8 @@ class TravelMapper extends AbstractPDOMapper
             creation_mode = :creation_mode,
             estimated_price = :estimated_price,
             transportation = :transportation
-            WHERE id = :id'
-        );
+            WHERE id = :id
+        ');
         $this->bindCommonValues($update, $travel);
         $update->bindValue('id', $travel->getId(), PDO::PARAM_INT);
         $update->execute();
@@ -378,20 +400,20 @@ class TravelMapper extends AbstractPDOMapper
 
     /**
      * @param PDOStatement $statement
-     * @param Travel $travel
+     * @param Travel       $travel
      */
     private function bindCommonValues(PDOStatement $statement, Travel $travel)
     {
         $values = [
-            'title' => $travel->getTitle(),
-            'description' => $travel->getDescription(),
-            'content' => json_encode($travel->getContent()),
-            'published' => $travel->isPublished(),
-            'image' => $travel->getImage(),
-            'author_id' => $travel->getAuthorId(),
-            'creation_mode' => $travel->getCreationMode(),
+            'title'           => $travel->getTitle(),
+            'description'     => $travel->getDescription(),
+            'content'         => json_encode($travel->getContent()),
+            'published'       => $travel->isPublished(),
+            'image'           => $travel->getImage(),
+            'author_id'       => $travel->getAuthorId(),
+            'creation_mode'   => $travel->getCreationMode(),
             'estimated_price' => $travel->getEstimatedPrice(),
-            'transportation' => $travel->getTransportation()
+            'transportation'  => $travel->getTransportation(),
         ];
         $this->bindValues($statement, $values);
     }
@@ -416,8 +438,8 @@ class TravelMapper extends AbstractPDOMapper
             WHERE id = :id'
         );
         $values = [
-            'id' => $travelId,
-            'deleted' => $deleted
+            'id'      => $travelId,
+            'deleted' => $deleted,
         ];
         $this->bindValues($update, $values);
         $update->execute();

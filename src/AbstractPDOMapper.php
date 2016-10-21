@@ -36,6 +36,22 @@ abstract class AbstractPDOMapper
     abstract protected function create(array $row);
 
     /**
+     * @param array  $values
+     * @param string $key
+     * @param array  $params
+     * @return string
+     */
+    protected function generateInExpression(array $values, string $key, array &$params = []): string
+    {
+        $i = 0;
+        foreach ($values as $val) {
+            $params[":{$key}_{$i}"] = $val;
+            $i++;
+        }
+        return '(' . implode(', ', array_keys($params)) . ')';
+    }
+
+    /**
      * Create object with all dependencies.
      * This method is to be overloaded in child classes
      * @param array $row

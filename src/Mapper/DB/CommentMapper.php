@@ -70,7 +70,7 @@ class CommentMapper extends AbstractPDOMapper
         }
         return $this->build($row);
     }
-    
+
     /**
      * Get all comments by travel id
      * @param int $travel_id

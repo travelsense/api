@@ -94,7 +94,7 @@ class TravelController extends ApiController
             $travel->setTransportation($json->get('transportation'));
         }
         $this->travel_mapper->insert($travel);
-        
+
         $actions = $this->createActions((array) $json->get('content'), $travel->getId());
         $travel->setActions($actions);
         $this->action_mapper->insertActions($travel->getActions());
@@ -179,15 +179,15 @@ class TravelController extends ApiController
     public function getFeatured(): array
     {
         $result = [
-            'banners' => $this->banner_mapper->fetchBanners()
+            'banners' => $this->banner_mapper->fetchBanners(),
         ];
         $featured_category_names = $this->category_mapper->fetchFeaturedCategoryNames();
         $featured_categories = [];
         foreach ($featured_category_names as $name) {
             $travels = $this->travel_mapper->fetchPublishedByCategory($name, 5, 0);
             $featured_categories[] = [
-                'title'   => $name,
-                'travels' => $this->buildTravelSetView($travels, [], true),
+                'title'    => $name,
+                'travels'  => $this->buildTravelSetView($travels, [], true),
                 'category' => $name,
             ];
         }
@@ -195,12 +195,12 @@ class TravelController extends ApiController
         return $result;
     }
 
-   /**
-     * @param int   $author_id
-     * @param User  $user
-     * @param bool  $minimized
-     * @param int   $limit
-     * @param int   $offset
+    /**
+     * @param int  $author_id
+     * @param User $user
+     * @param bool $minimized
+     * @param int  $limit
+     * @param int  $offset
      * @return array
      */
     public function getPublishedByAuthor(
@@ -209,7 +209,8 @@ class TravelController extends ApiController
         bool $minimized = true,
         int $limit = 10,
         int $offset = 0
-    ): array {
+    ): array
+    {
         $travels = $this->travel_mapper->fetchPublishedByAuthorId($author_id, $limit, $offset);
         $favorite_ids = $user ? $this->travel_mapper->fetchFavoriteIds($user->getId()) : [];
         return $this->buildTravelSetView($travels, $favorite_ids, $minimized);
@@ -232,36 +233,33 @@ class TravelController extends ApiController
     /**
      * Travels search by price and length
      *
-     * @param int $price_from
-     * @param int $price_to
-     * @param int $length_from
-     * @param int $length_to
-     * @param int $category_id
-     * @param int $transportation
-     * @param int $limit
-     * @param int $offset
-     * @param User $user
-     *
+     * @param int   $price_from
+     * @param int   $price_to
+     * @param int   $length_from
+     * @param int   $length_to
+     * @param array $category_ids
+     * @param int   $limit
+     * @param int   $offset
+     * @param User  $user
      * @return array
      */
     public function searchTravels(
-        int $price_from = 0,
+        int $price_from = null,
         int $price_to = null,
-        int $length_from = 0,
+        int $length_from = null,
         int $length_to = null,
-        int $category_id = null,
-        int $transportation = null,
+        array $category_ids = [],
         int $limit = 10,
         int $offset = 0,
         User $user = null
-    ): array {
+    ): array
+    {
         $travels = $this->travel_mapper->fetchTravelsByPriceByLength(
             $price_from,
             $price_to,
             $length_from,
             $length_to,
-            $category_id,
-            $transportation,
+            $category_ids,
             $limit,
             $offset
         );
@@ -308,10 +306,10 @@ class TravelController extends ApiController
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
         }
         if ($json->has('estimated_price')) {
-            $travel->setEstimatedPrice($json->get('estimated_price'));
+            $travel->setEstimatedPrice($json->getInteger('estimated_price'));
         }
         if ($json->has('transportation')) {
-            $travel->setTransportation($json->get('transportation'));
+            $travel->setTransportation($json->getInteger('transportation'));
         }
         $this->travel_mapper->update($travel);
 
@@ -393,7 +391,7 @@ class TravelController extends ApiController
         return $view;
     }
 
-   /**
+    /**
      * @param Action[] $actions
      * @return array[]
      */
@@ -413,14 +411,14 @@ class TravelController extends ApiController
     private function buildActionView(Action $action): array
     {
         return [
-            'id'            => $action->getId(),
-            'offsetStart'   => $action->getOffsetStart(),
-            'offsetEnd'     => $action->getOffsetEnd(),
-            'car'           => $action->getCar(),
-            'airports'      => $action->getAirports(),
-            'hotels'        => $action->getHotels(),
-            'sightseeings'  => $action->getSightseeings(),
-            'type'          => $action->getType()
+            'id'           => $action->getId(),
+            'offsetStart'  => $action->getOffsetStart(),
+            'offsetEnd'    => $action->getOffsetEnd(),
+            'car'          => $action->getCar(),
+            'airports'     => $action->getAirports(),
+            'hotels'       => $action->getHotels(),
+            'sightseeings' => $action->getSightseeings(),
+            'type'         => $action->getType(),
         ];
     }
 
@@ -440,8 +438,8 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param DataObject[]  $action_objects
-     * @param int           $travel_id
+     * @param DataObject[] $action_objects
+     * @param int          $travel_id
      * @return Action[]
      */
     private function createActions(array $action_objects, int $travel_id): array
@@ -454,8 +452,8 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param DataObject    $object
-     * @param int           $travelId
+     * @param DataObject $object
+     * @param int        $travelId
      * @return Action
      */
     private function createAction(DataObject $object, int $travelId): Action

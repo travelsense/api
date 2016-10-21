@@ -101,6 +101,12 @@ class DataObjectTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('barx', $data->getString('foo', '/x/'));
     }
 
+    public function testGetInteger()
+    {
+        $data = new DataObject((object) ['foo' => 42]);
+        $this->assertEquals(42, $data->getInteger('foo'));
+    }
+
     /**
      * @expectedException \Api\Exception\ApiException
      * @expectedExceptionMessage a must be an array of boolean
