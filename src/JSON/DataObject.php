@@ -70,13 +70,13 @@ class DataObject
 
         $value = $this->data->$property;
 
-        if (null !== $types && false === in_array(gettype($value), (array)$types)) {
+        if (null !== $types && false === in_array(gettype($value), (array) $types)) {
             $this->throwException(
                 sprintf(
                     'Property %s is of type %s, expected type(s): %s',
                     $property,
                     gettype($value),
-                    implode(', ', (array)$types)
+                    implode(', ', (array) $types)
                 )
             );
         }
@@ -108,13 +108,24 @@ class DataObject
 
     /**
      * Get boolean
-     * @param string          $property
+     * @param string $property
      * @return bool
      * @throws ApiException
      */
     public function getBoolean(string $property): bool
     {
         return $this->get($property, 'boolean');
+    }
+
+    /**
+     * Get integer
+     * @param string $property
+     * @return int
+     * @throws ApiException
+     */
+    public function getInteger(string $property): int
+    {
+        return $this->get($property, 'integer');
     }
 
     /**
@@ -133,15 +144,6 @@ class DataObject
     }
 
     /**
-     * @param string $message
-     * @throws ApiException
-     */
-    private function throwException(string $message)
-    {
-        throw new ApiException($message, ApiException::VALIDATION);
-    }
-
-    /**
      * @param string $type
      * @param string $property
      * @return array
@@ -156,5 +158,14 @@ class DataObject
             }
         }
         return $values;
+    }
+
+    /**
+     * @param string $message
+     * @throws ApiException
+     */
+    private function throwException(string $message)
+    {
+        throw new ApiException($message, ApiException::VALIDATION);
     }
 }
