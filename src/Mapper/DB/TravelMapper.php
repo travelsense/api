@@ -284,8 +284,7 @@ class TravelMapper extends AbstractPDOMapper
         array $category_ids = [],
         int $limit = 10,
         int $offset = 0
-    ): array
-    {
+    ): array {
         $params = [
             ':limit'  => $limit,
             ':offset' => $offset,
