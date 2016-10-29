@@ -308,6 +308,12 @@ class TravelMapper extends AbstractPDOMapper
             $params[':length_to'] = $length_to;
             $conditions[] = 'days_count >= :length_to';
         }
+        $tables[] = "
+        (
+            SELECT travel_id, MAX(offset_end) AS days_count
+            FROM actions GROUP BY travel_id
+        ) AS ac ON t.id = ac.travel_id
+        ";
         if ($category_ids) {
             $sql_list = $this->generateInExpression($category_ids, 'cat', $params);
             $tables[] = "
@@ -327,12 +333,7 @@ class TravelMapper extends AbstractPDOMapper
         $select = $this->pdo->prepare("
           SELECT 
             t.*, 
-            u.*,
-            (
-              SELECT MAX(offset_end) 
-              FROM actions ac 
-              WHERE ac.travel_id = t.id
-            ) AS days_count 
+            u.*
           FROM {$from}
           {$where}
           ORDER BY {$order} 
