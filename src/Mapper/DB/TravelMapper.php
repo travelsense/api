@@ -309,7 +309,7 @@ class TravelMapper extends AbstractPDOMapper
             $conditions[] = 'days_count >= :length_to';
         }
         if ($category_ids) {
-            $sql_list = $this->generateInExpression($category_ids, 'cat', $params);
+            $sql_list = $this->helper->generateInExpression($category_ids, 'cat', $params);
             $tables[] = "
             (
                 SELECT travel_id, COUNT(category_id) AS c
@@ -414,7 +414,7 @@ class TravelMapper extends AbstractPDOMapper
             'estimated_price' => $travel->getEstimatedPrice(),
             'transportation'  => $travel->getTransportation(),
         ];
-        $this->bindValues($statement, $values);
+        $this->helper->bindValues($statement, $values);
     }
 
     /**
@@ -440,7 +440,7 @@ class TravelMapper extends AbstractPDOMapper
             'id'      => $travelId,
             'deleted' => $deleted,
         ];
-        $this->bindValues($update, $values);
+        $this->helper->bindValues($update, $values);
         $update->execute();
     }
 }

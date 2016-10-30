@@ -65,7 +65,7 @@ class UserMapper extends AbstractPDOMapper
             ':picture'    => $user->getPicture(),
             ':creator'    => $user->isCreator(),
         ];
-        $this->bindValues($insert, $values);
+        $this->helper->bindValues($insert, $values);
         $insert->execute();
         $row = $insert->fetch(PDO::FETCH_ASSOC);
         $user->setId($row['id']);
@@ -102,7 +102,7 @@ class UserMapper extends AbstractPDOMapper
             'id' => $id,
             'creator' => $creator,
         ];
-        $this->bindValues($update, $values);
+        $this->helper->bindValues($update, $values);
         $update->execute();
     }
 
