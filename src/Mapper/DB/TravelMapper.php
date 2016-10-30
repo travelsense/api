@@ -292,21 +292,21 @@ class TravelMapper extends AbstractPDOMapper
         $tables = ['travels t', 'users u ON t.author_id = u.id'];
         $order_items = ['t.estimated_price ASC'];
         $conditions = [];
-        if ($price_to !== null) {
-            $params[':price_to'] = $price_to;
-            $conditions[] = 't.estimated_price <= :price_to';
-        }
         if ($price_from !== null) {
             $params[':price_from'] = $price_from;
             $conditions[] = 't.estimated_price >= :price_from';
         }
+        if ($price_to !== null) {
+            $params[':price_to'] = $price_to;
+            $conditions[] = 't.estimated_price <= :price_to';
+        }
         if ($length_from !== null) {
             $params[':length_from'] = $length_from;
-            $conditions[] = 'days_count <= :length_from';
+            $conditions[] = 'days_count >= :length_from';
         }
         if ($length_to !== null) {
             $params[':length_to'] = $length_to;
-            $conditions[] = 'days_count >= :length_to';
+            $conditions[] = 'days_count <= :length_to';
         }
         $tables[] = "
         (
