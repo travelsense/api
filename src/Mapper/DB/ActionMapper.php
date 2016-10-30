@@ -109,7 +109,7 @@ class ActionMapper extends AbstractPDOMapper
             'sightseeings' => json_encode($action->getSightseeings()),
             'type' => $action->getType()
         ];
-        $this->bindValues($statement, $values);
+        $this->helper->bindValues($statement, $values);
     }
 
     /**

@@ -1,9 +1,9 @@
 <?php
 namespace Api;
 
+use Api\PDO\Helper;
 use PDO;
 use PDOStatement;
-use InvalidArgumentException;
 
 abstract class AbstractPDOMapper
 {
@@ -18,13 +18,20 @@ abstract class AbstractPDOMapper
     protected $pdo;
 
     /**
+     * @var Helper
+     */
+    protected $helper;
+
+    /**
      * AbstractMapper constructor.
      *
-     * @param PDO $pdo
+     * @param PDO    $pdo
+     * @param Helper $helper
      */
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo, Helper $helper = null)
     {
         $this->pdo = $pdo;
+        $this->helper = $helper ?: new Helper();
     }
 
     /**
@@ -34,22 +41,6 @@ abstract class AbstractPDOMapper
      * @return mixed
      */
     abstract protected function create(array $row);
-
-    /**
-     * @param array  $values
-     * @param string $key
-     * @param array  $params
-     * @return string
-     */
-    protected function generateInExpression(array $values, string $key, array &$params = []): string
-    {
-        $i = 0;
-        foreach ($values as $val) {
-            $params[":{$key}_{$i}"] = $val;
-            $i++;
-        }
-        return '(' . implode(', ', array_keys($params)) . ')';
-    }
 
     /**
      * Create object with all dependencies.
@@ -100,49 +91,8 @@ abstract class AbstractPDOMapper
     {
         $objects = [];
         foreach ($mappers as $index => $mapper) {
-            $objects[] = $mapper->create($this->normalize($row, $index));
+            $objects[] = $mapper->create($this->helper->normalize($row, $index));
         }
         return $objects;
-    }
-
-    /**
-     * Replace keys which are arrays with their $index-th elements
-     * @param array $row
-     * @param int   $index
-     * @return array
-     */
-    private function normalize(array $row, int $index): array
-    {
-        foreach ($row as $key => $item) {
-            if (is_array($item)) {
-                $row[$key] = $item[$index];
-            }
-        }
-        return $row;
-    }
-
-    public function bindValues(PDOStatement $statement, array $values)
-    {
-        foreach ($values as $param => $value) {
-            $type = gettype($value);
-            switch ($type) {
-                case "boolean":
-                    $statement->bindValue($param, $value, PDO::PARAM_BOOL);
-                    break;
-                case "NULL":
-                    $statement->bindValue($param, $value, PDO::PARAM_NULL);
-                    break;
-                case "integer":
-                    $statement->bindValue($param, $value, PDO::PARAM_INT);
-                    break;
-                case "string":
-                    $statement->bindValue($param, $value, PDO::PARAM_STR);
-                    break;
-                default:
-                    throw new InvalidArgumentException(
-                        "Cannot bind value of type '{$type}' to placeholder '{$param}'"
-                    );
-            }
-        }
     }
 }
