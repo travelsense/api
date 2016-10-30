@@ -290,9 +290,9 @@ class ApiClient
      * @return mixed
      */
     public function searchTravels(
-        int $price_from = 0,
+        int $price_from = null,
         int $price_to = null,
-        int $length_from = 0,
+        int $length_from = null,
         int $length_to = null,
         int $category_id = null,
         int $transportation = null,

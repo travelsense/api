@@ -292,22 +292,28 @@ class TravelMapper extends AbstractPDOMapper
         $tables = ['travels t', 'users u ON t.author_id = u.id'];
         $order_items = ['t.estimated_price ASC'];
         $conditions = [];
-        if ($price_to !== null) {
-            $params[':price_to'] = $price_to;
-            $conditions[] = 't.estimated_price <= :price_to';
-        }
         if ($price_from !== null) {
             $params[':price_from'] = $price_from;
             $conditions[] = 't.estimated_price >= :price_from';
         }
+        if ($price_to !== null) {
+            $params[':price_to'] = $price_to;
+            $conditions[] = 't.estimated_price <= :price_to';
+        }
         if ($length_from !== null) {
             $params[':length_from'] = $length_from;
-            $conditions[] = 'days_count <= :length_from';
+            $conditions[] = 'days_count >= :length_from';
         }
         if ($length_to !== null) {
             $params[':length_to'] = $length_to;
-            $conditions[] = 'days_count >= :length_to';
+            $conditions[] = 'days_count <= :length_to';
         }
+        $tables[] = "
+        (
+            SELECT travel_id, MAX(offset_end) AS days_count
+            FROM actions GROUP BY travel_id
+        ) AS ac ON t.id = ac.travel_id
+        ";
         if ($category_ids) {
             $sql_list = $this->helper->generateInExpression($category_ids, 'cat', $params);
             $tables[] = "
@@ -327,12 +333,7 @@ class TravelMapper extends AbstractPDOMapper
         $select = $this->pdo->prepare("
           SELECT 
             t.*, 
-            u.*,
-            (
-              SELECT MAX(offset_end) 
-              FROM actions ac 
-              WHERE ac.travel_id = t.id
-            ) AS days_count 
+            u.*
           FROM {$from}
           {$where}
           ORDER BY {$order} 
