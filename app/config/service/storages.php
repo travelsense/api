@@ -13,6 +13,19 @@ use LazyPDO\LazyPDO;
 use Migrator\VersionLog\DatabaseLog;
 use Migrator\VersionLog\DatabaseLogAdapter\Factory as LogAdapterFactory;
 
+$app->register(new \Silex\Provider\DoctrineServiceProvider(), [
+    'dbs.options' => [
+        'main' => [
+            'dbname'   => $app['config']['db']['main']['database'],
+            'user'     => $app['config']['db']['main']['user'],
+            'password' => $app['config']['db']['main']['password'],
+            'host'     => $app['config']['db']['main']['host'],
+            'driver'   => 'pdo_pgsql',
+        ],
+    ],
+]);
+
+
 $app['db.main.pdo'] = function (Application $app) {
     $main = $app['config']['db']['main'];
     $pdo = new LazyPDO(
@@ -24,22 +37,8 @@ $app['db.main.pdo'] = function (Application $app) {
     return $pdo;
 };
 
-$app['db.main.connection'] = function (Application $app) {
-    $main = $app['config']['db']['main'];
-
-    $config = new Configuration();
-    $params = [
-        'dbname'   => $main['database'],
-        'user'     => $main['user'],
-        'password' => $main['password'],
-        'host'     => $main['host'],
-        'driver'   => 'pdo_pgsql',
-    ];
-    return DriverManager::getConnection($params, $config);
-};
-
 $app['storage.expirable_storage'] = function (Application $app) {
-    return new ExpirableStorage($app['db.main.connection']);
+    return new ExpirableStorage($app['dbs']['main']);
 };
 
 $app['db.migrator.factory'] = function (Application $app) {

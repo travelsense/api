@@ -18,21 +18,21 @@ use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\FlaggedCommentMapper;
 
 $app['mapper.db.user'] = function ($app) {
-    $mapper = new UserMapper($app['db.main.connection']);
+    $mapper = new UserMapper($app['dbs']['main']);
     $mapper->setSalt($app['config']['security']['password_salt']);
     return $mapper;
 };
 
 $app['mapper.db.sessions'] = function ($app) {
-    return new SessionMapper($app['db.main.connection']);
+    return new SessionMapper($app['dbs']['main']);
 };
 
 $app['mapper.db.iata'] = function ($app) {
-    return new IATAMapper($app['db.main.connection']);
+    return new IATAMapper($app['dbs']['main']);
 };
 
 $app['mapper.db.travel'] = function ($app) {
-    $mapper = new TravelMapper($app['db.main.connection']);
+    $mapper = new TravelMapper($app['dbs']['main']);
     $mapper->setUserMapper($app['mapper.db.user']);
     $mapper->setCategoryMapper($app['mapper.db.category']);
     $mapper->setActionMapper($app['mapper.db.action']);
@@ -40,32 +40,32 @@ $app['mapper.db.travel'] = function ($app) {
 };
 
 $app['mapper.db.category'] = function ($app) {
-    $mapper = new CategoryMapper($app['db.main.connection']);
+    $mapper = new CategoryMapper($app['dbs']['main']);
     return $mapper;
 };
 
 $app['mapper.db.comment'] = function ($app) {
-    $mapper = new CommentMapper($app['db.main.connection']);
+    $mapper = new CommentMapper($app['dbs']['main']);
     $mapper->setUserMapper($app['mapper.db.user']);
     return $mapper;
 };
 
 $app['mapper.db.flagged_comment'] = function ($app) {
-    return new FlaggedCommentMapper($app['db.main.connection']);
+    return new FlaggedCommentMapper($app['dbs']['main']);
 };
 
 $app['mapper.db.booking'] = function ($app) {
-    return new BookingMapper($app['db.main.connection']);
+    return new BookingMapper($app['dbs']['main']);
 };
 
 $app['mapper.db.action'] = function ($app) {
-    return new ActionMapper($app['db.main.connection']);
+    return new ActionMapper($app['dbs']['main']);
 };
 
 $app['mapper.db.banner'] = function ($app) {
-    return new BannerMapper($app['db.main.connection']);
+    return new BannerMapper($app['dbs']['main']);
 };
 
 $app['mapper.db.user_role'] = function ($app) {
-    return new RoleMapper($app['db.main.connection']);
+    return new RoleMapper($app['dbs']['main']);
 };
