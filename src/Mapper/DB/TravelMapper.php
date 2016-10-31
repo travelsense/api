@@ -1,17 +1,17 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
+use Api\DB\AbstractMapper;
 use Api\Model\Travel\Travel;
 use DateTime;
+use Doctrine\DBAL\Statement;
 use PDO;
-use PDOStatement;
 
 /**
  * Class TravelMapper
  * @package Api\Mapper\DB
  */
-class TravelMapper extends AbstractPDOMapper
+class TravelMapper extends AbstractMapper
 {
     /**
      * @var UserMapper
@@ -58,7 +58,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchById(int $id)
     {
-        $select = $this->pdo->prepare(
+        $select = $this->conn->prepare(
             'SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id AND NOT deleted'
         );
         $select->execute(['id' => $id]);
@@ -80,7 +80,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchByAuthorId(int $author_id, int $limit, int $offset, bool $is_published = null): array
     {
-        $select = $this->pdo->prepare(
+        $select = $this->conn->prepare(
             'SELECT t.*, u.* FROM travels t
              JOIN users u ON t.author_id = u.id
              WHERE t.author_id = :userId AND NOT deleted '
@@ -120,7 +120,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function insert(Travel $travel)
     {
-        $insert = $this->pdo->prepare(
+        $insert = $this->conn->prepare(
             'INSERT INTO travels (
             title, description, content,
             is_published, image, author_id,
@@ -145,7 +145,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function delete(int $id)
     {
-        $this->pdo
+        $this->conn
             ->prepare("DELETE FROM travels WHERE id = :id")
             ->execute([':id' => $id]);
     }
@@ -156,7 +156,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchFavoriteIds(int $user_id): array
     {
-        $select = $this->pdo->prepare('
+        $select = $this->conn->prepare('
             SELECT travel_id FROM  favorite_travels
             WHERE user_id = :user_id
             ');
@@ -177,7 +177,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function addFavorite(int $travel_id, int $user_id)
     {
-        $this->pdo->prepare('
+        $this->conn->prepare('
             INSERT INTO favorite_travels (user_id, travel_id)
             VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING
         ')->execute([
@@ -192,7 +192,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function removeFavorite(int $travel_id, int $user_id)
     {
-        $this->pdo
+        $this->conn
             ->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id')
             ->execute([
                 ':user_id'   => $user_id,
@@ -206,7 +206,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchFavorites(int $user_id): array
     {
-        $select = $this->pdo->prepare('
+        $select = $this->conn->prepare('
             SELECT t.*, u.* FROM  favorite_travels ft
             JOIN travels t ON ft.travel_id = t.id AND NOT t.deleted
             JOIN users u ON t.author_id = u.id
@@ -224,7 +224,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchByCategory(string $name, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare('
+        $select = $this->conn->prepare('
             SELECT t.*, u.* FROM travel_categories ct
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
@@ -248,7 +248,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function fetchPublishedByCategory(string $name, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare('
+        $select = $this->conn->prepare('
             SELECT t.*, u.* FROM travel_categories ct
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
@@ -330,7 +330,7 @@ class TravelMapper extends AbstractPDOMapper
         $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
         $from = implode(' JOIN ', $tables);
         $order = implode(', ', $order_items);
-        $select = $this->pdo->prepare("
+        $select = $this->conn->prepare("
           SELECT 
             t.*, 
             u.*
@@ -351,7 +351,7 @@ class TravelMapper extends AbstractPDOMapper
      */
     public function update(Travel $travel)
     {
-        $update = $this->pdo->prepare('
+        $update = $this->conn->prepare('
             UPDATE travels SET
             title = :title,
             description = :description,
@@ -399,10 +399,10 @@ class TravelMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param PDOStatement $statement
+     * @param Statement $statement
      * @param Travel       $travel
      */
-    private function bindCommonValues(PDOStatement $statement, Travel $travel)
+    private function bindCommonValues(Statement $statement, Travel $travel)
     {
         $values = [
             'title'           => $travel->getTitle(),
@@ -432,7 +432,7 @@ class TravelMapper extends AbstractPDOMapper
 
     public function markDeleted(int $travelId, bool $deleted = true)
     {
-        $update = $this->pdo->prepare(
+        $update = $this->conn->prepare(
             'UPDATE travels SET
               deleted = :deleted
             WHERE id = :id'

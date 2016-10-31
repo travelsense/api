@@ -1,14 +1,13 @@
 <?php
 namespace Api\Mapper\DB\User;
 
-use Api\AbstractPDOMapper;
-use BadMethodCallException;
+use Api\DB\AbstractMapper;
 
 /**
  * Class RoleMapper
  * @package Api\Mapper\DB\User
  */
-class RoleMapper extends AbstractPDOMapper
+class RoleMapper extends AbstractMapper
 {
     /**
      * Get user roles
@@ -17,7 +16,7 @@ class RoleMapper extends AbstractPDOMapper
      */
     public function getRoles(int $user_id): array
     {
-        $select = $this->pdo->prepare('SELECT role FROM user_roles WHERE user_id = :user_id ORDER BY role ASC');
+        $select = $this->conn->prepare('SELECT role FROM user_roles WHERE user_id = :user_id ORDER BY role ASC');
         $select->execute([
             ':user_id' => $user_id,
         ]);
@@ -35,7 +34,7 @@ class RoleMapper extends AbstractPDOMapper
      */
     public function grantRole(int $user_id, string $role)
     {
-        $insert = $this->pdo->prepare('INSERT INTO user_roles (user_id, role) VALUES (:user_id, :role)');
+        $insert = $this->conn->prepare('INSERT INTO user_roles (user_id, role) VALUES (:user_id, :role)');
         $insert->execute([
            ':user_id' => $user_id,
            ':role' => $role,
@@ -49,21 +48,10 @@ class RoleMapper extends AbstractPDOMapper
      */
     public function withdrawRole(int $user_id, string $role)
     {
-        $delete = $this->pdo->prepare('DELETE FROM user_roles WHERE user_id = :user_id AND role = :role');
+        $delete = $this->conn->prepare('DELETE FROM user_roles WHERE user_id = :user_id AND role = :role');
         $delete->execute([
            ':user_id' => $user_id,
            ':role' => $role,
         ]);
-    }
-
-    /**
-     * Create object by a DB row
-     *
-     * @param  array $row
-     * @return mixed
-     */
-    protected function create(array $row)
-    {
-        throw new BadMethodCallException();
     }
 }

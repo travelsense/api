@@ -1,10 +1,9 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
-use BadMethodCallException;
+use Api\DB\AbstractMapper;
 
-class FlaggedCommentMapper extends AbstractPDOMapper
+class FlaggedCommentMapper extends AbstractMapper
 {
     /**
      * @param int $user_id
@@ -13,7 +12,7 @@ class FlaggedCommentMapper extends AbstractPDOMapper
      */
     public function flagComment(int $user_id, int $comment_id)
     {
-        $insert = $this->pdo->prepare('
+        $insert = $this->conn->prepare('
             INSERT INTO flagged_comments 
             (comment_id, user_id)
             VALUES 
@@ -24,10 +23,5 @@ class FlaggedCommentMapper extends AbstractPDOMapper
             ':comment_id' => $comment_id,
             ':user_id' => $user_id,
         ]);
-    }
-
-    protected function create(array $row)
-    {
-        throw new BadMethodCallException();
     }
 }

@@ -1,11 +1,10 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
-use BadMethodCallException;
+use Api\DB\AbstractMapper;
 use PDO;
 
-class IATAMapper extends AbstractPDOMapper
+class IATAMapper extends AbstractMapper
 {
     private $table = [
         'country' => 'iata_countries',
@@ -22,7 +21,7 @@ class IATAMapper extends AbstractPDOMapper
      */
     public function fetchOne(string $type, string $code)
     {
-        $select = $this->pdo->prepare("SELECT * FROM {$this->table[$type]} WHERE code = :code");
+        $select = $this->conn->prepare("SELECT * FROM {$this->table[$type]} WHERE code = :code");
         $select->execute([
             ':code' => $code,
         ]);
@@ -37,7 +36,7 @@ class IATAMapper extends AbstractPDOMapper
      */
     public function fetchAll(string $type, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare(
+        $select = $this->conn->prepare(
             "SELECT * FROM {$this->table[$type]} ORDER BY code ASC LIMIT :limit OFFSET :offset"
         );
         $select->execute([
@@ -45,13 +44,5 @@ class IATAMapper extends AbstractPDOMapper
             ':offset' => $offset,
         ]);
         return $select->fetchAll(PDO::FETCH_NAMED);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function create(array $row)
-    {
-        throw new BadMethodCallException;
     }
 }

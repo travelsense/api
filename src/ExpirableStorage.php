@@ -1,10 +1,11 @@
 <?php
 namespace Api;
 
+use Api\DB\AbstractMapper;
 use DateTime;
 use PDO;
 
-class ExpirableStorage
+class ExpirableStorage extends AbstractMapper
 {
     const DELETE = true;
     const KEEP = false;
@@ -14,17 +15,7 @@ class ExpirableStorage
     /**
      * @var PDO
      */
-    protected $pdo;
-
-    /**
-     * AbstractMapper constructor.
-     *
-     * @param PDO $pdo
-     */
-    public function __construct(PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
+    protected $conn;
 
     /**
      * Store an object, get a key
@@ -37,7 +28,7 @@ class ExpirableStorage
     {
         $serialized = serialize($object);
         $token = sha1(mt_rand() . $serialized);
-        $insert = $this->pdo
+        $insert = $this->conn
             ->prepare("
               INSERT INTO expirable_storage
                 (serialized_object, token, expires)
@@ -69,7 +60,7 @@ class ExpirableStorage
         }
         list($token, $id) = str_split($key, self::SHA1_LENGTH);
 
-        $select = $this->pdo->prepare(
+        $select = $this->conn->prepare(
             'SELECT serialized_object FROM expirable_storage 
             WHERE 
               id = :id 
@@ -86,7 +77,7 @@ class ExpirableStorage
         $serialized = $select->fetchColumn();
 
         if ($delete) {
-            $this->pdo
+            $this->conn
                 ->prepare('DELETE FROM expirable_storage WHERE id = :id AND token = :token')
                 ->execute(
                     [
@@ -104,7 +95,7 @@ class ExpirableStorage
      */
     public function cleanup()
     {
-        $this->pdo
+        $this->conn
             ->prepare('DELETE FROM expirable_storage WHERE expires < now()')
             ->execute();
     }

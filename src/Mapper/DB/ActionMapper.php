@@ -1,16 +1,17 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
+use Api\DB\AbstractMapper;
 use Api\Model\Travel\Action;
+use Doctrine\DBAL\Statement;
 use PDO;
-use PDOStatement;
+use PDOException;
 
 /**
  * Class ActionMapper
  * @package Api\Mapper\DB
  */
-class ActionMapper extends AbstractPDOMapper
+class ActionMapper extends AbstractMapper
 {
     /**
      * Insert into DB, update id
@@ -19,7 +20,7 @@ class ActionMapper extends AbstractPDOMapper
      */
     public function insert(Action $action)
     {
-        $insert = $this->pdo->prepare(
+        $insert = $this->conn->prepare(
             'INSERT INTO actions (travel_id, offset_start, offset_end, car,  airports, hotels, sightseeings, type)
             VALUES (
               :travel_id, 
@@ -44,7 +45,7 @@ class ActionMapper extends AbstractPDOMapper
      */
     public function delete(int $id)
     {
-        $this->pdo
+        $this->conn
             ->prepare("DELETE FROM actions WHERE id = :id")
             ->execute([':id' => $id]);
     }
@@ -56,7 +57,7 @@ class ActionMapper extends AbstractPDOMapper
      */
     public function update(Action $action)
     {
-        $update = $this->pdo->prepare('
+        $update = $this->conn->prepare('
             UPDATE actions SET
             travel_id = :travel_id, 
             offset_start = :offset_start, 
@@ -94,10 +95,10 @@ class ActionMapper extends AbstractPDOMapper
     }
 
     /**
-     * @param PDOStatement $statement
+     * @param Statement $statement
      * @param Action $action
      */
-    private function bindCommonValues(PDOStatement $statement, Action $action)
+    private function bindCommonValues(Statement $statement, Action $action)
     {
         $values = [
             'travel_id' => $action->getTravelId(),
@@ -118,7 +119,7 @@ class ActionMapper extends AbstractPDOMapper
      */
     public function fetchActionsForTravel(int $travel_id): array
     {
-        $select = $this->pdo->prepare('
+        $select = $this->conn->prepare('
             SELECT * FROM actions
             WHERE travel_id = :travel_id
             ');
@@ -131,7 +132,7 @@ class ActionMapper extends AbstractPDOMapper
      */
     public function deleteTravelActions(int $travel_id)
     {
-        $this->pdo
+        $this->conn
             ->prepare("DELETE FROM actions WHERE travel_id = :travel_id")
             ->execute([':travel_id' => $travel_id]);
     }
@@ -144,13 +145,13 @@ class ActionMapper extends AbstractPDOMapper
     public function insertActions(array $actions)
     {
         try {
-            $this->pdo->beginTransaction();
+            $this->conn->beginTransaction();
             foreach ($actions as $action) {
                 $this->insert($action);
             }
-            $this->pdo->commit();
+            $this->conn->commit();
         } catch (PDOException $e) {
-            $this->pdo->rollBack();
+            $this->conn->rollBack();
         }
     }
 }

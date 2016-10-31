@@ -1,18 +1,18 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
+use Api\DB\AbstractMapper;
 use Api\Model\Travel\Banner;
 use PDO;
 
-class BannerMapper extends AbstractPDOMapper
+class BannerMapper extends AbstractMapper
 {
     /**
      * @return array[]
      */
     public function fetchBanners(): array
     {
-        $select = $this->pdo->prepare('SELECT title, subtitle, image, category FROM banners');
+        $select = $this->conn->prepare('SELECT title, subtitle, image, category FROM banners');
         $select->execute();
 
         return $select->fetchAll(PDO::FETCH_ASSOC);

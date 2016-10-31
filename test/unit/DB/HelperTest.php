@@ -1,9 +1,9 @@
 <?php
-namespace Api\PDO;
+namespace Api\DB;
 
+use Doctrine\DBAL\Statement;
 use InvalidArgumentException;
 use PDO;
-use PDOStatement;
 use PHPUnit\Framework\TestCase;
 
 class HelperTest extends TestCase
@@ -36,7 +36,9 @@ class HelperTest extends TestCase
      */
     public function testBindValuesHappyPath(string $expected_type, string $placeholder, $value)
     {
-        $stmt = $this->getMockBuilder('PDOStatement')->getMock();
+        $stmt = $this->getMockBuilder(Statement::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $stmt->expects($this->once())->method('bindValue')->with($placeholder, $value, $expected_type);
         $this->helper->bindValues($stmt, [$placeholder => $value]);
     }
@@ -47,12 +49,14 @@ class HelperTest extends TestCase
      */
     public function testBindValuesException()
     {
-        $statement = new PDOStatement();
+        $stmt = $this->getMockBuilder(Statement::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $object = (object)[];
         $values = [
             'object' => $object
         ];
-        $this->helper->bindValues($statement, $values);
+        $this->helper->bindValues($stmt, $values);
     }
 
     public function testNormalize()

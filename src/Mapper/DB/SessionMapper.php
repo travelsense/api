@@ -1,10 +1,9 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
-use BadMethodCallException;
+use Api\DB\AbstractMapper;
 
-class SessionMapper extends AbstractPDOMapper
+class SessionMapper extends AbstractMapper
 {
     /**
      * @param int    $user_id
@@ -15,7 +14,7 @@ class SessionMapper extends AbstractPDOMapper
     public function createSession(int $user_id, string $token, string $device = null): int
     {
         $sql = 'INSERT INTO sessions (user_id, token, device) VALUES (:user_id, :token, :device) RETURNING id';
-        $insert = $this->pdo->prepare($sql);
+        $insert = $this->conn->prepare($sql);
         $insert->execute(
             [
                 ':user_id' => $user_id,
@@ -33,19 +32,11 @@ class SessionMapper extends AbstractPDOMapper
      */
     public function getUserId(int $id, string $token)
     {
-        $select = $this->pdo->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
+        $select = $this->conn->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
         $select->execute([
             ':id'    => $id,
             ':token' => $token,
         ]);
         return $select->fetchColumn(0) ?: null;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function create(array $row)
-    {
-        throw new BadMethodCallException;
     }
 }
