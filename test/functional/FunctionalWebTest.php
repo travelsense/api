@@ -18,7 +18,7 @@ class FunctionalWebTest extends FunctionalTestCase
     /**
      * @var Connection
      */
-    private $conn;
+    private $connection;
 
 
     /**
@@ -107,7 +107,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $app = Application::createByEnvironment('test');
 
         $this->category_mapper = $app['mapper.db.category'];
-        $this->conn = $app['dbs']['main'];
+        $this->connection = $app['dbs']['main'];
 
         $cat_a = new Category();
         $cat_a = $cat_a->setName('a');

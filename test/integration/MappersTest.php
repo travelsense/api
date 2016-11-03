@@ -44,7 +44,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Connection
      */
-    private $conn;
+    private $connection;
 
     /**
      * @var FlaggedCommentMapper
@@ -75,7 +75,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     {
         $app = Application::createByEnvironment('test');
 
-        $this->conn = $app['dbs']['main'];
+        $this->connection = $app['dbs']['main'];
 
         $this->user_mapper = $app['mapper.db.user'];
         $this->travel_mapper = $app['mapper.db.travel'];
@@ -88,9 +88,9 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->conn->exec('DELETE FROM users CASCADE');
-        $this->conn->exec('DELETE FROM travel_categories');
-        $this->conn->exec('DELETE FROM categories CASCADE');
+        $this->connection->exec('DELETE FROM users CASCADE');
+        $this->connection->exec('DELETE FROM travel_categories');
+        $this->connection->exec('DELETE FROM categories CASCADE');
     }
 
     /**
@@ -229,7 +229,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $user = $this->createUser('testUser');
         $travel = $this->createTravel($user, 'testTravel');
         $this->travel_mapper->markDeleted($travel->getId(), $deleted = true);
-        $select = $this->conn->prepare('SELECT id, deleted FROM travels WHERE deleted=true');
+        $select = $this->connection->prepare('SELECT id, deleted FROM travels WHERE deleted=true');
         $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
         $this->assertEquals(
@@ -274,7 +274,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $comment = $this->createComment($user->getId(), $travel->getId(), 'flagged this comment');
         $mapper = $this->flagged_comment_mapper;
         $mapper->flagComment($user->getId(), $comment->getId());
-        $select = $this->conn->prepare('SELECT comment_id, user_id FROM flagged_comments');
+        $select = $this->connection->prepare('SELECT comment_id, user_id FROM flagged_comments');
         $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
         $this->assertEquals(
