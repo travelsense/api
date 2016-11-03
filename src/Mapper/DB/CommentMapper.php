@@ -33,7 +33,7 @@ class CommentMapper extends AbstractMapper
      */
     public function insert(Comment $comment)
     {
-        $insert = $this->conn->prepare('
+        $insert = $this->connection->prepare('
             INSERT INTO travel_comments 
             (author_id, travel_id, text)
             VALUES 
@@ -55,7 +55,7 @@ class CommentMapper extends AbstractMapper
      */
     public function fetchById(int $id)
     {
-        $select = $this->conn->prepare('
+        $select = $this->connection->prepare('
             SELECT c.*, u.* FROM travel_comments c 
             JOIN users u ON u.id = c.author_id
             WHERE c.id = :id 
@@ -80,7 +80,7 @@ class CommentMapper extends AbstractMapper
      */
     public function fetchByTravelId(int $travel_id, int $limit, int $offset): array
     {
-        $select = $this->conn->prepare('
+        $select = $this->connection->prepare('
             SELECT c.*, u.* FROM travel_comments c 
             JOIN users u ON u.id = c.author_id
             WHERE c.travel_id = :id 
@@ -99,7 +99,7 @@ class CommentMapper extends AbstractMapper
      */
     public function delete(int $id)
     {
-        $this->conn
+        $this->connection
             ->prepare('DELETE FROM travel_comments WHERE id=:id')
             ->execute([':id' => $id]);
     }

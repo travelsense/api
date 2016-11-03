@@ -13,7 +13,7 @@ class CategoryMapper extends AbstractMapper
      */
     public function insert(Category $category)
     {
-        $insert = $this->conn->prepare('INSERT INTO categories (name) VALUES (:name) RETURNING id');
+        $insert = $this->connection->prepare('INSERT INTO categories (name) VALUES (:name) RETURNING id');
         $insert->execute([
             ':name' => $category->getName(),
         ]);
@@ -25,7 +25,7 @@ class CategoryMapper extends AbstractMapper
      */
     public function fetchAll(): array
     {
-        $select = $this->conn->prepare('SELECT * FROM categories ORDER BY sort_order, id ASC');
+        $select = $this->connection->prepare('SELECT * FROM categories ORDER BY sort_order, id ASC');
         $select->execute();
         return $this->createAll($select);
     }
@@ -36,7 +36,7 @@ class CategoryMapper extends AbstractMapper
      */
     public function fetchAllByName(string $name): array
     {
-        $select = $this->conn->prepare(
+        $select = $this->connection->prepare(
             'SELECT * FROM categories WHERE name LIKE :query ORDER BY name ASC'
         );
         $select->execute([
@@ -52,7 +52,7 @@ class CategoryMapper extends AbstractMapper
      */
     public function fetchByTravelId(int $travel_id): array
     {
-        $select = $this->conn->prepare('
+        $select = $this->connection->prepare('
             SELECT c.* FROM travel_categories ct 
             JOIN categories c ON ct.category_id = c.id 
             WHERE ct.travel_id = :travel_id
@@ -69,7 +69,7 @@ class CategoryMapper extends AbstractMapper
      */
     public function fetchById(int $id): Category
     {
-        $select = $this->conn->prepare('SELECT * FROM categories WHERE id = :id');
+        $select = $this->connection->prepare('SELECT * FROM categories WHERE id = :id');
         $select->execute([
             'id' => $id,
         ]);
@@ -85,7 +85,7 @@ class CategoryMapper extends AbstractMapper
      */
     public function fetchFeaturedCategoryNames(): array
     {
-        $select = $this->pdo->prepare(
+        $select = $this->connection->prepare(
             'SELECT name FROM categories WHERE featured ORDER BY sort_order, id ASC'
         );
         $select->execute();
@@ -104,14 +104,14 @@ class CategoryMapper extends AbstractMapper
     public function setTravelCategories(int $travel_id, array $category_ids)
     {
         try {
-            $this->conn->beginTransaction();
-            $this->conn
+            $this->connection->beginTransaction();
+            $this->connection
                 ->prepare('DELETE FROM travel_categories WHERE travel_id=:travel_id')
                 ->execute([
                     ':travel_id' => $travel_id,
                 ]);
 
-            $insert = $this->conn
+            $insert = $this->connection
                 ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)');
             foreach ($category_ids as $category_id) {
                 $insert->execute([
@@ -119,9 +119,9 @@ class CategoryMapper extends AbstractMapper
                     ':category_id' => $category_id,
                 ]);
             }
-            $this->conn->commit();
+            $this->connection->commit();
         } catch (PDOException $e) {
-            $this->conn->rollBack();
+            $this->connection->rollBack();
         }
     }
 

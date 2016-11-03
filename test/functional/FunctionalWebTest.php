@@ -5,8 +5,8 @@ use Api\Application;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
 use Api\Test\FunctionalTestCase;
+use Doctrine\DBAL\Connection;
 use HopTrip\ApiClient\ApiClientException;
-use PDO;
 
 class FunctionalWebTest extends FunctionalTestCase
 {
@@ -16,9 +16,9 @@ class FunctionalWebTest extends FunctionalTestCase
     private $category_mapper;
 
     /**
-     * @var PDO
+     * @var Connection
      */
-    private $pdo;
+    private $conn;
 
 
     /**
@@ -107,7 +107,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $app = Application::createByEnvironment('test');
 
         $this->category_mapper = $app['mapper.db.category'];
-        $this->pdo = $app['db.main.pdo'];
+        $this->conn = $app['dbs']['main'];
 
         $cat_a = new Category();
         $cat_a = $cat_a->setName('a');

@@ -12,7 +12,7 @@ class BookingMapper extends AbstractMapper
      */
     public function registerBooking(int $user_id, int $travel_id)
     {
-        $insert = $this->conn->prepare(
+        $insert = $this->connection->prepare(
             'INSERT INTO bookings (user_id, travel_id) VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING'
         );
         $insert->execute([
@@ -27,7 +27,7 @@ class BookingMapper extends AbstractMapper
      */
     public function getBookingsTotal(int $author_id): int
     {
-        $select = $this->conn->prepare(
+        $select = $this->connection->prepare(
             'SELECT COUNT(*) FROM bookings b JOIN travels t on t.id = b.travel_id WHERE t.author_id = :author_id'
         );
         $select->execute([':author_id' => $author_id]);
@@ -47,7 +47,7 @@ class BookingMapper extends AbstractMapper
      */
     public function getStats(int $author_id): array
     {
-        $select = $this->conn->prepare(
+        $select = $this->connection->prepare(
             'SELECT 
               d.date AS date, 
               COUNT (t.*) AS count 

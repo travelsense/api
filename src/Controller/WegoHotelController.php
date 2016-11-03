@@ -3,7 +3,7 @@ namespace Api\Controller;
 
 use Api\Wego\WegoHotels;
 use DateTime;
-use PDO;
+use Doctrine\DBAL\Connection;
 
 class WegoHotelController extends ApiController
 {
@@ -13,20 +13,14 @@ class WegoHotelController extends ApiController
     private $wego;
 
     /**
-     * @var PDO
+     * @var Connection
      */
-    private $pdo;
+    private $conn;
 
-    /**
-     * WegoHotelController constructor.
-     *
-     * @param WegoHotels $wego
-     * @param PDO        $pdo
-     */
-    public function __construct(WegoHotels $wego, PDO $pdo)
+    public function __construct(WegoHotels $wego, Connection $connection)
     {
         $this->wego = $wego;
-        $this->pdo = $pdo;
+        $this->conn = $connection;
     }
 
     /**
@@ -113,7 +107,7 @@ class WegoHotelController extends ApiController
         string $desc,
         int $stars
     ): int {
-        $insert = $this->pdo->prepare(
+        $insert = $this->conn->prepare(
             'INSERT INTO hotels
             (name, location, address, lat, lon, description, stars)
              VALUES
@@ -152,7 +146,7 @@ class WegoHotelController extends ApiController
         int $stars,
         int $hotel_id
     ) {
-        $insert = $this->pdo->prepare(
+        $insert = $this->conn->prepare(
             'UPDATE hotels SET
              name = :name, location = :location, address = :address,
              lat = :lat, lon = :lon, description = :description, stars = :stars
@@ -176,7 +170,7 @@ class WegoHotelController extends ApiController
      */
     private function addWegoIdForHotelId(int $hotel_id, int $wego_id)
     {
-        $insert = $this->pdo->prepare(
+        $insert = $this->conn->prepare(
             'INSERT INTO wego_hotels
             (hotel_id, wego_hotel_id)
              VALUES (:id, :wego_hotel_id)'
@@ -193,7 +187,7 @@ class WegoHotelController extends ApiController
      */
     private function getHotelIdByWegoId(int $wego_id)
     {
-        $select = $this->pdo->prepare('SELECT hotel_id FROM wego_hotels WHERE wego_hotel_id = :wego_hotel_id');
+        $select = $this->conn->prepare('SELECT hotel_id FROM wego_hotels WHERE wego_hotel_id = :wego_hotel_id');
         $select->execute([':wego_hotel_id' => $wego_id]);
         return $select->fetchColumn();
     }

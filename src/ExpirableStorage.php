@@ -15,7 +15,7 @@ class ExpirableStorage extends AbstractMapper
     /**
      * @var PDO
      */
-    protected $conn;
+    protected $connection;
 
     /**
      * Store an object, get a key
@@ -28,7 +28,7 @@ class ExpirableStorage extends AbstractMapper
     {
         $serialized = serialize($object);
         $token = sha1(mt_rand() . $serialized);
-        $insert = $this->conn
+        $insert = $this->connection
             ->prepare("
               INSERT INTO expirable_storage
                 (serialized_object, token, expires)
@@ -60,7 +60,7 @@ class ExpirableStorage extends AbstractMapper
         }
         list($token, $id) = str_split($key, self::SHA1_LENGTH);
 
-        $select = $this->conn->prepare(
+        $select = $this->connection->prepare(
             'SELECT serialized_object FROM expirable_storage 
             WHERE 
               id = :id 
@@ -77,7 +77,7 @@ class ExpirableStorage extends AbstractMapper
         $serialized = $select->fetchColumn();
 
         if ($delete) {
-            $this->conn
+            $this->connection
                 ->prepare('DELETE FROM expirable_storage WHERE id = :id AND token = :token')
                 ->execute(
                     [
@@ -95,7 +95,7 @@ class ExpirableStorage extends AbstractMapper
      */
     public function cleanup()
     {
-        $this->conn
+        $this->connection
             ->prepare('DELETE FROM expirable_storage WHERE expires < now()')
             ->execute();
     }

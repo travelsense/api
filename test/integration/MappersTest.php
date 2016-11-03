@@ -19,6 +19,7 @@ use Api\Model\Travel\Comment;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
 use Api\Test\DatabaseTrait;
+use Doctrine\DBAL\Connection;
 use PDO;
 
 class MappersTest extends \PHPUnit_Framework_TestCase
@@ -41,9 +42,9 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     private $category_mapper;
 
     /**
-     * @var PDO
+     * @var Connection
      */
-    private $pdo;
+    private $conn;
 
     /**
      * @var FlaggedCommentMapper
@@ -74,7 +75,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     {
         $app = Application::createByEnvironment('test');
 
-        $this->pdo = $app['db.main.pdo'];
+        $this->conn = $app['dbs']['main'];
 
         $this->user_mapper = $app['mapper.db.user'];
         $this->travel_mapper = $app['mapper.db.travel'];
@@ -87,9 +88,9 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->pdo->exec('DELETE FROM users CASCADE');
-        $this->pdo->exec('DELETE FROM travel_categories');
-        $this->pdo->exec('DELETE FROM categories CASCADE');
+        $this->conn->exec('DELETE FROM users CASCADE');
+        $this->conn->exec('DELETE FROM travel_categories');
+        $this->conn->exec('DELETE FROM categories CASCADE');
     }
 
     /**
@@ -135,6 +136,8 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $category = $this->createCategory('a');
         $this->assertTrue(is_int($category->getId()));
         $this->assertSameCategories($category, $this->category_mapper->fetchById($category->getId()));
+
+        $this->assertInternalType('array', $this->category_mapper->fetchFeaturedCategoryNames());
     }
 
     public function testCategoryMapperFetchAllCategories()
@@ -226,7 +229,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $user = $this->createUser('testUser');
         $travel = $this->createTravel($user, 'testTravel');
         $this->travel_mapper->markDeleted($travel->getId(), $deleted = true);
-        $select = $this->pdo->prepare('SELECT id, deleted FROM travels WHERE deleted=true');
+        $select = $this->conn->prepare('SELECT id, deleted FROM travels WHERE deleted=true');
         $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
         $this->assertEquals(
@@ -271,7 +274,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $comment = $this->createComment($user->getId(), $travel->getId(), 'flagged this comment');
         $mapper = $this->flagged_comment_mapper;
         $mapper->flagComment($user->getId(), $comment->getId());
-        $select = $this->pdo->prepare('SELECT comment_id, user_id FROM flagged_comments');
+        $select = $this->conn->prepare('SELECT comment_id, user_id FROM flagged_comments');
         $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
         $this->assertEquals(
