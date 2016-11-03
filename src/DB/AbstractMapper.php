@@ -11,7 +11,7 @@ abstract class AbstractMapper
     /**
      * @var PDO
      */
-    protected $conn;
+    protected $connection;
 
     /**
      * @var Helper
@@ -21,12 +21,12 @@ abstract class AbstractMapper
     /**
      * AbstractMapper constructor.
      *
-     * @param Connection $conn
+     * @param Connection $connection
      * @param Helper     $helper
      */
-    public function __construct(Connection $conn, Helper $helper = null)
+    public function __construct(Connection $connection, Helper $helper = null)
     {
-        $this->conn = $conn;
+        $this->connection = $connection;
         $this->helper = $helper ?: new Helper();
     }
 

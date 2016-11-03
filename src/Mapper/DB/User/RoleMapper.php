@@ -16,7 +16,7 @@ class RoleMapper extends AbstractMapper
      */
     public function getRoles(int $user_id): array
     {
-        $select = $this->conn->prepare('SELECT role FROM user_roles WHERE user_id = :user_id ORDER BY role ASC');
+        $select = $this->connection->prepare('SELECT role FROM user_roles WHERE user_id = :user_id ORDER BY role ASC');
         $select->execute([
             ':user_id' => $user_id,
         ]);
@@ -34,7 +34,7 @@ class RoleMapper extends AbstractMapper
      */
     public function grantRole(int $user_id, string $role)
     {
-        $insert = $this->conn->prepare('INSERT INTO user_roles (user_id, role) VALUES (:user_id, :role)');
+        $insert = $this->connection->prepare('INSERT INTO user_roles (user_id, role) VALUES (:user_id, :role)');
         $insert->execute([
            ':user_id' => $user_id,
            ':role' => $role,
@@ -48,7 +48,7 @@ class RoleMapper extends AbstractMapper
      */
     public function withdrawRole(int $user_id, string $role)
     {
-        $delete = $this->conn->prepare('DELETE FROM user_roles WHERE user_id = :user_id AND role = :role');
+        $delete = $this->connection->prepare('DELETE FROM user_roles WHERE user_id = :user_id AND role = :role');
         $delete->execute([
            ':user_id' => $user_id,
            ':role' => $role,

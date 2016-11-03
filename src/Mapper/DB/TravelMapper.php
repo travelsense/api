@@ -58,7 +58,7 @@ class TravelMapper extends AbstractMapper
      */
     public function fetchById(int $id)
     {
-        $select = $this->conn->prepare(
+        $select = $this->connection->prepare(
             'SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id AND NOT deleted'
         );
         $select->execute(['id' => $id]);
@@ -80,7 +80,7 @@ class TravelMapper extends AbstractMapper
      */
     public function fetchByAuthorId(int $author_id, int $limit, int $offset, bool $is_published = null): array
     {
-        $select = $this->conn->prepare(
+        $select = $this->connection->prepare(
             'SELECT t.*, u.* FROM travels t
              JOIN users u ON t.author_id = u.id
              WHERE t.author_id = :userId AND NOT deleted '
@@ -120,7 +120,7 @@ class TravelMapper extends AbstractMapper
      */
     public function insert(Travel $travel)
     {
-        $insert = $this->conn->prepare(
+        $insert = $this->connection->prepare(
             'INSERT INTO travels (
             title, description, content,
             is_published, image, author_id,
@@ -145,7 +145,7 @@ class TravelMapper extends AbstractMapper
      */
     public function delete(int $id)
     {
-        $this->conn
+        $this->connection
             ->prepare("DELETE FROM travels WHERE id = :id")
             ->execute([':id' => $id]);
     }
@@ -156,7 +156,7 @@ class TravelMapper extends AbstractMapper
      */
     public function fetchFavoriteIds(int $user_id): array
     {
-        $select = $this->conn->prepare('
+        $select = $this->connection->prepare('
             SELECT travel_id FROM  favorite_travels
             WHERE user_id = :user_id
             ');
@@ -177,7 +177,7 @@ class TravelMapper extends AbstractMapper
      */
     public function addFavorite(int $travel_id, int $user_id)
     {
-        $this->conn->prepare('
+        $this->connection->prepare('
             INSERT INTO favorite_travels (user_id, travel_id)
             VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING
         ')->execute([
@@ -192,7 +192,7 @@ class TravelMapper extends AbstractMapper
      */
     public function removeFavorite(int $travel_id, int $user_id)
     {
-        $this->conn
+        $this->connection
             ->prepare('DELETE FROM favorite_travels WHERE user_id = :user_id AND travel_id = :travel_id')
             ->execute([
                 ':user_id'   => $user_id,
@@ -206,7 +206,7 @@ class TravelMapper extends AbstractMapper
      */
     public function fetchFavorites(int $user_id): array
     {
-        $select = $this->conn->prepare('
+        $select = $this->connection->prepare('
             SELECT t.*, u.* FROM  favorite_travels ft
             JOIN travels t ON ft.travel_id = t.id AND NOT t.deleted
             JOIN users u ON t.author_id = u.id
@@ -224,7 +224,7 @@ class TravelMapper extends AbstractMapper
      */
     public function fetchByCategory(string $name, int $limit, int $offset): array
     {
-        $select = $this->conn->prepare('
+        $select = $this->connection->prepare('
             SELECT t.*, u.* FROM travel_categories ct
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
@@ -248,7 +248,7 @@ class TravelMapper extends AbstractMapper
      */
     public function fetchPublishedByCategory(string $name, int $limit, int $offset): array
     {
-        $select = $this->conn->prepare('
+        $select = $this->connection->prepare('
             SELECT t.*, u.* FROM travel_categories ct
             JOIN travels t ON ct.travel_id = t.id AND NOT t.deleted
             JOIN categories c ON ct.category_id = c.id
@@ -330,7 +330,7 @@ class TravelMapper extends AbstractMapper
         $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
         $from = implode(' JOIN ', $tables);
         $order = implode(', ', $order_items);
-        $select = $this->conn->prepare("
+        $select = $this->connection->prepare("
           SELECT 
             t.*, 
             u.*
@@ -351,7 +351,7 @@ class TravelMapper extends AbstractMapper
      */
     public function update(Travel $travel)
     {
-        $update = $this->conn->prepare('
+        $update = $this->connection->prepare('
             UPDATE travels SET
             title = :title,
             description = :description,
@@ -431,7 +431,7 @@ class TravelMapper extends AbstractMapper
 
     public function markDeleted(int $travelId, bool $deleted = true)
     {
-        $update = $this->conn->prepare(
+        $update = $this->connection->prepare(
             'UPDATE travels SET
               deleted = :deleted
             WHERE id = :id'

@@ -52,7 +52,7 @@ class ActionMapper extends AbstractMapper
      */
     public function delete(int $id)
     {
-        $this->conn
+        $this->connection
             ->prepare("DELETE FROM actions WHERE id = :id")
             ->execute([':id' => $id]);
     }
@@ -64,7 +64,7 @@ class ActionMapper extends AbstractMapper
      */
     public function update(Action $action)
     {
-        $update = $this->conn->prepare('
+        $update = $this->connection->prepare('
             UPDATE actions SET
             travel_id = :travel_id, 
             offset_start = :offset_start, 
@@ -135,7 +135,7 @@ class ActionMapper extends AbstractMapper
      */
     public function fetchActionsForTravel(int $travel_id): array
     {
-        $select = $this->conn->prepare('
+        $select = $this->connection->prepare('
             SELECT * FROM actions
             WHERE travel_id = :travel_id
             ');
@@ -148,7 +148,7 @@ class ActionMapper extends AbstractMapper
      */
     public function deleteTravelActions(int $travel_id)
     {
-        $this->conn
+        $this->connection
             ->prepare("DELETE FROM actions WHERE travel_id = :travel_id")
             ->execute([':travel_id' => $travel_id]);
     }
@@ -161,13 +161,13 @@ class ActionMapper extends AbstractMapper
     public function insertActions(array $actions)
     {
         try {
-            $this->conn->beginTransaction();
+            $this->connection->beginTransaction();
             foreach ($actions as $action) {
                 $this->insert($action);
             }
-            $this->conn->commit();
+            $this->connection->commit();
         } catch (PDOException $e) {
-            $this->conn->rollBack();
+            $this->connection->rollBack();
         }
     }
 }
