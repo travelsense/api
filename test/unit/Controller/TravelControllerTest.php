@@ -104,8 +104,7 @@ class TravelControllerTest extends ControllerTestCase
                 'image' => 'https://host.com/image.jpg',
                 'places_count' => 1,
                 'days_count' => 0,
-                'estimated_price' => null,
-                'transportation' =>null
+                'estimated_price' => null
             ],
             $this->controller->getTravel(1)
         );
@@ -142,8 +141,7 @@ class TravelControllerTest extends ControllerTestCase
                 'image' => 'https://host.com/image.jpg',
                 'places_count' => 1,
                 'days_count' => 0,
-                'estimated_price' => null,
-                'transportation' => null
+                'estimated_price' => null
             ],
             $this->controller->getTravel(1, $user)
         );

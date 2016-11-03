@@ -60,7 +60,7 @@ class Travel implements SubjectInterface
     /**
      * @var int
      */
-    private $transportation;
+//    private $transportation;
 
     /**
      * @return string
@@ -209,20 +209,20 @@ class Travel implements SubjectInterface
     /**
      * @return int
      */
-    public function getTransportation()
-    {
-        return $this->transportation;
-    }
+//    public function getTransportation()
+//    {
+//        return $this->transportation;
+//    }
 
     /**
      * @param int $transportation
      * @return Travel
      */
-    public function setTransportation($transportation)
-    {
-        $this->transportation = $transportation;
-        return $this;
-    }
+//    public function setTransportation($transportation)
+//    {
+//        $this->transportation = $transportation;
+//        return $this;
+//    }
 
     /**
      * @return Action[]
