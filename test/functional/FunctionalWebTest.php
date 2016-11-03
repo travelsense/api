@@ -34,7 +34,7 @@ class FunctionalWebTest extends FunctionalTestCase
         "sightseeings" => [],
         "car" => false,
         "index" => -1,
-        "endIndex" => -1,
+        "end_index" => -1,
         "transportation" => 1
     ];
     

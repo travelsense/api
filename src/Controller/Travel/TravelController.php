@@ -490,8 +490,8 @@ class TravelController extends ApiController
         if ($object->has('index')) {
             $action->setIndex($object->get('index', 'integer'));
         }
-        if ($object->has('endIndex')) {
-            $action->setEndIndex($object->get('endIndex', 'integer'));
+        if ($object->has('end_index')) {
+            $action->setEndIndex($object->get('end_index', 'integer'));
         }
         return $action;
     }
