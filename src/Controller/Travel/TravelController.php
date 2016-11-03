@@ -409,14 +409,17 @@ class TravelController extends ApiController
     private function buildActionView(Action $action): array
     {
         return [
-            'id'           => $action->getId(),
-            'offsetStart'  => $action->getOffsetStart(),
-            'offsetEnd'    => $action->getOffsetEnd(),
-            'car'          => $action->getCar(),
-            'airports'     => $action->getAirports(),
-            'hotels'       => $action->getHotels(),
-            'sightseeings' => $action->getSightseeings(),
-            'type'         => $action->getType(),
+            'id'             => $action->getId(),
+            'offsetStart'    => $action->getOffsetStart(),
+            'offsetEnd'      => $action->getOffsetEnd(),
+            'car'            => $action->getCar(),
+            'airports'       => $action->getAirports(),
+            'hotels'         => $action->getHotels(),
+            'sightseeings'   => $action->getSightseeings(),
+            'type'           => $action->getType(),
+            'transportation' => $action->getTransportation(),
+            'index'          => $action->getIndex(),
+            'end_index'      => $action->getEndIndex(),
         ];
     }
 
@@ -480,6 +483,15 @@ class TravelController extends ApiController
         }
         if ($object->has('type')) {
             $action->setType($object->get('type'));
+        }
+        if ($object->has('transportation')) {
+            $action->setTransportation($object->get('transportation', 'integer'));
+        }
+        if ($object->has('index')) {
+            $action->setIndex($object->get('index', 'integer'));
+        }
+        if ($object->has('endIndex')) {
+            $action->setEndIndex($object->get('endIndex', 'integer'));
         }
         return $action;
     }

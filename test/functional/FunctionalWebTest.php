@@ -32,7 +32,10 @@ class FunctionalWebTest extends FunctionalTestCase
         "offsetEnd" => 0,
         "type" => "flight",
         "sightseeings" => [],
-        "car" => false
+        "car" => false,
+        "index" => -1,
+        "endIndex" => -1,
+        "transportation" => 1
     ];
     
     public function testUpdateUserDetails()

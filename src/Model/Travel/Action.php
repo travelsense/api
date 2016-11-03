@@ -21,6 +21,21 @@ class Action
      * @var int
      */
     private $offset_end;
+
+    /**
+     * @var int
+     */
+    private $index;
+
+    /**
+     * @var int
+     */
+    private $end_index;
+
+    /**
+     * @var int
+     */
+    private $transportation;
  
     /**
      * @var bool
@@ -99,6 +114,60 @@ class Action
     public function setOffsetEnd($offset_end)
     {
         $this->offset_end = $offset_end;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIndex()
+    {
+        return $this->index;
+    }
+
+    /**
+     * @param int $index
+     * @return Action
+     */
+    public function setIndex($index)
+    {
+        $this->index = $index;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndIndex()
+    {
+        return $this->end_index;
+    }
+
+    /**
+     * @param int $end_index
+     * @return Action
+     */
+    public function setEndIndex($end_index)
+    {
+        $this->end_index = $end_index;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransportation()
+    {
+        return $this->transportation;
+    }
+
+    /**
+     * @param int $transportation
+     * @return Action
+     */
+    public function setTransportation($transportation)
+    {
+        $this->transportation = $transportation;
         return $this;
     }
  
