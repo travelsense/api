@@ -2,6 +2,9 @@
 /**
  * @var $app Api\Application
  */
+
+use Api\Application;
+use Api\ExpirableStorage;
 use F3\SimpleUber\Uber;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
@@ -23,4 +26,8 @@ $app['password_generator'] = function ($app) {
 
 $app['uber'] = function ($app) {
     return new Uber($app['config']['uber']['server_token']);
+};
+
+$app['storage.expirable_storage'] = function (Application $app) {
+    return new ExpirableStorage($app['dbs']['main']);
 };

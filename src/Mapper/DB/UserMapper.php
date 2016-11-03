@@ -28,7 +28,7 @@ class UserMapper extends AbstractMapper
      */
     public function emailExists(string $email)
     {
-        $select = $this->conn->prepare('SELECT id FROM users WHERE email=:email');
+        $select = $this->connection->prepare('SELECT id FROM users WHERE email=:email');
         $select->execute([':email' => $email]);
         return $select->rowCount() == 1;
     }
@@ -39,7 +39,7 @@ class UserMapper extends AbstractMapper
      */
     public function confirmEmail(string $email)
     {
-        $select = $this->conn->prepare('UPDATE users SET email_confirmed = true WHERE email=:email');
+        $select = $this->connection->prepare('UPDATE users SET email_confirmed = true WHERE email=:email');
         $select->execute([':email' => $email]);
     }
 
@@ -50,7 +50,7 @@ class UserMapper extends AbstractMapper
      */
     public function insert(User $user)
     {
-        $insert = $this->conn->prepare(
+        $insert = $this->connection->prepare(
             'INSERT INTO users
               ("email", "password", "first_name", "last_name", "picture", "creator")
             VALUES
@@ -84,7 +84,7 @@ class UserMapper extends AbstractMapper
         $email_confirmed = $user->isEmailConfirmed();
         $creator = $user->isCreator();
         $id = $user->getId();
-        $update = $this->conn->prepare(
+        $update = $this->connection->prepare(
             'UPDATE users 
             SET 
               email = :email, 
@@ -113,7 +113,7 @@ class UserMapper extends AbstractMapper
      */
     public function fetchByEmailAndPassword(string $email, string $password)
     {
-        $select = $this->conn->prepare('SELECT * FROM users WHERE email = :email AND "password" = :password');
+        $select = $this->connection->prepare('SELECT * FROM users WHERE email = :email AND "password" = :password');
 
         $select->execute(
             [
@@ -131,7 +131,7 @@ class UserMapper extends AbstractMapper
      */
     public function fetchById(int $id)
     {
-        $select = $this->conn->prepare('SELECT * FROM users WHERE "id" = :id');
+        $select = $this->connection->prepare('SELECT * FROM users WHERE "id" = :id');
         $select->execute(
             [
                 ':id' => $id,
@@ -147,7 +147,7 @@ class UserMapper extends AbstractMapper
      */
     public function fetchByEmail(string $email)
     {
-        $select = $this->conn->prepare('SELECT * FROM users WHERE "email" = :email');
+        $select = $this->connection->prepare('SELECT * FROM users WHERE "email" = :email');
         $select->execute(
             [
                 ':email' => $email,
@@ -164,7 +164,7 @@ class UserMapper extends AbstractMapper
      */
     public function updatePasswordByEmail(string $email, string $password)
     {
-        $update = $this->conn->prepare('UPDATE users SET password= :password WHERE email= :email');
+        $update = $this->connection->prepare('UPDATE users SET password= :password WHERE email= :email');
         return $update->execute(
             [
                 ':email'    => $email,

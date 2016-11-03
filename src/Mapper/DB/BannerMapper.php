@@ -12,7 +12,7 @@ class BannerMapper extends AbstractMapper
      */
     public function fetchBanners(): array
     {
-        $select = $this->conn->prepare('SELECT title, subtitle, image, category FROM banners');
+        $select = $this->connection->prepare('SELECT title, subtitle, image, category FROM banners');
         $select->execute();
 
         return $select->fetchAll(PDO::FETCH_ASSOC);

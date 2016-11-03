@@ -12,7 +12,7 @@ class FlaggedCommentMapper extends AbstractMapper
      */
     public function flagComment(int $user_id, int $comment_id)
     {
-        $insert = $this->conn->prepare('
+        $insert = $this->connection->prepare('
             INSERT INTO flagged_comments 
             (comment_id, user_id)
             VALUES 

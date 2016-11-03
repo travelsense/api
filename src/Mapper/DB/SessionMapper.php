@@ -14,7 +14,7 @@ class SessionMapper extends AbstractMapper
     public function createSession(int $user_id, string $token, string $device = null): int
     {
         $sql = 'INSERT INTO sessions (user_id, token, device) VALUES (:user_id, :token, :device) RETURNING id';
-        $insert = $this->conn->prepare($sql);
+        $insert = $this->connection->prepare($sql);
         $insert->execute(
             [
                 ':user_id' => $user_id,
@@ -32,7 +32,7 @@ class SessionMapper extends AbstractMapper
      */
     public function getUserId(int $id, string $token)
     {
-        $select = $this->conn->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
+        $select = $this->connection->prepare('SELECT user_id FROM sessions WHERE id = :id AND token = :token');
         $select->execute([
             ':id'    => $id,
             ':token' => $token,

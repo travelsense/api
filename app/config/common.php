@@ -13,7 +13,6 @@ return [
         'misc.php',
         'routing.php',
         'security.php',
-        'storages.php',
         'wego.php',
     ],
     'debug' => false,
@@ -69,9 +68,6 @@ return [
             'user' => 'xxx',
             'database' => 'xxx',
             'password' => 'xxx',
-            'options' => [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ],
         ],
     ],
     'migrations' => __DIR__ . '/../../db',

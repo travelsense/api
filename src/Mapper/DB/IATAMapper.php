@@ -21,7 +21,7 @@ class IATAMapper extends AbstractMapper
      */
     public function fetchOne(string $type, string $code)
     {
-        $select = $this->conn->prepare("SELECT * FROM {$this->table[$type]} WHERE code = :code");
+        $select = $this->connection->prepare("SELECT * FROM {$this->table[$type]} WHERE code = :code");
         $select->execute([
             ':code' => $code,
         ]);
@@ -36,7 +36,7 @@ class IATAMapper extends AbstractMapper
      */
     public function fetchAll(string $type, int $limit, int $offset): array
     {
-        $select = $this->conn->prepare(
+        $select = $this->connection->prepare(
             "SELECT * FROM {$this->table[$type]} ORDER BY code ASC LIMIT :limit OFFSET :offset"
         );
         $select->execute([

@@ -85,14 +85,11 @@ $app['controller.uber'] = function ($app) {
 };
 
 $app['controller.wego'] = function ($app) {
-    return new WegoHotelController($app['wego.hotels'], $app['db.main.pdo']);
+    return new WegoHotelController($app['wego.hotels'], $app['dbs']['main']);
 };
 
 $app['controller.health'] = function ($app) {
-    return new HealthCheckController(
-        $app['db.migrator.factory'],
-        array_keys($app['config']['db'])
-    );
+    return new HealthCheckController();
 };
 
 $app['controller.iata'] = function ($app) {
