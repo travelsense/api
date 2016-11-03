@@ -90,9 +90,9 @@ class TravelController extends ApiController
         if ($json->has('estimated_price')) {
             $travel->setEstimatedPrice($json->get('estimated_price'));
         }
-        if ($json->has('transportation')) {
-            $travel->setTransportation($json->get('transportation'));
-        }
+//        if ($json->has('transportation')) {
+//            $travel->setTransportation($json->get('transportation'));
+//        }
         $this->travel_mapper->insert($travel);
 
         $actions = $this->createActions((array) $json->get('content'), $travel->getId());
@@ -306,9 +306,9 @@ class TravelController extends ApiController
         if ($json->has('estimated_price')) {
             $travel->setEstimatedPrice($json->getInteger('estimated_price'));
         }
-        if ($json->has('transportation')) {
-            $travel->setTransportation($json->getInteger('transportation'));
-        }
+//        if ($json->has('transportation')) {
+//            $travel->setTransportation($json->getInteger('transportation'));
+//        }
         $this->travel_mapper->update($travel);
 
         return [];
@@ -366,7 +366,7 @@ class TravelController extends ApiController
             $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
             $view['estimated_price'] = $travel->getEstimatedPrice();
-            $view['transportation'] = $travel->getTransportation();
+//            $view['transportation'] = $travel->getTransportation();
 
             $author = $travel->getAuthor();
             if ($author) {
@@ -409,14 +409,17 @@ class TravelController extends ApiController
     private function buildActionView(Action $action): array
     {
         return [
-            'id'           => $action->getId(),
-            'offsetStart'  => $action->getOffsetStart(),
-            'offsetEnd'    => $action->getOffsetEnd(),
-            'car'          => $action->getCar(),
-            'airports'     => $action->getAirports(),
-            'hotels'       => $action->getHotels(),
-            'sightseeings' => $action->getSightseeings(),
-            'type'         => $action->getType(),
+            'id'             => $action->getId(),
+            'offsetStart'    => $action->getOffsetStart(),
+            'offsetEnd'      => $action->getOffsetEnd(),
+            'car'            => $action->getCar(),
+            'airports'       => $action->getAirports(),
+            'hotels'         => $action->getHotels(),
+            'sightseeings'   => $action->getSightseeings(),
+            'type'           => $action->getType(),
+            'transportation' => $action->getTransportation(),
+            'index'          => $action->getIndex(),
+            'end_index'      => $action->getEndIndex(),
         ];
     }
 
@@ -480,6 +483,15 @@ class TravelController extends ApiController
         }
         if ($object->has('type')) {
             $action->setType($object->get('type'));
+        }
+        if ($object->has('transportation')) {
+            $action->setTransportation($object->get('transportation', 'integer'));
+        }
+        if ($object->has('index')) {
+            $action->setIndex($object->get('index', 'integer'));
+        }
+        if ($object->has('end_index')) {
+            $action->setEndIndex($object->get('end_index', 'integer'));
         }
         return $action;
     }

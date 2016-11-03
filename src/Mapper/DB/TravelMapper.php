@@ -124,11 +124,11 @@ class TravelMapper extends AbstractMapper
             'INSERT INTO travels (
             title, description, content,
             is_published, image, author_id,
-            creation_mode, estimated_price,transportation
+            creation_mode, estimated_price
             ) VALUES (
             :title, :description, :content::JSON,
             :published, :image, :author_id,
-            :creation_mode, :estimated_price, :transportation
+            :creation_mode, :estimated_price
             ) RETURNING id, created'
         );
         $this->bindCommonValues($insert, $travel);
@@ -360,8 +360,7 @@ class TravelMapper extends AbstractMapper
             image = :image,
             author_id = :author_id,
             creation_mode = :creation_mode,
-            estimated_price = :estimated_price,
-            transportation = :transportation
+            estimated_price = :estimated_price
             WHERE id = :id
         ');
         $this->bindCommonValues($update, $travel);
@@ -386,8 +385,8 @@ class TravelMapper extends AbstractMapper
             ->setCreated(new DateTime($row['created']))
             ->setUpdated(new DateTime($row['updated']))
             ->setCreationMode($row['creation_mode'])
-            ->setEstimatedPrice($row['estimated_price'])
-            ->setTransportation($row['transportation']);
+            ->setEstimatedPrice($row['estimated_price']);
+//            ->setTransportation($row['transportation']);
         $categories = $this->category_mapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
             foreach ($categories as $category) {
@@ -413,7 +412,7 @@ class TravelMapper extends AbstractMapper
             'author_id'       => $travel->getAuthorId(),
             'creation_mode'   => $travel->getCreationMode(),
             'estimated_price' => $travel->getEstimatedPrice(),
-            'transportation'  => $travel->getTransportation(),
+//            'transportation'  => $travel->getTransportation(),
         ];
         $this->helper->bindValues($statement, $values);
     }

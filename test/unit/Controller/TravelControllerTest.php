@@ -37,7 +37,10 @@ class TravelControllerTest extends ControllerTestCase
         "offsetEnd" => 0,
         "type" => "flight",
         "sightseeings" => [],
-        "car" => false
+        "car" => false,
+        "index" => -1,
+        "end_index" => -1,
+        "transportation" => 1
     ];
 
     public function setUp()
@@ -101,8 +104,7 @@ class TravelControllerTest extends ControllerTestCase
                 'image' => 'https://host.com/image.jpg',
                 'places_count' => 1,
                 'days_count' => 0,
-                'estimated_price' => null,
-                'transportation' =>null
+                'estimated_price' => null
             ],
             $this->controller->getTravel(1)
         );
@@ -139,8 +141,7 @@ class TravelControllerTest extends ControllerTestCase
                 'image' => 'https://host.com/image.jpg',
                 'places_count' => 1,
                 'days_count' => 0,
-                'estimated_price' => null,
-                'transportation' => null
+                'estimated_price' => null
             ],
             $this->controller->getTravel(1, $user)
         );

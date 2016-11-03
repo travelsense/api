@@ -701,7 +701,7 @@
             "dist": {
                 "type": "path",
                 "url": "libs/api-client",
-                "reference": "b9d911fb17c33cdbb0d6b17fe3886325a288ebc1",
+                "reference": "0abff1e6a1a004de270d816f409d87f5dedc91bf",
                 "shasum": null
             },
             "require": {
