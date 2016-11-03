@@ -1,7 +1,7 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
+use Api\DB\AbstractMapper;
 use Api\Model\Travel\Comment;
 use Api\Model\User;
 use DateTime;
@@ -11,7 +11,7 @@ use PDO;
  * Class CommentMapper
  * @package Api\Mapper\DB
  */
-class CommentMapper extends AbstractPDOMapper
+class CommentMapper extends AbstractMapper
 {
     /**
      * @var UserMapper
@@ -33,7 +33,7 @@ class CommentMapper extends AbstractPDOMapper
      */
     public function insert(Comment $comment)
     {
-        $insert = $this->pdo->prepare('
+        $insert = $this->conn->prepare('
             INSERT INTO travel_comments 
             (author_id, travel_id, text)
             VALUES 
@@ -55,7 +55,7 @@ class CommentMapper extends AbstractPDOMapper
      */
     public function fetchById(int $id)
     {
-        $select = $this->pdo->prepare('
+        $select = $this->conn->prepare('
             SELECT c.*, u.* FROM travel_comments c 
             JOIN users u ON u.id = c.author_id
             WHERE c.id = :id 
@@ -80,7 +80,7 @@ class CommentMapper extends AbstractPDOMapper
      */
     public function fetchByTravelId(int $travel_id, int $limit, int $offset): array
     {
-        $select = $this->pdo->prepare('
+        $select = $this->conn->prepare('
             SELECT c.*, u.* FROM travel_comments c 
             JOIN users u ON u.id = c.author_id
             WHERE c.travel_id = :id 
@@ -99,7 +99,7 @@ class CommentMapper extends AbstractPDOMapper
      */
     public function delete(int $id)
     {
-        $this->pdo
+        $this->conn
             ->prepare('DELETE FROM travel_comments WHERE id=:id')
             ->execute([':id' => $id]);
     }

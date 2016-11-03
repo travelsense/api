@@ -1,19 +1,19 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
+use Api\DB\AbstractMapper;
 use Api\Model\Travel\Category;
 use PDO;
 use PDOException;
 
-class CategoryMapper extends AbstractPDOMapper
+class CategoryMapper extends AbstractMapper
 {
     /**
      * @param Category $category
      */
     public function insert(Category $category)
     {
-        $insert = $this->pdo->prepare('INSERT INTO categories (name) VALUES (:name) RETURNING id');
+        $insert = $this->conn->prepare('INSERT INTO categories (name) VALUES (:name) RETURNING id');
         $insert->execute([
             ':name' => $category->getName(),
         ]);
@@ -25,7 +25,7 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function fetchAll(): array
     {
-        $select = $this->pdo->prepare('SELECT * FROM categories ORDER BY sort_order, id ASC');
+        $select = $this->conn->prepare('SELECT * FROM categories ORDER BY sort_order, id ASC');
         $select->execute();
         return $this->createAll($select);
     }
@@ -36,7 +36,7 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function fetchAllByName(string $name): array
     {
-        $select = $this->pdo->prepare(
+        $select = $this->conn->prepare(
             'SELECT * FROM categories WHERE name LIKE :query ORDER BY name ASC'
         );
         $select->execute([
@@ -52,7 +52,7 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function fetchByTravelId(int $travel_id): array
     {
-        $select = $this->pdo->prepare('
+        $select = $this->conn->prepare('
             SELECT c.* FROM travel_categories ct 
             JOIN categories c ON ct.category_id = c.id 
             WHERE ct.travel_id = :travel_id
@@ -69,7 +69,7 @@ class CategoryMapper extends AbstractPDOMapper
      */
     public function fetchById(int $id): Category
     {
-        $select = $this->pdo->prepare('SELECT * FROM categories WHERE id = :id');
+        $select = $this->conn->prepare('SELECT * FROM categories WHERE id = :id');
         $select->execute([
             'id' => $id,
         ]);
@@ -104,14 +104,14 @@ class CategoryMapper extends AbstractPDOMapper
     public function setTravelCategories(int $travel_id, array $category_ids)
     {
         try {
-            $this->pdo->beginTransaction();
-            $this->pdo
+            $this->conn->beginTransaction();
+            $this->conn
                 ->prepare('DELETE FROM travel_categories WHERE travel_id=:travel_id')
                 ->execute([
                     ':travel_id' => $travel_id,
                 ]);
 
-            $insert = $this->pdo
+            $insert = $this->conn
                 ->prepare('INSERT INTO travel_categories (travel_id, category_id) VALUES (:travel_id, :category_id)');
             foreach ($category_ids as $category_id) {
                 $insert->execute([
@@ -119,9 +119,9 @@ class CategoryMapper extends AbstractPDOMapper
                     ':category_id' => $category_id,
                 ]);
             }
-            $this->pdo->commit();
+            $this->conn->commit();
         } catch (PDOException $e) {
-            $this->pdo->rollBack();
+            $this->conn->rollBack();
         }
     }
 

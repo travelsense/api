@@ -1,11 +1,10 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
-use BadMethodCallException;
+use Api\DB\AbstractMapper;
 use PDO;
 
-class BookingMapper extends AbstractPDOMapper
+class BookingMapper extends AbstractMapper
 {
     /**
      * @param int $user_id
@@ -13,7 +12,7 @@ class BookingMapper extends AbstractPDOMapper
      */
     public function registerBooking(int $user_id, int $travel_id)
     {
-        $insert = $this->pdo->prepare(
+        $insert = $this->conn->prepare(
             'INSERT INTO bookings (user_id, travel_id) VALUES (:user_id, :travel_id) ON CONFLICT DO NOTHING'
         );
         $insert->execute([
@@ -28,7 +27,7 @@ class BookingMapper extends AbstractPDOMapper
      */
     public function getBookingsTotal(int $author_id): int
     {
-        $select = $this->pdo->prepare(
+        $select = $this->conn->prepare(
             'SELECT COUNT(*) FROM bookings b JOIN travels t on t.id = b.travel_id WHERE t.author_id = :author_id'
         );
         $select->execute([':author_id' => $author_id]);
@@ -48,7 +47,7 @@ class BookingMapper extends AbstractPDOMapper
      */
     public function getStats(int $author_id): array
     {
-        $select = $this->pdo->prepare(
+        $select = $this->conn->prepare(
             'SELECT 
               d.date AS date, 
               COUNT (t.*) AS count 
@@ -64,16 +63,5 @@ class BookingMapper extends AbstractPDOMapper
         );
         $select->execute([':author_id' => $author_id]);
         return $select->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Create object by a DB row
-     *
-     * @param  array $row
-     * @return mixed
-     */
-    protected function create(array $row)
-    {
-        throw new BadMethodCallException();
     }
 }

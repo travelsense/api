@@ -7,6 +7,7 @@ return [
     'service' => [
         'app.php', // must be processed first
         'controllers.php',
+        'doctrine.php',
         'email.php',
         'mappers.php',
         'misc.php',

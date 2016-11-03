@@ -2,12 +2,12 @@
 
 namespace Api\Mapper\DB;
 
-use Api\AbstractPDOMapper;
+use Api\DB\AbstractMapper;
 use Api\Model\User;
 use DateTime;
 use PDO;
 
-class UserMapper extends AbstractPDOMapper
+class UserMapper extends AbstractMapper
 {
     /**
      * @var string
@@ -28,7 +28,7 @@ class UserMapper extends AbstractPDOMapper
      */
     public function emailExists(string $email)
     {
-        $select = $this->pdo->prepare('SELECT id FROM users WHERE email=:email');
+        $select = $this->conn->prepare('SELECT id FROM users WHERE email=:email');
         $select->execute([':email' => $email]);
         return $select->rowCount() == 1;
     }
@@ -39,7 +39,7 @@ class UserMapper extends AbstractPDOMapper
      */
     public function confirmEmail(string $email)
     {
-        $select = $this->pdo->prepare('UPDATE users SET email_confirmed = true WHERE email=:email');
+        $select = $this->conn->prepare('UPDATE users SET email_confirmed = true WHERE email=:email');
         $select->execute([':email' => $email]);
     }
 
@@ -50,7 +50,7 @@ class UserMapper extends AbstractPDOMapper
      */
     public function insert(User $user)
     {
-        $insert = $this->pdo->prepare(
+        $insert = $this->conn->prepare(
             'INSERT INTO users
               ("email", "password", "first_name", "last_name", "picture", "creator")
             VALUES
@@ -84,7 +84,7 @@ class UserMapper extends AbstractPDOMapper
         $email_confirmed = $user->isEmailConfirmed();
         $creator = $user->isCreator();
         $id = $user->getId();
-        $update = $this->pdo->prepare(
+        $update = $this->conn->prepare(
             'UPDATE users 
             SET 
               email = :email, 
@@ -113,7 +113,7 @@ class UserMapper extends AbstractPDOMapper
      */
     public function fetchByEmailAndPassword(string $email, string $password)
     {
-        $select = $this->pdo->prepare('SELECT * FROM users WHERE email = :email AND "password" = :password');
+        $select = $this->conn->prepare('SELECT * FROM users WHERE email = :email AND "password" = :password');
 
         $select->execute(
             [
@@ -131,7 +131,7 @@ class UserMapper extends AbstractPDOMapper
      */
     public function fetchById(int $id)
     {
-        $select = $this->pdo->prepare('SELECT * FROM users WHERE "id" = :id');
+        $select = $this->conn->prepare('SELECT * FROM users WHERE "id" = :id');
         $select->execute(
             [
                 ':id' => $id,
@@ -147,7 +147,7 @@ class UserMapper extends AbstractPDOMapper
      */
     public function fetchByEmail(string $email)
     {
-        $select = $this->pdo->prepare('SELECT * FROM users WHERE "email" = :email');
+        $select = $this->conn->prepare('SELECT * FROM users WHERE "email" = :email');
         $select->execute(
             [
                 ':email' => $email,
@@ -164,7 +164,7 @@ class UserMapper extends AbstractPDOMapper
      */
     public function updatePasswordByEmail(string $email, string $password)
     {
-        $update = $this->pdo->prepare('UPDATE users SET password= :password WHERE email= :email');
+        $update = $this->conn->prepare('UPDATE users SET password= :password WHERE email= :email');
         return $update->execute(
             [
                 ':email'    => $email,

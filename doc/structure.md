@@ -23,18 +23,11 @@ The application environment is determined by the OS env variable `APP_ENV`. The 
 * prod - production, the default environment
 
 ## Database schema and migrations
-Database migration scripts are in [db](../db). The naming convention for migration is `<db_name>/<version>.<direction>.<memo>.sql`
-* db_name - the database name, e.g. `main`
-* version - the migration version, 001 to 999
-* direction - the migration direction: *up* (upgrade) or *dn* (downgrade)
-* memo - a short description (optional)
+Database migration scripts are in [db](../db). The naming convention for migration is `<db_name>/migration.php`
 
 To manage the DB, use `bin/db.php`:
-* ` APP_ENV=dev php bin/db.php st main` - show status of db `main` in `dev` env
-* ` APP_ENV=stage php bin/db.php migrate main 123` - migrate db `main` to version 123 in `stage` env
-* ` APP_ENV=dev php bin/db.php migrate` - migrate the default database to the highest available version
 
-Database is managed by [Migrator](https://github.com/lazypdo/migrator).
+Database is managed by a slightly tailored [Doctrine Migraitons](http://www.doctrine-project.org/projects/migrations.html).
 
 ## Mappers and Models
 * [Mappers](../src/Mapper)

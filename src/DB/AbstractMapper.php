@@ -1,21 +1,17 @@
 <?php
-namespace Api;
+namespace Api\DB;
 
-use Api\PDO\Helper;
+use BadMethodCallException;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Statement;
 use PDO;
-use PDOStatement;
 
-abstract class AbstractPDOMapper
+abstract class AbstractMapper
 {
-    /**
-     * @var array
-     */
-    protected $driver_options = [];
-
     /**
      * @var PDO
      */
-    protected $pdo;
+    protected $conn;
 
     /**
      * @var Helper
@@ -25,12 +21,12 @@ abstract class AbstractPDOMapper
     /**
      * AbstractMapper constructor.
      *
-     * @param PDO    $pdo
-     * @param Helper $helper
+     * @param Connection $conn
+     * @param Helper     $helper
      */
-    public function __construct(PDO $pdo, Helper $helper = null)
+    public function __construct(Connection $conn, Helper $helper = null)
     {
-        $this->pdo = $pdo;
+        $this->conn = $conn;
         $this->helper = $helper ?: new Helper();
     }
 
@@ -40,8 +36,10 @@ abstract class AbstractPDOMapper
      * @param  array $row
      * @return mixed
      */
-    abstract protected function create(array $row);
-
+    protected function create(array $row)
+    {
+        throw new BadMethodCallException();
+    }
     /**
      * Create object with all dependencies.
      * This method is to be overloaded in child classes
@@ -54,10 +52,10 @@ abstract class AbstractPDOMapper
     }
 
     /**
-     * @param PDOStatement $statement
+     * @param Statement $statement
      * @return array
      */
-    protected function buildAll(PDOStatement $statement): array
+    protected function buildAll(Statement $statement): array
     {
         $list = [];
         while ($row = $statement->fetch(PDO::FETCH_NAMED)) {
@@ -67,10 +65,10 @@ abstract class AbstractPDOMapper
     }
 
     /**
-     * @param PDOStatement $statement
+     * @param Statement $statement
      * @return array
      */
-    protected function createAll(PDOStatement $statement): array
+    protected function createAll(Statement $statement): array
     {
         $list = [];
         while ($row = $statement->fetch(PDO::FETCH_NAMED)) {
@@ -84,7 +82,7 @@ abstract class AbstractPDOMapper
      * If the SQL result contains multiple columns with the same name
      *
      * @param array               $row     Result set fetched using PDO::FETCH_NAMED method
-     * @param AbstractPDOMapper[] $mappers Variadic list of mappers
+     * @param AbstractMapper[] $mappers Variadic list of mappers
      * @return array Array of created objects
      */
     protected function createFromJoined(array $row, self ...$mappers): array
