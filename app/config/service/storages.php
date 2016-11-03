@@ -1,30 +1,15 @@
 <?php
 /**
  * System storages
- * @var $app Application
+ * @var $app Api\Application
  */
 
 use Api\Application;
 use Api\ExpirableStorage;
 use Api\Migrator\Factory as MigratorFactory;
-use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\DriverManager;
 use LazyPDO\LazyPDO;
 use Migrator\VersionLog\DatabaseLog;
 use Migrator\VersionLog\DatabaseLogAdapter\Factory as LogAdapterFactory;
-
-$app->register(new \Silex\Provider\DoctrineServiceProvider(), [
-    'dbs.options' => [
-        'main' => [
-            'dbname'   => $app['config']['db']['main']['database'],
-            'user'     => $app['config']['db']['main']['user'],
-            'password' => $app['config']['db']['main']['password'],
-            'host'     => $app['config']['db']['main']['host'],
-            'driver'   => 'pdo_pgsql',
-        ],
-    ],
-]);
-
 
 $app['db.main.pdo'] = function (Application $app) {
     $main = $app['config']['db']['main'];
@@ -44,6 +29,7 @@ $app['storage.expirable_storage'] = function (Application $app) {
 $app['db.migrator.factory'] = function (Application $app) {
     return new MigratorFactory($app);
 };
+
 $app['db.migrator.log'] = function () {
     return new DatabaseLog(
         new LogAdapterFactory('__history')

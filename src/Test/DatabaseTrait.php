@@ -2,6 +2,7 @@
 namespace Api\Test;
 
 use Api\Application;
+use Doctrine\DBAL\Migrations\Migration;
 use Migrator\Migrator;
 use PDO;
 
@@ -20,10 +21,10 @@ trait DatabaseTrait
             $pdo->exec("DROP DATABASE IF EXISTS {$db['database']}");
             $pdo->exec("CREATE DATABASE {$db['database']} OWNER={$db['user']}");
             $app["db.$name.pdo"]->exec(file_get_contents(__DIR__ . "/../../db/{$name}/ext/postgis.sql"));
-            /** @var Migrator $migrator */
-            $migrator = $app["db.migrator.factory"]->getMigrator($name);
-            list(,, $highest) = $migrator->getVersionRange();
-            $migrator->migrateTo($highest);
+
+            $conf = $app["doctrine.migrations.configuration.$name"];
+            $migration = new Migration($conf);
+            $migration->migrate();
         }
     }
 }

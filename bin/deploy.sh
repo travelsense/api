@@ -60,6 +60,6 @@ fi
 if [[ "$DO_INSTALL" = true ]]; then
     echo "*** Installing"
     pushd ${CURRENT}
-    sudo -u www-data APP_ENV=prod bin/db.php migrate
+    sudo -u www-data APP_ENV=prod bin/db.php migrations:migrate --no-interaction
     popd
 fi
