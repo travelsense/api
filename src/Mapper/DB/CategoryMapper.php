@@ -86,7 +86,7 @@ class CategoryMapper extends AbstractPDOMapper
     public function fetchFeaturedCategoryNames(): array
     {
         $select = $this->pdo->prepare(
-            'SELECT name FROM categories WHERE featured'
+            'SELECT name FROM categories WHERE featured ORDER BY sort_order, id ASC'
         );
         $select->execute();
 
