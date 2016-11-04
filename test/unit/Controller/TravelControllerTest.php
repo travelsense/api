@@ -37,7 +37,10 @@ class TravelControllerTest extends ControllerTestCase
         "offsetEnd" => 0,
         "type" => "flight",
         "sightseeings" => [],
-        "car" => false
+        "car" => false,
+        "index" => -1,
+        "end_index" => -1,
+        "action_transportation" => 1
     ];
 
     public function setUp()
