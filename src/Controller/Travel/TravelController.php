@@ -367,6 +367,7 @@ class TravelController extends ApiController
             $view['creation_mode'] = $travel->getCreationMode();
             $view['estimated_price'] = $travel->getEstimatedPrice();
             $view['transportation'] = $travel->getTransportation();
+            $view['app_version'] = $travel->getAppVersion();
 
             $author = $travel->getAuthor();
             if ($author) {

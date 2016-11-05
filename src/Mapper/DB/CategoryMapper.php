@@ -62,6 +62,22 @@ class CategoryMapper extends AbstractMapper
         ]);
         return $this->createAll($select);
     }
+
+    /**
+     * @param int $travel_id
+     * @return int[]
+     */
+    public function fetchIdsByTravelId(int $travel_id): array
+    {
+        $select = $this->connection->prepare('
+            SELECT ct.category_id FROM travel_categories ct 
+            WHERE ct.travel_id = :travel_id
+        ');
+        $select->execute([
+            'travel_id' => $travel_id,
+        ]);
+        return array_map(function ($r) { return $r['category_id']; }, $select->fetchAll(PDO::FETCH_ASSOC));
+    }
     
     /**
      * @param int $id
