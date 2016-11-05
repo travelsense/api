@@ -1,1 +1,0 @@
-ALTER TABLE actions ADD COLUMN transportation INTEGER DEFAULT 1;
