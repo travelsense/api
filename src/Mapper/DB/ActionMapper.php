@@ -21,7 +21,11 @@ class ActionMapper extends AbstractMapper
     public function insert(Action $action)
     {
         $insert = $this->connection->prepare(
-            'INSERT INTO actions (travel_id, offset_start, offset_end, car,  airports, hotels, sightseeings, type)
+            'INSERT INTO actions (
+              travel_id, offset_start, offset_end,
+              car,  airports, hotels, sightseeings,
+              type, transportation, index, end_index
+              )
             VALUES (
               :travel_id, 
               :offset_start, 
@@ -30,7 +34,10 @@ class ActionMapper extends AbstractMapper
               :airports::JSON, 
               :hotels::JSON, 
               :sightseeings::JSON, 
-              :type
+              :type,
+              :transportation,
+              :index,
+              :end_index
             ) 
             RETURNING id'
         );
@@ -66,7 +73,10 @@ class ActionMapper extends AbstractMapper
             airports = :airports, 
             hotels = :hotels,
             sightseeings = :sightseeings,
-            type = :type
+            type = :type,
+            transportation = :transportation,
+            index = :index,
+            end_index = :end_index
             WHERE id = :id
         ');
         $this->bindCommonValues($update, $action);
@@ -90,7 +100,10 @@ class ActionMapper extends AbstractMapper
             ->setAirports(json_decode($row['airports']))
             ->setHotels(json_decode($row['hotels']))
             ->setSightseeings(json_decode($row['sightseeings']))
-            ->setType($row['type']);
+            ->setType($row['type'])
+            ->setTransportation($row['transportation'])
+            ->setIndex($row['index'])
+            ->setEndIndex($row['end_index']);
         return $action;
     }
 
@@ -108,7 +121,10 @@ class ActionMapper extends AbstractMapper
             'airports' => json_encode($action->getAirports()),
             'hotels' => json_encode($action->getHotels()),
             'sightseeings' => json_encode($action->getSightseeings()),
-            'type' => $action->getType()
+            'type' => $action->getType(),
+            'transportation' => $action->getTransportation(),
+            'index' => $action->getIndex(),
+            'end_index' =>$action->getEndIndex()
         ];
         $this->helper->bindValues($statement, $values);
     }
