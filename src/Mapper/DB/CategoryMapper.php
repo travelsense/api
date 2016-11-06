@@ -76,7 +76,7 @@ class CategoryMapper extends AbstractMapper
         $select->execute([
             'travel_id' => $travel_id,
         ]);
-        return array_map(function ($r) { return $r['category_id']; }, $select->fetchAll(PDO::FETCH_ASSOC));
+        return $select->fetchAll(PDO::FETCH_COLUMN);
     }
     
     /**
@@ -105,7 +105,6 @@ class CategoryMapper extends AbstractMapper
             'SELECT name FROM categories WHERE featured ORDER BY sort_order, id ASC'
         );
         $select->execute();
-
         $names = [];
         while (false !== $featured = $select->fetchColumn()) {
             $names[] = $featured;
