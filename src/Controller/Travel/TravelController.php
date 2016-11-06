@@ -417,7 +417,7 @@ class TravelController extends ApiController
             'hotels'       => $action->getHotels(),
             'sightseeings' => $action->getSightseeings(),
             'type'         => $action->getType(),
-            'action_transportation' => $action->getTransportation(),
+            'transportation' => $action->getTransportation(),
             'index'          => $action->getIndex(),
             'end_index'      => $action->getEndIndex(),
         ];
@@ -484,8 +484,8 @@ class TravelController extends ApiController
         if ($object->has('type')) {
             $action->setType($object->get('type'));
         }
-        if ($object->has('action_transportation')) {
-            $action->setTransportation($object->get('action_transportation', 'integer'));
+        if ($object->has('transportation')) {
+            $action->setTransportation($object->get('transportation', 'integer'));
         }
         if ($object->has('index')) {
             $action->setIndex($object->get('index', 'integer'));

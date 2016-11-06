@@ -35,7 +35,7 @@ class ActionMapper extends AbstractMapper
               :hotels::JSON, 
               :sightseeings::JSON, 
               :type,
-              :action_transportation,
+              :transportation,
               :index,
               :end_index
             ) 
@@ -74,7 +74,7 @@ class ActionMapper extends AbstractMapper
             hotels = :hotels,
             sightseeings = :sightseeings,
             type = :type,
-            transportation = :action_transportation,
+            transportation = :transportation,
             index = :index,
             end_index = :end_index
             WHERE id = :id
@@ -122,7 +122,7 @@ class ActionMapper extends AbstractMapper
             'hotels' => json_encode($action->getHotels()),
             'sightseeings' => json_encode($action->getSightseeings()),
             'type' => $action->getType(),
-            'action_transportation' => $action->getTransportation(),
+            'transportation' => $action->getTransportation(),
             'index' => $action->getIndex(),
             'end_index' =>$action->getEndIndex()
         ];

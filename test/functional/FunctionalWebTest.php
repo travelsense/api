@@ -35,7 +35,7 @@ class FunctionalWebTest extends FunctionalTestCase
         "car" => false,
         "index" => -1,
         "end_index" => -1,
-        "action_transportation" => 1
+        "transportation" => 1,
     ];
     
     public function testUpdateUserDetails()
@@ -78,6 +78,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'content'     => [$this->airportAction],
             'creation_mode' => 'First Travel test mode',
             'category_ids' => [1, 2],
+            'transportation' => 5,
         ]);
         $this->assertEquals(1, $id);
         $id = $this->client->createTravel([
@@ -87,6 +88,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'content'     => [$this->airportAction],
             'creation_mode' => 'Hobbit test mode',
             'category_ids' => [1, 2],
+            'transportation' => 5,
         ]);
         $this->assertEquals(2, $id);
 
@@ -154,6 +156,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'content'     => [$this->airportAction],
             'creation_mode' => 'First Travel test mode',
             'category_ids' => [1, 2],
+            'transportation' => 2,
         ]);
 
         $this->client->registerBooking($id, ['foo' => 'bar']);
@@ -195,6 +198,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals('Pushkin', $author->lastName, 'Wrong author');
         $this->assertEquals([(object) $this->airportAction], $travel->content);
         $this->assertEquals([1, 2], $travel->category_ids);
+        $this->assertEquals(5, $travel->transportation);
 
         foreach (['firstName', 'lastName', 'id', 'picture'] as $attr) {
             $this->assertObjectHasAttribute($attr, $author);
@@ -215,6 +219,7 @@ class FunctionalWebTest extends FunctionalTestCase
             'content'     => [$this->airportAction],
             'creation_mode' => 'Two Towers test mode',
             'category_ids' => [1, 3],
+            'transportation' => 3,
         ]);
         $travel = $this->client->getTravel($id);
         $this->assertEquals('Two Towers', $travel->title);
@@ -223,6 +228,7 @@ class FunctionalWebTest extends FunctionalTestCase
         $this->assertEquals(true, $travel->published);
         $this->assertEquals('Two Towers test mode', $travel->creation_mode);
         $this->assertEquals([1, 3], $travel->category_ids);
+        $this->assertEquals(3, $travel->transportation);
 
         $this->assertEquals(false, $travel->is_favorited);
     }
