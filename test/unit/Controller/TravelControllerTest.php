@@ -105,7 +105,7 @@ class TravelControllerTest extends ControllerTestCase
                 'places_count' => 1,
                 'days_count' => 0,
                 'estimated_price' => null,
-                'transportation' =>5
+                'transportation' => 5
             ],
             $this->controller->getTravel(1)
         );
