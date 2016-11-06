@@ -37,7 +37,10 @@ class TravelControllerTest extends ControllerTestCase
         "offsetEnd" => 0,
         "type" => "flight",
         "sightseeings" => [],
-        "car" => false
+        "car" => false,
+        "index" => -1,
+        "end_index" => -1,
+        "transportation" => 1,
     ];
 
     public function setUp()
@@ -102,7 +105,7 @@ class TravelControllerTest extends ControllerTestCase
                 'places_count' => 1,
                 'days_count' => 0,
                 'estimated_price' => null,
-                'transportation' =>null
+                'transportation' => 5
             ],
             $this->controller->getTravel(1)
         );
@@ -140,7 +143,7 @@ class TravelControllerTest extends ControllerTestCase
                 'places_count' => 1,
                 'days_count' => 0,
                 'estimated_price' => null,
-                'transportation' => null
+                'transportation' => 5
             ],
             $this->controller->getTravel(1, $user)
         );
@@ -198,7 +201,7 @@ class TravelControllerTest extends ControllerTestCase
         $travel = $this->getMockBuilder(Travel::class)
             ->setMethods([
                 'getId', 'getTitle', 'getDescription', 'isPublished', 'getImage',
-                'getContent', 'getCreationMode', 'getCreated', 'getAuthor'
+                'getContent', 'getCreationMode', 'getCreated', 'getAuthor', 'getTransportation'
             ])
             ->getMock();
         $travel->method('getId')->willReturn(1);
@@ -210,6 +213,7 @@ class TravelControllerTest extends ControllerTestCase
         $travel->method('getCreationMode')->willReturn('Travel test mode');
         $travel->method('getCreated')->willReturn(new DateTime('2000-01-01'));
         $travel->method('getAuthor')->willReturn($this->buildUser());
+        $travel->method('getTransportation')->willReturn(5);
         return $travel;
     }
 }
