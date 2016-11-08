@@ -291,7 +291,7 @@ class TravelMapper extends AbstractMapper
         ];
         $tables = ['travels t', 'users u ON t.author_id = u.id'];
         $order_items = ['t.estimated_price ASC'];
-        $conditions = [];
+        $conditions = ['is_published'];
         if ($price_from !== null) {
             $params[':price_from'] = $price_from;
             $conditions[] = 't.estimated_price >= :price_from';
