@@ -27,6 +27,11 @@ trait PHPServerTrait
     protected static $host = 'localhost';
 
     /**
+     * @var string
+     */
+    protected static $log_path = '/tmp/php-server.log';
+
+    /**
      * start the php dev server
      * @param string $log
      */
@@ -61,5 +66,28 @@ trait PHPServerTrait
         } else {
             throw new LogicException('Server is not running');
         }
+    }
+
+    /**
+     * Get log file content
+     * @param $file_name
+     * @param int $num_line
+     * @return string
+     */
+    public static function getFileContent($file_name, int $num_line = 15)
+    {
+        $file = escapeshellarg($file_name);
+        $cmd = "sudo tail -n $num_line $file";
+        exec($cmd, $output);
+        return implode("\n", $output);
+    }
+
+    /**
+     * Get server log path
+     * @return type
+     */
+    public static function getLogPath(): string
+    {
+        return self::$log_path;
     }
 }

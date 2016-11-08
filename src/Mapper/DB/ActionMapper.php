@@ -101,7 +101,7 @@ class ActionMapper extends AbstractMapper
             ->setHotels(json_decode($row['hotels']))
             ->setSightseeings(json_decode($row['sightseeings']))
             ->setType($row['type'])
-            ->setTransportation($row['transportation'])
+            ->setTransportation($row['a_transportation'])
             ->setIndex($row['index'])
             ->setEndIndex($row['end_index']);
         return $action;
