@@ -210,7 +210,9 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $this->createTravel($user, 'b');
 
         $cat_list = $this->category_mapper->fetchByTravelId($travel_a->getId());
+        $cat_ids_list = $this->category_mapper->fetchIdsByTravelId($travel_a->getId());
         $this->assertSameCategories($cat_a, $cat_list[0]);
+        $this->assertEquals([$cat_a->getId()], $cat_ids_list);
 
         $this->assertEquals([], $this->travel_mapper->fetchByCategory($cat_b->getName(), 1, 0));
         $travel_list = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
@@ -397,18 +399,18 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param User   $author
-     * @param string $token
+     * @param string $title
      * @param int[]  $category_ids
      * @return Travel
      */
-    private function createTravel(User $author, string $token, array $category_ids = []): Travel
+    private function createTravel(User $author, string $title, array $category_ids = []): Travel
     {
         $travel = new Travel();
         $travel
             ->setAuthor($author)
-            ->setContent($token)
-            ->setTitle($token)
-            ->setDescription($token)
+            ->setContent($title)
+            ->setTitle($title)
+            ->setDescription($title)
             ->setCategoryIds($category_ids)
         ;
         $this->travel_mapper->insert($travel);

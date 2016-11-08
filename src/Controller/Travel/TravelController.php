@@ -93,6 +93,12 @@ class TravelController extends ApiController
         if ($json->has('transportation')) {
             $travel->setTransportation($json->get('transportation'));
         }
+        if ($json->has('published')) {
+            $travel->setPublished($json->get('published'));
+        }
+        if ($json->has('app_version')) {
+            $travel->setAppVersion($json->getString('app_version'));
+        }
         $this->travel_mapper->insert($travel);
 
         $actions = $this->createActions((array) $json->get('content'), $travel->getId());
@@ -106,11 +112,59 @@ class TravelController extends ApiController
         if ($json->has('category_ids')) {
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
         }
+
+        return ['id' => $travel->getId()];
+    }
+
+    /**
+     * @param int     $id
+     * @param Request $request
+     * @param User    $user
+     * @return array
+     */
+    public function updateTravel(int $id, Request $request, User $user): array
+    {
+        $travel = $this->getTravelForModification($id, $user);
+        $json = DataObject::createFromString($request->getContent());
+        if ($json->has('title')) {
+            $travel->setTitle($json->getString('title'));
+        }
+        if ($json->has('description')) {
+            $travel->setDescription($json->getString('description'));
+        }
+        if ($json->has('content')) {
+            $actions = $this->createActions((array) $json->get('content'), $id);
+            $travel->setActions($actions);
+            $this->action_mapper->deleteTravelActions($id);
+            $this->action_mapper->insertActions($travel->getActions());
+        }
+        if ($json->has('image')) {
+            $travel->setImage($json->get('image'));
+        }
         if ($json->has('published')) {
             $travel->setPublished($json->get('published'));
         }
-
-        return ['id' => $travel->getId()];
+        if ($json->has('creation_mode')) {
+            $travel->setCreationMode($json->get('creation_mode'));
+        }
+        if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
+            $ids = (array) $json->get('category_id');
+            $this->category_mapper->setTravelCategories($travel->getId(), $ids);
+        }
+        if ($json->has('category_ids')) {
+            $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
+        }
+        if ($json->has('estimated_price')) {
+            $travel->setEstimatedPrice($json->getInteger('estimated_price'));
+        }
+        if ($json->has('transportation')) {
+            $travel->setTransportation($json->getInteger('transportation'));
+        }
+        if ($json->has('app_version')) {
+            $travel->setAppVersion($json->getString('app_version'));
+        }
+        $this->travel_mapper->update($travel);
+        return [];
     }
 
     /**
@@ -266,56 +320,6 @@ class TravelController extends ApiController
     }
 
     /**
-     * @param int     $id
-     * @param Request $request
-     * @param User    $user
-     * @return array
-     */
-    public function updateTravel(int $id, Request $request, User $user): array
-    {
-        $travel = $this->getTravelForModification($id, $user);
-        $json = DataObject::createFromString($request->getContent());
-        if ($json->has('title')) {
-            $travel->setTitle($json->getString('title'));
-        }
-        if ($json->has('description')) {
-            $travel->setDescription($json->getString('description'));
-        }
-        if ($json->has('content')) {
-            $actions = $this->createActions((array) $json->get('content'), $id);
-            $travel->setActions($actions);
-            $this->action_mapper->deleteTravelActions($id);
-            $this->action_mapper->insertActions($travel->getActions());
-        }
-        if ($json->has('image')) {
-            $travel->setImage($json->get('image'));
-        }
-        if ($json->has('published')) {
-            $travel->setPublished($json->get('published'));
-        }
-        if ($json->has('creation_mode')) {
-            $travel->setCreationMode($json->get('creation_mode'));
-        }
-        if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
-            $ids = (array) $json->get('category_id');
-            $this->category_mapper->setTravelCategories($travel->getId(), $ids);
-        }
-        if ($json->has('category_ids')) {
-            $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
-        }
-        if ($json->has('estimated_price')) {
-            $travel->setEstimatedPrice($json->getInteger('estimated_price'));
-        }
-        if ($json->has('transportation')) {
-            $travel->setTransportation($json->getInteger('transportation'));
-        }
-        $this->travel_mapper->update($travel);
-
-        return [];
-    }
-
-
-    /**
      * @param int  $id
      * @param User $user
      * @return array
@@ -367,6 +371,7 @@ class TravelController extends ApiController
             $view['creation_mode'] = $travel->getCreationMode();
             $view['estimated_price'] = $travel->getEstimatedPrice();
             $view['transportation'] = $travel->getTransportation();
+            $view['app_version'] = $travel->getAppVersion();
 
             $author = $travel->getAuthor();
             if ($author) {

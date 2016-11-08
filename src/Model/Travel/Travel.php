@@ -63,6 +63,11 @@ class Travel implements SubjectInterface
     private $transportation;
 
     /**
+     * @var string
+     */
+    private $app_version;
+
+    /**
      * @return string
      */
     public function getDescription()
@@ -200,7 +205,7 @@ class Travel implements SubjectInterface
      * @param int $estimated_price
      * @return Travel
      */
-    public function setEstimatedPrice($estimated_price)
+    public function setEstimatedPrice(int $estimated_price = null)
     {
         $this->estimated_price = $estimated_price;
         return $this;
@@ -240,6 +245,22 @@ class Travel implements SubjectInterface
     {
         $this->actions = $actions;
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAppVersion()
+    {
+        return $this->app_version;
+    }
+
+    /**
+     * @param string $app_version
+     */
+    public function setAppVersion(string $app_version = null)
+    {
+        $this->app_version = $app_version;
     }
 
     /**
