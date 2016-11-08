@@ -1,7 +1,6 @@
 <?php
 namespace Api\Test;
 
-
 use HopTrip\ApiClient\ApiClient;
 use HopTrip\ApiClient\ApiClientException;
 use RuntimeException;
