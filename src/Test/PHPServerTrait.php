@@ -78,7 +78,7 @@ trait PHPServerTrait
     {
         $content = '';
         $lines = file($file_name);
-        for ($i = count($lines) - $num_line; $i < count($lines); $i++){
+        for ($i = count($lines) - $num_line; $i < count($lines); $i++) {
             $content .= $lines[$i] . '';
         }
         return $content;
