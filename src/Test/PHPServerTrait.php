@@ -76,10 +76,12 @@ trait PHPServerTrait
      */
     public static function getFileContent($file_name, int $num_line = 15)
     {
-        $file = escapeshellarg($file_name);
-        $cmd = "sudo tail -n $num_line $file";
-        exec($cmd, $output);
-        return implode("\n", $output);
+        $content = '';
+        $lines = file($file_name);
+        for ($i = count($lines) - $num_line; $i < count($lines); $i++){
+            $content .= $lines[$i] . '';
+        }
+        return $content;
     }
 
     /**
