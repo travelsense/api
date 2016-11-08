@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7ff72f91ca18865766e3efae9b8ed581",
-    "content-hash": "2a8eb187a47038c14bba4a1609940520",
+    "hash": "d4fa59b9755d3478ef09836cee863a65",
+    "content-hash": "d985db6626897281de4b7b738dd8e4f7",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -698,11 +698,16 @@
         {
             "name": "hoptrip/lib-api-client",
             "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:travelsense/lib-api-client.git",
+                "reference": "4679d3594e2797c76e36e5830ef03d52504dbe8c"
+            },
             "dist": {
-                "type": "path",
-                "url": "libs/api-client",
-                "reference": "b9d911fb17c33cdbb0d6b17fe3886325a288ebc1",
-                "shasum": null
+                "type": "zip",
+                "url": "https://api.github.com/repos/travelsense/lib-api-client/zipball/4679d3594e2797c76e36e5830ef03d52504dbe8c",
+                "reference": "4679d3594e2797c76e36e5830ef03d52504dbe8c",
+                "shasum": ""
             },
             "require": {
                 "php": ">=7.0",
@@ -727,7 +732,8 @@
                     "email": "alexey@karapetov.com"
                 }
             ],
-            "description": "PHP Client for HopTrip API"
+            "description": "PHP Client for HopTrip API",
+            "time": "2016-10-14 03:41:25"
         },
         {
             "name": "monolog/monolog",
@@ -856,16 +862,16 @@
         },
         {
             "name": "ocramius/proxy-manager",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/ProxyManager.git",
-                "reference": "51c7fdd99dba53808aaab21b34f7a55b302c160c"
+                "reference": "a55d08229f4f614bf335759ed0cf63378feeb2e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/51c7fdd99dba53808aaab21b34f7a55b302c160c",
-                "reference": "51c7fdd99dba53808aaab21b34f7a55b302c160c",
+                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/a55d08229f4f614bf335759ed0cf63378feeb2e6",
+                "reference": "a55d08229f4f614bf335759ed0cf63378feeb2e6",
                 "shasum": ""
             },
             "require": {
@@ -876,7 +882,8 @@
             "require-dev": {
                 "couscous/couscous": "^1.4.0",
                 "ext-phar": "*",
-                "phpunit/phpunit": "^5.3.4",
+                "phpbench/phpbench": "^0.11.2",
+                "phpunit/phpunit": "^5.4.6",
                 "squizlabs/php_codesniffer": "^2.6.0"
             },
             "suggest": {
@@ -916,20 +923,20 @@
                 "proxy pattern",
                 "service proxies"
             ],
-            "time": "2016-07-01 12:11:54"
+            "time": "2016-11-04 15:53:15"
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "c0125896dbb151380ab47e96c621741e79623beb"
+                "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c0125896dbb151380ab47e96c621741e79623beb",
-                "reference": "c0125896dbb151380ab47e96c621741e79623beb",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
+                "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
                 "shasum": ""
             },
             "require": {
@@ -964,7 +971,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-10-17 15:23:22"
+            "time": "2016-11-07 23:38:38"
         },
         {
             "name": "phpcurl/curlhttp",
@@ -1171,16 +1178,16 @@
         },
         {
             "name": "silex/silex",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1"
+                "reference": "49ca08d853731d1635374e5019c8696cfd53c161"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1",
-                "reference": "fd0852ebfa0a4cf1e17d746bb81962ec69bbb6d1",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/49ca08d853731d1635374e5019c8696cfd53c161",
+                "reference": "49ca08d853731d1635374e5019c8696cfd53c161",
                 "shasum": ""
             },
             "require": {
@@ -1220,7 +1227,7 @@
                 "symfony/twig-bridge": "~2.8|^3.0",
                 "symfony/validator": "~2.8|^3.0",
                 "symfony/var-dumper": "~2.8|^3.0",
-                "twig/twig": "~1.8|~2.0"
+                "twig/twig": "~1.27|~2.0"
             },
             "type": "library",
             "extra": {
@@ -1252,7 +1259,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2016-08-22 17:50:21"
+            "time": "2016-11-06 18:09:06"
         },
         {
             "name": "swiftmailer/swiftmailer",

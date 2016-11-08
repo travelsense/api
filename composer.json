@@ -1,7 +1,13 @@
 {
   "name": "hoptrip/api",
   "license": "proprietary",
-
+  "repositories": [
+    {
+      "no-api": true,
+      "type": "vcs",
+      "url": "git@github.com:travelsense/lib-api-client.git"
+    }
+  ],
   "require": {
     "php": "^7.0",
     "f3ath/simpleuber": "^1.0",
@@ -28,11 +34,5 @@
   },
   "autoload": {
     "psr-4": {"Api\\": "src/"}
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url":  "libs/api-client"
-    }
-  ]
+  }
 }
