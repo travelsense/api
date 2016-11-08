@@ -388,6 +388,7 @@ class TravelMapper extends AbstractMapper
         $travel->setCreationMode($row['creation_mode']);
         $travel->setEstimatedPrice($row['estimated_price']);
         $travel->setTransportation($row['transportation']);
+        $travel->setAppVersion($row['app_version']);
         $categories = $this->category_mapper->fetchByTravelId($travel->getId());
         if (count($categories)) {
             foreach ($categories as $category) {
