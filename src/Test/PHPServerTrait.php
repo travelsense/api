@@ -76,12 +76,8 @@ trait PHPServerTrait
      */
     public static function getFileContent($file_name, int $num_line = 15)
     {
-        $content = '';
-        $lines = file($file_name);
-        for ($i = count($lines) - $num_line; $i < count($lines); $i++) {
-            $content .= $lines[$i] . '';
-        }
-        return $content;
+        $content = array_slice(file($file_name), -$num_line);
+        return implode('', $content);
     }
 
     /**
