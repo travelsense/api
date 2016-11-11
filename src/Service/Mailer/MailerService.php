@@ -103,8 +103,11 @@ class MailerService
      */
     public function sendBookingDetails(string $details)
     {
-        $message = Swift_Message::newInstance('Hoptrip Booking Request')
-            ->setBody($details)
+        $template = $this->twig->loadTemplate('email/booking.twig');
+
+//        $message = Swift_Message::newInstance('Hoptrip Booking Request')
+        $message = Swift_Message::newInstance($template->renderBlock('subj', []))
+            ->setBody($template->renderBlock('body',['details' => $details]))
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($this->conf['booking_details_receivers']);
 
