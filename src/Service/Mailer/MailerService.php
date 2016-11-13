@@ -107,7 +107,7 @@ class MailerService
         $data = json_decode($details, true);
 
         $message = Swift_Message::newInstance($template->renderBlock('subj', []))
-            ->setBody($template->renderBlock('body',[
+            ->setBody($template->renderBlock('body', [
                 'peoples' => $data['people'],
                 'billing' => $data['billing'],
                 'phone' => $data['phone'],
