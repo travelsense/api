@@ -3,7 +3,7 @@ namespace Api\Controller\Travel;
 
 use Api\Mapper\DB\BookingMapper;
 use Api\Model\User;
-use Api\Service\Mailer\MailerService;
+use Api\Service\Mailer;
 use Symfony\Component\HttpFoundation\Request;
 
 class BookingController
@@ -14,7 +14,7 @@ class BookingController
     private $booking_mapper;
 
     /**
-     * @var MailerService
+     * @var Mailer
      */
     private $mailer_service;
 
@@ -26,9 +26,9 @@ class BookingController
     /**
      * StatsController constructor.
      * @param BookingMapper $booking_mapper
-     * @param MailerService $mailer_service
+     * @param Mailer        $mailer_service
      */
-    public function __construct(BookingMapper $booking_mapper, MailerService $mailer_service)
+    public function __construct(BookingMapper $booking_mapper, Mailer $mailer_service)
     {
         $this->booking_mapper = $booking_mapper;
         $this->mailer_service = $mailer_service;

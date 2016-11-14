@@ -1,13 +1,16 @@
 <?php
 
-namespace Api\Service\Mailer;
+namespace Api\Service;
 
+use DateTime;
+use DateTimeZone;
 use Psr\Log\LoggerAwareTrait;
+use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
 use Twig_Environment;
 
-class MailerService
+class Mailer
 {
     use LoggerAwareTrait;
 
@@ -27,16 +30,15 @@ class MailerService
     private $conf;
 
     /**
-     * MailerService constructor.
-     *
-     * @param Swift_Mailer     $mailer
-     * @param Twig_Environment $twig
-     * @param array            $conf
+     * @var PdfGenerator
      */
-    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, array $conf)
+    private $pdf_generator;
+
+    public function __construct(Swift_Mailer $mailer, Twig_Environment $twig, PdfGenerator $pdf_generator, array $conf)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->pdf_generator = $pdf_generator;
         $this->conf = $conf;
     }
 
@@ -99,14 +101,23 @@ class MailerService
 
     /**
      * Send booking details to internal address
-     * @param string $details
+     * @param string $booking
      */
-    public function sendBookingDetails(string $details)
+    public function sendBookingDetails(string $booking)
     {
-        $message = Swift_Message::newInstance('Hoptrip Booking Request')
-            ->setBody($details)
+        $template = $this->twig->loadTemplate('email/booking.twig');
+        $html = $template->render([
+            'booking' => $booking,
+            'date' => new DateTime('now', new DateTimeZone('UTC')),
+        ]);
+        $pdf = $this->pdf_generator->generate($html);
+        $attachment = Swift_Attachment::newInstance($pdf, 'hoptrip_booking.pdf', 'application/pdf');
+
+        $message = Swift_Message::newInstance('HopTrip Booking Request')
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
-            ->setTo($this->conf['booking_details_receivers']);
+            ->setTo($this->conf['booking_details_receivers'])
+            ->attach($attachment)
+        ;
 
         $sent = $this->mailer->send($message);
         if ($this->logger) {

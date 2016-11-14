@@ -8,7 +8,7 @@ use Api\Test\FunctionalTestCase;
 use Doctrine\DBAL\Connection;
 use HopTrip\ApiClient\ApiClientException;
 
-class FunctionalWebTest extends FunctionalTestCase
+class RealWebServerTest extends FunctionalTestCase
 {
     /**
      * @var CategoryMapper

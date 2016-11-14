@@ -4,7 +4,7 @@
  * @var $app Api\Application
  */
 
-use Api\Service\Mailer\MailerService;
+use Api\Service\Mailer;
 
 $app['mailer'] = function ($app) {
     $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
@@ -15,7 +15,7 @@ $app['mailer'] = function ($app) {
 
 // MailerService
 $app['email.service'] = function ($app) {
-    $service = new MailerService($app['mailer'], $app['twig'], $app['config']['email']);
+    $service = new Mailer($app['mailer'], $app['twig'], $app['pdf_generator'], $app['config']['email']);
     $service->setLogger($app['monolog']);
     return $service;
 };

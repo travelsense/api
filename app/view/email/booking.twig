@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        div {color: grey;}
+        span, h3, h4, ol {color: black;}
+        li {margin-top: 10px;}
+    </style>
+</head>
+<body>
+<h2>HopTrip Booking Request - {{ date|date("F d, Y h:i e") }}</h2>
+<div>
+    <h3>Pax</h3>
+    <ol>
+        {% for pax in booking.people %}
+            <li>
+                <div>First name: <span>{{ pax.firstName }}</span></div>
+                <div>Last name: <span>{{ pax.lastName }}</span></div>
+                <div>DOB: <span>{{ pax.dateOfBirth }}</span></div>
+            </li>
+        {% endfor %}
+    </ol>
+    <div>Phone: <span>{{ booking.phone }}</span></div>
+    <div>Email: <a href="mailto:{{ booking.email }}">{{ booking.email }}</a></div>
+    <div>Notes: <span>{{ booking.notes }}</span></div>
+
+    <h3>Billing</h3>
+    <div>Full name: <span>{{ booking.billing.fullName }}</span></div>
+    <div>Address: <span>{{ booking.billing.address1 }} {{ booking.billing.address2 }}</span></div>
+    <div>City: <span>{{ booking.billing.city }}</span></div>
+    <div>State: <span>{{ booking.billing.state }}</span></div>
+    <div>Country: <span>{{ booking.billing.country }}</span></div>
+    <div>Zip: <span>{{ booking.billing.zip }}</span></div>
+
+    <h3>DL</h3>
+    <div>First name: <span>{{ booking.driver.firstName }}</span></div>
+    <div>Last name: <span>{{ booking.driver.lastName }}</span></div>
+    <div>DOB: <span>{{ booking.driver.dateOfBirth }}</span></div>
+
+    <h3>CC</h3>
+    <div>Number: <span>{{ booking.card.card }}</span></div>
+    <div>Exp. month: <span>{{ booking.card.expiryMonth }}</span></div>
+    <div>Exp. year: <span>{{ booking.card.expiryYear }}</span></div>
+    <div>Code: <span>{{ booking.card.cvv }}</span></div>
+    <div>Zip: <span>{{ booking.card.zip }}</span></div>
+
+    <h3>Hotels</h3>
+    <ol>
+    {% for hotel in booking.bookingSelection.hotelBookingResults %}
+        <li>
+        {% for key, val in hotel %}
+            {% if key == 'url' %}
+                <div>{{ key }}: <a href="{{ val }}">{{ val }}</a></div>
+            {% else %}
+                <div>{{ key }}: <span>{{ val }}</span></div>
+            {% endif %}
+        {% endfor %}
+        </li>
+    {% endfor %}
+    </ol>
+
+    <h3>Car</h3>
+    {% for key, val in booking.bookingSelection.carRentalOption %}
+        {% if key == 'url' %}
+            <div>{{ key }}: <a href="{{ val }}">{{ val }}</a></div>
+        {% else %}
+            <div>{{ key }}: <span>{{ val }}</span></div>
+        {% endif %}
+    {% endfor %}
+
+    <h3>Flight</h3>
+    <div>From: <span>{{ booking.bookingSelection.flightBookingOption.fromAirport }}</span></div>
+    <div>To: <span>{{ booking.bookingSelection.flightBookingOption.toAirport }}</span></div>
+    <div>Provider name: <span>{{ booking.bookingSelection.flightBookingOption.providerName }}</span></div>
+    <div>Provider code: <span>{{ booking.bookingSelection.flightBookingOption.providerCode }}</span></div>
+    <h4>Outbound</h4>
+    <ol>
+        {% for segment in booking.bookingSelection.flightBookingOption.outboundSegments %}
+            <li>
+                {% for key, val in segment %}
+                    <div>{{ key }}: <span>{{ val }}</span></div>
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ol>
+    <h4>Inbound</h4>
+    <ol>
+        {% for segment in booking.bookingSelection.flightBookingOption.inboundSegments %}
+            <li>
+                {% for key, val in segment %}
+                    <div>{{ key }}: <span>{{ val }}</span></div>
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ol>
+
+</div>
+</body>
+</html>

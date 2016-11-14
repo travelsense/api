@@ -6,8 +6,7 @@ use Api\ExpirableStorage;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
-use Api\Service\Mailer\MailerService;
-use Psr\Log\LoggerAwareTrait;
+use Api\Service\Mailer;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,7 +20,7 @@ class UserController extends ApiController
     private $user_mapper;
 
     /**
-     * @var MailerService
+     * @var Mailer
      */
     private $mailer;
 
@@ -34,12 +33,12 @@ class UserController extends ApiController
      * UserController constructor.
      *
      * @param UserMapper       $user_mapper
-     * @param MailerService    $mailer
+     * @param Mailer           $mailer
      * @param ExpirableStorage $storage
      */
     public function __construct(
         UserMapper $user_mapper,
-        MailerService $mailer,
+        Mailer $mailer,
         ExpirableStorage $storage
     ) {
         $this->user_mapper = $user_mapper;
