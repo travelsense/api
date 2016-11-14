@@ -13,10 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
-foreach (['debug', 'env'] as $key) {
-    $app[$key] = $app['config'][$key];
-}
-
 $app->error(function (Throwable $e) use ($app) {
     if ($e instanceof ApiException) {
         $map = [

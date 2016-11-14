@@ -110,7 +110,7 @@ class FunctionalWebTest extends FunctionalTestCase
     {
         $this->createAndLoginUser();
 
-        $app = Application::createByEnvironment('test');
+        $app = new Application('test');
 
         $this->category_mapper = $app['mapper.db.category'];
         $this->connection = $app['dbs']['main'];

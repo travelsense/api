@@ -15,6 +15,11 @@ The development cycle is similar to [Contributing to Open Source]( https://guide
 * open a console and `cd` into the project root folder
 * run `vagrant plugin install vagrant-vbguest` to install Guest Additions plugin
 * run `vagrant up` and wait till it finishes
+* ssh into the VM: `vagrant ssh`
+* inside the VM run the following:
+ * `cd /vagrant`
+ * install dependencies `composer install` - composer will ask you to create an access token for private repos. Follow the instructions.
+ * run database migrations: `APP_ENV=dev bin/db.php migrations:migrate --no-interaction`
 * open http://172.16.0.101/healthCheck in a browser, the page should show a JSON response
 
 ## Troubleshooting

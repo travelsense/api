@@ -4,16 +4,16 @@
  */
 return [
     'secure_json' => false,
-    'service' => [
-        'app.php', // must be processed first
-        'controllers.php',
-        'doctrine.php',
-        'email.php',
-        'mappers.php',
-        'misc.php',
-        'routing.php',
-        'security.php',
-        'wego.php',
+    'services' => [
+        __DIR__ . '/service/app.php',
+        __DIR__ . '/service/controllers.php',
+        __DIR__ . '/service/doctrine.php',
+        __DIR__ . '/service/email.php',
+        __DIR__ . '/service/mappers.php',
+        __DIR__ . '/service/misc.php',
+        __DIR__ . '/service/routing.php',
+        __DIR__ . '/service/security.php',
+        __DIR__ . '/service/wego.php',
     ],
     'debug' => false,
     'log' => [

@@ -26,7 +26,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
     
     public function setUp()
     {
-        $app = Application::createByEnvironment();
+        $app = new Application();
         $env = $app['env'];
         if ($env !== 'test') {
             $this->markTestSkipped("Functional tests are disabled on this environment: $env");

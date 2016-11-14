@@ -3,8 +3,8 @@ return array_replace_recursive(
     require __DIR__ . '/common.php',
     [
         'debug' => true,
-        'service' => [
-            'email' => 'email.mock.php',
+        'services' => [
+            'email' => __DIR__ . '/service/email.mock.php',
         ],
         'log' => [
             'main' => [
