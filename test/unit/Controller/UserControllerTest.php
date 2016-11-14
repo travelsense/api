@@ -5,7 +5,7 @@ use Api\Exception\ApiException;
 use Api\ExpirableStorage;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
-use Api\Service\Mailer\MailerService;
+use Api\Service\Mailer;
 use Api\Test\ControllerTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,7 +29,7 @@ class UserControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->mailer = $this->getMockBuilder(MailerService::class)
+        $this->mailer = $this->getMockBuilder(Mailer::class)
             ->setMethods(['sendAccountConfirmationMessage'])
             ->disableOriginalConstructor()
             ->getMock();

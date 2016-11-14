@@ -4,6 +4,11 @@ namespace Api\Test;
 use Api\Application;
 use HopTrip\ApiClient\ApiClient;
 
+/**
+ * Class FunctionalTestCase
+ * @package Api\Test
+ * @deprecated Use \Silex\WebTestCase
+ */
 abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 {
     use PHPServerTrait;

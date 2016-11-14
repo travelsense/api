@@ -5,6 +5,7 @@
 
 use Api\Application;
 use Api\ExpirableStorage;
+use Api\Service\PdfGenerator;
 use F3\SimpleUber\Uber;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
@@ -30,4 +31,13 @@ $app['uber'] = function ($app) {
 
 $app['storage.expirable_storage'] = function (Application $app) {
     return new ExpirableStorage($app['dbs']['main']);
+};
+
+$app['pdf_generator'] = function (Application $app) {
+    $conf = $app['config']['pdf_generator'];
+    return new PdfGenerator(
+        $conf['permissions'],
+        $conf['password'],
+        $conf['key_length']
+    );
 };

@@ -63,9 +63,9 @@ return [
     ],
     'db' => [
         'main' => [
-            'driver' => 'pgsql',
-            'host' => 'localhost',
-            'user' => 'xxx',
+            'driver'   => 'pgsql',
+            'host'     => 'localhost',
+            'user'     => 'xxx',
             'database' => 'xxx',
             'password' => 'xxx',
         ],
@@ -75,11 +75,15 @@ return [
         'server_token' => 'xxx',
     ],
     'wego' => [
-        'key' => 'xxx',
+        'key'     => 'xxx',
         'ts_code' => 'xxx',
     ],
     'booking' => [
         'reward_point_price' => 0.1, // 10 cents
     ],
-    
+    'pdf_generator' => [
+        'permissions' => ['copy', 'print', 'extract', 'print-highres'],
+        'password'    => '',
+        'key_length'  => 128,
+    ],
 ];
