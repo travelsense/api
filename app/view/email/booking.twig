@@ -1,0 +1,46 @@
+{% block subj %}Hoptrip Booking Request{% endblock %}
+{% block body %}
+    <div class="booking">
+        <p>people:<br>
+        {% for people in peoples %}
+            <span>
+                First Name: {{ people.firstName }}<br>
+                date of birth: {{ people.dateOfBirth }}<br>
+                Last Name: {{ people.lastName }}
+            </span>
+        {% endfor %}
+        </p>
+        <p>billing:<span>
+        {% for key, value in billing %}
+            {{ key }}: {{ value }}<br>
+        {% endfor %}</span>
+        </p>
+        <p>phone: {{ phone }}</p>
+        <p>driver:<span>
+        {% for key, value in driver %}
+            {{ key }}: {{ value }}<br>
+        {% endfor %}</span>
+        </p>
+        <p>card:<span>
+        {% for key, value in card %}
+            {{ key }}: {{ value }}<br>
+        {% endfor %}</span>
+        </p>
+        <p>notes: {{ notes }}</p>
+        <p>booking selection: <br>
+            hotelBookingResults:
+            <span>
+                {% for hotelBooking in bookingSelection.hotelBookingResults %}
+                    {% for key, value in hotelBooking %}
+                        {{ key }}: {{ value }}<br>
+                    {% endfor %}
+                    <br>
+                {% endfor %}<br>
+                cabBookingOption: {{ bookingSelection.cabBookingOption }}<br>
+                carRentalOption: {{ bookingSelection.carRentalOption }}<br>
+                flightBookingOption: {{ bookingSelection.flightBookingOption }}
+            </span>
+        </p>
+        <p>email: {{ email }}</p>
+    </div>
+{% endblock %}

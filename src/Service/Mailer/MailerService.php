@@ -103,8 +103,20 @@ class MailerService
      */
     public function sendBookingDetails(string $details)
     {
-        $message = Swift_Message::newInstance('Hoptrip Booking Request')
-            ->setBody($details)
+        $template = $this->twig->loadTemplate('email/booking.twig');
+        $data = json_decode($details, true);
+
+        $message = Swift_Message::newInstance($template->renderBlock('subj', []))
+            ->setBody($template->renderBlock('body', [
+                'peoples' => $data['people'],
+                'billing' => $data['billing'],
+                'phone' => $data['phone'],
+                'driver' => $data['driver'],
+                'card' => $data['card'],
+                'notes' => $data['notes'],
+                'bookingSelection' => $data['bookingSelection'],
+                'email' => $data['email']
+                ]))
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($this->conf['booking_details_receivers']);
 
