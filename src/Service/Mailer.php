@@ -50,9 +50,7 @@ class Mailer
     public function sendAccountConfirmationMessage(string $email, string $token)
     {
         $template = $this->twig->loadTemplate('email/confirmation.twig');
-
         $link = sprintf($this->conf['email_confirm'], urlencode($token));
-
         $message = Swift_Message::newInstance($template->renderBlock('subj', []))
             ->setBody($template->renderBlock('body', ['link' => $link]))
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
@@ -101,9 +99,9 @@ class Mailer
 
     /**
      * Send booking details to internal address
-     * @param string $booking
+     * @param array $booking
      */
-    public function sendBookingDetails(string $booking)
+    public function sendBookingDetails(array $booking)
     {
         $template = $this->twig->loadTemplate('email/booking.twig');
         $html = $template->render([
@@ -112,13 +110,11 @@ class Mailer
         ]);
         $pdf = $this->pdf_generator->generate($html);
         $attachment = Swift_Attachment::newInstance($pdf, 'hoptrip_booking.pdf', 'application/pdf');
-
         $message = Swift_Message::newInstance('HopTrip Booking Request')
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($this->conf['booking_details_receivers'])
             ->attach($attachment)
         ;
-
         $sent = $this->mailer->send($message);
         if ($this->logger) {
             $this->logger->info(

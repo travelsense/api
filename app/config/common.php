@@ -83,7 +83,7 @@ return [
     ],
     'pdf_generator' => [
         'permissions' => ['copy', 'print', 'extract', 'print-highres'],
-        'password'    => '',
+        'password'    => 'hoptrip',
         'key_length'  => 128,
     ],
 ];

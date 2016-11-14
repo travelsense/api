@@ -51,7 +51,7 @@ class BookingController
     public function registerBooking(User $user, int $id, Request $request)
     {
         $this->booking_mapper->registerBooking($user->getId(), $id);
-        $this->mailer_service->sendBookingDetails($request->getContent());
+        $this->mailer_service->sendBookingDetails(json_decode($request->getContent(), true));
         return [];
     }
 
