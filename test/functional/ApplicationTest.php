@@ -46,8 +46,7 @@ class ApplicationTest extends WebTestCase
         $messages = $mailer->getLoggedMessages();
         $last_message = array_pop($messages);
         $this->assertEquals('HopTrip Booking Request', $last_message->getSubject());
-        $attachment = $last_message->getChildren()[0];
-        $this->assertEquals('application/pdf', $attachment->getContentType());
+        $this->assertEquals('application/pdf', $last_message->getChildren()[0]->getContentType());
     }
 
     protected function createAndLoginUser(ApiClient $client)
