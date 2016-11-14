@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d4fa59b9755d3478ef09836cee863a65",
-    "content-hash": "d985db6626897281de4b7b738dd8e4f7",
+    "hash": "b43891e573df2cee1235d18626668554",
+    "content-hash": "95c90077b8afbbb0f234b5d0612e020f",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -734,6 +734,48 @@
             ],
             "description": "PHP Client for HopTrip API",
             "time": "2016-10-14 03:41:25"
+        },
+        {
+            "name": "hoptrip/lib-silex-app",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:travelsense/lib-silex-app.git",
+                "reference": "08655ca4986805d65b32f064889fd55746e7add7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/travelsense/lib-silex-app/zipball/08655ca4986805d65b32f064889fd55746e7add7",
+                "reference": "08655ca4986805d65b32f064889fd55746e7add7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.6",
+                "squizlabs/php_codesniffer": "~2.5"
+            },
+            "suggest": {
+                "silex/silex": "Silex Framework"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HopTrip\\SilexApp\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Karapetov",
+                    "email": "alexey@karapetov.com"
+                }
+            ],
+            "description": "Silex Application",
+            "time": "2016-11-13 03:40:05"
         },
         {
             "name": "monolog/monolog",

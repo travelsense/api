@@ -41,6 +41,7 @@ if [[ ! -d ${RELEASE} ]]; then
     git archive --format=tar ${TAG} | sudo tar -x -C ${WORKSPACE}
     pushd ${WORKSPACE} > /dev/null
     composer install --no-dev
+    composer dump-autoload -o
     echo ${TAG} > VERSION
     printf "${TAG} ${USER}@${HOSTNAME} `date`\n\n`uname -a`\n\n`php -v`\n\n`composer -V`" > RELEASE
     popd > /dev/null

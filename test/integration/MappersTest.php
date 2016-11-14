@@ -68,12 +68,12 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::resetDatabase(Application::createByEnvironment('test'));
+        self::resetDatabase(new Application('test'));
     }
 
     public function setUp()
     {
-        $app = Application::createByEnvironment('test');
+        $app = new Application('test');
 
         $this->connection = $app['dbs']['main'];
 

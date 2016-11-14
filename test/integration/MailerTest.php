@@ -11,7 +11,7 @@ class MailerTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $app = Application::createByEnvironment('test');
+        $app = new Application('test');
 
         $app['mailer'] = $this->mailer = $this->getMockBuilder('Swift_Mailer')
             ->disableOriginalConstructor()

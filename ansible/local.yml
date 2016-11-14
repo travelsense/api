@@ -38,11 +38,6 @@
   - include: tasks/install_composer.yml
   - include: tasks/update_composer.yml
 
-  - name: composer install
-    shell: composer install
-    args:
-      chdir: /vagrant
-
   - name: run migrations
     shell: APP_ENV=dev bin/db.php migrations:migrate --no-interaction
     args:
