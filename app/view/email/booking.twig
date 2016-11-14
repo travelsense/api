@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        div {color: grey;}
+        span, h3, ol {color: black;}
+    </style>
+</head>
+<body>
+<h2>HopTrip Booking Request {{ date|date("F d, Y h:i e") }}</h2>
+<div>
+    <h3>Pax</h3>
+    <ol>
+        {% for pax in booking.people %}
+            <li>
+                <div>First name: <span>{{ pax.firstName }}</span></div>
+                <div>Last name: <span>{{ pax.lastName }}</span></div>
+                <div>DOB: <span>{{ pax.dateOfBirth }}</span></div>
+            </li>
+        {% endfor %}
+    </ol>
+    <h3>Billing</h3>
+    <div>Full name: <span>{{ booking.billing.fullName }}</span></div>
+    <div>Address: <span>{{ booking.billing.address1 }} {{ booking.billing.address2 }}</span></div>
+    <div>City: <span>{{ booking.billing.city }}</span></div>
+    <div>State: <span>{{ booking.billing.state }}</span></div>
+    <div>Country: <span>{{ booking.billing.country }}</span></div>
+    <div>Zip: <span>{{ booking.billing.zip }}</span></div>
+</div>
+</body>
+</html>
