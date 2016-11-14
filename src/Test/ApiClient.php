@@ -68,6 +68,4 @@ class ApiClient
     {
         $this->token = $this->post('/token', ['email' => $email, 'password' => $password])['token'];
     }
-
-
 }

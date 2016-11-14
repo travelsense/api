@@ -1,7 +1,6 @@
 <?php
 namespace Api;
 
-
 use Api\Service\PdfGenerator;
 
 class PdfGeneratorTest extends \PHPUnit_Framework_TestCase

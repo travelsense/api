@@ -53,7 +53,8 @@ class ApplicationTest extends WebTestCase
     {
         $email = 'tester@example.com';
         $password = '123abc';
-        $client->post('/user',
+        $client->post(
+            '/user',
             [
                 'firstName' => 'Test',
                 'lastName'  => 'Tester',
