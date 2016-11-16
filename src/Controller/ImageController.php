@@ -37,7 +37,7 @@ class ImageController
         stream_copy_to_stream($request->getContent(true), $tmp_file);
         fflush($tmp_file);
         $tmp_file_name = stream_get_meta_data($tmp_file)['uri'];
-        $this->logger->debug($tmp_file_name);
+        $this->logger->debug("File uploaded to $tmp_file_name");
         $tmp_file_type = mime_content_type($tmp_file_name);
         if (!in_array($tmp_file_type, $this->allowed_mime_types)) {
             throw new ApiException("Invalid mime type: $tmp_file_type", ApiException::VALIDATION);
