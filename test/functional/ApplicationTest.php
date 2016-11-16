@@ -63,7 +63,10 @@ class ApplicationTest extends WebTestCase
             '/image',
             file_get_contents(__DIR__ . '/stub/pic.jpg')
         );
-        $this->assertEquals('https://static.hoptrip.us/b2/0e/b20e6e912ef015c7389230a9b8c0ac6959c37fda', $response['url']);
+        $this->assertEquals(
+            'https://static.hoptrip.us/b2/0e/b20e6e912ef015c7389230a9b8c0ac6959c37fda',
+            $response['url']
+        );
 
         /**
          * Invalid mime type
