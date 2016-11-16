@@ -111,6 +111,8 @@ $app->get('/iata/{type}/all', 'controller.iata:getAll')
     ->assert('type', $iata_type)
     ->bind('iata-all');
 
+$app->post('/image', 'controller.image:upload');
+
 $app->post('/hotel/search/{location}/{in}/{out}/{rooms}', 'controller.wego:startSearch')
     ->convert('in', $to_date)
     ->convert('out', $to_date)

@@ -9,6 +9,7 @@ use Api\Controller\AuthController;
 use Api\Controller\ClientController;
 use Api\Controller\HealthCheckController;
 use Api\Controller\IataController;
+use Api\Controller\ImageController;
 use Api\Controller\Travel\BookingController;
 use Api\Controller\Travel\CategoriesController;
 use Api\Controller\Travel\CommentController;
@@ -16,6 +17,7 @@ use Api\Controller\Travel\TravelController;
 use Api\Controller\UberController;
 use Api\Controller\UserController;
 use Api\Controller\WegoHotelController;
+use Silex\Provider\ServiceControllerServiceProvider;
 
 $app->extend('argument_value_resolvers', function (array $resolvers, $app) {
     return array_merge(
@@ -26,7 +28,7 @@ $app->extend('argument_value_resolvers', function (array $resolvers, $app) {
     );
 });
 
-$app->register(new Silex\Provider\ServiceControllerServiceProvider());
+$app->register(new ServiceControllerServiceProvider());
 
 // API
 
@@ -103,5 +105,12 @@ $app['controller.client'] = function ($app) {
 $app['controller.booking'] = function ($app) {
     $controller = new BookingController($app['mapper.db.booking'], $app['email.service']);
     $controller->setPointPrice($app['config']['booking']['reward_point_price']);
+    return $controller;
+};
+
+$app['controller.image'] = function ($app) {
+    $conf = $app['config']['image_upload'];
+    $controller = new ImageController($conf['allowed_mime_types'], $conf['dir'], $conf['base_url']);
+    $controller->setLogger($app['logger']);
     return $controller;
 };

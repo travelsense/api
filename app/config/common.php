@@ -86,4 +86,11 @@ return [
         'password'    => 'hoptrip',
         'key_length'  => 128,
     ],
+    'image_upload' => [
+        'dir' => '/tmp/images',
+        'base_url' => 'https://static.hoptrip.us',
+        'allowed_mime_types' => [
+            'image/jpeg',
+        ],
+    ],
 ];

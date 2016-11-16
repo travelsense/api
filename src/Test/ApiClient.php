@@ -1,6 +1,7 @@
 <?php
 namespace Api\Test;
 
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
@@ -52,14 +53,23 @@ class ApiClient
      */
     public function post(string $uri, $payload)
     {
+        return $this->rawPost($uri, json_encode($payload));
+    }
+
+    public function rawPost(string $uri, $payload)
+    {
         $server = [];
         if ($this->token) {
             $server['HTTP_AUTHORIZATION'] = "Token {$this->token}";
         }
-        $this->http->request('POST', $uri, [], [], $server, json_encode($payload));
+        $this->http->request('POST', $uri, [], [], $server, $payload);
         $response = $this->http->getResponse();
         if ($response->getStatusCode() != 200) {
-            throw new \RuntimeException($response->getContent(), $response->getStatusCode());
+            $payload = json_decode($response->getContent(), true);
+            if (isset($payload['code']) && isset($payload['error'])) {
+                throw new ApiClientException($payload['error'], $payload['code']);
+            }
+            throw new RuntimeException($response->getContent(), $response->getStatusCode());
         }
         return json_decode($response->getContent(), true);
     }
