@@ -55,8 +55,8 @@ class ApplicationTest extends WebTestCase
     public function testImageUpload()
     {
         $dir = '/tmp/images';
+        exec("rm -rf $dir && mkdir $dir");
         $this->app['config']['image_upload']['dir'] = $dir;
-        `rm -rf $dir && mkdir $dir`;
         $client = $this->createApiClient();
         $this->createAndLoginUser($client);
         $response = $client->rawPost(
@@ -67,6 +67,7 @@ class ApplicationTest extends WebTestCase
             'https://static.hoptrip.us/b2/0e/b20e6e912ef015c7389230a9b8c0ac6959c37fda',
             $response['url']
         );
+        $this->assertFileEquals(__DIR__ . '/stub/pic.jpg', '/tmp/images/b2/0e/b20e6e912ef015c7389230a9b8c0ac6959c37fda');
 
         /**
          * Invalid mime type
