@@ -9,8 +9,19 @@ class ImageController
 {
     use LoggerAwareTrait;
 
+    /**
+     * @var array
+     */
     private $allowed_mime_types = [];
+
+    /**
+     * @var string
+     */
     private $upload_dir;
+
+    /**
+     * @var string
+     */
     private $base_url;
 
     public function __construct(array $allowed_mime_types, string $upload_dir, string $base_url)
@@ -20,7 +31,7 @@ class ImageController
         $this->base_url = $base_url;
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request): array
     {
         $tmp_file = tmpfile();
         stream_copy_to_stream($request->getContent(true), $tmp_file);
