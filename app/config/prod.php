@@ -4,7 +4,7 @@ return array_replace_recursive(
     [
         'secure_json' => '/etc/secure.json',
         'image_upload' => [
-            'dir' => '/www/static',
+            'dir' => '/www/images',
             'base_url' => 'https://static.hoptrip.us',
         ],
     ]
