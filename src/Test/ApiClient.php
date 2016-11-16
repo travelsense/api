@@ -48,7 +48,7 @@ class ApiClient
     /**
      * Do POST request
      * @param string $uri
-     * @param        $payload
+     * @param mixed $payload to be json encoded
      * @return mixed json decoded response
      */
     public function post(string $uri, $payload)
@@ -56,7 +56,13 @@ class ApiClient
         return $this->rawPost($uri, json_encode($payload));
     }
 
-    public function rawPost(string $uri, $payload)
+    /**
+     * Do a raw POST request, no json encoding
+     * @param string $uri
+     * @param string $payload
+     * @return mixed
+     */
+    public function rawPost(string $uri, string $payload)
     {
         $server = [];
         if ($this->token) {
