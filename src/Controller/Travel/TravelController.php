@@ -360,6 +360,7 @@ class TravelController extends ApiController
         $view = [];
         $view['id'] = $travel->getId();
         $view['title'] = $travel->getTitle();
+        $view['estimated_price'] = $travel->getEstimatedPrice();
         if (!$minimized) {
             $actions = $travel->getActions();
             $view['description'] = $travel->getDescription();
@@ -369,7 +370,6 @@ class TravelController extends ApiController
             $view['category_ids'] = $travel->getCategoryIds();
             $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
-            $view['estimated_price'] = $travel->getEstimatedPrice();
             $view['transportation'] = $travel->getTransportation();
             $view['app_version'] = $travel->getAppVersion();
 
