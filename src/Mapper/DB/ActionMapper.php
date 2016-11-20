@@ -85,51 +85,6 @@ class ActionMapper extends AbstractMapper
     }
 
     /**
-     * @param array $row
-     * @return Action
-     */
-    protected function create(array $row)
-    {
-        $action = new Action();
-        $action
-            ->setId($row['id'])
-            ->setTravelId($row['travel_id'])
-            ->setOffsetStart($row['offset_start'])
-            ->setOffsetEnd($row['offset_end'])
-            ->setCar($row['car'])
-            ->setAirports(json_decode($row['airports']))
-            ->setHotels(json_decode($row['hotels']))
-            ->setSightseeings(json_decode($row['sightseeings']))
-            ->setType($row['type'])
-            ->setTransportation($row['transportation'])
-            ->setIndex($row['index'])
-            ->setEndIndex($row['end_index']);
-        return $action;
-    }
-
-    /**
-     * @param Statement $statement
-     * @param Action $action
-     */
-    private function bindCommonValues(Statement $statement, Action $action)
-    {
-        $values = [
-            'travel_id' => $action->getTravelId(),
-            'offset_start' => $action->getOffsetStart(),
-            'offset_end' => $action->getOffsetEnd(),
-            'car' => $action->getCar(),
-            'airports' => json_encode($action->getAirports()),
-            'hotels' => json_encode($action->getHotels()),
-            'sightseeings' => json_encode($action->getSightseeings()),
-            'type' => $action->getType(),
-            'transportation' => $action->getTransportation(),
-            'index' => $action->getIndex(),
-            'end_index' =>$action->getEndIndex()
-        ];
-        $this->helper->bindValues($statement, $values);
-    }
-
-    /**
      * @param int $travel_id
      * @return Action[]
      */
@@ -170,5 +125,50 @@ class ActionMapper extends AbstractMapper
         } catch (PDOException $e) {
             $this->connection->rollBack();
         }
+    }
+
+    /**
+     * @param array $row
+     * @return Action
+     */
+    protected function create(array $row)
+    {
+        $action = new Action();
+        $action
+            ->setId($row['id'])
+            ->setTravelId($row['travel_id'])
+            ->setOffsetStart($row['offset_start'])
+            ->setOffsetEnd($row['offset_end'])
+            ->setCar($row['car'])
+            ->setAirports(json_decode($row['airports'], true))
+            ->setHotels(json_decode($row['hotels'], true))
+            ->setSightseeings(json_decode($row['sightseeings'], true))
+            ->setType($row['type'])
+            ->setTransportation($row['transportation'])
+            ->setIndex($row['index'])
+            ->setEndIndex($row['end_index']);
+        return $action;
+    }
+
+    /**
+     * @param Statement $statement
+     * @param Action $action
+     */
+    private function bindCommonValues(Statement $statement, Action $action)
+    {
+        $values = [
+            'travel_id' => $action->getTravelId(),
+            'offset_start' => $action->getOffsetStart(),
+            'offset_end' => $action->getOffsetEnd(),
+            'car' => $action->getCar(),
+            'airports' => json_encode($action->getAirports()),
+            'hotels' => json_encode($action->getHotels()),
+            'sightseeings' => json_encode($action->getSightseeings()),
+            'type' => $action->getType(),
+            'transportation' => $action->getTransportation(),
+            'index' => $action->getIndex(),
+            'end_index' =>$action->getEndIndex()
+        ];
+        $this->helper->bindValues($statement, $values);
     }
 }
