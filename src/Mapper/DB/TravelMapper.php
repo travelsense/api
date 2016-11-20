@@ -370,6 +370,21 @@ class TravelMapper extends AbstractMapper
         $update->execute();
     }
 
+    public function markDeleted(int $travelId, bool $deleted = true)
+    {
+        $update = $this->connection->prepare('
+          UPDATE travels SET
+            deleted = :deleted
+          WHERE id = :id
+        ');
+        $values = [
+            'id'      => $travelId,
+            'deleted' => $deleted,
+        ];
+        $this->helper->bindValues($update, $values);
+        $update->execute();
+    }
+
     /**
      * @param array $row
      * @return Travel
@@ -380,7 +395,7 @@ class TravelMapper extends AbstractMapper
         $travel->setId($row['id']);
         $travel->setDescription($row['description']);
         $travel->setTitle($row['title']);
-        $travel->setContent(json_decode($row['content']));
+        $travel->setContent(json_decode($row['content'], true));
         $travel->setPublished($row['is_published']);
         $travel->setImage($row['image']);
         $travel->setCreated(new DateTime($row['created']));
@@ -430,20 +445,5 @@ class TravelMapper extends AbstractMapper
         $travel->setAuthor($author);
         $travel->setActions($this->action_mapper->fetchActionsForTravel($travel->getId()));
         return $travel;
-    }
-
-    public function markDeleted(int $travelId, bool $deleted = true)
-    {
-        $update = $this->connection->prepare(
-            'UPDATE travels SET
-              deleted = :deleted
-            WHERE id = :id'
-        );
-        $values = [
-            'id'      => $travelId,
-            'deleted' => $deleted,
-        ];
-        $this->helper->bindValues($update, $values);
-        $update->execute();
     }
 }
