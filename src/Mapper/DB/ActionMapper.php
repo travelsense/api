@@ -138,6 +138,7 @@ class ActionMapper extends AbstractMapper
         $select = $this->connection->prepare('
             SELECT * FROM actions
             WHERE travel_id = :travel_id
+            ORDER BY id ASC
             ');
         $select->execute(['travel_id' => $travel_id]);
         return $this->buildAll($select);
