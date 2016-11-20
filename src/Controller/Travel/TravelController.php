@@ -414,7 +414,6 @@ class TravelController extends ApiController
     private function buildActionView(Action $action): array
     {
         return [
-            'id'           => $action->getId(),
             'offsetStart'  => $action->getOffsetStart(),
             'offsetEnd'    => $action->getOffsetEnd(),
             'car'          => $action->getCar(),
