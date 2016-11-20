@@ -27,6 +27,7 @@ class RealWebServerTest extends FunctionalTestCase
     private $airportAction = [
         "offsetStart" => 0,
         "hotels" => [],
+        "id" => 2,
         "airports" => [],
         "offsetEnd" => 0,
         "type" => "flight",
