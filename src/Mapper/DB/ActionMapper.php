@@ -66,17 +66,17 @@ class ActionMapper extends AbstractMapper
     {
         $update = $this->connection->prepare('
             UPDATE actions SET
-              travel_id = :travel_id, 
-              offset_start = :offset_start, 
-              offset_end = :offset_end, 
-              car = :car,
-              airports = :airports, 
-              hotels = :hotels,
-              sightseeings = :sightseeings,
-              type = :type,
-              transportation = :transportation,
-              index = :index,
-              end_index = :end_index
+            travel_id = :travel_id, 
+            offset_start = :offset_start, 
+            offset_end = :offset_end, 
+            car = :car,
+            airports = :airports, 
+            hotels = :hotels,
+            sightseeings = :sightseeings,
+            type = :type,
+            transportation = :transportation,
+            index = :index,
+            end_index = :end_index
             WHERE id = :id
         ');
         $this->bindCommonValues($update, $action);
@@ -138,7 +138,6 @@ class ActionMapper extends AbstractMapper
         $select = $this->connection->prepare('
             SELECT * FROM actions
             WHERE travel_id = :travel_id
-            ORDER BY id ASC
             ');
         $select->execute(['travel_id' => $travel_id]);
         return $this->buildAll($select);
