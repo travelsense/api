@@ -392,7 +392,6 @@ class MappersTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($a->getId(), $b->getId());
         $this->assertEquals($a->getAuthorId(), $b->getAuthorId());
-        $this->assertEquals($a->getContent(), $b->getContent());
         $this->assertEquals($a->getTitle(), $b->getTitle());
         $this->assertEquals($a->getCategoryIds(), $b->getCategoryIds());
     }
@@ -408,7 +407,6 @@ class MappersTest extends \PHPUnit_Framework_TestCase
         $travel = new Travel();
         $travel
             ->setAuthor($author)
-            ->setContent($title)
             ->setTitle($title)
             ->setDescription($title)
             ->setCategoryIds($category_ids)
