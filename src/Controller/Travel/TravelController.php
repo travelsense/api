@@ -105,10 +105,6 @@ class TravelController extends ApiController
         $travel->setActions($actions);
         $this->action_mapper->insertActions($travel->getActions());
 
-        if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
-            $ids = (array) $json->get('category_id');
-            $this->category_mapper->setTravelCategories($travel->getId(), $ids);
-        }
         if ($json->has('category_ids')) {
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
         }
@@ -146,10 +142,6 @@ class TravelController extends ApiController
         }
         if ($json->has('creation_mode')) {
             $travel->setCreationMode($json->get('creation_mode'));
-        }
-        if ($json->has('category_id')) { //TODO: remove in version 2.0 #126
-            $ids = (array) $json->get('category_id');
-            $this->category_mapper->setTravelCategories($travel->getId(), $ids);
         }
         if ($json->has('category_ids')) {
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
@@ -364,7 +356,7 @@ class TravelController extends ApiController
         if (!$minimized) {
             $actions = $travel->getActions();
             $view['description'] = $travel->getDescription();
-            $view['content'] = count($actions) ? $this->buildActionsView($actions) : $travel->getContent();
+            $view['content'] = $this->buildActionsView($actions);
             $view['created'] = $travel->getCreated()->format(self::DATETIME_FORMAT);
             $view['category'] = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
             $view['category_ids'] = $travel->getCategoryIds();
@@ -384,9 +376,6 @@ class TravelController extends ApiController
             }
         }
         $view['is_favorited'] = $is_favorited;
-        if (count($travel->getContent())) { // TODO Refactor this logic. Move to Travel?
-            $travel->setActions($this->createActions($travel->getContent(), $travel->getId()));
-        }
         $view['image'] = $travel->getImage();
         $view['places_count'] = count($travel->getActions());
         $view['days_count'] = $travel->getDaysCount();
