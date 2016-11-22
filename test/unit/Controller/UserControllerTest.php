@@ -61,6 +61,7 @@ class UserControllerTest extends ControllerTestCase
                 'firstName' => 'User1',
                 'lastName'  => 'Tester',
                 'created'   => '2000-01-01T00:00:00+00:00',
+                'creator'   => false,
             ],
             $this->controller->getUser($this->test_user)
         );
@@ -77,6 +78,7 @@ class UserControllerTest extends ControllerTestCase
             'picture'   => 'http://example.com/user.jpg',
             'firstName' => 'Simple',
             'lastName'  => 'Tester',
+            'creator'   => false,
         ]);
 
         $request = $this->getMockBuilder(Request::class)
@@ -95,7 +97,8 @@ class UserControllerTest extends ControllerTestCase
                 return $u->getEmail() === 'test@example.com'
                 && $u->getFirstName() === 'Simple'
                 && $u->getLastName() === 'Tester'
-                && $u->getPicture() === 'http://example.com/user.jpg';
+                && $u->getPicture() === 'http://example.com/user.jpg'
+                && $u->getCreator() === false;
             }));
 
         $this->storage->expects($this->once())
