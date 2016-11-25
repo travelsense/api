@@ -120,17 +120,15 @@ class TravelMapper extends AbstractMapper
      */
     public function insert(Travel $travel)
     {
-        $insert = $this->connection->prepare(
-            'INSERT INTO travels (
-            title, description, content,
-            is_published, image, author_id,
+        $insert = $this->connection->prepare('
+          INSERT INTO travels (
+            title, description, is_published, image, author_id,
             creation_mode, estimated_price, transportation, app_version
-            ) VALUES (
-            :title, :description, :content::JSON,
-            :published, :image, :author_id,
+          ) VALUES (
+            :title, :description,:published, :image, :author_id,
             :creation_mode, :estimated_price, :transportation, :app_version
-            ) RETURNING id, created'
-        );
+          ) RETURNING id, created
+        ');
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
         $row = $insert->fetch(PDO::FETCH_ASSOC);
@@ -355,7 +353,6 @@ class TravelMapper extends AbstractMapper
             UPDATE travels SET
             title = :title,
             description = :description,
-            content = :content::JSON,
             is_published = :published,
             image = :image,
             author_id = :author_id,
@@ -395,7 +392,6 @@ class TravelMapper extends AbstractMapper
         $travel->setId($row['id']);
         $travel->setDescription($row['description']);
         $travel->setTitle($row['title']);
-        $travel->setContent(json_decode($row['content'], true));
         $travel->setPublished($row['is_published']);
         $travel->setImage($row['image']);
         $travel->setCreated(new DateTime($row['created']));
@@ -423,7 +419,6 @@ class TravelMapper extends AbstractMapper
         $values = [
             'title'           => $travel->getTitle(),
             'description'     => $travel->getDescription(),
-            'content'         => json_encode($travel->getContent()),
             'published'       => $travel->isPublished(),
             'image'           => $travel->getImage(),
             'author_id'       => $travel->getAuthorId(),

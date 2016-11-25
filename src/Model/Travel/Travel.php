@@ -23,11 +23,6 @@ class Travel implements SubjectInterface
     private $title;
 
     /**
-     * @var object|array
-     */
-    private $content;
-
-    /**
      * @var array
      */
     private $category_ids = [];
@@ -100,24 +95,6 @@ class Travel implements SubjectInterface
     public function setTitle($title)
     {
         $this->title = $title;
-        return $this;
-    }
-
-    /**
-     * @return array|object
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * @param array|object $content
-     * @return Travel
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
         return $this;
     }
 
