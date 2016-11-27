@@ -46,7 +46,10 @@ class ImageController
         $path = $this->getPath($hash);
         $dir = "{$this->upload_dir}/{$path}";
         $this->logger->debug("Creating dir: $dir");
-        mkdir($dir, 0700, true);
+        @mkdir($dir, 0700, true);
+        if (!is_dir($dir) || !is_writable($dir)) {
+            throw new \RuntimeException("Unable to create dir $dir");
+        }
         rename($tmp_file_name, "{$dir}/{$hash}");
         return [
             'url' => "{$this->base_url}/{$path}/{$hash}",

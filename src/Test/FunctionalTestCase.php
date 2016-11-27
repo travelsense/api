@@ -7,7 +7,7 @@ use HopTrip\ApiClient\ApiClient;
 /**
  * Class FunctionalTestCase
  * @package Api\Test
- * @deprecated Use \Silex\WebTestCase
+ * @deprecated Use ApplicationTestCase
  */
 abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 {
