@@ -1,7 +1,6 @@
 <?php
 namespace Test;
 
-
 use Api\Model\User;
 use Api\Test\ApplicationTestCase;
 use Api\Test\Mailer;

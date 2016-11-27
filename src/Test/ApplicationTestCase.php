@@ -1,7 +1,6 @@
 <?php
 namespace Api\Test;
 
-
 use Api\Application;
 use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\UserMapper;
@@ -46,7 +45,8 @@ class ApplicationTestCase extends WebTestCase
                         function (string $a, int $b) {
                             return [$a, $b];
                         },
-                        array_keys($tokens), $tokens
+                        array_keys($tokens),
+                        $tokens
                     )
                 )
             );
