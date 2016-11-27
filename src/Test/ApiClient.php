@@ -79,9 +79,4 @@ class ApiClient
         }
         return json_decode($response->getContent(), true);
     }
-
-    public function login(string $email, string $password)
-    {
-        $this->token = $this->post('/token', ['email' => $email, 'password' => $password])['token'];
-    }
 }
