@@ -49,7 +49,7 @@ class Mailer
      */
     public function sendAccountConfirmationMessage(string $email, string $token)
     {
-        $template = $this->twig->loadTemplate('email/confirmation.twig');
+        $template = $this->twig->load('email/confirmation.twig');
         $link = sprintf($this->conf['email_confirm'], urlencode($token));
         $message = Swift_Message::newInstance($template->renderBlock('subj', []))
             ->setBody($template->renderBlock('body', ['link' => $link]))
@@ -75,7 +75,7 @@ class Mailer
      */
     public function sendPasswordResetLink(string $email, string $token)
     {
-        $template = $this->twig->loadTemplate('email/reset.twig');
+        $template = $this->twig->load('email/reset.twig');
 
         $link = sprintf($this->conf['password_reset'], urlencode($token));
 
@@ -103,7 +103,7 @@ class Mailer
      */
     public function sendBookingDetails(array $booking)
     {
-        $template = $this->twig->loadTemplate('email/booking.twig');
+        $template = $this->twig->load('email/booking.twig');
         $html = $template->render([
             'booking' => $booking,
             'date' => new DateTime('now', new DateTimeZone('UTC')),
