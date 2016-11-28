@@ -122,7 +122,7 @@ class RealWebServerTest extends FunctionalTestCase
         $cat_b = $cat_b->setName('b');
         $this->category_mapper->insert($cat_b);
 
-        $cats = $this->client->getCategories();
+        $cats = $this->client->getTravelCategories();
         $cat_ids = [];
         $cat_names = [];
         foreach ($cats as $category) {
@@ -132,17 +132,6 @@ class RealWebServerTest extends FunctionalTestCase
         $this->assertCount(2, $cats);
         $this->assertEquals([$cat_a->getId(), $cat_b->getId()], $cat_ids);
         $this->assertEquals(['a', 'b'], $cat_names);
-
-        $travel_cats = $this->client->getTravelCategories();
-        $tcat_ids = [];
-        $tcat_names = [];
-        foreach ($travel_cats as $category) {
-            $tcat_ids[] = $category->id;
-            $tcat_names[] = $category->title;
-        }
-        $this->assertCount(2, $travel_cats);
-        $this->assertEquals([$cat_a->getId(), $cat_b->getId()], $tcat_ids);
-        $this->assertEquals(['a', 'b'], $tcat_names);
     }
 
     public function testBookingStats()

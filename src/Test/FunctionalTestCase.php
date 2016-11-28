@@ -2,6 +2,7 @@
 namespace Api\Test;
 
 use Api\Application;
+use GuzzleHttp\Client;
 use HopTrip\ApiClient\ApiClient;
 
 /**
@@ -37,7 +38,7 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped("Functional tests are disabled on this environment: $env");
         }
         $this->resetDatabase($app);
-        $this->client = new ApiClient(sprintf('%s:%s', self::$host, self::$port));
+        $this->client = new ApiClient(new Client(['base_uri' => sprintf('%s:%s', self::$host, self::$port)]));
     }
 
     /**
