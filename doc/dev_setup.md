@@ -42,9 +42,8 @@ Create a file named `example.php` in the project root:
 
 ```php
 <?php
-use GuzzleHttp\Client;
 require_once __DIR__ . '/vendor/autoload.php';
-$api = new \HopTrip\ApiClient\ApiClient(new Client(['base_uri' => 'http://172.16.0.101']));
+$api = new \HopTrip\ApiClient\ApiClient(new \GuzzleHttp\Client(['base_uri' => 'http://172.16.0.101']));
 
 try {
     $api->registerUser([
