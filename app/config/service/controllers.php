@@ -48,7 +48,8 @@ $app['controller.auth'] = function ($app) {
         $app['mapper.db.user'],
         $app['security.session_manager'],
         $app['facebook'],
-        $app['password_generator']
+        $app['password_generator'],
+        $app['image_loader']
     );
     $controller->setLogger($app['monolog']);
     return $controller;
@@ -109,8 +110,5 @@ $app['controller.booking'] = function ($app) {
 };
 
 $app['controller.image'] = function ($app) {
-    $conf = $app['config']['image_upload'];
-    $controller = new ImageController($conf['allowed_mime_types'], $conf['dir'], $conf['base_url']);
-    $controller->setLogger($app['logger']);
-    return $controller;
+    return new ImageController($app['image_loader']);
 };
