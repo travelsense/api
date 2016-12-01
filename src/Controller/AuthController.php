@@ -6,8 +6,10 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
+use Api\Service\ImageLoader;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
+use HopTrip\ApiClient\ApiClient;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,23 +39,31 @@ class AuthController extends ApiController
     private $facebook;
 
     /**
+     * @var ImageLoader
+     */
+    private $image_loader;
+
+    /**
      * UserSessionController constructor.
      *
      * @param UserMapper                 $user_mapper
      * @param SessionManager             $session_manager
      * @param Facebook                   $facebook
      * @param PasswordGeneratorInterface $pwd_generator
+     * @param ImageLoader                $image_loader
      */
     public function __construct(
         UserMapper $user_mapper,
         SessionManager $session_manager,
         Facebook $facebook,
-        PasswordGeneratorInterface $pwd_generator
+        PasswordGeneratorInterface $pwd_generator,
+        ImageLoader $image_loader
     ) {
         $this->user_mapper = $user_mapper;
         $this->session_manager = $session_manager;
         $this->facebook = $facebook;
         $this->pwd_generator = $pwd_generator;
+        $this->image_loader = $image_loader;
     }
 
     /**
