@@ -6,6 +6,7 @@ use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
+use Api\Service\ImageLoader;
 use Api\Test\ControllerTestCase;
 use Facebook\Facebook;
 use Facebook\GraphNodes\GraphPicture;
@@ -19,6 +20,7 @@ class AuthControllerTest extends ControllerTestCase
     private $session_manager;
     private $facebook;
     private $pw_gen;
+    private $img_loader;
     private $request;
 
     /**
@@ -49,6 +51,11 @@ class AuthControllerTest extends ControllerTestCase
 
         $this->facebook = $this->getMockBuilder(Facebook::class)
             ->setMethods(['setDefaultAccessToken', 'get', 'getGraphUser'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->img_loader = $this->getMockBuilder(ImageLoader::class)
+            ->setMethods(['upload'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -94,7 +101,8 @@ class AuthControllerTest extends ControllerTestCase
             $this->user_mapper,
             $this->session_manager,
             $this->facebook,
-            $this->pw_gen
+            $this->pw_gen,
+            $this->img_loader
         );
     }
 
