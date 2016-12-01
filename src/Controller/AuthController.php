@@ -133,14 +133,11 @@ class AuthController extends ApiController
     {
         $ch = curl_init($pic_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // Отключить ошибку "SSL certificate problem, verify that the CA cert is OK"
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        // Отключить ошибку "SSL: certificate subject name 'hostname.ru' does not match target host name '123.123'"
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         $out=curl_exec($ch);
         curl_close($ch);
         $link = $this->image_loader->upload(new Request(['body' => "$out"]));
-        var_dump($link);
         return $link['url'];
     }
 }
