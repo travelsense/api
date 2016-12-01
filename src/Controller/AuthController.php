@@ -121,23 +121,10 @@ class AuthController extends ApiController
                 ->setEmail($fb_user->getEmail())
                 ->setFirstName($fb_user->getFirstName())
                 ->setLastName($fb_user->getLastName())
-//                ->setPicture($pic ? $pic->getUrl() : null)
-                ->setPicture($pic ? $this->imageUpload($pic->getUrl()) : null)
+                ->setPicture($pic ? $pic->getUrl() : null)
                 ->setPassword($this->pwd_generator->generatePassword());
             $this->user_mapper->insert($user);
         }
         return $user;
-    }
-
-    protected function imageUpload($pic_url)
-    {
-        $ch = curl_init($pic_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        $out=curl_exec($ch);
-        curl_close($ch);
-        $link = $this->image_loader->upload(new Request(['body' => "$out"]));
-        return $link['url'];
     }
 }
