@@ -109,8 +109,5 @@ $app['controller.booking'] = function ($app) {
 };
 
 $app['controller.image'] = function ($app) {
-    $conf = $app['config']['image_upload'];
-    $controller = new ImageController($conf['allowed_mime_types'], $conf['dir'], $conf['base_url']);
-    $controller->setLogger($app['logger']);
-    return $controller;
+    return new ImageController($app['image_loader']);
 };
