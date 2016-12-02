@@ -30,7 +30,7 @@ class ImageLoader
         $this->base_url = $base_url;
     }
 
-    public function upload($stream): array
+    public function upload($stream): string
     {
         $tmp_file = tmpfile();
         stream_copy_to_stream($stream, $tmp_file);
@@ -50,11 +50,7 @@ class ImageLoader
             throw new \RuntimeException("Unable to create dir $dir");
         }
         rename($tmp_file_name, "{$dir}/{$hash}");
-//        $url = "{$this->base_url}/{$path}/{$hash}";
-//        return $url;
-        return [
-            'url' => "{$this->base_url}/{$path}/{$hash}",
-        ];
+        return "{$this->base_url}/{$path}/{$hash}";
     }
 
     private function getPath(string $hash): string

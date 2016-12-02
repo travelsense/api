@@ -18,6 +18,8 @@ class ImageController
 
     public function upload(Request $request): array
     {
-        return $this->image_loader->upload($request->getContent(true));
+        return [
+            'url' => $this->image_loader->upload($request->getContent(true))
+        ];
     }
 }
