@@ -6,7 +6,10 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
+use Api\Service\ImageLoader;
+use Api\Service\ImageSaver;
 use Facebook\Facebook;
+use GuzzleHttp\Client;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,23 +40,39 @@ class AuthController extends ApiController
     private $facebook;
 
     /**
+     * @var ImageLoader
+     */
+    private $image_loader;
+
+    /**
+     * @var ImageSaver
+     */
+    private $image_saver;
+
+    /**
      * UserSessionController constructor.
      *
      * @param UserMapper                 $user_mapper
      * @param SessionManager             $session_manager
      * @param Facebook                   $facebook
      * @param PasswordGeneratorInterface $pwd_generator
+     * @param ImageLoader                $image_loader
+     * @param ImageSaver                 $image_saver
      */
     public function __construct(
         UserMapper $user_mapper,
         SessionManager $session_manager,
         Facebook $facebook,
-        PasswordGeneratorInterface $pwd_generator
+        PasswordGeneratorInterface $pwd_generator,
+        ImageLoader $image_loader,
+        ImageSaver $image_saver
     ) {
         $this->user_mapper = $user_mapper;
         $this->session_manager = $session_manager;
         $this->facebook = $facebook;
         $this->pwd_generator = $pwd_generator;
+        $this->image_loader = $image_loader;
+        $this->image_saver = $image_saver;
     }
 
     /**
@@ -106,12 +125,22 @@ class AuthController extends ApiController
         $user = $this->user_mapper->fetchByEmail($fb_user->getEmail());
         if (null === $user) {
             $pic = $fb_user->getPicture();
+            var_dump($pic->getUrl());
+            if ($pic) {
+                $resource = $this->image_saver->save($pic->getUrl());
+                var_dump($resource);
+                $link = $this->image_loader->upload($resource);
+                echo 'LINK= '.$link;
+            } else {
+                $link = null;
+            }
             $user = new User();
             $user
                 ->setEmail($fb_user->getEmail())
                 ->setFirstName($fb_user->getFirstName())
                 ->setLastName($fb_user->getLastName())
-                ->setPicture($pic ? $pic->getUrl() : null)
+                ->setPicture($link)
+//                ->setPicture($pic ? $pic->getUrl() : null)
                 ->setPassword($this->pwd_generator->generatePassword());
             $this->user_mapper->insert($user);
         }

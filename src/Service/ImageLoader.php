@@ -32,6 +32,7 @@ class ImageLoader
 
     public function upload($stream): string
     {
+        echo "LOAD= ";
         $tmp_file = tmpfile();
         stream_copy_to_stream($stream, $tmp_file);
         fflush($tmp_file);

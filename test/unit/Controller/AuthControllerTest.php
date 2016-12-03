@@ -6,6 +6,8 @@ use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
+use Api\Service\ImageLoader;
+use Api\Service\ImageSaver;
 use Api\Test\ControllerTestCase;
 use Facebook\Facebook;
 use Facebook\GraphNodes\GraphPicture;
@@ -19,6 +21,8 @@ class AuthControllerTest extends ControllerTestCase
     private $session_manager;
     private $facebook;
     private $pw_gen;
+    private $img_loader;
+    private $img_saver;
     private $request;
 
     /**
@@ -52,11 +56,21 @@ class AuthControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->img_loader = $this->getMockBuilder(ImageLoader::class)
+            ->setMethods(['upload', 'save'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->img_saver = $this->getMockBuilder(ImageSaver::class)
+            ->setMethods(['save'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $user_pic = $this->getMockBuilder(GraphPicture::class)
             ->setMethods(['getUrl'])
             ->getMock();
         
-        $user_pic->method('getUrl')->willReturn('https://pushkin.ru/pic.jpg');
+        $user_pic->method('getUrl')->willReturn('https://avatarko.ru/img/kartinka/13/kot_ochki_12879.jpg');
 
         $fb_user = $this->getMockBuilder(GraphUser::class)
             ->setMethods(['getFirstName', 'getLastName', 'getPicture', 'getEmail'])
@@ -94,7 +108,9 @@ class AuthControllerTest extends ControllerTestCase
             $this->user_mapper,
             $this->session_manager,
             $this->facebook,
-            $this->pw_gen
+            $this->pw_gen,
+            $this->img_loader,
+            $this->img_saver
         );
     }
 
@@ -164,7 +180,7 @@ class AuthControllerTest extends ControllerTestCase
             ->with($this->callback(function (User $user) {
                 return $user->getFirstName() === 'Alexander'
                 && $user->getEmail() === 'sasha@pushkin.ru'
-                && $user->getPicture() === 'https://pushkin.ru/pic.jpg';
+                && $user->getPicture() === 'https://avatarko.ru/img/kartinka/13/kot_ochki_12879.jpg';
             }))
             ->will($this->returnCallback(function (User $user) {
                 $user->setId(42);
