@@ -7,4 +7,5 @@
     <file>test</file>
     <exclude-pattern>vendor/*</exclude-pattern>
     <rule ref="PSR2"/>
+    <rule ref="vendor/f3ath/code-sniffs/src"/>
 </ruleset>
