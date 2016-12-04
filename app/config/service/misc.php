@@ -10,6 +10,7 @@ use Api\Service\ImageLoader;
 use Api\Service\PdfGenerator;
 use F3\SimpleUber\Uber;
 use Facebook\Facebook;
+use GuzzleHttp\Client;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
 $app['facebook'] = function ($app) {
@@ -52,5 +53,8 @@ $app['image_loader'] = function (Application $app) {
 };
 
 $app['image_copier'] = function (Application $app) {
-    return new ImageCopier($app['image_loader']);
+    return new ImageCopier(
+        $app['image_loader'],
+        new Client()
+    );
 };

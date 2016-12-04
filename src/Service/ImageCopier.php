@@ -10,14 +10,18 @@ class ImageCopier
      */
     private $image_loader;
 
-    public function __construct(ImageLoader $image_loader)
-    {
+    private $guzzle;
+
+    public function __construct(
+        ImageLoader $image_loader,
+        Client $client
+    ) {
         $this->image_loader = $image_loader;
+        $this->guzzle = $client;
     }
 
-    function copyFrom(string $from_url): string
+    public function copyFrom(string $from_url): string
     {
-        $guzzle = new Client();
-        return $this->image_loader->upload($guzzle->request('GET', $from_url, ['stream' => true]));
+        return $this->image_loader->upload($this->guzzle->request('GET', $from_url, ['stream' => true]));
     }
 }
