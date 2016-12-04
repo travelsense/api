@@ -5,6 +5,7 @@
 
 use Api\Application;
 use Api\ExpirableStorage;
+use Api\Service\ImageCopier;
 use Api\Service\ImageLoader;
 use Api\Service\PdfGenerator;
 use F3\SimpleUber\Uber;
@@ -43,10 +44,13 @@ $app['pdf_generator'] = function (Application $app) {
     );
 };
 
-
 $app['image_loader'] = function (Application $app) {
     $conf = $app['config']['image_upload'];
     $service = new ImageLoader($conf['allowed_mime_types'], $conf['dir'], $conf['base_url']);
     $service->setLogger($app['logger']);
     return $service;
+};
+
+$app['image_copier'] = function (Application $app) {
+    return new ImageCopier($app['image_loader']);
 };
