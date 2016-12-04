@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Remove travel.content
+ * Remove travels.content
  */
 class Version20161204055508 extends AbstractMigration
 {
