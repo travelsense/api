@@ -15,7 +15,8 @@ class ImageCopier
         $this->image_loader = $image_loader;
     }
 
-    function copyFrom(string $from_url): string {
+    function copyFrom(string $from_url): string
+    {
         $guzzle = new Client();
         return $this->image_loader->upload($guzzle->request('GET', $from_url, ['stream' => true]));
     }
