@@ -93,4 +93,8 @@ return [
             'image/jpeg',
         ],
     ],
+    'image_copier' => [
+        'dir' => '/tmp/img',
+        'file_name' => '/pic.jpg',
+    ],
 ];
