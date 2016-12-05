@@ -20,9 +20,11 @@ $app['security.access_manager'] = function ($app) {
     );
 };
 
-$app['user'] = null;
 
 $app->on(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
+    if (!$event->isMasterRequest()) {
+        return;
+    }
     $request = $event->getRequest();
     $route = $request->attributes->get('_route');
     $auth_header = $request->headers->get('Authorization');
@@ -34,5 +36,7 @@ $app->on(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
         $app['user'] = $app['mapper.db.user']->fetchById($user_id);
     } elseif (!in_array($route, $app['config']['security']['unsecured_routes'])) {
         $event->setResponse(new Response('', Response::HTTP_UNAUTHORIZED, ['WWW-Authenticate' => 'Token']));
+    } else {
+        $app['user'] = null;
     }
 });

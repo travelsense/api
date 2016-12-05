@@ -14,11 +14,10 @@ class BookingEmailTest extends ApplicationTestCase
             $this->createConfiguredMock(User::class, ['getId' => 1])
         ]);
 
+        $payload = json_decode(file_get_contents(__DIR__ . '/stub/booking_request.json'), true);
+
         $client = $this->createApiClient('testtoken');
-        $client->post(
-            '/travel/42/book',
-            json_decode(file_get_contents(__DIR__ . '/stub/booking_request.json'))
-        );
+        $client->registerBooking(42, $payload);
 
         /** @var Mailer $mailer */
         $mailer = $this->app['mailer'];
