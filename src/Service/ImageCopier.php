@@ -57,7 +57,9 @@ class ImageCopier
         $this->guzzle->request('GET', $from_url, ['sink' => fopen($file_path, 'w')]);
         $resource = fopen($file_path, 'r');
         $link = $this->image_loader->upload($resource);
-        if (file_exists($file_path)) unlink($file_path);
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
         return $link;
     }
 }

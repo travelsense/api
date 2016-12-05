@@ -1,7 +1,6 @@
 <?php
 namespace Api;
 
-
 use Api\Service\ImageCopier;
 use PHPUnit_Framework_TestCase;
 
