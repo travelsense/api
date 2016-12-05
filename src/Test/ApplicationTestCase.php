@@ -6,7 +6,15 @@ use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\ServerRequest;
+use HopTrip\ApiClient\ApiClient;
+use Psr\Http\Message\RequestInterface;
 use Silex\WebTestCase;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
+use Symfony\Component\HttpKernel\TerminableInterface;
 
 class ApplicationTestCase extends WebTestCase
 {
@@ -24,11 +32,33 @@ class ApplicationTestCase extends WebTestCase
 
     protected function createApiClient(string $token = null): ApiClient
     {
-        $api = new ApiClient($this->createClient());
-        if ($token) {
-            $api->setToken($token);
-        }
-        return $api;
+        $stack = HandlerStack::create(function (RequestInterface $request, array $options) {
+            $server_request = (new ServerRequest(
+                $request->getMethod(),
+                $request->getUri(),
+                $request->getHeaders(),
+                $request->getBody(),
+                $request->getProtocolVersion()
+            ))->withQueryParams(\GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery()));
+            $factory = new HttpFoundationFactory();
+            $diactoros = new DiactorosFactory();
+            $symfony_request = $factory->createRequest($server_request);
+            $symfony_response = $this->app->handle($symfony_request);
+            if ($this->app instanceof TerminableInterface) {
+                $this->app->terminate($symfony_request, $symfony_response);
+            }
+            $response = $diactoros->createResponse($symfony_response);
+            $promise = \GuzzleHttp\Promise\promise_for($response);
+            return $promise;
+        });
+
+        $guzzle = new Client([
+            'base_uri' => 'https://localhost',
+            'handler' => $stack,
+        ]);
+        $client = new ApiClient($guzzle);
+        $client->setAuthToken($token);
+        return $client;
     }
 
     /**

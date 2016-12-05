@@ -20,9 +20,7 @@ class ArgumentValueResolver implements ArgumentValueResolverInterface
 
     public function supports(Request $request, ArgumentMetadata $argument)
     {
-        return
-            $argument->getType() === User::class
-            && $this->app['user'] instanceof User;
+        return $argument->getType() === User::class;
     }
 
     public function resolve(Request $request, ArgumentMetadata $argument)

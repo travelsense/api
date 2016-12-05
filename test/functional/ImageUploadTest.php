@@ -6,14 +6,14 @@ use Api\Test\ApplicationTestCase;
 class ImageUploadTest extends ApplicationTestCase
 {
     /**
-     * @expectedException \Api\Test\ApiClientException
+     * @expectedException \HopTrip\ApiClient\ApiClientException
      * @expectedExceptionMessage Invalid mime type: text/x-php
      */
     public function testInvalidMimeType()
     {
         $this->appExpectTokens(['testtoken' => 1]);
         $api = $this->createApiClient('testtoken');
-        $api->rawPost('/image', file_get_contents(__FILE__));
+        $api->uploadImage(file_get_contents(__FILE__));
     }
 
     /**
@@ -23,7 +23,7 @@ class ImageUploadTest extends ApplicationTestCase
     public function testUnauthorizedUser()
     {
         $api = $this->createApiClient();
-        $api->rawPost('/image', file_get_contents(__FILE__));
+        $api->uploadImage(file_get_contents(__FILE__));
     }
 
     public function testImageUpload()
@@ -36,13 +36,10 @@ class ImageUploadTest extends ApplicationTestCase
         $api = $this->createApiClient('testtoken');
 
         for ($i = 0; $i < 2; $i++) { // loop to ensure the call is idempotent
-            $response = $api->rawPost(
-                '/image',
-                file_get_contents(__DIR__ . '/stub/pic.jpg')
-            );
+            $response = $api->uploadImage(file_get_contents(__DIR__ . '/stub/pic.jpg'));
             $this->assertEquals(
                 'https://static.hoptrip.us/b2/0e/b20e6e912ef015c7389230a9b8c0ac6959c37fda',
-                $response['url']
+                $response->url
             );
             $this->assertFileEquals(
                 __DIR__ . '/stub/pic.jpg',
