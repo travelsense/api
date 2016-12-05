@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "509a03a122f70b5d11c1122c2d33e242",
-    "content-hash": "3ad678373d306cc22d14cde75ed13eb2",
+    "hash": "40bc95ea9fa21ed8bd9d2b07a628709c",
+    "content-hash": "f623cde1bd91781760ec18a0a7c85f15",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2869,16 +2869,16 @@
         },
         {
             "name": "hoptrip/lib-api-client",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:travelsense/lib-api-client.git",
-                "reference": "db1229e90a0091362154cf2979a02e2d824faf92"
+                "reference": "4bca6574fc05d07853a83ad161b2220a387bebf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/travelsense/lib-api-client/zipball/db1229e90a0091362154cf2979a02e2d824faf92",
-                "reference": "db1229e90a0091362154cf2979a02e2d824faf92",
+                "url": "https://api.github.com/repos/travelsense/lib-api-client/zipball/4bca6574fc05d07853a83ad161b2220a387bebf9",
+                "reference": "4bca6574fc05d07853a83ad161b2220a387bebf9",
                 "shasum": ""
             },
             "require": {
@@ -2905,7 +2905,7 @@
                 }
             ],
             "description": "PHP Client for HopTrip API",
-            "time": "2016-11-27 11:25:19"
+            "time": "2016-12-05 00:38:38"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3404,16 +3404,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.7.1",
+            "version": "5.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0158307fae98f8013eeac2ff2803fe8d4f6bc1a0"
+                "reference": "336aff0ac52e306c98e7455bc3e8d7b0bf777a5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0158307fae98f8013eeac2ff2803fe8d4f6bc1a0",
-                "reference": "0158307fae98f8013eeac2ff2803fe8d4f6bc1a0",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/336aff0ac52e306c98e7455bc3e8d7b0bf777a5e",
+                "reference": "336aff0ac52e306c98e7455bc3e8d7b0bf777a5e",
                 "shasum": ""
             },
             "require": {
@@ -3482,7 +3482,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-12-02 12:03:05"
+            "time": "2016-12-03 08:33:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -4490,160 +4490,54 @@
             "time": "2016-11-23 20:04:58"
         },
         {
-            "name": "weew/helpers-array",
-            "version": "v1.3.1",
+            "name": "zendframework/zend-diactoros",
+            "version": "1.3.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/weew/helpers-array.git",
-                "reference": "9bff63111f9765b4277750db8d276d92b3e16ed0"
+                "url": "https://github.com/zendframework/zend-diactoros.git",
+                "reference": "969ff423d3f201da3ff718a5831bb999bb0669b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/weew/helpers-array/zipball/9bff63111f9765b4277750db8d276d92b3e16ed0",
-                "reference": "9bff63111f9765b4277750db8d276d92b3e16ed0",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.7",
-                "satooshi/php-coveralls": "^0.6.1"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/array.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Maxim Kott",
-                    "email": "maximkott@gmail.com"
-                }
-            ],
-            "description": "Useful collection of php array helpers.",
-            "time": "2016-07-21 11:18:01"
-        },
-        {
-            "name": "weew/helpers-string",
-            "version": "v1.9.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/weew/helpers-string.git",
-                "reference": "b06295b6e9ca1c25b36eb4ecba23919249ef95ff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/weew/helpers-string/zipball/b06295b6e9ca1c25b36eb4ecba23919249ef95ff",
-                "reference": "b06295b6e9ca1c25b36eb4ecba23919249ef95ff",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.7",
-                "satooshi/php-coveralls": "^0.6.1"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/string.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Maxim Kott",
-                    "email": "maximkott@gmail.com"
-                }
-            ],
-            "description": "Collection of useful php string helpers.",
-            "time": "2016-07-21 11:18:19"
-        },
-        {
-            "name": "weew/http-server",
-            "version": "v1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/weew/http-server.git",
-                "reference": "43b39943bd35be20d6d910d0b2c89c16af443274"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/weew/http-server/zipball/43b39943bd35be20d6d910d0b2c89c16af443274",
-                "reference": "43b39943bd35be20d6d910d0b2c89c16af443274",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/969ff423d3f201da3ff718a5831bb999bb0669b0",
+                "reference": "969ff423d3f201da3ff718a5831bb999bb0669b0",
                 "shasum": ""
             },
             "require": {
-                "weew/helpers-array": "^1.0.0",
-                "weew/helpers-string": "^1.0.0",
-                "weew/timer": "^1.0.0"
+                "php": "^5.4 || ^7.0",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "~1.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.7",
-                "satooshi/php-coveralls": "^0.6.1"
+                "phpunit/phpunit": "^4.6 || ^5.5",
+                "squizlabs/php_codesniffer": "^2.3.1"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3-dev",
+                    "dev-develop": "1.4-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "": "src/"
+                    "Zend\\Diactoros\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "BSD-2-Clause"
             ],
-            "authors": [
-                {
-                    "name": "Maxim Kott",
-                    "email": "maximkott@gmail.com"
-                }
+            "description": "PSR HTTP Message implementations",
+            "homepage": "https://github.com/zendframework/zend-diactoros",
+            "keywords": [
+                "http",
+                "psr",
+                "psr-7"
             ],
-            "description": "Simple wrapper for the php's built in http server.",
-            "time": "2016-07-21 11:18:33"
-        },
-        {
-            "name": "weew/timer",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/weew/timer.git",
-                "reference": "8ed9a2ae486c67c76e2e96828ea252d23b4400f6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/weew/timer/zipball/8ed9a2ae486c67c76e2e96828ea252d23b4400f6",
-                "reference": "8ed9a2ae486c67c76e2e96828ea252d23b4400f6",
-                "shasum": ""
-            },
-            "require": {
-                "weew/helpers-array": "^1.0.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.7",
-                "satooshi/php-coveralls": "^0.6.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Maxim Kott",
-                    "email": "maximkott@gmail.com"
-                }
-            ],
-            "description": "Simple timer.",
-            "time": "2016-07-21 11:18:57"
+            "time": "2016-10-11 13:25:21"
         }
     ],
     "aliases": [],

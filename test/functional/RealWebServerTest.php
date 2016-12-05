@@ -20,7 +20,6 @@ class RealWebServerTest extends FunctionalTestCase
      */
     private $connection;
 
-
     /**
      * @var array
      */

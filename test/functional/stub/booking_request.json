@@ -1,1 +1,144 @@
-{"people":[{"firstName":"Anton ","dateOfBirth":"01\/01\/1981","lastName":"Remizov "},{"firstName":"Anna","dateOfBirth":"02\/02\/1982","lastName":"Zhandarovich "},{"firstName":"Stefania ","dateOfBirth":"03\/03\/1983","lastName":"Remizova"}],"billing":{"address2":"","address1":"123 Main street","city":"San Jose ","country":"usa","fullName":"Anton Y Remizov ","zip":"95136","state":"ca"},"phone":"+11112223344","driver":{"firstName":"Anton ","dateOfBirth":"01\/01\/1981","lastName":"Remizov "},"card":{"zip":"","expiryMonth":9,"card":"111222333444","expiryYear":2020,"cvv":"123"},"notes":"Please do everything ASAP.","bookingSelection":{"hotelBookingResults":[{"url":"","address":"","checkin":"04\/23\/2017 11:20","city":"","price":"","name":"","checkout":"04\/25\/2017 11:20"},{"url":"http:\/\/wego.com\/hotels\/denmark\/copenhagen\/scandic-copenhagen-66512","address":"Vester Soegade 6","checkin":"04\/16\/2017 11:20","city":"Copenhagen","price":"139","name":"Scandic Copenhagen","checkout":"04\/19\/2017 11:20"},{"url":"http:\/\/wego.com\/hotels\/denmark\/fredericia\/best-western-hotel-fredericia-397775","address":"Vestre Ringvej 96","checkin":"04\/19\/2017 11:20","city":"Fredericia","price":"133","name":"BEST WESTERN Hotel Fredericia","checkout":"04\/21\/2017 11:20"},{"url":"http:\/\/wego.com\/hotels\/denmark\/ribe\/byferie-hotel-504750","address":"Damvej 34 \n      ","checkin":"04\/21\/2017 11:20","city":"Ribe","price":"145","name":"Byferie Hotel","checkout":"04\/23\/2017 11:20"}],"cabBookingOption":"","carRentalOption":{"makeModel":"Volkswagen Golf","class":"Compact Limousine","supplierID":"35","supplierName":"Sixt"},"flightBookingOption":{"fromAirport":"SFO","inboundSegments":[{"departureAirport":"CPH","airlineCode":"KL","airlineName":"KLM","airplaneCode":"KL1124","arrivalAirport":"AMS","departureTimeUTC":"04\/24\/2017 21:00","departureTimeLocal":"04\/24\/2017 23:00","arrivalTimeUTC":"04\/24\/2017 22:25","arrivalTimeLocal":"04\/25\/2017 00:25"},{"departureAirport":"AMS","airlineCode":"KL","airlineName":"KLM","airplaneCode":"KL605","arrivalAirport":"SFO","departureTimeUTC":"04\/25\/2017 00:50","departureTimeLocal":"04\/25\/2017 02:50","arrivalTimeUTC":"04\/25\/2017 11:45","arrivalTimeLocal":"04\/25\/2017 04:45"}],"outboundSegments":[{"departureAirport":"SFO","airlineCode":"KL","airlineName":"KLM","airplaneCode":"KL606","arrivalAirport":"AMS","departureTimeUTC":"04\/15\/2017 13:55","departureTimeLocal":"04\/15\/2017 06:55","arrivalTimeUTC":"04\/16\/2017 00:15","arrivalTimeLocal":"04\/16\/2017 02:15"},{"departureAirport":"AMS","airlineCode":"KL","airlineName":"KLM","airplaneCode":"KL1133","arrivalAirport":"CPH","departureTimeUTC":"04\/16\/2017 08:00","departureTimeLocal":"04\/16\/2017 10:00","arrivalTimeUTC":"04\/16\/2017 09:20","arrivalTimeLocal":"04\/16\/2017 11:20"}],"providerName":"","toAirport":"CPH","providerCode":"airfrance.com"}},"email":"a.y.remizov@gmail.com"}
+{
+  "people": [
+    {
+      "firstName": "Anton ",
+      "dateOfBirth": "01\/01\/1981",
+      "lastName": "Remizov "
+    },
+    {
+      "firstName": "Anna",
+      "dateOfBirth": "02\/02\/1982",
+      "lastName": "Zhandarovich "
+    },
+    {
+      "firstName": "Stefania ",
+      "dateOfBirth": "03\/03\/1983",
+      "lastName": "Remizova"
+    }
+  ],
+  "billing": {
+    "address2": "",
+    "address1": "123 Main street",
+    "city": "San Jose ",
+    "country": "usa",
+    "fullName": "Anton Y Remizov ",
+    "zip": "95136",
+    "state": "ca"
+  },
+  "phone": "+11112223344",
+  "driver": {
+    "firstName": "Anton ",
+    "dateOfBirth": "01\/01\/1981",
+    "lastName": "Remizov "
+  },
+  "card": {
+    "zip": "",
+    "expiryMonth": 9,
+    "card": "111222333444",
+    "expiryYear": 2020,
+    "cvv": "123"
+  },
+  "notes": "Please do everything ASAP.",
+  "bookingSelection": {
+    "hotelBookingResults": [
+      {
+        "url": "",
+        "address": "",
+        "checkin": "04\/23\/2017 11:20",
+        "city": "",
+        "price": "",
+        "name": "",
+        "checkout": "04\/25\/2017 11:20"
+      },
+      {
+        "url": "http:\/\/wego.com\/hotels\/denmark\/copenhagen\/scandic-copenhagen-66512",
+        "address": "Vester Soegade 6",
+        "checkin": "04\/16\/2017 11:20",
+        "city": "Copenhagen",
+        "price": "139",
+        "name": "Scandic Copenhagen",
+        "checkout": "04\/19\/2017 11:20"
+      },
+      {
+        "url": "http:\/\/wego.com\/hotels\/denmark\/fredericia\/best-western-hotel-fredericia-397775",
+        "address": "Vestre Ringvej 96",
+        "checkin": "04\/19\/2017 11:20",
+        "city": "Fredericia",
+        "price": "133",
+        "name": "BEST WESTERN Hotel Fredericia",
+        "checkout": "04\/21\/2017 11:20"
+      },
+      {
+        "url": "http:\/\/wego.com\/hotels\/denmark\/ribe\/byferie-hotel-504750",
+        "address": "Damvej 34 \n      ",
+        "checkin": "04\/21\/2017 11:20",
+        "city": "Ribe",
+        "price": "145",
+        "name": "Byferie Hotel",
+        "checkout": "04\/23\/2017 11:20"
+      }
+    ],
+    "cabBookingOption": "",
+    "carRentalOption": {
+      "makeModel": "Volkswagen Golf",
+      "class": "Compact Limousine",
+      "supplierID": "35",
+      "supplierName": "Sixt"
+    },
+    "flightBookingOption": {
+      "fromAirport": "SFO",
+      "inboundSegments": [
+        {
+          "departureAirport": "CPH",
+          "airlineCode": "KL",
+          "airlineName": "KLM",
+          "airplaneCode": "KL1124",
+          "arrivalAirport": "AMS",
+          "departureTimeUTC": "04\/24\/2017 21:00",
+          "departureTimeLocal": "04\/24\/2017 23:00",
+          "arrivalTimeUTC": "04\/24\/2017 22:25",
+          "arrivalTimeLocal": "04\/25\/2017 00:25"
+        },
+        {
+          "departureAirport": "AMS",
+          "airlineCode": "KL",
+          "airlineName": "KLM",
+          "airplaneCode": "KL605",
+          "arrivalAirport": "SFO",
+          "departureTimeUTC": "04\/25\/2017 00:50",
+          "departureTimeLocal": "04\/25\/2017 02:50",
+          "arrivalTimeUTC": "04\/25\/2017 11:45",
+          "arrivalTimeLocal": "04\/25\/2017 04:45"
+        }
+      ],
+      "outboundSegments": [
+        {
+          "departureAirport": "SFO",
+          "airlineCode": "KL",
+          "airlineName": "KLM",
+          "airplaneCode": "KL606",
+          "arrivalAirport": "AMS",
+          "departureTimeUTC": "04\/15\/2017 13:55",
+          "departureTimeLocal": "04\/15\/2017 06:55",
+          "arrivalTimeUTC": "04\/16\/2017 00:15",
+          "arrivalTimeLocal": "04\/16\/2017 02:15"
+        },
+        {
+          "departureAirport": "AMS",
+          "airlineCode": "KL",
+          "airlineName": "KLM",
+          "airplaneCode": "KL1133",
+          "arrivalAirport": "CPH",
+          "departureTimeUTC": "04\/16\/2017 08:00",
+          "departureTimeLocal": "04\/16\/2017 10:00",
+          "arrivalTimeUTC": "04\/16\/2017 09:20",
+          "arrivalTimeLocal": "04\/16\/2017 11:20"
+        }
+      ],
+      "providerName": "",
+      "toAirport": "CPH",
+      "providerCode": "airfrance.com"
+    }
+  },
+  "email": "a.y.remizov@gmail.com"
+}

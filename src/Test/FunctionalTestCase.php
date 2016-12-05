@@ -10,9 +10,8 @@ use HopTrip\ApiClient\ApiClient;
  * @package Api\Test
  * @deprecated Use ApplicationTestCase
  */
-abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
+abstract class FunctionalTestCase extends ApplicationTestCase
 {
-    use PHPServerTrait;
     use DatabaseTrait;
 
     /**
@@ -20,25 +19,16 @@ abstract class FunctionalTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $client;
     
-    public static function setUpBeforeClass()
-    {
-        self::startServer('/tmp/php-server.log');
-    }
-
-    public static function tearDownAfterClass()
-    {
-        self::stopServer();
-    }
-    
     public function setUp()
     {
-        $app = new Application();
-        $env = $app['env'];
-        if ($env !== 'test') {
-            $this->markTestSkipped("Functional tests are disabled on this environment: $env");
-        }
-        $this->resetDatabase($app);
-        $this->client = new ApiClient(new Client(['base_uri' => sprintf('%s:%s', self::$host, self::$port)]));
+        parent::setUp();
+        $this->resetDatabase($this->app);
+        $this->client = $this->createApiClient();
+    }
+
+    public function createApplication()
+    {
+        return new Application('test');
     }
 
     /**

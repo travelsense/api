@@ -73,7 +73,7 @@ class CommentController extends ApiController
      * @param int $offset
      * @return array
      */
-    public function getAllByTravelId(int $id, int $limit = 10, int $offset = 0): array
+    public function getAllByTravelId(Request $r, int $id, int $limit = 10, int $offset = 0): array
     {
         $response = [];
         foreach ($this->comment_mapper->fetchByTravelId($id, $limit, $offset) as $comment) {
