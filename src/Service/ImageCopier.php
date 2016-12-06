@@ -2,6 +2,8 @@
 namespace Api\Service;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Stream;
+use GuzzleHttp\Psr7\StreamWrapper;
 
 class ImageCopier
 {
@@ -33,15 +35,15 @@ class ImageCopier
      * @param string      $file_name
      */
     public function __construct(
-        ImageLoader $image_loader,
-        Client $client,
-        string $dir,
-        string $file_name
+        ImageLoader $image_loader
+//        Client $client,
+//        string $dir,
+//        string $file_name
     ) {
         $this->image_loader = $image_loader;
-        $this->guzzle = $client;
-        $this->dir = $dir;
-        $this->file_name = $file_name;
+//        $this->guzzle = $client;
+//        $this->dir = $dir;
+//        $this->file_name = $file_name;
     }
 
     /**
@@ -52,14 +54,9 @@ class ImageCopier
      */
     public function copyFrom(string $from_url): string
     {
-        @mkdir($this->dir, 0700, true);
-        $file_path = $this->dir . $this->file_name;
-        $this->guzzle->request('GET', $from_url, ['sink' => fopen($file_path, 'w')]);
-        $resource = fopen($file_path, 'r');
+        $stream = \GuzzleHttp\Psr7\stream_for($from_url);
+        $resource = StreamWrapper::getResource($stream);
         $link = $this->image_loader->upload($resource);
-        if (file_exists($file_path)) {
-            unlink($file_path);
-        }
         return $link;
     }
 }
