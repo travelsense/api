@@ -13,37 +13,13 @@ class ImageCopier
     private $image_loader;
 
     /**
-     * @var Client
-     */
-    private $guzzle;
-
-    /**
-     * @var string
-     */
-    private $dir;
-
-    /**
-     * @var string
-     */
-    private $file_name;
-
-    /**
      * ImageCopier constructor.
      * @param ImageLoader $image_loader
-     * @param Client      $client
-     * @param string      $dir
-     * @param string      $file_name
      */
     public function __construct(
         ImageLoader $image_loader
-//        Client $client,
-//        string $dir,
-//        string $file_name
     ) {
         $this->image_loader = $image_loader;
-//        $this->guzzle = $client;
-//        $this->dir = $dir;
-//        $this->file_name = $file_name;
     }
 
     /**
