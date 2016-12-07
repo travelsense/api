@@ -93,4 +93,9 @@ return [
             'image/jpeg',
         ],
     ],
+    'image_save' => [
+        'dir'  => '/tmp/image',
+        'file' => '/pic.jpg',
+
+    ],
 ];
