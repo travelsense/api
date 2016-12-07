@@ -54,6 +54,9 @@ $app['image_loader'] = function (Application $app) {
 
 $app['image_copier'] = function (Application $app) {
     return new ImageCopier(
-        $app['image_loader']
+        $app['image_loader'],
+        new Client(),
+        $app['config']['image_copier']['dir'],
+        $app['config']['image_copier']['file_name']
     );
 };

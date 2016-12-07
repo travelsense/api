@@ -95,6 +95,6 @@ return [
     ],
     'image_copier' => [
         'dir' => '/tmp/img',
-        'file_name' => '/pic.jpg',
+        'file_name' => 'pic.jpg',
     ],
 ];
