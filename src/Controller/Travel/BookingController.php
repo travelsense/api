@@ -4,10 +4,13 @@ namespace Api\Controller\Travel;
 use Api\Mapper\DB\BookingMapper;
 use Api\Model\User;
 use Api\Service\Mailer;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class BookingController
 {
+    use LoggerAwareTrait;
+
     /**
      * @var BookingMapper
      */
@@ -50,8 +53,12 @@ class BookingController
      */
     public function registerBooking(User $user, int $id, Request $request)
     {
+        $json = $request->getContent();
+        if ($this->logger) {
+            $this->logger->debug($json);
+        }
         $this->booking_mapper->registerBooking($user->getId(), $id);
-        $this->mailer_service->sendBookingDetails(json_decode($request->getContent(), true));
+        $this->mailer_service->sendBookingDetails(json_decode($json, true));
         return [];
     }
 
