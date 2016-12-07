@@ -7,5 +7,8 @@ return array_replace_recursive(
             'dir' => '/www/images',
             'base_url' => 'https://static.hoptrip.us',
         ],
+        'email' => [
+            'booking_details_receivers' => ['karapetov@gmail.com', 'book@hoptrip.us']
+        ],
     ]
 );

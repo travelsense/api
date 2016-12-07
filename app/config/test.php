@@ -22,6 +22,7 @@ return array_replace_recursive(
         'email' => [
             'email_confirm' => 'https://example.com/email/confirm/%s',
             'password_reset' => 'https://example.com/password/reset/%s',
+            'booking_details_receivers' => ['test@example.com'],
         ],
         'image_upload' => [
             'dir' => '/tmp/images',
