@@ -14,15 +14,44 @@
     <div>Total price: <span>${{ booking.totalPrice|number_format(2, '.', ',') }}</span></div>
 
     {% block pax %}
+        <h3>Pax</h3>
+        <ol>
+            {% for pax in booking.people %}
+                <li>
+                    <div>First name: <span>{{ pax.firstName }}</span></div>
+                    <div>Last name: <span>{{ pax.lastName }}</span></div>
+                    <div>DOB: <span>{{ pax.dateOfBirth }}</span></div>
+                </li>
+            {% endfor %}
+        </ol>
+        <div>Phone: <span>{{ booking.phone }}</span></div>
+        <div>Email: <a href="mailto:{{ booking.email }}">{{ booking.email }}</a></div>
     {% endblock %}
 
     {% block billing %}
+        <h3>Billing</h3>
+        <div>Full name: <span>{{ booking.billing.fullName }}</span></div>
+        <div>Address: <span>{{ booking.billing.address1 }} {{ booking.billing.address2 }}</span></div>
+        <div>City: <span>{{ booking.billing.city }}</span></div>
+        <div>State: <span>{{ booking.billing.state }}</span></div>
+        <div>Country: <span>{{ booking.billing.country }}</span></div>
+        <div>Zip: <span>{{ booking.billing.zip }}</span></div>
     {% endblock %}
 
     {% block docs %}
+        <h3>DL</h3>
+        <div>First name: <span>{{ booking.driver.firstName }}</span></div>
+        <div>Last name: <span>{{ booking.driver.lastName }}</span></div>
+        <div>DOB: <span>{{ booking.driver.dateOfBirth }}</span></div>
     {% endblock %}
 
     {% block credit_card %}
+        <h3>CC</h3>
+        <div>Number: <span>{{ booking.card.card }}</span></div>
+        <div>Exp. month: <span>{{ booking.card.expiryMonth }}</span></div>
+        <div>Exp. year: <span>{{ booking.card.expiryYear }}</span></div>
+        <div>Code: <span>{{ booking.card.cvv }}</span></div>
+        <div>Zip: <span>{{ booking.card.zip }}</span></div>
     {% endblock %}
 
     <h3>Hotels</h3>
