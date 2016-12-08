@@ -28,7 +28,6 @@ class ImageCopier
     {
         $stream = fopen($from_url, 'r');
         stream_set_timeout($stream, 5);
-        var_dump($stream);
         $link = $this->image_loader->upload($stream);
         fclose($stream);
         return $link;
