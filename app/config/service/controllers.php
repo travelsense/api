@@ -105,6 +105,7 @@ $app['controller.client'] = function ($app) {
 $app['controller.booking'] = function ($app) {
     $controller = new BookingController($app['mapper.db.booking'], $app['email.service']);
     $controller->setPointPrice($app['config']['booking']['reward_point_price']);
+    $controller->setLogger($app['logger']);
     return $controller;
 };
 

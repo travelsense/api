@@ -103,18 +103,28 @@ class Mailer
      */
     public function sendBookingDetails(array $booking)
     {
-        $template = $this->twig->load('email/booking.twig');
-        $html = $template->render([
+        $params = [
             'booking' => $booking,
-            'date' => new DateTime('now', new DateTimeZone('UTC')),
-        ]);
-        $pdf = $this->pdf_generator->generate($html);
+            'date'    => new DateTime('now', new DateTimeZone('UTC')),
+        ];
+        $pdf = $this->pdf_generator
+            ->generate(
+                $this->twig
+                    ->load('email/booking_pdf.twig')
+                    ->render($params)
+            );
         $attachment = Swift_Attachment::newInstance($pdf, 'hoptrip_booking.pdf', 'application/pdf');
         $message = Swift_Message::newInstance('HopTrip Booking Request')
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
             ->setTo($this->conf['booking_details_receivers'])
-            ->attach($attachment)
-        ;
+            ->setBody('')
+            ->addPart(
+                $this->twig
+                    ->load('email/booking.twig')
+                    ->render($params),
+                'text/html'
+            )
+            ->attach($attachment);
         $sent = $this->mailer->send($message);
         if ($this->logger) {
             $this->logger->info(
