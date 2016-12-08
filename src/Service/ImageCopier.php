@@ -31,7 +31,6 @@ class ImageCopier
         var_dump($stream);
         $link = $this->image_loader->upload($stream);
         fclose($stream);
-        var_dump($link);
         return $link;
     }
 }
