@@ -31,7 +31,7 @@ return [
         'message_log' => '/tmp/email.log', // used in Api\Test\Mailer
         'email_confirm' => 'https://hoptrip.us/email/confirm/%s',
         'password_reset' => 'https://hoptrip.us/password/reset/%s',
-        'booking_details_receivers' => ['karapetov@gmail.com', 'book@hoptrip.us']
+        'booking_details_receivers' => []
     ],
     'security' => [
         'enabled' => true,
