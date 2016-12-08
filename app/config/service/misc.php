@@ -10,7 +10,6 @@ use Api\Service\ImageLoader;
 use Api\Service\PdfGenerator;
 use F3\SimpleUber\Uber;
 use Facebook\Facebook;
-use GuzzleHttp\Client;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
 $app['facebook'] = function ($app) {
