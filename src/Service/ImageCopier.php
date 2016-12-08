@@ -1,7 +1,6 @@
 <?php
 namespace Api\Service;
 
-
 class ImageCopier
 {
     /**
