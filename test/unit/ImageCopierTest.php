@@ -3,7 +3,9 @@ namespace Api;
 
 use Api\Service\ImageCopier;
 use Api\Service\ImageLoader;
+use phpDocumentor\Reflection\Types\Resource;
 use PHPUnit_Framework_TestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class ImageCopierTest extends PHPUnit_Framework_TestCase
 {
@@ -24,12 +26,15 @@ class ImageCopierTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $context = stream_context_create(['http' => ['timeout' => 5]]);
-        $stream = fopen('./test/unit/ImageCopierTest.php', 'r', false, $context);
-
         $this->image_loader->expects($this->once())
             ->method('upload')
-            ->with($stream)
+            ->with($this->callback(function ($value) {
+                if (getType($value)==='resource') {
+                    var_dump($value);
+                    return $value;
+                }
+                return false;
+            }))
             ->willReturn('https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5');
 
         $this->image_copier = new ImageCopier($this->image_loader, 5);
