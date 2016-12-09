@@ -1,8 +1,6 @@
 <?php
 namespace Api\Service;
 
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-
 class ImageCopier
 {
     /**
@@ -34,14 +32,14 @@ class ImageCopier
      *
      * @param string $from_url
      * @return string
-     * @throws FileException
+     * @throws \RuntimeException
      */
     public function copyFrom(string $from_url): string
     {
         $context = stream_context_create(['http' => ['timeout' => $this->timeout]]);
 
-        if (!($stream = fopen($from_url, 'r', false, $context))) {
-            throw new FileException("Could not open the file $from_url");
+        if (!($stream = @fopen($from_url, 'r', false, $context))) {
+            throw new \RuntimeException("Could not open the file $from_url");
         }
 
         $link = $this->image_loader->upload($stream);
