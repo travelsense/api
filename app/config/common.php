@@ -93,4 +93,7 @@ return [
             'image/jpeg',
         ],
     ],
+    'image_copier' => [
+        'timeout' => 5,
+    ],
 ];
