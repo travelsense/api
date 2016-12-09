@@ -62,11 +62,11 @@ class ImageCopierTest extends PHPUnit_Framework_TestCase
         $this->image_copier->expects($this->once())
             ->method('copyFrom')
             ->willThrowException(new Exception("Could not open the file $fake_remote_uri"));
-        
+
         try {
             $this->image_copier->copyFrom($fake_remote_uri);
+            $this->fail();
         } catch (Exception $e) {
-            var_dump($e->getMessage());
             $this->assertEquals("Could not open the file $fake_remote_uri", $e->getMessage());
         }
     }
