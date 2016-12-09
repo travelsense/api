@@ -31,7 +31,7 @@ class ImageCopierTest extends PHPUnit_Framework_TestCase
 
         $this->image_copier = new ImageCopier($this->image_loader, 5);
 
-        $link = $this->image_copier->copyFrom( __DIR__ . '/ImageCopierTest.php');
+        $link = $this->image_copier->copyFrom( __FILE__);
 
         $this->assertEquals(
             'https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5',
