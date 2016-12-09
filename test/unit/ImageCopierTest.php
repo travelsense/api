@@ -3,8 +3,8 @@ namespace Api;
 
 use Api\Service\ImageCopier;
 use Api\Service\ImageLoader;
-use Exception;
 use PHPUnit_Framework_TestCase;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ImageCopierTest extends PHPUnit_Framework_TestCase
 {
@@ -52,21 +52,14 @@ class ImageCopierTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->image_copier = $this->getMockBuilder(ImageCopier::class)
-            ->setMethods(['copyFrom'])
-            ->setConstructorArgs([$this->image_loader, 5])
-            ->getMock();
+        $this->image_copier = new ImageCopier($this->image_loader, 5);
 
         $fake_remote_uri = '/example.com/my-avatar.jpg';
 
-        $this->image_copier->expects($this->once())
-            ->method('copyFrom')
-            ->willThrowException(new Exception("Could not open the file $fake_remote_uri"));
-
         try {
-            $this->image_copier->copyFrom($fake_remote_uri);
+            @$this->image_copier->copyFrom($fake_remote_uri);
             $this->fail();
-        } catch (Exception $e) {
+        } catch (FileException $e) {
             $this->assertEquals("Could not open the file $fake_remote_uri", $e->getMessage());
         }
     }
