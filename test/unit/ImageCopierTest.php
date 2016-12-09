@@ -24,15 +24,17 @@ class ImageCopierTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $context = stream_context_create(['http' => ['timeout' => 5]]);
+        $stream = fopen('./test/unit/ImageCopierTest.php', 'r', false, $context);
+
         $this->image_loader->expects($this->once())
             ->method('upload')
+            ->with($stream)
             ->willReturn('https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5');
 
-        $fake_remote_uri = tempnam(sys_get_temp_dir(), 'image') . '.jpg';
+        $this->image_copier = new ImageCopier($this->image_loader, 5);
 
-        $this->image_copier = new ImageCopier($this->image_loader);
-
-        $link = @$this->image_copier->copyFrom($fake_remote_uri);
+        $link = $this->image_copier->copyFrom('./test/unit/ImageCopierTest.php');
 
         $this->assertEquals(
             'https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5',
