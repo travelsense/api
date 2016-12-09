@@ -39,7 +39,7 @@ class ImageCopier
         $context = stream_context_create(['http' => ['timeout' => $this->timeout]]);
 
         if (!($stream = @fopen($from_url, 'r', false, $context))) {
-            throw new \RuntimeException("Could not open the file $from_url");
+            throw new \RuntimeException("Could not open $from_url");
         }
 
         $link = $this->image_loader->upload($stream);
