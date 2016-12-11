@@ -125,6 +125,10 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
         $mapper->update($user);
         $this->assertSameUsers($user, $mapper->fetchByEmail($user->getEmail()));
+
+         // Update picture
+        $mapper->updatePic($user->getId(), 'https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5');
+        $this->assertSameUsers($user, $mapper->fetchByEmail($user->getEmail()));
     }
 
     /**

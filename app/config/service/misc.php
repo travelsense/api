@@ -8,6 +8,7 @@ use Api\ExpirableStorage;
 use Api\Service\ImageCopier;
 use Api\Service\ImageLoader;
 use Api\Service\PdfGenerator;
+use Api\Service\UserPicUpdater;
 use F3\SimpleUber\Uber;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
@@ -55,5 +56,12 @@ $app['image_copier'] = function (Application $app) {
     return new ImageCopier(
         $app['image_loader'],
         $app['config']['image_copier']['timeout']
+    );
+};
+
+$app['user_pic_updater'] = function (Application $app) {
+    return new UserPicUpdater(
+        $app['mapper.db.user'],
+        $app['image_copier']
     );
 };

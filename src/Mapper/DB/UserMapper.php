@@ -174,6 +174,22 @@ class UserMapper extends AbstractMapper
     }
 
     /**
+     * @param int $user_id
+     * @param string $pic
+     * @return bool
+     */
+    public function updatePic(int $user_id, string $pic)
+    {
+        $update = $this->connection->prepare('UPDATE users SET "picture" = :picture WHERE "id" = :id');
+        return $update->execute(
+            [
+                ':picture' => $pic,
+                ':id' => $user_id,
+            ]
+        );
+    }
+
+    /**
      * @param array $row
      * @return User
      */
