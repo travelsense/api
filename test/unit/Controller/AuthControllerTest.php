@@ -184,7 +184,12 @@ class AuthControllerTest extends ControllerTestCase
             ->with(
                 UpdatePicEvent::UPDATE_USER_PIC,
                 new UpdatePicEvent(42, $this->user_pic->getUrl())
-            );
+            )
+            ->will($this->returnCallback(function ($event) {
+                if ($event === UpdatePicEvent::UPDATE_USER_PIC) {
+                    return $event;
+                }
+            }));
 
         $this->session_manager->method('createSession')
             ->with(42, $this->request)
