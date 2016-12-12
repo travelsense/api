@@ -2,7 +2,6 @@
 namespace Api\Controller;
 
 use Api\Exception\ApiException;
-use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;

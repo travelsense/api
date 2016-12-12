@@ -92,6 +92,7 @@ return [
         'allowed_mime_types' => [
             'image/jpeg',
         ],
+        'size_limit' => 4 * 1024 * 1024,
     ],
     'image_copier' => [
         'timeout' => 5,

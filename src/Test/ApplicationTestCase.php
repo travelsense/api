@@ -6,6 +6,7 @@ use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
+use Api\Service\ImageStorage;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -27,6 +28,7 @@ class ApplicationTestCase extends WebTestCase
         $app['mapper.db.booking'] = $this->createMock(BookingMapper::class);
         $app['mapper.db.user'] = $this->createMock(UserMapper::class);
         $app['security.session_manager'] = $this->createMock(SessionManager::class);
+        $app['image_storage'] = $this->createMock(ImageStorage::class);
         return $app;
     }
 

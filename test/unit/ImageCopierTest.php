@@ -2,15 +2,15 @@
 namespace Api;
 
 use Api\Service\ImageCopier;
-use Api\Service\ImageLoader;
+use Api\Service\ImageStorage;
 use PHPUnit_Framework_TestCase;
 
 class ImageCopierTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var ImageLoader
+     * @var ImageStorage
      */
-    private $image_loader;
+    private $image_storage;
 
     /**
      * @var ImageCopier
@@ -19,17 +19,17 @@ class ImageCopierTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->image_loader = $this->createMock(ImageLoader::class);
+        $this->image_storage = $this->createMock(ImageStorage::class);
     }
 
     public function testCopyFrom()
     {
-        $this->image_loader->expects($this->once())
+        $this->image_storage->expects($this->once())
             ->method('upload')
             ->with($this->isType('resource'))
             ->willReturn('https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5');
 
-        $this->image_copier = new ImageCopier($this->image_loader, 5);
+        $this->image_copier = new ImageCopier($this->image_storage, 5);
         $link = $this->image_copier->copyFrom( __FILE__);
         $this->assertEquals(
             'https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5',
@@ -43,7 +43,7 @@ class ImageCopierTest extends PHPUnit_Framework_TestCase
      */
     public function testCopyFromError()
     {
-        $this->image_copier = new ImageCopier($this->image_loader, 5);
+        $this->image_copier = new ImageCopier($this->image_storage, 5);
         $this->image_copier->copyFrom('/example.com/my-avatar.jpg');
     }
 }

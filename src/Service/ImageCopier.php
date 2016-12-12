@@ -9,20 +9,20 @@ class ImageCopier
     private $timeout;
 
     /**
-     * @var ImageLoader
+     * @var ImageStorage
      */
-    private $image_loader;
+    private $image_storage;
 
     /**
      * ImageCopier constructor.
-     * @param ImageLoader $image_loader
-     * @param int         $timeout
+     * @param ImageStorage $image_loader
+     * @param int          $timeout
      */
     public function __construct(
-        ImageLoader $image_loader,
+        ImageStorage $image_loader,
         int $timeout
     ) {
-        $this->image_loader = $image_loader;
+        $this->image_storage = $image_loader;
         $this->timeout = $timeout;
     }
 
@@ -42,7 +42,7 @@ class ImageCopier
             throw new \RuntimeException("Could not open $from_url");
         }
 
-        $link = $this->image_loader->upload($stream);
+        $link = $this->image_storage->upload($stream);
         fclose($stream);
         return $link;
     }
