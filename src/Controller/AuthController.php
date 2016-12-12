@@ -117,7 +117,6 @@ class AuthController extends ApiController
                 ->setEmail($fb_user->getEmail())
                 ->setFirstName($fb_user->getFirstName())
                 ->setLastName($fb_user->getLastName())
-//                ->setPicture($pic ? $pic->getUrl() : null)
                 ->setPassword($this->pwd_generator->generatePassword());
             $this->user_mapper->insert($user);
             if ($pic) {
