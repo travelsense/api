@@ -40,14 +40,7 @@
     {% endfor %}
     </ol>
 
-    <h3>Car</h3>
-    {% for key, val in booking.bookingSelection.carRentalOption %}
-        {% if key == 'url' %}
-            <div>{{ key }}: <a href="{{ val }}">{{ val }}</a></div>
-        {% else %}
-            <div>{{ key }}: <span>{{ val }}</span></div>
-        {% endif %}
-    {% endfor %}
+    {% include 'email/booking/car.twig' with {'car': booking.bookingSelection.carRentalOption} %}
 
     <h3>Flight</h3>
     <div>From: <span>{{ booking.bookingSelection.flightBookingOption.fromAirport }}</span></div>

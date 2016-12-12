@@ -1,0 +1,17 @@
+<h3>Car</h3>
+<div>Price: <span>{{ car.price|number_format(2, '.', ',') }}</span></div>
+<div>Make/Model: <span>{{ car.makeModel }}</span></div>
+<div>Class: <span>{{ car.class }}</span></div>
+<div>Supplier: <span>{{ car.supplierName }} ({{ car.supplierID }})</span></div>
+<ul>
+    {% for extra in car.selectedExtras %}
+        <li>
+            <span>
+                {{ extra.code }} ({{ extra.name }})
+                {{ extra.customerPrice|number_format(2, '.', ',') }}
+                {{ extra.customerCurrency }}
+                QTY:{{ extra.quantity }} {% if extra.required %}required{% endif %}
+            </span>
+        </li>
+    {% endfor %}
+</ul>
