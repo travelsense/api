@@ -1,9 +1,11 @@
 <?php
 namespace Api\Service;
 
+use Api\Event\UpdatePicEvent;
 use Api\Mapper\DB\UserMapper;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserPicUpdater
+class UserPicUpdater implements EventSubscriberInterface
 {
     /**
      * @var UserMapper
@@ -28,14 +30,19 @@ class UserPicUpdater
         $this->image_copier = $image_copier;
     }
 
+    public static function getSubscribedEvents ()
+    {
+        return [UpdatePicEvent::UPDATE_USER_PIC => 'updateUserPic'];
+    }
+
     /**
      * Update the user avatar.
      *
-     * @param int    $user_id
-     * @param string $pic_url
+     * @param UpdatePicEvent $event
      */
-    public function updateUserPic(int $user_id, string $pic_url)
+    public function updateUserPic(UpdatePicEvent $event)
+//    public function updateUserPic(int $user_id, string $pic_url)
     {
-        $this->user_mapper->updatePic($user_id, $this->image_copier->copyFrom($pic_url));
+        $this->user_mapper->updatePic($event->getUserId(), $this->image_copier->copyFrom($event->getPicUrl()));
     }
 }

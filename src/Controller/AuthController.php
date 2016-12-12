@@ -1,6 +1,7 @@
 <?php
 namespace Api\Controller;
 
+use Api\Event\UpdatePicEvent;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
@@ -8,6 +9,7 @@ use Api\Model\User;
 use Api\Security\SessionManager;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -110,9 +112,14 @@ class AuthController extends ApiController
                 ->setEmail($fb_user->getEmail())
                 ->setFirstName($fb_user->getFirstName())
                 ->setLastName($fb_user->getLastName())
-                ->setPicture($pic ? $pic->getUrl() : null)
+                ->setPicture(null)
+//                ->setPicture($pic ? $pic->getUrl() : null)
                 ->setPassword($this->pwd_generator->generatePassword());
             $this->user_mapper->insert($user);
+            if ($pic) {
+                $dispatcher = new EventDispatcher();
+                $dispatcher->dispatch(UpdatePicEvent::UPDATE_USER_PIC, new UpdatePicEvent($user->getId(), $pic->getUrl()));
+            }
         }
         return $user;
     }
