@@ -41,7 +41,6 @@ class UserPicUpdater implements EventSubscriberInterface
      * @param UpdatePicEvent $event
      */
     public function updateUserPic(UpdatePicEvent $event)
-//    public function updateUserPic(int $user_id, string $pic_url)
     {
         $this->user_mapper->updatePic($event->getUserId(), $this->image_copier->copyFrom($event->getPicUrl()));
     }
