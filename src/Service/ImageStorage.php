@@ -2,12 +2,9 @@
 namespace Api\Service;
 
 use Api\Exception\ApiException;
-use Psr\Log\LoggerAwareTrait;
 
-class ImageLoader
+class ImageStorage
 {
-    use LoggerAwareTrait;
-
     /**
      * @var array
      */
@@ -23,6 +20,11 @@ class ImageLoader
      */
     private $base_url;
 
+    /**
+     * @var int
+     */
+    private $size_limit = 4 * 1024 * 1024;
+
     public function __construct(array $allowed_mime_types, string $upload_dir, string $base_url)
     {
         $this->allowed_mime_types = $allowed_mime_types;
@@ -30,13 +32,22 @@ class ImageLoader
         $this->base_url = $base_url;
     }
 
+    /**
+     * @param resource $stream
+     * @return string
+     */
     public function upload($stream): string
     {
+        if (!is_resource($stream)) {
+            throw new \InvalidArgumentException('Resource expected');
+        }
         $tmp_file = tmpfile();
-        stream_copy_to_stream($stream, $tmp_file);
+        $actual_size = stream_copy_to_stream($stream, $tmp_file, $this->size_limit);
+        if ($actual_size >= $this->size_limit) {
+            throw new \LengthException("File is too big");
+        }
         fflush($tmp_file);
         $tmp_file_name = stream_get_meta_data($tmp_file)['uri'];
-        $this->logger->debug("File uploaded to $tmp_file_name");
         $tmp_file_type = mime_content_type($tmp_file_name);
         if (!in_array($tmp_file_type, $this->allowed_mime_types)) {
             throw new ApiException("Invalid mime type: $tmp_file_type", ApiException::VALIDATION);
@@ -44,13 +55,21 @@ class ImageLoader
         $hash = sha1_file($tmp_file_name);
         $path = $this->getPath($hash);
         $dir = "{$this->upload_dir}/{$path}";
-        $this->logger->debug("Creating dir: $dir");
         @mkdir($dir, 0700, true);
         if (!is_dir($dir) || !is_writable($dir)) {
             throw new \RuntimeException("Unable to create dir $dir");
         }
         rename($tmp_file_name, "{$dir}/{$hash}");
+        fclose($tmp_file);
         return "{$this->base_url}/{$path}/{$hash}";
+    }
+
+    /**
+     * @param int $size_limit bytes
+     */
+    public function setSizeLimit(int $size_limit)
+    {
+        $this->size_limit = $size_limit;
     }
 
     private function getPath(string $hash): string

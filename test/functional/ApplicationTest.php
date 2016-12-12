@@ -4,12 +4,17 @@ namespace Test;
 use Api\Application;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
+use Api\Test\ApplicationTestCase;
+use Api\Test\DatabaseTrait;
 use Api\Test\FunctionalTestCase;
 use Doctrine\DBAL\Connection;
+use HopTrip\ApiClient\ApiClient;
 use HopTrip\ApiClient\ApiClientException;
 
-class RealWebServerTest extends FunctionalTestCase
+class ApplicationTest extends ApplicationTestCase
 {
+    use DatabaseTrait;
+
     /**
      * @var CategoryMapper
      */
@@ -36,7 +41,25 @@ class RealWebServerTest extends FunctionalTestCase
         "end_index" => -1,
         "transportation" => 1,
     ];
-    
+
+
+    /**
+     * @var ApiClient
+     */
+    protected $client;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->resetDatabase($this->app);
+        $this->client = $this->createApiClient();
+    }
+
+    public function createApplication()
+    {
+        return new Application('test');
+    }
+
     public function testUpdateUserDetails()
     {
         $this->createAndLoginUser();
@@ -158,6 +181,25 @@ class RealWebServerTest extends FunctionalTestCase
             $total += $item->count;
         }
         $this->assertEquals(1, $total);
+    }
+
+    /**
+     * Creates a user and logs him in
+     * @param string $email
+     */
+    protected function createAndLoginUser($email = 'sasha@pushkin.ru')
+    {
+        $password = '123';
+        $this->client->registerUser([
+            'firstName' => 'Alexander',
+            'lastName'  => 'Pushkin',
+            'picture'   => 'http://pushkin.ru/sasha.jpg',
+            'email'     => $email,
+            'password'  => $password,
+            'creator'   => true,
+        ]);
+        $token = $this->client->getTokenByEmail($email, $password);
+        $this->client->setAuthToken($token);
     }
 
     private function checkGetTravelWithOutAuth(int $id)

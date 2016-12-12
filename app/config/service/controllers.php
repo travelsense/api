@@ -110,5 +110,5 @@ $app['controller.booking'] = function ($app) {
 };
 
 $app['controller.image'] = function ($app) {
-    return new ImageController($app['image_loader']);
+    return new ImageController($app['image_storage']);
 };

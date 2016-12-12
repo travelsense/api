@@ -21,8 +21,9 @@ use Api\Model\User;
 use Api\Test\DatabaseTrait;
 use Doctrine\DBAL\Connection;
 use PDO;
+use PHPUnit\Framework\TestCase;
 
-class MappersTest extends \PHPUnit_Framework_TestCase
+class MappersTest extends TestCase
 {
     use DatabaseTrait;
 
@@ -68,7 +69,15 @@ class MappersTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::resetDatabase(new Application('test'));
+        try {
+            self::resetDatabase(new Application('test'));
+        } catch (\PDOException $e) {
+            if (false !== strpos($e->getMessage(), 'SQLSTATE[08006]')) {
+                self::markTestSkipped('DB is down');
+            } else {
+                throw $e;
+            }
+        }
     }
 
     public function setUp()

@@ -6,7 +6,7 @@
 use Api\Application;
 use Api\ExpirableStorage;
 use Api\Service\ImageCopier;
-use Api\Service\ImageLoader;
+use Api\Service\ImageStorage;
 use Api\Service\PdfGenerator;
 use Api\Service\UserPicUpdater;
 use F3\SimpleUber\Uber;
@@ -45,10 +45,10 @@ $app['pdf_generator'] = function (Application $app) {
     );
 };
 
-$app['image_loader'] = function (Application $app) {
+$app['image_storage'] = function (Application $app) {
     $conf = $app['config']['image_upload'];
-    $service = new ImageLoader($conf['allowed_mime_types'], $conf['dir'], $conf['base_url']);
-    $service->setLogger($app['logger']);
+    $service = new ImageStorage($conf['allowed_mime_types'], $conf['dir'], $conf['base_url']);
+    $service->setSizeLimit($conf['size_limit']);
     return $service;
 };
 
@@ -62,6 +62,6 @@ $app['image_copier'] = function (Application $app) {
 $app['user_pic_updater'] = function (Application $app) {
     return new UserPicUpdater(
         $app['mapper.db.user'],
-        $app['image_copier']
+        $app['image_storage']
     );
 };

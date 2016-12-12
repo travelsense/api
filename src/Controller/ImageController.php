@@ -1,25 +1,25 @@
 <?php
 namespace Api\Controller;
 
-use Api\Service\ImageLoader;
+use Api\Service\ImageStorage;
 use Symfony\Component\HttpFoundation\Request;
 
 class ImageController
 {
     /**
-     * @var ImageLoader
+     * @var ImageStorage
      */
-    private $image_loader;
+    private $image_storage;
 
-    public function __construct(ImageLoader $image_loader)
+    public function __construct(ImageStorage $image_loader)
     {
-        $this->image_loader = $image_loader;
+        $this->image_storage = $image_loader;
     }
 
     public function upload(Request $request): array
     {
         return [
-            'url' => $this->image_loader->upload($request->getContent(true))
+            'url' => $this->image_storage->upload($request->getContent(true))
         ];
     }
 }
