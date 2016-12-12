@@ -83,7 +83,46 @@
       "makeModel": "Volkswagen Golf",
       "class": "Compact Limousine",
       "supplierID": "35",
-      "supplierName": "Sixt"
+      "supplierName": "Sixt",
+      "price": "102.23",
+      "selectedExtras": [
+        {
+          "prepaid": false,
+          "quantity": 1,
+          "customerPrice": 0,
+          "code": "I_CDW",
+          "customerCurrency": "EUR",
+          "name": "Collision Damage Waiver (CDW)",
+          "required": false
+        },
+        {
+          "prepaid": false,
+          "quantity": 1,
+          "customerPrice": 0,
+          "code": "I_LAF",
+          "customerCurrency": "EUR",
+          "name": "Road Tax & License Fees (LAF)",
+          "required": false
+        },
+        {
+          "prepaid": false,
+          "quantity": 1,
+          "customerPrice": 0,
+          "code": "I_THW",
+          "customerCurrency": "EUR",
+          "name": "Theft Waiver (THW)",
+          "required": false
+        },
+        {
+          "prepaid": true,
+          "quantity": 1,
+          "customerPrice": 10.99,
+          "code": "BCRM_LMC",
+          "customerCurrency": "EUR",
+          "name": "Cancel Protection",
+          "required": false
+        }
+      ]
     },
     "flightBookingOption": {
       "fromAirport": "SFO",
