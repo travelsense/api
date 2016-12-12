@@ -48,7 +48,8 @@ $app['controller.auth'] = function ($app) {
         $app['mapper.db.user'],
         $app['security.session_manager'],
         $app['facebook'],
-        $app['password_generator']
+        $app['password_generator'],
+        $app['event_dispatcher']
     );
     $controller->setLogger($app['monolog']);
     return $controller;

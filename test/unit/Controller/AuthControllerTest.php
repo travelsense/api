@@ -10,6 +10,7 @@ use Facebook\Facebook;
 use Facebook\GraphNodes\GraphPicture;
 use Facebook\GraphNodes\GraphUser;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthControllerTest extends ControllerTestCase
@@ -18,6 +19,7 @@ class AuthControllerTest extends ControllerTestCase
     private $session_manager;
     private $facebook;
     private $pw_gen;
+    private $dispatcher;
     private $request;
 
     /**
@@ -85,6 +87,12 @@ class AuthControllerTest extends ControllerTestCase
 
         $this->pw_gen->method('generatePassword')->willReturn('test_generated_password');
 
+        $this->dispatcher = $this->getMockBuilder(EventDispatcher::class)
+            ->setMethods(['dispatcher', 'addSubscriber'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
         $this->request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
@@ -93,7 +101,8 @@ class AuthControllerTest extends ControllerTestCase
             $this->user_mapper,
             $this->session_manager,
             $this->facebook,
-            $this->pw_gen
+            $this->pw_gen,
+            $this->dispatcher
         );
     }
 

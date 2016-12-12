@@ -13,6 +13,10 @@ use F3\SimpleUber\Uber;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
+$app['event_dispatcher'] = function ($app) {
+    return new \Symfony\Component\EventDispatcher\EventDispatcher();
+};
+
 $app['facebook'] = function ($app) {
     return new Facebook($app['config']['facebook']);
 };

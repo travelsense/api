@@ -30,7 +30,7 @@ class UserPicUpdater implements EventSubscriberInterface
         $this->image_copier = $image_copier;
     }
 
-    public static function getSubscribedEvents ()
+    public static function getSubscribedEvents()
     {
         return [UpdatePicEvent::UPDATE_USER_PIC => 'updateUserPic'];
     }
