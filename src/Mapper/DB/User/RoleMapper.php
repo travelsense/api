@@ -1,14 +1,16 @@
 <?php
 namespace Api\Mapper\DB\User;
 
-use Api\DB\AbstractMapper;
+use Api\Mapper\DB\ConnectionDependentTrait;
 
 /**
  * Class RoleMapper
  * @package Api\Mapper\DB\User
  */
-class RoleMapper extends AbstractMapper
+class RoleMapper
 {
+    use ConnectionDependentTrait;
+
     /**
      * Get user roles
      * @param int $user_id
@@ -50,16 +52,5 @@ class RoleMapper extends AbstractMapper
            ':user_id' => $user_id,
            ':role' => $role,
         ]);
-    }
-
-    /**
-     * Create object by a DB row
-     *
-     * @param  array $row
-     * @return mixed
-     */
-    protected function create(array $row)
-    {
-        return $row;
     }
 }
