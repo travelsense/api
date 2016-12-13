@@ -16,11 +16,17 @@ class UpdatePicEvent extends Event
         $this->pic_url = $pic_url;
     }
 
+    /**
+     * @return int
+     */
     public function getUserId()
     {
         return $this->user_id;
     }
 
+    /**
+     * @return string
+     */
     public function getPicUrl()
     {
         return $this->pic_url;
