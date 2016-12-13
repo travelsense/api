@@ -1,15 +1,13 @@
 <?php
 namespace Api\DB;
 
-use BadMethodCallException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
-use PDO;
 
 abstract class AbstractMapper
 {
     /**
-     * @var PDO
+     * @var Connection
      */
     protected $connection;
 
@@ -36,10 +34,8 @@ abstract class AbstractMapper
      * @param  array $row
      * @return mixed
      */
-    protected function create(array $row)
-    {
-        throw new BadMethodCallException();
-    }
+    abstract protected function create(array $row);
+
     /**
      * Create object with all dependencies.
      * This method is to be overloaded in child classes
@@ -58,7 +54,7 @@ abstract class AbstractMapper
     protected function buildAll(Statement $statement): array
     {
         $list = [];
-        while ($row = $statement->fetch(PDO::FETCH_NAMED)) {
+        while ($row = $statement->fetch(\PDO::FETCH_NAMED)) {
             $list[] = $this->build($row);
         }
         return $list;
@@ -71,7 +67,7 @@ abstract class AbstractMapper
     protected function createAll(Statement $statement): array
     {
         $list = [];
-        while ($row = $statement->fetch(PDO::FETCH_NAMED)) {
+        while ($row = $statement->fetch(\PDO::FETCH_NAMED)) {
             $list[] = $this->create($row);
         }
         return $list;

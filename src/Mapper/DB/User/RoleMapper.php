@@ -20,11 +20,8 @@ class RoleMapper extends AbstractMapper
         $select->execute([
             ':user_id' => $user_id,
         ]);
-        $roles = [];
-        while (false !== $role =$select->fetchColumn()) {
-            $roles[$role] = $role;
-        }
-        return $roles;
+
+        return $select->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**
@@ -53,5 +50,16 @@ class RoleMapper extends AbstractMapper
            ':user_id' => $user_id,
            ':role' => $role,
         ]);
+    }
+
+    /**
+     * Create object by a DB row
+     *
+     * @param  array $row
+     * @return mixed
+     */
+    protected function create(array $row)
+    {
+        return $row;
     }
 }

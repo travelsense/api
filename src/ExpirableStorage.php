@@ -1,11 +1,10 @@
 <?php
 namespace Api;
 
-use Api\DB\AbstractMapper;
 use DateTime;
-use PDO;
+use Doctrine\DBAL\Connection;
 
-class ExpirableStorage extends AbstractMapper
+class ExpirableStorage
 {
     const DELETE = true;
     const KEEP = false;
@@ -13,9 +12,14 @@ class ExpirableStorage extends AbstractMapper
     const SHA1_LENGTH = 40;
 
     /**
-     * @var PDO
+     * @var Connection
      */
     protected $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
 
     /**
      * Store an object, get a key

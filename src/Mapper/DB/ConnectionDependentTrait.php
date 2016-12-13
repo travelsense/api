@@ -1,7 +1,9 @@
 <?php
 namespace Api\Mapper\DB;
 
-trait ConnectionAwareTrait
+use Doctrine\DBAL\Connection;
+
+trait ConnectionDependentTrait
 {
     /**
      * @var Connection
@@ -12,5 +14,4 @@ trait ConnectionAwareTrait
     {
         $this->connection = $connection;
     }
-
 }
