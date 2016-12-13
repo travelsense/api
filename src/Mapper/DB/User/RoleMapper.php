@@ -1,14 +1,16 @@
 <?php
 namespace Api\Mapper\DB\User;
 
-use Api\DB\AbstractMapper;
+use Api\Mapper\DB\ConnectionDependentTrait;
 
 /**
  * Class RoleMapper
  * @package Api\Mapper\DB\User
  */
-class RoleMapper extends AbstractMapper
+class RoleMapper
 {
+    use ConnectionDependentTrait;
+
     /**
      * Get user roles
      * @param int $user_id
@@ -20,11 +22,8 @@ class RoleMapper extends AbstractMapper
         $select->execute([
             ':user_id' => $user_id,
         ]);
-        $roles = [];
-        while (false !== $role =$select->fetchColumn()) {
-            $roles[$role] = $role;
-        }
-        return $roles;
+
+        return $select->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**

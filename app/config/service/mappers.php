@@ -50,10 +50,6 @@ $app['mapper.db.comment'] = function ($app) {
     return $mapper;
 };
 
-$app['mapper.db.flagged_comment'] = function ($app) {
-    return new FlaggedCommentMapper($app['dbs']['main']);
-};
-
 $app['mapper.db.booking'] = function ($app) {
     return new BookingMapper($app['dbs']['main']);
 };

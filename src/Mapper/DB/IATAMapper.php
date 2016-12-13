@@ -1,11 +1,10 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\DB\AbstractMapper;
-use PDO;
-
-class IATAMapper extends AbstractMapper
+class IATAMapper
 {
+    use ConnectionDependentTrait;
+
     private $table = [
         'country' => 'iata_countries',
         'city'    => 'iata_cities',
@@ -25,7 +24,7 @@ class IATAMapper extends AbstractMapper
         $select->execute([
             ':code' => $code,
         ]);
-        return $select->fetch(PDO::FETCH_NAMED);
+        return $select->fetch(\PDO::FETCH_NAMED);
     }
 
     /**
@@ -43,6 +42,6 @@ class IATAMapper extends AbstractMapper
             ':limit'  => $limit,
             ':offset' => $offset,
         ]);
-        return $select->fetchAll(PDO::FETCH_NAMED);
+        return $select->fetchAll(\PDO::FETCH_NAMED);
     }
 }

@@ -1,11 +1,10 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\DB\AbstractMapper;
-use PDO;
-
-class BookingMapper extends AbstractMapper
+class BookingMapper
 {
+    use ConnectionDependentTrait;
+
     /**
      * @param int $user_id
      * @param int $travel_id
@@ -62,6 +61,6 @@ class BookingMapper extends AbstractMapper
             ORDER BY d.date ASC'
         );
         $select->execute([':author_id' => $author_id]);
-        return $select->fetchAll(PDO::FETCH_ASSOC);
+        return $select->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

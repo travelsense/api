@@ -48,11 +48,6 @@ class MappersTest extends TestCase
     private $connection;
 
     /**
-     * @var FlaggedCommentMapper
-     */
-    private $flagged_comment_mapper;
-
-    /**
      * @var CommentMapper
      */
     private $comment_mapper;
@@ -89,7 +84,6 @@ class MappersTest extends TestCase
         $this->user_mapper = $app['mapper.db.user'];
         $this->travel_mapper = $app['mapper.db.travel'];
         $this->category_mapper = $app['mapper.db.category'];
-        $this->flagged_comment_mapper = $app['mapper.db.flagged_comment'];
         $this->comment_mapper = $app['mapper.db.comment'];
         $this->booking_mapper = $app['mapper.db.booking'];
         $this->user_role_mapper = $app['mapper.db.user_role'];
@@ -287,7 +281,7 @@ class MappersTest extends TestCase
         $user = $this->createUser('testUser');
         $travel = $this->createTravel($user, 'testTravel');
         $comment = $this->createComment($user->getId(), $travel->getId(), 'flagged this comment');
-        $mapper = $this->flagged_comment_mapper;
+        $mapper = $this->comment_mapper;
         $mapper->flagComment($user->getId(), $comment->getId());
         $select = $this->connection->prepare('SELECT comment_id, user_id FROM flagged_comments');
         $select->execute();
@@ -350,19 +344,14 @@ class MappersTest extends TestCase
         $this->user_role_mapper->grantRole($user->getId(), 'admin');
 
         $this->assertEquals(
-            [
-                'admin' => 'admin',
-                'moderator' => 'moderator',
-            ],
+            ['admin', 'moderator'],
             $this->user_role_mapper->getRoles($user->getId())
         );
 
         $this->user_role_mapper->withdrawRole($user->getId(), 'admin');
 
         $this->assertEquals(
-            [
-                'moderator' => 'moderator',
-            ],
+            ['moderator'],
             $this->user_role_mapper->getRoles($user->getId())
         );
     }
