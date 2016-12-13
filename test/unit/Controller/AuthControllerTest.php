@@ -21,7 +21,6 @@ class AuthControllerTest extends ControllerTestCase
     private $facebook;
     private $pw_gen;
     private $dispatcher;
-    private $user_pic;
     private $request;
 
     /**
@@ -55,11 +54,11 @@ class AuthControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->user_pic = $this->getMockBuilder(GraphPicture::class)
+        $user_pic = $this->getMockBuilder(GraphPicture::class)
             ->setMethods(['getUrl'])
             ->getMock();
         
-        $this->user_pic->method('getUrl')->willReturn('https://pushkin.ru/pic.jpg');
+        $user_pic->method('getUrl')->willReturn('https://pushkin.ru/pic.jpg');
 
         $fb_user = $this->getMockBuilder(GraphUser::class)
             ->setMethods(['getFirstName', 'getLastName', 'getPicture', 'getEmail'])
@@ -68,7 +67,7 @@ class AuthControllerTest extends ControllerTestCase
                      'getEmail'     => 'sasha@pushkin.ru',
                      'getFirstName' => 'Alexander',
                      'getLastName'  => 'Pushkin',
-                     'getPicture'   => $this->user_pic,
+                     'getPicture'   => $user_pic,
                  ] as $method => $value) {
             $fb_user->method($method)->willReturn($value);
         }
@@ -81,7 +80,7 @@ class AuthControllerTest extends ControllerTestCase
             ->willReturn($fb_user);
 
         $fb_user->method('getPicture')
-            ->willReturn($this->user_pic);
+            ->willReturn($user_pic);
 
         $this->pw_gen = $this->getMockBuilder(PasswordGeneratorInterface::class)
             ->setMethods(['generatePassword'])
@@ -90,10 +89,7 @@ class AuthControllerTest extends ControllerTestCase
 
         $this->pw_gen->method('generatePassword')->willReturn('test_generated_password');
 
-        $this->dispatcher = $this->getMockBuilder(EventDispatcher::class)
-            ->setMethods(['dispatch', 'addSubscriber'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->dispatcher = $this->createMock(EventDispatcher::class);
 
         $this->request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
@@ -180,16 +176,12 @@ class AuthControllerTest extends ControllerTestCase
                 $user->setId(42);
             }));
 
-        $this->dispatcher->method('dispatch')
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
             ->with(
                 UpdatePicEvent::UPDATE_USER_PIC,
-                new UpdatePicEvent(42, $this->user_pic->getUrl())
-            )
-            ->will($this->returnCallback(function ($event) {
-                if ($event === UpdatePicEvent::UPDATE_USER_PIC) {
-                    return $event;
-                }
-            }));
+                $this->isInstanceOf(UpdatePicEvent::class)
+            );
 
         $this->session_manager->method('createSession')
             ->with(42, $this->request)
