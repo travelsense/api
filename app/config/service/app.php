@@ -82,8 +82,7 @@ $app->register(new MonologServiceProvider, [
 
 // Event Subscriber
 $app->on(UpdatePicEvent::UPDATE_USER_PIC, function ($app) {
-    $dispatcher = $app['event_dispatcher'];
-    $dispatcher->addSubscriber($app['user_pic_updater']);
+    return [$app['user_pic_updater'], 'updateUserPic'];
 });
 
 // Pimple dumper
