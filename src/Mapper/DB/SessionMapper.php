@@ -1,10 +1,10 @@
 <?php
 namespace Api\Mapper\DB;
 
-use Api\DB\AbstractMapper;
-
-class SessionMapper extends AbstractMapper
+class SessionMapper
 {
+    use ConnectionDependentTrait;
+
     /**
      * @param int    $user_id
      * @param string $token
