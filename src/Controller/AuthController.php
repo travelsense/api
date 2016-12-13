@@ -7,7 +7,6 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
-use Api\Service\UserPicUpdater;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;

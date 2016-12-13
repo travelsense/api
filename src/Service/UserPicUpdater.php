@@ -38,6 +38,5 @@ class UserPicUpdater
     public function updateUserPic(UpdatePicEvent $event)
     {
         $this->user_mapper->updatePic($event->getUserId(), $this->image_copier->copyFrom($event->getPicUrl()));
-//        return [];
     }
 }
