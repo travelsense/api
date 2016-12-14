@@ -1,5 +1,4 @@
 <?php
-
 namespace Api\DB\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -24,7 +23,6 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE expirable_storage
 (
@@ -35,7 +33,6 @@ CREATE TABLE expirable_storage
   created TIMESTAMP DEFAULT now()
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE users
 (
@@ -51,13 +48,11 @@ CREATE TABLE users
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER users_before_update BEFORE UPDATE
 ON users FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE sessions
 (
@@ -69,13 +64,11 @@ CREATE TABLE sessions
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER sessions_before_update BEFORE UPDATE
 ON sessions FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE travels
 (
@@ -94,13 +87,11 @@ CREATE TABLE travels
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER travels_before_update BEFORE UPDATE
 ON travels FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE travel_comments
 (
@@ -112,13 +103,11 @@ CREATE TABLE travel_comments
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER travel_comments_before_update BEFORE UPDATE
 ON travel_comments FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE favorite_travels
 (
@@ -127,7 +116,6 @@ CREATE TABLE favorite_travels
   CONSTRAINT favorite_travels_pkey PRIMARY KEY (user_id, travel_id)
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE categories
 (
@@ -137,7 +125,6 @@ CREATE TABLE categories
   sort_order INT DEFAULT 0
 );
 SQL;
-
         $sql[] = <<<SQL
 UPDATE categories SET featured = true WHERE name IN ('Featured', 'Romantic', 'Sports');
 SQL;
@@ -149,7 +136,6 @@ CREATE TABLE travel_categories
   CONSTRAINT travel_categories_pkey PRIMARY KEY (travel_id, category_id)
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE hotels
 (
@@ -165,13 +151,11 @@ CREATE TABLE hotels
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER hotels_before_update BEFORE UPDATE
 ON hotels FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE wego_hotels
 (
@@ -180,7 +164,6 @@ CREATE TABLE wego_hotels
   CONSTRAINT self_wego_hotel_pkey PRIMARY KEY (hotel_id, wego_hotel_id)
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE flagged_comments
 (
@@ -190,7 +173,6 @@ CREATE TABLE flagged_comments
   CONSTRAINT flagged_comments_pkey PRIMARY KEY (comment_id, user_id)
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE bookings
 (
