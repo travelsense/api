@@ -37,6 +37,9 @@ class AuthController extends ApiController
      */
     private $facebook;
 
+    /**
+     * @var EventDispatcher
+     */
     private $dispatcher;
 
     /**
