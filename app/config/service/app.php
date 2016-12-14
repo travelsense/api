@@ -5,6 +5,7 @@
  * @var $app Api\Application
  */
 
+use Api\Event\UpdatePicEvent;
 use Api\Exception\ApiException;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -83,3 +84,8 @@ $app->register(new MonologServiceProvider, [
 if ($app['env'] === 'dev') {
     $app->register(new PimpleDumpProvider());
 }
+
+// Event Subscriber
+$app->on(UpdatePicEvent::UPDATE_USER_PIC, function ($app) {
+    return [$app['user_pic_updater'], 'updateUserPic'];
+});

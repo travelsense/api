@@ -1,6 +1,7 @@
 <?php
 namespace Api\Service;
 
+use Api\Event\UpdatePicEvent;
 use Api\Mapper\DB\UserMapper;
 
 class UserPicUpdater
@@ -31,11 +32,10 @@ class UserPicUpdater
     /**
      * Update the user avatar.
      *
-     * @param int    $user_id
-     * @param string $pic_url
+     * @param UpdatePicEvent $event
      */
-    public function updateUserPic(int $user_id, string $pic_url)
+    public function updateUserPic(UpdatePicEvent $event)
     {
-        $this->user_mapper->updatePic($user_id, $this->image_copier->copyFrom($pic_url));
+        $this->user_mapper->updatePic($event->getUserId(), $this->image_copier->copyFrom($event->getPicUrl()));
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Api\Controller;
 
+use Api\Event\UpdatePicEvent;
 use Api\Exception\ApiException;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
@@ -10,6 +11,7 @@ use Facebook\Facebook;
 use Facebook\GraphNodes\GraphPicture;
 use Facebook\GraphNodes\GraphUser;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthControllerTest extends ControllerTestCase
@@ -18,6 +20,7 @@ class AuthControllerTest extends ControllerTestCase
     private $session_manager;
     private $facebook;
     private $pw_gen;
+    private $dispatcher;
     private $request;
 
     /**
@@ -64,6 +67,7 @@ class AuthControllerTest extends ControllerTestCase
                      'getEmail'     => 'sasha@pushkin.ru',
                      'getFirstName' => 'Alexander',
                      'getLastName'  => 'Pushkin',
+                     'getPicture'   => $user_pic,
                  ] as $method => $value) {
             $fb_user->method($method)->willReturn($value);
         }
@@ -85,6 +89,8 @@ class AuthControllerTest extends ControllerTestCase
 
         $this->pw_gen->method('generatePassword')->willReturn('test_generated_password');
 
+        $this->dispatcher = $this->createMock(EventDispatcher::class);
+
         $this->request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
@@ -93,7 +99,8 @@ class AuthControllerTest extends ControllerTestCase
             $this->user_mapper,
             $this->session_manager,
             $this->facebook,
-            $this->pw_gen
+            $this->pw_gen,
+            $this->dispatcher
         );
     }
 
@@ -163,11 +170,18 @@ class AuthControllerTest extends ControllerTestCase
             ->with($this->callback(function (User $user) {
                 return $user->getFirstName() === 'Alexander'
                 && $user->getEmail() === 'sasha@pushkin.ru'
-                && $user->getPicture() === 'https://pushkin.ru/pic.jpg';
+                && $user->getPicture() === null;
             }))
             ->will($this->returnCallback(function (User $user) {
                 $user->setId(42);
             }));
+
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                UpdatePicEvent::UPDATE_USER_PIC,
+                $this->isInstanceOf(UpdatePicEvent::class)
+            );
 
         $this->session_manager->method('createSession')
             ->with(42, $this->request)
