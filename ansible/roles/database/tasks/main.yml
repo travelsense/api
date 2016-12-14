@@ -29,13 +29,6 @@
   postgresql_db: name={{ item }}
   with_items: '{{ databases }}'
 
-- name: create extenstions
-  become_user: postgres
-  postgresql_ext: name={{ item[0] }} db={{ item[1] }}
-  with_nested:
-    - '{{ extensions }}'
-    - '{{ databases }}'
-
 - name: create users
   become_user: postgres
   postgresql_user: name={{ item.name }} db={{ item.db }} password={{ item.password }} role_attr_flags={{ item.roles }}

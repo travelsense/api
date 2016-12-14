@@ -4,10 +4,8 @@
  * @var $app Api\Application
  */
 
-use Api\ExpirableStorage;
 use Api\Mapper\DB\BannerMapper;
 use Api\Mapper\DB\BookingMapper;
-use Api\Mapper\DB\IATAMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\CommentMapper;
@@ -25,10 +23,6 @@ $app['mapper.db.user'] = function ($app) {
 
 $app['mapper.db.sessions'] = function ($app) {
     return new SessionMapper($app['dbs']['main']);
-};
-
-$app['mapper.db.iata'] = function ($app) {
-    return new IATAMapper($app['dbs']['main']);
 };
 
 $app['mapper.db.travel'] = function ($app) {
