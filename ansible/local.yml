@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
+  connection: local
   become: yes
   roles:
     - role: application
@@ -18,26 +19,16 @@
           password: api_test
           db: api_test
           roles: "LOGIN,CREATEDB,SUPERUSER"
-      scripts:
-        - db: api_dev
-          file: /vagrant/db/main/ext/postgis.sql
-        - db: api_test
-          file: /vagrant/db/main/ext/postgis.sql
-
   tasks:
-
   - name: Install packages
-    apt: name={{ item }}
+    apt: name={{ item }} autoremove=yes
     with_items:
       - vim
       - mc
       - unzip
       - htop
-
-  - include: tasks/apt_autoremove.yml
   - include: tasks/install_composer.yml
   - include: tasks/update_composer.yml
-
   - name: run migrations
     shell: APP_ENV=dev bin/db.php migrations:migrate --no-interaction
     args:

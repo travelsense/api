@@ -41,8 +41,6 @@ return [
             'create-token',
             'create-user',
             'health-check',
-            'iata-all',
-            'iata-by-code',
             'reset-password',
             'send-password-reset-link',
             'travel-by-category',
