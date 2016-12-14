@@ -3,7 +3,6 @@ namespace Api\Service;
 
 use Api\Event\UpdatePicEvent;
 use Api\Mapper\DB\UserMapper;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UserPicUpdater
 {
