@@ -23,7 +23,6 @@ trait DatabaseTrait
             ");
             $admin_pdo->exec("DROP DATABASE IF EXISTS {$db['database']}");
             $admin_pdo->exec("CREATE DATABASE {$db['database']} OWNER={$db['user']}");
-            $app['dbs'][$name]->exec(file_get_contents(__DIR__ . "/../../db/{$name}/ext/postgis.sql"));
 
             $conf = $app["doctrine.migrations.configuration.$name"];
             $migration = new Migration($conf);

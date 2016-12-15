@@ -8,7 +8,6 @@ use Api\ArgumentValueResolver;
 use Api\Controller\AuthController;
 use Api\Controller\ClientController;
 use Api\Controller\HealthCheckController;
-use Api\Controller\IataController;
 use Api\Controller\ImageController;
 use Api\Controller\Travel\BookingController;
 use Api\Controller\Travel\CategoriesController;
@@ -94,10 +93,6 @@ $app['controller.wego'] = function ($app) {
 
 $app['controller.health'] = function ($app) {
     return new HealthCheckController();
-};
-
-$app['controller.iata'] = function ($app) {
-    return new IataController($app['mapper.db.iata']);
 };
 
 $app['controller.client'] = function ($app) {

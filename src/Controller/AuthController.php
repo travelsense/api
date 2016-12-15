@@ -57,6 +57,7 @@ class AuthController extends ApiController
      * @param Facebook                   $facebook
      * @param PasswordGeneratorInterface $pwd_generator
      * @param EventDispatcher            $dispatcher
+     * @param ImageCopier                $image_copier
      */
     public function __construct(
         UserMapper $user_mapper,

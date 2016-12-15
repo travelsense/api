@@ -2,3 +2,4 @@
 /vendor
 .vagrant
 /pimple.json
+/ansible/local.retry
