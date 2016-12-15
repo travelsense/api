@@ -1,7 +1,0 @@
-CREATE TABLE IF NOT EXISTS banners (
-  id SERIAL NOT NULL PRIMARY KEY ,
-  title TEXT NOT NULL,
-  subtitle TEXT NOT NULL,
-  image TEXT NOT NULL,
-  category TEXT NOT NULL
-)

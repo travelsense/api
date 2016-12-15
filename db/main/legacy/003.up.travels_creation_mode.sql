@@ -1,1 +1,0 @@
-ALTER TABLE travels ADD COLUMN creation_mode TEXT DEFAULT NULL;

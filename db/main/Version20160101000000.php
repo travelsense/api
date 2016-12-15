@@ -1,5 +1,4 @@
 <?php
-
 namespace Api\DB\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
@@ -24,7 +23,6 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE expirable_storage
 (
@@ -35,7 +33,6 @@ CREATE TABLE expirable_storage
   created TIMESTAMP DEFAULT now()
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE users
 (
@@ -51,13 +48,11 @@ CREATE TABLE users
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER users_before_update BEFORE UPDATE
 ON users FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE sessions
 (
@@ -69,13 +64,11 @@ CREATE TABLE sessions
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER sessions_before_update BEFORE UPDATE
 ON sessions FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE travels
 (
@@ -94,13 +87,11 @@ CREATE TABLE travels
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER travels_before_update BEFORE UPDATE
 ON travels FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE travel_comments
 (
@@ -112,13 +103,11 @@ CREATE TABLE travel_comments
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER travel_comments_before_update BEFORE UPDATE
 ON travel_comments FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE favorite_travels
 (
@@ -127,7 +116,6 @@ CREATE TABLE favorite_travels
   CONSTRAINT favorite_travels_pkey PRIMARY KEY (user_id, travel_id)
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE categories
 (
@@ -137,7 +125,6 @@ CREATE TABLE categories
   sort_order INT DEFAULT 0
 );
 SQL;
-
         $sql[] = <<<SQL
 UPDATE categories SET featured = true WHERE name IN ('Featured', 'Romantic', 'Sports');
 SQL;
@@ -149,7 +136,6 @@ CREATE TABLE travel_categories
   CONSTRAINT travel_categories_pkey PRIMARY KEY (travel_id, category_id)
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE hotels
 (
@@ -165,13 +151,11 @@ CREATE TABLE hotels
   updated TIMESTAMP
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TRIGGER hotels_before_update BEFORE UPDATE
 ON hotels FOR EACH ROW EXECUTE PROCEDURE
   process_updated_column();
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE wego_hotels
 (
@@ -180,92 +164,6 @@ CREATE TABLE wego_hotels
   CONSTRAINT self_wego_hotel_pkey PRIMARY KEY (hotel_id, wego_hotel_id)
 );
 SQL;
-
-        $sql[] = <<<SQL
-CREATE TABLE iata_carriers
-(
-  code TEXT NOT NULL PRIMARY KEY,
-  type TEXT NOT NULL,
-  name TEXT NOT NULL,
-  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2}$'),
-  CONSTRAINT type_regex CHECK (type ~* '^aircraft|bus|railway|vendor$')
-);
-SQL;
-
-        $sql[] = <<<SQL
-CREATE TABLE iata_countries
-(
-  code TEXT NOT NULL PRIMARY KEY,
-  name TEXT NOT NULL,
-  phone INTEGER,
-  currency_code TEXT,
-  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2}$')
-);
-SQL;
-
-        $sql[] = <<<SQL
-CREATE TABLE iata_states (
-  code         TEXT NOT NULL,
-  country_code TEXT NOT NULL,
-  name         TEXT NOT NULL,
-  PRIMARY KEY (code, country_code),
-  CONSTRAINT country_fk FOREIGN KEY (country_code)
-  REFERENCES iata_countries (code)
-  ON UPDATE NO ACTION
-  ON DELETE NO ACTION,
-  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{2,3}$')
-);
-SQL;
-
-        $sql[] = <<<SQL
-CREATE TABLE iata_cities
-(
-  code TEXT NOT NULL PRIMARY KEY ,
-  country_code TEXT NOT NULL,
-  state_code TEXT,
-  lat FLOAT4 NOT NULL,
-  lon FLOAT4 NOT NULL,
-  capital BOOLEAN DEFAULT false NOT NULL,
-  name TEXT NOT NULL,
-  utc TEXT,
-  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{3}$'),
-
-  CONSTRAINT country_fk FOREIGN KEY (country_code)
-  REFERENCES iata_countries (code)
-  ON UPDATE NO ACTION
-  ON DELETE NO ACTION,
-
-  CONSTRAINT state_fk FOREIGN KEY (country_code, state_code)
-  REFERENCES iata_states (country_code, code) MATCH SIMPLE
-  ON UPDATE NO ACTION
-  ON DELETE NO ACTION
-);
-SQL;
-
-        $sql[] = <<<SQL
-CREATE TABLE iata_ports
-(
-  code TEXT PRIMARY KEY NOT NULL,
-  city_code TEXT NOT NULL,
-  name TEXT,
-  lat FLOAT4 NOT NULL,
-  lon FLOAT4 NOT NULL,
-  type TEXT NOT NULL,
-
-  CONSTRAINT city_fk FOREIGN KEY (city_code)
-  REFERENCES iata_cities (code)
-  ON UPDATE NO ACTION
-  ON DELETE NO ACTION,
-
-  CONSTRAINT code_regex CHECK (code ~* '^[0-9A-Z]{3}$'),
-  CONSTRAINT type_regex CHECK (type ~* '^airport|bus|helicopter|railway|seaport$')
-);
-SQL;
-
-        $sql[] = <<<SQL
-CREATE INDEX iata_ports_geo_index ON iata_ports (ST_setSRID(ST_Point(lon, lat), 4326));
-SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE flagged_comments
 (
@@ -275,7 +173,6 @@ CREATE TABLE flagged_comments
   CONSTRAINT flagged_comments_pkey PRIMARY KEY (comment_id, user_id)
 );
 SQL;
-
         $sql[] = <<<SQL
 CREATE TABLE bookings
 (

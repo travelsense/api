@@ -9,8 +9,6 @@ $to_int = function (string $val) {
     return intval($val);
 };
 
-$iata_type = '^country|city|port|carrier$';
-
 /** @var $app Api\Application */
 
 $app->get('/user/{author_id}/travels', 'controller.travel:getPublishedByAuthor')
@@ -96,14 +94,6 @@ $app->delete('/travel/{id}', 'controller.travel:deleteTravel')
     ->convert('id', $to_int);
 
 $app->post('/travel', 'controller.travel:createTravel');
-
-$app->get('/iata/{type}/code/{code}', 'controller.iata:getOne')
-    ->assert('type', $iata_type)
-    ->bind('iata-by-code');
-
-$app->get('/iata/{type}/all', 'controller.iata:getAll')
-    ->assert('type', $iata_type)
-    ->bind('iata-all');
 
 $app->post('/image', 'controller.image:upload');
 
