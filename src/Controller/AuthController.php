@@ -7,8 +7,6 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
-use Api\Service\ImageCopier;
-use Api\Service\UserPicUpdater;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -45,11 +43,6 @@ class AuthController extends ApiController
     private $dispatcher;
 
     /**
-     * @var ImageCopier
-     */
-    private $image_copier;
-
-    /**
      * UserSessionController constructor.
      *
      * @param UserMapper                 $user_mapper
@@ -57,22 +50,19 @@ class AuthController extends ApiController
      * @param Facebook                   $facebook
      * @param PasswordGeneratorInterface $pwd_generator
      * @param EventDispatcher            $dispatcher
-     * @param ImageCopier                $image_copier
      */
     public function __construct(
         UserMapper $user_mapper,
         SessionManager $session_manager,
         Facebook $facebook,
         PasswordGeneratorInterface $pwd_generator,
-        EventDispatcher $dispatcher,
-        ImageCopier $image_copier
+        EventDispatcher $dispatcher
     ) {
         $this->user_mapper = $user_mapper;
         $this->session_manager = $session_manager;
         $this->facebook = $facebook;
         $this->pwd_generator = $pwd_generator;
         $this->dispatcher = $dispatcher;
-        $this->image_copier = $image_copier;
     }
 
     /**
@@ -122,7 +112,6 @@ class AuthController extends ApiController
         $fb_user = $this->facebook
             ->get('/me?fields=picture,email,first_name,last_name')
             ->getGraphUser();
-        $pic = $fb_user->getPicture();
         $user = $this->user_mapper->fetchByEmail($fb_user->getEmail());
         if (null === $user) {
             $user = new User();
@@ -133,8 +122,8 @@ class AuthController extends ApiController
                 ->setPassword($this->pwd_generator->generatePassword());
             $this->user_mapper->insert($user);
         }
+        $pic = $fb_user->getPicture();
         if ($pic) {
-            $this->dispatcher->addSubscriber(new UserPicUpdater($this->user_mapper, $this->image_copier));
             $this->dispatcher->dispatch(
                 UpdatePicEvent::UPDATE_USER_PIC,
                 new UpdatePicEvent($user->getId(), $pic->getUrl())

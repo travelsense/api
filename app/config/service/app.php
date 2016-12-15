@@ -59,6 +59,13 @@ $app->before(function (Request $request) {
     }
 });
 
+//Event Dispatcher
+$app->on(UpdatePicEvent::UPDATE_USER_PIC, function () use ($app) {
+    $dispatcher = $app['dispatcher'];
+    $dispatcher->addSubscriber($app['user_pic_updater']);
+    return $dispatcher;
+});
+
 // JSON Response
 $app->view(function (array $response) use ($app) {
     return $app->json($response);
