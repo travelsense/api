@@ -6,6 +6,8 @@ use Api\Exception\ApiException;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
+use Api\Service\ImageCopier;
+use Api\Service\UserPicUpdater;
 use Api\Test\ControllerTestCase;
 use Facebook\Facebook;
 use Facebook\GraphNodes\GraphPicture;
@@ -21,6 +23,7 @@ class AuthControllerTest extends ControllerTestCase
     private $facebook;
     private $pw_gen;
     private $dispatcher;
+    private $image_copier;
     private $request;
 
     /**
@@ -91,6 +94,8 @@ class AuthControllerTest extends ControllerTestCase
 
         $this->dispatcher = $this->createMock(EventDispatcher::class);
 
+        $this->image_copier = $this->createMock(ImageCopier::class);
+
         $this->request = $this->getMockBuilder(Request::class)
             ->setMethods(['getContent'])
             ->getMock();
@@ -100,7 +105,8 @@ class AuthControllerTest extends ControllerTestCase
             $this->session_manager,
             $this->facebook,
             $this->pw_gen,
-            $this->dispatcher
+            $this->dispatcher,
+            $this->image_copier
         );
     }
 
@@ -175,6 +181,11 @@ class AuthControllerTest extends ControllerTestCase
             ->will($this->returnCallback(function (User $user) {
                 $user->setId(42);
             }));
+
+        $this->dispatcher->expects($this->once())
+            ->method('addSubscriber')
+            ->with($this->isInstanceOf(UserPicUpdater::class));
+
 
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
