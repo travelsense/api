@@ -6,8 +6,6 @@ use Api\Exception\ApiException;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Security\SessionManager;
-use Api\Service\ImageCopier;
-use Api\Service\UserPicUpdater;
 use Api\Test\ControllerTestCase;
 use Facebook\Facebook;
 use Facebook\GraphNodes\GraphPicture;
