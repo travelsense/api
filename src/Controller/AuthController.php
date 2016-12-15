@@ -114,7 +114,6 @@ class AuthController extends ApiController
             ->getGraphUser();
         $user = $this->user_mapper->fetchByEmail($fb_user->getEmail());
         if (null === $user) {
-            $pic = $fb_user->getPicture();
             $user = new User();
             $user
                 ->setEmail($fb_user->getEmail())
@@ -122,12 +121,13 @@ class AuthController extends ApiController
                 ->setLastName($fb_user->getLastName())
                 ->setPassword($this->pwd_generator->generatePassword());
             $this->user_mapper->insert($user);
-            if ($pic) {
-                $this->dispatcher->dispatch(
-                    UpdatePicEvent::UPDATE_USER_PIC,
-                    new UpdatePicEvent($user->getId(), $pic->getUrl())
-                );
-            }
+        }
+        $pic = $fb_user->getPicture();
+        if ($pic) {
+            $this->dispatcher->dispatch(
+                UpdatePicEvent::UPDATE_USER_PIC,
+                new UpdatePicEvent($user->getId(), $pic->getUrl())
+            );
         }
         return $user;
     }

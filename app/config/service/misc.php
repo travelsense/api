@@ -54,7 +54,7 @@ $app['image_storage'] = function (Application $app) {
 
 $app['image_copier'] = function (Application $app) {
     return new ImageCopier(
-        $app['image_loader'],
+        $app['image_storage'],
         $app['config']['image_copier']['timeout']
     );
 };
@@ -62,6 +62,6 @@ $app['image_copier'] = function (Application $app) {
 $app['user_pic_updater'] = function (Application $app) {
     return new UserPicUpdater(
         $app['mapper.db.user'],
-        $app['image_storage']
+        $app['image_copier']
     );
 };

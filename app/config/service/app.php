@@ -59,6 +59,10 @@ $app->before(function (Request $request) {
     }
 });
 
+$app->on(UpdatePicEvent::UPDATE_USER_PIC, function (UpdatePicEvent $event) use ($app) {
+    $app['user_pic_updater']->updateUserPic($event);
+});
+
 // JSON Response
 $app->view(function (array $response) use ($app) {
     return $app->json($response);
@@ -79,11 +83,6 @@ $app->register(new MonologServiceProvider, [
     'monolog.level' => $app['config']['log']['main']['level'],
     'monolog.name' => 'api',
 ]);
-
-// Event Subscriber
-$app->on(UpdatePicEvent::UPDATE_USER_PIC, function ($app) {
-    return [$app['user_pic_updater'], 'updateUserPic'];
-});
 
 // Pimple dumper
 if ($app['env'] === 'dev') {
