@@ -1,6 +1,7 @@
 <?php
 namespace Api\Controller;
 
+use Api\Event\UpdatePicEvent;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
@@ -8,6 +9,7 @@ use Api\Model\User;
 use Api\Security\SessionManager;
 use Facebook\Facebook;
 use Hackzilla\PasswordGenerator\Generator\PasswordGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -36,23 +38,31 @@ class AuthController extends ApiController
     private $facebook;
 
     /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
      * UserSessionController constructor.
      *
      * @param UserMapper                 $user_mapper
      * @param SessionManager             $session_manager
      * @param Facebook                   $facebook
      * @param PasswordGeneratorInterface $pwd_generator
+     * @param EventDispatcher            $dispatcher
      */
     public function __construct(
         UserMapper $user_mapper,
         SessionManager $session_manager,
         Facebook $facebook,
-        PasswordGeneratorInterface $pwd_generator
+        PasswordGeneratorInterface $pwd_generator,
+        EventDispatcher $dispatcher
     ) {
         $this->user_mapper = $user_mapper;
         $this->session_manager = $session_manager;
         $this->facebook = $facebook;
         $this->pwd_generator = $pwd_generator;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -110,9 +120,14 @@ class AuthController extends ApiController
                 ->setEmail($fb_user->getEmail())
                 ->setFirstName($fb_user->getFirstName())
                 ->setLastName($fb_user->getLastName())
-                ->setPicture($pic ? $pic->getUrl() : null)
                 ->setPassword($this->pwd_generator->generatePassword());
             $this->user_mapper->insert($user);
+            if ($pic) {
+                $this->dispatcher->dispatch(
+                    UpdatePicEvent::UPDATE_USER_PIC,
+                    new UpdatePicEvent($user->getId(), $pic->getUrl())
+                );
+            }
         }
         return $user;
     }
