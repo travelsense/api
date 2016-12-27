@@ -352,8 +352,8 @@ class TravelMapper extends AbstractMapper
     {
         $select = $this->connection->prepare('
             SELECT * FROM  travels
-            WHERE updated >= :date_time
-            ');
+            WHERE updated > :date_time
+        ');
         $select->execute([
             ':date_time' => $date_time,
         ]);
