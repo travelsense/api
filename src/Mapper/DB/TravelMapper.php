@@ -343,12 +343,12 @@ class TravelMapper extends AbstractMapper
     }
 
     /**
-     * Travels search by date
+     * Travels search after date
      *
      * @param DateTime $date_time
      * @return array
      */
-    public function fetchTravelByDate(DateTime $date_time): array
+    public function fetchUpdatedAfter(DateTime $date_time): array
     {
         $select = $this->connection->prepare('
             SELECT * FROM  travels
