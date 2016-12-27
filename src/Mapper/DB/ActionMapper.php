@@ -22,8 +22,8 @@ class ActionMapper extends AbstractMapper
     {
         $insert = $this->connection->prepare(
             'INSERT INTO actions (
-              travel_id, offset_start, offset_end,
-              car,  airports, hotels, sightseeings,
+              travel_id, offset_start, offset_end, car,
+              latlng, airports, hotels, sightseeings,
               type, transportation, index, end_index
               )
             VALUES (
@@ -34,6 +34,7 @@ class ActionMapper extends AbstractMapper
               :airports::JSON, 
               :hotels::JSON, 
               :sightseeings::JSON, 
+              :latlng,
               :type,
               :transportation,
               :index,
@@ -73,6 +74,7 @@ class ActionMapper extends AbstractMapper
             airports = :airports, 
             hotels = :hotels,
             sightseeings = :sightseeings,
+            latlng = :latlng,
             type = :type,
             transportation = :transportation,
             index = :index,
@@ -128,6 +130,20 @@ class ActionMapper extends AbstractMapper
     }
 
     /**
+     * @param int $travel_id
+     * @return Action[]
+     */
+    public function fetchLatlngsForTravel(int $travel_id): array
+    {
+        $select = $this->connection->prepare('
+            SELECT latlng FROM actions
+            WHERE travel_id = :travel_id
+            ');
+        $select->execute(['travel_id' => $travel_id]);
+        return $this->buildAll($select);
+    }
+
+    /**
      * @param array $row
      * @return Action
      */
@@ -143,6 +159,7 @@ class ActionMapper extends AbstractMapper
             ->setAirports(json_decode($row['airports'], true))
             ->setHotels(json_decode($row['hotels'], true))
             ->setSightseeings(json_decode($row['sightseeings'], true))
+            ->setLatlng($row['latlng'])
             ->setType($row['type'])
             ->setTransportation($row['transportation'])
             ->setIndex($row['index'])
@@ -164,6 +181,7 @@ class ActionMapper extends AbstractMapper
             'airports' => json_encode($action->getAirports()),
             'hotels' => json_encode($action->getHotels()),
             'sightseeings' => json_encode($action->getSightseeings()),
+            'latlng' => $action->getLatlng(),
             'type' => $action->getType(),
             'transportation' => $action->getTransportation(),
             'index' => $action->getIndex(),

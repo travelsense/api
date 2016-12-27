@@ -99,11 +99,15 @@ class TravelController extends ApiController
         if ($json->has('app_version')) {
             $travel->setAppVersion($json->getString('app_version'));
         }
-        $this->travel_mapper->insert($travel);
 
         $actions = $this->createActions((array) $json->get('content'), $travel->getId());
         $travel->setActions($actions);
         $this->action_mapper->insertActions($travel->getActions());
+
+        if ($this->action_mapper->fetchLatlngsForTravel($travel->getId())) {
+
+        }
+        $this->travel_mapper->insert($travel);
 
         if ($json->has('category_ids')) {
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
@@ -360,6 +364,7 @@ class TravelController extends ApiController
             $view['created'] = $travel->getCreated()->format(self::DATETIME_FORMAT);
             $view['category'] = $travel->getCategoryIds() ? $travel->getCategoryIds()[0] : null;
             $view['category_ids'] = $travel->getCategoryIds();
+            $view['geotags'] = $travel->getGeotags();
             $view['published'] = $travel->isPublished();
             $view['creation_mode'] = $travel->getCreationMode();
             $view['transportation'] = $travel->getTransportation();
@@ -410,6 +415,7 @@ class TravelController extends ApiController
             'airports'     => $action->getAirports(),
             'hotels'       => $action->getHotels(),
             'sightseeings' => $action->getSightseeings(),
+            'latlng'       => $action->getLatlng(),
             'type'         => $action->getType(),
             'transportation' => $action->getTransportation(),
             'index'          => $action->getIndex(),
@@ -453,6 +459,7 @@ class TravelController extends ApiController
      */
     private function createAction(DataObject $object, int $travelId): Action
     {
+        $latlng = null;
         $action = new Action();
         $action->setTravelId($travelId);
         if ($object->has('offsetStart')) {
@@ -467,14 +474,31 @@ class TravelController extends ApiController
             $action->setCar(false);
         }
         if ($object->has('airports')) {
-            $action->setAirports($object->get('airports'));
+            $airports = $object->get('airports');
+            $action->setAirports($airports);
+            if ($airports->has('latitude') && $airports->has('longitude')) {
+                    $latlng .= $airports->get('latitude').','.$airports->get('longitude').' ';
+                }
         }
         if ($object->has('hotels')) {
-            $action->setHotels($object->get('hotels'));
+            $hotel = $object->get('hotels');
+            $action->setHotels($hotel);
+            if ($hotel->has('latitude') && $hotel->has('longitude')) {
+                $latlng .= $hotel->get('latitude').','.$hotel->get('longitude').' ';
+            }
         }
         if ($object->has('sightseeings')) {
-            $action->setSightseeings($object->get('sightseeings'));
+            $sightseeings = $object->get('sightseeings');
+            $action->setSightseeings($sightseeings);
+            if ($sightseeings->has('latitude') && $sightseeings->has('longitude')) {
+                $latlng .= $sightseeings->get('latitude').','.$sightseeings->get('longitude').' ';
+            }
         }
+
+        if ($latlng != null) {
+            $action->setLatlng($latlng);
+        }
+
         if ($object->has('type')) {
             $action->setType($object->get('type'));
         }

@@ -54,6 +54,10 @@ return [
         ],
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],
+    'google_maps_geocoding' => [
+        'url' => 'https://maps.googleapis.com/maps/api/geocode/json?latlng=',
+        'key' => 'AIzaSyC4-CaeY9H-epHyrRwxa4pX6uZB6yqESHc',
+    ],
     'facebook' => [
         'app_id' => 'xxx',
         'app_secret' => 'xxx',
