@@ -122,10 +122,10 @@ class TravelMapper extends AbstractMapper
     {
         $insert = $this->connection->prepare('
           INSERT INTO travels (
-            title, description, is_published, image, author_id,
+            title, description, is_published, image, geotags, author_id,
             creation_mode, estimated_price, transportation, app_version
           ) VALUES (
-            :title, :description,:published, :image, :author_id,
+            :title, :description,:published, :image, :geotags, :author_id,
             :creation_mode, :estimated_price, :transportation, :app_version
           ) RETURNING id, created
         ');
@@ -355,6 +355,7 @@ class TravelMapper extends AbstractMapper
             description = :description,
             is_published = :published,
             image = :image,
+            geotags = :geotags,
             author_id = :author_id,
             creation_mode = :creation_mode,
             estimated_price = :estimated_price,
@@ -394,6 +395,7 @@ class TravelMapper extends AbstractMapper
         $travel->setTitle($row['title']);
         $travel->setPublished($row['is_published']);
         $travel->setImage($row['image']);
+        $travel->setGeotags($row['geotags']);
         $travel->setCreated(new DateTime($row['created']));
         $travel->setUpdated(new DateTime($row['updated']));
         $travel->setCreationMode($row['creation_mode']);
@@ -421,6 +423,7 @@ class TravelMapper extends AbstractMapper
             'description'     => $travel->getDescription(),
             'published'       => $travel->isPublished(),
             'image'           => $travel->getImage(),
+            'geotags'         => $travel->getGeotags(),
             'author_id'       => $travel->getAuthorId(),
             'creation_mode'   => $travel->getCreationMode(),
             'estimated_price' => $travel->getEstimatedPrice(),

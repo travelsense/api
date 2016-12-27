@@ -33,6 +33,11 @@ class Travel implements SubjectInterface
     private $image;
 
     /**
+     * @var string
+     */
+    private $geotags;
+
+    /**
      * @var bool
      */
     private $published = false;
@@ -131,6 +136,24 @@ class Travel implements SubjectInterface
     public function setImage($image)
     {
         $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGeotags()
+    {
+        return $this->geotags;
+    }
+
+    /**
+     * @param string $geotags
+     * @return Travel
+     */
+    public function setGeotags($geotags)
+    {
+        $this->geotags = $geotags;
         return $this;
     }
     

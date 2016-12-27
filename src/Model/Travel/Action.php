@@ -56,6 +56,11 @@ class Action
      * @var string
      */
     private $sightseeings;
+
+    /**
+     * @var string
+     */
+    private $latlng;
  
     /**
      * @var string
@@ -240,6 +245,24 @@ class Action
     public function setSightseeings($sightseeings)
     {
         $this->sightseeings = $sightseeings;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLatlng()
+    {
+        return $this->latlng;
+    }
+
+    /**
+     * @param string $latlng
+     * @return Action
+     */
+    public function setLatlng($latlng)
+    {
+        $this->latlng = $latlng;
         return $this;
     }
     
