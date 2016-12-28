@@ -5,6 +5,7 @@
 
 use Api\Application;
 use Api\ExpirableStorage;
+use Api\Service\Geocoder;
 use Api\Service\ImageCopier;
 use Api\Service\ImageStorage;
 use Api\Service\PdfGenerator;
@@ -63,5 +64,14 @@ $app['user_pic_updater'] = function (Application $app) {
     return new UserPicUpdater(
         $app['mapper.db.user'],
         $app['image_copier']
+    );
+};
+
+$app['geocoder'] = function (Application $app) {
+    $google_maps_geocoder = new GoogleMapsGeocoder();
+    $google_maps_geocoder->setApiKey($app['congig']['google_maps_geocoding']['key']);
+    return new Geocoder(
+        $google_maps_geocoder,
+        $app['mapper.db.travel']
     );
 };
