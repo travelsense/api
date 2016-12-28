@@ -57,7 +57,6 @@ return [
     'google_maps_geocoding' => [
         'key' => 'AIzaSyC4-CaeY9H-epHyrRwxa4pX6uZB6yqESHc',
     ],
-
     'facebook' => [
         'app_id' => 'xxx',
         'app_secret' => 'xxx',

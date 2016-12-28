@@ -32,7 +32,6 @@ class Geocoder
 
     public function setCitiesStatesCountriesToTravel()
     {
-
     }
 
     private function getTravelsUpdatedAfter(DateTime $date_time)
