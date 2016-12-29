@@ -5,7 +5,9 @@
 
 use Api\Application;
 use Api\ExpirableStorage;
-use Api\Service\Geocoder;
+use Api\Service\GeoCoder\DateWriteReader;
+use Api\Service\GeoCoder\Geocoder;
+use Api\Service\GeoCoder\TravelGeocoder;
 use Api\Service\ImageCopier;
 use Api\Service\ImageStorage;
 use Api\Service\PdfGenerator;
@@ -68,10 +70,22 @@ $app['user_pic_updater'] = function (Application $app) {
 };
 
 $app['geocoder'] = function (Application $app) {
-    $google_maps_geocoder = new GoogleMapsGeocoder();
-    $google_maps_geocoder->setApiKey($app['congig']['google_maps_geocoding']['key']);
     return new Geocoder(
-        $google_maps_geocoder,
-        $app['mapper.db.travel']
+        $app['config']['google_maps_geocoding']['url'],
+        $app['config']['google_maps_geocoding']['key']
+    );
+};
+
+$app['date_write_reader'] = function (Application $app) {
+    new DateWriteReader(
+        $app['config']['google_maps_geocoding']['file_name']
+    );
+};
+
+$app['travel_geocoder'] = function (Application $app) {
+    new TravelGeocoder(
+        $app['geocoder'],
+        $app['mapper.db.travel'],
+        $app['date_write_reader']
     );
 };

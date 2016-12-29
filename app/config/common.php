@@ -55,6 +55,8 @@ return [
         'password_salt' => 'oquaezooQuoo9Iex8haht9thewaa2Sae',
     ],
     'google_maps_geocoding' => [
+        'file_name' => '/tmp/updated/last_updated.txt',
+        'url' => 'https://maps.googleapis.com/maps/api/geocode/json',
         'key' => 'AIzaSyC4-CaeY9H-epHyrRwxa4pX6uZB6yqESHc',
     ],
     'facebook' => [
