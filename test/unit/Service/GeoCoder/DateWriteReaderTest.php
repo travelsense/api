@@ -11,7 +11,7 @@ class DateWriteReaderTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->date_write_reader = new DateWriteReader($this->file_name);
-        }
+    }
 
     public function testReadLastUpdatedTime()
     {
