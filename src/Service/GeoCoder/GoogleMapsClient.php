@@ -1,6 +1,8 @@
 <?php
 namespace Api\Service\GeoCoder;
 
+use Api\Exception\GeocoderException;
+
 class Geocoder
 {
     private $url;
@@ -14,10 +16,10 @@ class Geocoder
 
     public function geocode($latlng)
     {
-        $request = file_get_contents($this->url.'?latlng='.$latlng.'&key='.$this->key);
+        $request = file_get_contents(urlencode($this->url).'?latlng='.$latlng.'&key='.urlencode($this->key));
         $response = json_decode($request, true);
 
-        if ($response['status']='OK') {
+        if ($response['status']=='OK') {
             $tag = [
                 'city' => $response['results'][0]['address_components'][3]['long_name'],
                 'state' => $response['results'][0]['address_components'][5]['long_name'],
@@ -25,7 +27,7 @@ class Geocoder
             ];
             return $tag;
         } else {
-            return false;
+            throw new GeocoderException();
         }
     }
 }

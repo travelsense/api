@@ -7,7 +7,7 @@ use DateTime;
 class TravelGeocoder
 {
     /**
-     * @var Geocoder
+     * @var GoogleMapsClient
      */
     private $geocoder;
 
@@ -23,12 +23,12 @@ class TravelGeocoder
 
     /**
      * Geocoder constructor.
-     * @param Geocoder $geocoder
+     * @param GoogleMapsClient $geocoder
      * @param DateWriteReader $date_write_reader
      * @param TravelMapper $travel_mapper
      */
     public function __construct(
-        Geocoder $geocoder,
+        GoogleMapsClient $geocoder,
         DateWriteReader $date_write_reader,
         TravelMapper $travel_mapper
     ) {
@@ -43,11 +43,11 @@ class TravelGeocoder
         $this->date_write_reader->writeLastUpdatedTime(new DateTime());
         foreach ($this->travel_mapper->fetchUpdatedAfter($last_updated) as $travel) {
             $geo_names = [];
-            foreach($travel->getAll Coordinates as $point) {
-                $geo_names[] = $this->geocoder->getName($point);
-            }
-            $travel->setGeotags($geo_names);
+//            foreach ($travel->getAll Coordinates as $point) {
+//                $geo_names[] = $this->geocoder->getName($point);
+//            }
+//            $travel->setGeotags($geo_names);
         }
-        $this->travel_mapper->update($travel);
+//        $this->travel_mapper->update($travel);
     }
 }
