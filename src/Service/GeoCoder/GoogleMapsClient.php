@@ -3,7 +3,7 @@ namespace Api\Service\GeoCoder;
 
 use Api\Exception\GeocoderException;
 
-class Geocoder
+class GoogleMapsClient
 {
     private $url;
     private $key;

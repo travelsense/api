@@ -4,7 +4,7 @@ namespace Api\Service\GeoCoder;
 use Api\Mapper\DB\TravelMapper;
 use DateTime;
 
-class TravelGeocoder
+class GeocoderService
 {
     /**
      * @var GoogleMapsClient
@@ -40,14 +40,16 @@ class TravelGeocoder
     public function setCitiesStatesCountriesToTravel()
     {
         $last_updated = $this->date_write_reader->readLastUpdatedTime();
-        $this->date_write_reader->writeLastUpdatedTime(new DateTime());
-        foreach ($this->travel_mapper->fetchUpdatedAfter($last_updated) as $travel) {
-            $geo_names = [];
-//            foreach ($travel->getAll Coordinates as $point) {
-//                $geo_names[] = $this->geocoder->getName($point);
-//            }
-//            $travel->setGeotags($geo_names);
+        $this->date_write_reader->writeLastUpdatedTime(date('Y-m-d H:i:s'));
+        if ($last_updated != null) {
+            foreach ($this->travel_mapper->fetchUpdatedAfter($last_updated) as $travel) {
+                $geo_names = [];
+                //            foreach ($travel->getAll Coordinates as $point) {
+                //                $geo_names[] = $this->geocoder->getName($point);
+                //            }
+                //            $travel->setGeotags($geo_names);
+                $this->travel_mapper->update($travel);
+            }
         }
-//        $this->travel_mapper->update($travel);
     }
 }
