@@ -5,7 +5,7 @@
 
 use Api\Application;
 use Api\ExpirableStorage;
-use Api\Service\GeoCoder\DateWriteReader;
+use Api\Service\GeoCoder\DateStorage;
 use Api\Service\GeoCoder\GoogleMapsClient;
 use Api\Service\GeoCoder\GeocoderService;
 use Api\Service\ImageCopier;
@@ -77,7 +77,7 @@ $app['google_maps_client'] = function (Application $app) {
 };
 
 $app['geocoder_service'] = function (Application $app) {
-    $date_write_reader = new DateWriteReader(
+    $date_write_reader = new DateStorage(
         $app['config']['google_maps_geocoding']['file_name']
     );
     return new GeocoderService(
