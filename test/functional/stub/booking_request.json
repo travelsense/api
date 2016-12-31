@@ -176,8 +176,11 @@
       ],
       "providerName": "",
       "toAirport": "CPH",
-      "providerCode": "airfrance.com"
+      "providerCode": "airfrance.com",
+      "price": 1024.42,
+      "deeplink": "https://example.com/blah"
     }
   },
-  "email": "a.y.remizov@gmail.com"
+  "email": "a.y.remizov@gmail.com",
+  "totalPrice": 1234.56
 }

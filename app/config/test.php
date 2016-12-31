@@ -2,9 +2,11 @@
 return array_replace_recursive(
     require __DIR__ . '/common.php',
     [
-        'debug' => true,
         'services' => [
             'email' => __DIR__ . '/service/email.mock.php',
+        ],
+        'application' => [
+            'debug' => true,
         ],
         'log' => [
             'main' => [
