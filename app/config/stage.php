@@ -8,5 +8,8 @@ return array_replace_recursive(
                 'level' => 'debug',
             ]
         ],
+        'application' => [
+            'debug' => true,
+        ],
     ]
 );

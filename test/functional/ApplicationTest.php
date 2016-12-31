@@ -4,6 +4,7 @@ namespace Test;
 use Api\Application;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
+use Api\Service\Mailer;
 use Api\Test\ApplicationTestCase;
 use Api\Test\DatabaseTrait;
 use Api\Test\FunctionalTestCase;
@@ -158,6 +159,8 @@ class ApplicationTest extends ApplicationTestCase
 
     public function testBookingStats()
     {
+        $mailer_service = $this->createMock(Mailer::class);
+        $this->app['email.service'] = $mailer_service;
         $this->createAndLoginUser();
         $this->client->createCategory('test cat1');
         $this->client->createCategory('test cat2');
