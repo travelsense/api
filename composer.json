@@ -29,8 +29,7 @@
     "symfony/twig-bridge": "^2.7",
     "twig/twig": "^1.23",
     "silex/silex": "2.0.3",
-    "mpdf/mpdf": "^6.1",
-    "jstayton/google-maps-geocoder": "^2.4"
+    "mpdf/mpdf": "^6.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.6",
