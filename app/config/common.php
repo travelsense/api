@@ -15,7 +15,9 @@ return [
         __DIR__ . '/service/security.php',
         __DIR__ . '/service/wego.php',
     ],
-    'debug' => false,
+    'application' => [
+        'debug' => false,
+    ],
     'log' => [
         'main' => [
             'file' => '/var/log/api.log',
