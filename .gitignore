@@ -3,3 +3,4 @@
 .vagrant
 /pimple.json
 /ansible/local.retry
+/.changelog.json
