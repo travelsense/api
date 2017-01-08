@@ -29,7 +29,8 @@
     "symfony/twig-bridge": "^2.7",
     "twig/twig": "^1.23",
     "silex/silex": "2.0.3",
-    "mpdf/mpdf": "^6.1"
+    "mpdf/mpdf": "^6.1",
+    "bernard/bernard": "^0.12.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.6",

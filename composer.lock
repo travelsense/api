@@ -4,8 +4,61 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7660ab7fe617f0b14ba6144727fb0387",
+    "content-hash": "48845e6108a40c1befbfc577cea8fc8b",
     "packages": [
+        {
+            "name": "bernard/bernard",
+            "version": "0.12.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bernardphp/bernard.git",
+                "reference": "9442bf4b0e739e360f9b07b101d1dec8c87f1028"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bernardphp/bernard/zipball/9442bf4b0e739e360f9b07b101d1dec8c87f1028",
+                "reference": "9442bf4b0e739e360f9b07b101d1dec8c87f1028",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "replace": {
+                "henrikbjorn/bernard": "self.version"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "~2.4",
+                "doctrine/dbal": "~2.3",
+                "iron-io/iron_mq": "~1.4",
+                "jms/serializer": "~0.12",
+                "pimple/pimple": "~1.0",
+                "predis/predis": "~0.8",
+                "psr/log": "~1.0",
+                "symfony/console": "~2.0",
+                "symfony/dependency-injection": "~2.0",
+                "symfony/serializer": "~2.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.10.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Bernard": "src/"
+                },
+                "files": [
+                    "src/Bernard/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Message queue implemented in PHP with Redis as a backend.",
+            "time": "2016-01-04T10:19:54+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.3.1",
@@ -2762,16 +2815,16 @@
         },
         {
             "name": "f3ath/git-changelog",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/f3ath/git-changelog.git",
-                "reference": "1775a02759af14c218f919626cb596854f550ded"
+                "reference": "54992bde1a8ea304430cef5b50c5639ecf0cbdb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/f3ath/git-changelog/zipball/1775a02759af14c218f919626cb596854f550ded",
-                "reference": "1775a02759af14c218f919626cb596854f550ded",
+                "url": "https://api.github.com/repos/f3ath/git-changelog/zipball/54992bde1a8ea304430cef5b50c5639ecf0cbdb7",
+                "reference": "54992bde1a8ea304430cef5b50c5639ecf0cbdb7",
                 "shasum": ""
             },
             "require": {
@@ -2813,7 +2866,7 @@
                 "release",
                 "release notes"
             ],
-            "time": "2017-01-06T18:55:07+00:00"
+            "time": "2017-01-07T01:48:17+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
