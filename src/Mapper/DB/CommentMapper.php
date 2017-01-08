@@ -4,8 +4,6 @@ namespace Api\Mapper\DB;
 use Api\DB\AbstractMapper;
 use Api\Model\Travel\Comment;
 use Api\Model\User;
-use DateTime;
-use PDO;
 
 /**
  * Class CommentMapper
@@ -64,7 +62,7 @@ class CommentMapper extends AbstractMapper
             ':id' => $id,
         ]);
 
-        $row = $select->fetch(PDO::FETCH_NAMED);
+        $row = $select->fetch(\PDO::FETCH_NAMED);
         if (empty($row)) {
             return null;
         }
@@ -136,8 +134,8 @@ class CommentMapper extends AbstractMapper
             ->setAuthorId($row['author_id'])
             ->setTravelId($row['travel_id'])
             ->setText($row['text'])
-            ->setCreated(new DateTime($row['created']))
-            ->setUpdated(new DateTime($row['updated']));
+            ->setCreated(new \DateTime($row['created']))
+            ->setUpdated(new \DateTime($row['updated']));
     }
 
     protected function build(array $row)

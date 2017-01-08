@@ -1,9 +1,8 @@
 <?php
 namespace Api\DB;
 
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Driver\Statement;
 use InvalidArgumentException;
-use PDO;
 
 class Helper
 {
@@ -48,16 +47,16 @@ class Helper
             $type = gettype($value);
             switch ($type) {
                 case "boolean":
-                    $statement->bindValue($param, $value, PDO::PARAM_BOOL);
+                    $statement->bindValue($param, $value, \PDO::PARAM_BOOL);
                     break;
                 case "NULL":
-                    $statement->bindValue($param, $value, PDO::PARAM_NULL);
+                    $statement->bindValue($param, $value, \PDO::PARAM_NULL);
                     break;
                 case "integer":
-                    $statement->bindValue($param, $value, PDO::PARAM_INT);
+                    $statement->bindValue($param, $value, \PDO::PARAM_INT);
                     break;
                 case "string":
-                    $statement->bindValue($param, $value, PDO::PARAM_STR);
+                    $statement->bindValue($param, $value, \PDO::PARAM_STR);
                     break;
                 default:
                     throw new InvalidArgumentException(

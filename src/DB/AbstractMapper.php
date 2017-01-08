@@ -2,7 +2,7 @@
 namespace Api\DB;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Driver\Statement;
 
 abstract class AbstractMapper
 {

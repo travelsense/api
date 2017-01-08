@@ -3,8 +3,6 @@ namespace Api\Mapper\DB;
 
 use Api\DB\AbstractMapper;
 use Api\Model\Travel\Category;
-use PDO;
-use PDOException;
 
 class CategoryMapper extends AbstractMapper
 {
@@ -76,7 +74,7 @@ class CategoryMapper extends AbstractMapper
         $select->execute([
             'travel_id' => $travel_id,
         ]);
-        return $select->fetchAll(PDO::FETCH_COLUMN);
+        return $select->fetchAll(\PDO::FETCH_COLUMN);
     }
     
     /**
@@ -89,7 +87,7 @@ class CategoryMapper extends AbstractMapper
         $select->execute([
             'id' => $id,
         ]);
-        $row = $select->fetch(PDO::FETCH_ASSOC);
+        $row = $select->fetch(\PDO::FETCH_ASSOC);
         if (empty($row)) {
             return null;
         }
@@ -135,7 +133,7 @@ class CategoryMapper extends AbstractMapper
                 ]);
             }
             $this->connection->commit();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->connection->rollBack();
         }
     }
