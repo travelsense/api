@@ -3,7 +3,6 @@ namespace Api\Mapper\DB;
 
 use Api\DB\AbstractMapper;
 use Api\Model\Travel\Banner;
-use PDO;
 
 class BannerMapper extends AbstractMapper
 {
@@ -15,7 +14,7 @@ class BannerMapper extends AbstractMapper
         $select = $this->connection->prepare('SELECT title, subtitle, image, category FROM banners');
         $select->execute();
 
-        return $select->fetchAll(PDO::FETCH_ASSOC);
+        return $select->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**

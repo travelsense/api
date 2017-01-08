@@ -1,7 +1,7 @@
 <?php
 namespace Api\Mapper\DB\User;
 
-use Api\Mapper\DB\ConnectionDependentTrait;
+use Doctrine\DBAL\Driver\Connection;
 
 /**
  * Class RoleMapper
@@ -9,7 +9,15 @@ use Api\Mapper\DB\ConnectionDependentTrait;
  */
 class RoleMapper
 {
-    use ConnectionDependentTrait;
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
 
     /**
      * Get user roles

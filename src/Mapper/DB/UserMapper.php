@@ -1,11 +1,8 @@
 <?php
-
 namespace Api\Mapper\DB;
 
 use Api\DB\AbstractMapper;
 use Api\Model\User;
-use DateTime;
-use PDO;
 
 class UserMapper extends AbstractMapper
 {
@@ -67,9 +64,9 @@ class UserMapper extends AbstractMapper
         ];
         $this->helper->bindValues($insert, $values);
         $insert->execute();
-        $row = $insert->fetch(PDO::FETCH_ASSOC);
+        $row = $insert->fetch(\PDO::FETCH_ASSOC);
         $user->setId($row['id']);
-        $user->setCreated(new DateTime($row['created']));
+        $user->setCreated(new \DateTime($row['created']));
     }
 
     /**
@@ -121,7 +118,7 @@ class UserMapper extends AbstractMapper
                 ':password' => $this->getPasswordHash($password),
             ]
         );
-        $row = $select->fetch(PDO::FETCH_NAMED);
+        $row = $select->fetch(\PDO::FETCH_NAMED);
         return $row ? $this->create($row) : null;
     }
 
@@ -137,7 +134,7 @@ class UserMapper extends AbstractMapper
                 ':id' => $id,
             ]
         );
-        $row = $select->fetch(PDO::FETCH_NAMED);
+        $row = $select->fetch(\PDO::FETCH_NAMED);
         return $row ? $this->create($row) : null;
     }
 
@@ -153,7 +150,7 @@ class UserMapper extends AbstractMapper
                 ':email' => $email,
             ]
         );
-        $row = $select->fetch(PDO::FETCH_NAMED);
+        $row = $select->fetch(\PDO::FETCH_NAMED);
         return $row ? $this->create($row) : null;
     }
 
@@ -203,7 +200,7 @@ class UserMapper extends AbstractMapper
             ->setLastName($row['last_name'])
             ->setPicture($row['picture'])
             ->setCreator($row['creator'])
-            ->setCreated(new DateTime($row['created']))
+            ->setCreated(new \DateTime($row['created']))
             ->setEmailConfirmed($row['email_confirmed']);
     }
 
