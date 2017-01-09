@@ -118,7 +118,6 @@ class TravelController extends ApiController
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
         }
 
-
         $this->stats_service->addTravelStats();
 
         return ['id' => $travel->getId()];

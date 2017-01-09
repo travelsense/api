@@ -6,6 +6,7 @@ use Api\ExpirableStorage;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Service\Mailer;
+use Api\Service\StatisticService;
 use Api\Test\ControllerTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,6 +15,7 @@ class UserControllerTest extends ControllerTestCase
     private $user_mapper;
     private $mailer;
     private $storage;
+    private $stats_service;
 
     /**
      * @var UserController
@@ -39,10 +41,16 @@ class UserControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->stats_service = $this->getMockBuilder(StatisticService::class)
+            ->setMethods(['addUserStats'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->controller = new UserController(
             $this->user_mapper,
             $this->mailer,
-            $this->storage
+            $this->storage,
+            $this->stats_service
         );
 
         $this->test_user = $this->buildUser();
