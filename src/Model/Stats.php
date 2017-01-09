@@ -1,7 +1,6 @@
 <?php
 namespace Api\Model;
 
-
 class Stats
 {
     use IdTrait;
