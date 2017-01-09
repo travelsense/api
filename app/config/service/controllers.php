@@ -36,6 +36,7 @@ $app['controller.user'] = function ($app) {
         $app['mapper.db.user'],
         $app['email.service'],
         $app['storage.expirable_storage'],
+        $app['statistic_service'],
         $app['password_generator']
     );
     $controller->setLogger($app['monolog']);
@@ -60,7 +61,8 @@ $app['controller.travel'] = function ($app) {
         $app['mapper.db.category'],
         $app['mapper.db.action'],
         $app['mapper.db.banner'],
-        $app['security.access_manager']
+        $app['security.access_manager'],
+        $app['statistic_service']
     );
     $controller->setLogger($app['monolog']);
     return $controller;

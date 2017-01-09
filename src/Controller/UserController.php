@@ -7,6 +7,7 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Service\Mailer;
+use Api\Service\StatisticService;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -30,20 +31,28 @@ class UserController extends ApiController
     private $storage;
 
     /**
+     * @var StatisticService
+     */
+    private $stats_service;
+
+    /**
      * UserController constructor.
      *
      * @param UserMapper       $user_mapper
      * @param Mailer           $mailer
      * @param ExpirableStorage $storage
+     * @param StatisticService $stats_service
      */
     public function __construct(
         UserMapper $user_mapper,
         Mailer $mailer,
-        ExpirableStorage $storage
+        ExpirableStorage $storage,
+        StatisticService $stats_service
     ) {
         $this->user_mapper = $user_mapper;
         $this->mailer = $mailer;
         $this->storage = $storage;
+        $this->stats_service = $stats_service;
     }
 
     /**
@@ -100,6 +109,7 @@ class UserController extends ApiController
         }
         $this->user_mapper->insert($user);
         $this->sendConfirmationLink($user);
+        $this->stats_service->addUserStats();
         return [];
     }
 

@@ -26,7 +26,7 @@ class Stats
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -42,7 +42,7 @@ class Stats
     /**
      * @param int $value
      */
-    public function setValue($value)
+    public function setValue(int $value)
     {
         $this->value = $value;
     }
