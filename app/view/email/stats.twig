@@ -1,0 +1,7 @@
+{% block subj %}HopTrip Statistic - {{ date|date("F d, Y h:i e") }}{% endblock %}
+{% block body %}
+    <h2>HopTrip Statistic - {{ date|date("F d, Y h:i e") }}</h2>
+
+    <div>Users: {{ stats.users }} (+{{ stats.delta_users }})</div>
+    <div>Travels: {{ stats.travels }} (+{{ stats.delta_travels }})</div>
+{% endblock %}

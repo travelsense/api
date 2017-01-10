@@ -11,6 +11,7 @@ use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\FlaggedCommentMapper;
+use Api\Mapper\DB\StatsMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\User\RoleMapper;
 use Api\Mapper\DB\UserMapper;
@@ -58,6 +59,11 @@ class MappersTest extends TestCase
     private $booking_mapper;
 
     /**
+     * @var StatsMapper
+     */
+    private $stats_mapper;
+
+    /**
      * @var RoleMapper
      */
     private $user_role_mapper;
@@ -87,6 +93,7 @@ class MappersTest extends TestCase
         $this->comment_mapper = $app['mapper.db.comment'];
         $this->booking_mapper = $app['mapper.db.booking'];
         $this->user_role_mapper = $app['mapper.db.user_role'];
+        $this->stats_mapper = $app['mapper.db.stats'];
     }
 
     public function tearDown()
@@ -270,6 +277,40 @@ class MappersTest extends TestCase
         $travel = $this->createTravel($user, 'testTravel', [$cat->getId()]);
         $travel_list = $this->travel_mapper->fetchByCategory($cat->getName(), 1, 0);
         $this->assertSameTravels($travel_list[0], $travel);
+    }
+
+    /**
+     * Stats mapper
+     */
+    public function testStatsMapper()
+    {
+        $user_a = $this->createUser('a');
+        $user_b = $this->createUser('b');
+
+        $this->createTravel($user_a, 'testTravel 1');
+        $this->createTravel($user_b, 'testTravel 2');
+        $this->createTravel($user_b, 'testTravel 3');
+
+        $this->stats_mapper->buildStats();
+        $stats = $this->stats_mapper->getStats(new \DateTime());
+        $statistic = [];
+        foreach ($stats as $stat) {
+            if ($stat['users'] != null) {
+                $statistic['users'] = $stat['users'];
+            } elseif ($stat['travels'] != null) {
+                $statistic['travels'] = $stat['travels'];
+            }
+        }
+
+        $select = $this->connection->prepare('SELECT COUNT(*) FROM users');
+        $select->execute();
+        $row = $select->fetch(PDO::FETCH_NAMED);
+        $this->assertEquals($row['count'], $statistic['users']);
+
+        $select = $this->connection->prepare('SELECT COUNT(*) FROM travels');
+        $select->execute();
+        $row = $select->fetch(PDO::FETCH_NAMED);
+        $this->assertEquals($row['count'], $statistic['travels']);
     }
 
     /**

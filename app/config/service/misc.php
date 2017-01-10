@@ -68,5 +68,5 @@ $app['user_pic_updater'] = function (Application $app) {
 };
 
 $app['stats_service'] = function (Application $app) {
-    return new StatisticService($app['mapper.db.stats']);
+    return new StatisticService($app['mapper.db.stats'], $app['email.service']);
 };
