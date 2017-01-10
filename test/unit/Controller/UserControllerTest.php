@@ -15,7 +15,6 @@ class UserControllerTest extends ControllerTestCase
     private $user_mapper;
     private $mailer;
     private $storage;
-    private $stats_service;
 
     /**
      * @var UserController
@@ -41,16 +40,10 @@ class UserControllerTest extends ControllerTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->stats_service = $this->getMockBuilder(StatisticService::class)
-            ->setMethods(['addUserStats'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->controller = new UserController(
             $this->user_mapper,
             $this->mailer,
-            $this->storage,
-            $this->stats_service
+            $this->storage
         );
 
         $this->test_user = $this->buildUser();

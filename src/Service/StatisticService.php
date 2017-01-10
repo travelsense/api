@@ -15,18 +15,8 @@ class StatisticService
         $this->stats_mapper = $stats_mapper;
     }
 
-    public function addUserStats()
+    public function sendEmail(\DateTime $date)
     {
-        $this->stats_mapper->addUser();
-    }
-
-    public function addTravelStats()
-    {
-        $this->stats_mapper->addTravel();
-    }
-
-    public function sendStatisticEmail()
-    {
-
+        $stats = $this->stats_mapper->getStats($date);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Api\Mapper\DB;
 
+use DateTime;
 use Doctrine\DBAL\Driver\Connection;
 
 class StatsMapper
@@ -15,45 +16,38 @@ class StatsMapper
         $this->connection = $connection;
     }
 
-    public function addUser()
+    public function buildStats()
     {
-        $sql = 'INSERT INTO stats (name, value) VALUES (:name, :value) RETURNING id';
-        $insert = $this->connection->prepare($sql);
+        $insert = $this->connection->prepare('
+          INSERT INTO stats (name, value)
+          VALUES
+            (:users, (SELECT COUNT(*) FROM users)),
+            (:travels, (SELECT COUNT(*) FROM travels))
+        ');
         $insert->execute(
             [
-                ':name' => 'users',
-                ':value'  => 1,
+                ':users' => 'users',
+                ':travels'  => 'travels',
             ]
         );
     }
 
-    public function addTravel()
-    {
-        $sql = 'INSERT INTO stats (name, value) VALUES (:name, :value) RETURNING id';
-        $insert = $this->connection->prepare($sql);
-        $insert->execute(
-            [
-                ':name' => 'travels',
-                ':value'  => 1,
-            ]
-        );
-    }
-
-    public function getStats()
+    public function getStats(DateTime $date): array
     {
         $select = $this->connection->prepare('
             SELECT
-              SUM(CASE name WHEN :users THEN value END) AS sum_new_users,
-              SUM(CASE name WHEN :travels THEN value END) AS sum_new_travels
-            FROM
-              stats
+              (CASE name WHEN :users THEN value END) AS users,
+              (CASE name WHEN :travels THEN value END) AS travels
+            FROM stats
+            WHERE date >= :date
         ');
         $select->execute(
             [
                 ':users' => 'users',
-                ':travels' => 'travels'
+                ':travels' => 'travels',
+                ':date' => $date->format('Y-m-d')
             ]
         );
-        return $select->fetch(\PDO::FETCH_ASSOC);
+        return $select->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

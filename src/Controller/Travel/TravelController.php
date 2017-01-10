@@ -48,33 +48,25 @@ class TravelController extends ApiController
     private $access_manager;
 
     /**
-     * @var StatisticService
-     */
-    private $stats_service;
-
-    /**
      * TravelController constructor.
      * @param TravelMapper   $travel_mapper
      * @param CategoryMapper $category_mapper
      * @param ActionMapper   $action_mapper
      * @param BannerMapper   $banner_mapper
      * @param AccessManager  $access_manager
-     * @param StatisticService $stats_service
      */
     public function __construct(
         TravelMapper $travel_mapper,
         CategoryMapper $category_mapper,
         ActionMapper $action_mapper,
         BannerMapper $banner_mapper,
-        AccessManager $access_manager,
-        StatisticService $stats_service
+        AccessManager $access_manager
     ) {
         $this->travel_mapper = $travel_mapper;
         $this->category_mapper = $category_mapper;
         $this->action_mapper = $action_mapper;
         $this->banner_mapper = $banner_mapper;
         $this->access_manager = $access_manager;
-        $this->stats_service = $stats_service;
     }
 
     /**
@@ -117,8 +109,6 @@ class TravelController extends ApiController
         if ($json->has('category_ids')) {
             $this->category_mapper->setTravelCategories($travel->getId(), $json->getArrayOf('integer', 'category_ids'));
         }
-
-        $this->stats_service->addTravelStats();
 
         return ['id' => $travel->getId()];
     }
