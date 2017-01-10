@@ -14,7 +14,6 @@ use Api\Model\Travel\Travel;
 use Api\Model\User;
 use Api\Security\Access\AccessManager;
 use Api\Security\Access\Action as AccessAction;
-use Api\Service\StatisticService;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

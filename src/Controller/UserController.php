@@ -7,7 +7,6 @@ use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Service\Mailer;
-use Api\Service\StatisticService;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

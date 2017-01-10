@@ -6,7 +6,6 @@ use Api\ExpirableStorage;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
 use Api\Service\Mailer;
-use Api\Service\StatisticService;
 use Api\Test\ControllerTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
