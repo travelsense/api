@@ -24,4 +24,9 @@ class StatisticService
     {
         $this->stats_mapper->addTravel();
     }
+
+    public function sendStatisticEmail()
+    {
+
+    }
 }

@@ -38,4 +38,22 @@ class StatsMapper
             ]
         );
     }
+
+    public function getStats()
+    {
+        $select = $this->connection->prepare('
+            SELECT
+              SUM(CASE name WHEN :users THEN value END) AS sum_new_users,
+              SUM(CASE name WHEN :travels THEN value END) AS sum_new_travels
+            FROM
+              stats
+        ');
+        $select->execute(
+            [
+                ':users' => 'users',
+                ':travels' => 'travels'
+            ]
+        );
+        return $select->fetch(\PDO::FETCH_ASSOC);
+    }
 }
