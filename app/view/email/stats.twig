@@ -2,6 +2,6 @@
 {% block body %}
     <h2>HopTrip Statistic - {{ date|date("F d, Y h:i e") }}</h2>
 
-    <div>Users: {{ stats.users }} (+{{ stats.delta_users }})</div>
-    <div>Travels: {{ stats.travels }} (+{{ stats.delta_travels }})</div>
+    <div>Users: {{ stats.users }} ({% if {{ stats.delta_users }} > 0 %}+{% endif %}{{ stats.delta_users }})</div>
+    <div>Travels: {{ stats.travels }} ({% if {{ stats.delta_travels }} > 0 %}+{% endif %}{{ stats.delta_travels }})</div>
 {% endblock %}
