@@ -139,9 +139,8 @@ class Mailer
     /**
      * Send statistic data about users and travels
      * @param array $stats
-     * @param string $email
      */
-    public function sendStats(array $stats, string $email)
+    public function sendStats(array $stats)
     {
         $date = new DateTime('now', new DateTimeZone('UTC'));
 
