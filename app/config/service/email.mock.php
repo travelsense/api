@@ -1,6 +1,6 @@
 <?php
 /**
- * Mail service config
+ * Mail service config for dev environments
  * @var $app Api\Application
  */
 require __DIR__ . '/email.php';

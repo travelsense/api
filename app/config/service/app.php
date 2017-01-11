@@ -5,7 +5,6 @@
  * @var $app Api\Application
  */
 
-use Api\Event\UpdatePicEvent;
 use Api\Exception\ApiException;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -57,10 +56,6 @@ $app->before(function (Request $request) {
             }
         }
     }
-});
-
-$app->on(UpdatePicEvent::UPDATE_USER_PIC, function (UpdatePicEvent $event) use ($app) {
-    $app['user_pic_updater']->updateUserPic($event);
 });
 
 // JSON Response

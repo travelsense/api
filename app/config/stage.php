@@ -11,5 +11,9 @@ return array_replace_recursive(
         'application' => [
             'debug' => true,
         ],
+        'jobs' => [
+            'cron_lock' => '/home/www/cache/job_queue.lock',
+            'event_storage_dir' => '/home/www/cache',
+        ],
     ]
 );

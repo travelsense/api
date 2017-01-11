@@ -10,5 +10,9 @@ return array_replace_recursive(
         'email' => [
             'booking_details_receivers' => ['karapetov@gmail.com', 'book@hoptrip.us']
         ],
+        'jobs' => [
+            'cron_lock' => '/www/cache/job_queue.lock',
+            'event_storage_dir' => '/www/cache',
+        ],
     ]
 );

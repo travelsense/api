@@ -5,15 +5,17 @@
 return [
     'secure_json' => false,
     'services' => [
-        __DIR__ . '/service/app.php',
-        __DIR__ . '/service/controllers.php',
-        __DIR__ . '/service/doctrine.php',
-        __DIR__ . '/service/email.php',
-        __DIR__ . '/service/mappers.php',
-        __DIR__ . '/service/misc.php',
-        __DIR__ . '/service/routing.php',
-        __DIR__ . '/service/security.php',
-        __DIR__ . '/service/wego.php',
+        'app'         => __DIR__ . '/service/app.php',
+        'controllers' => __DIR__ . '/service/controllers.php',
+        'doctrine'    => __DIR__ . '/service/doctrine.php',
+        'email'       => __DIR__ . '/service/email.php',
+        'events'      => __DIR__ . '/service/events.php',
+        'jobs'        => __DIR__ . '/service/jobs.php',
+        'mappers'     => __DIR__ . '/service/mappers.php',
+        'misc'        => __DIR__ . '/service/misc.php',
+        'routing'     => __DIR__ . '/service/routing.php',
+        'security'    => __DIR__ . '/service/security.php',
+        'wego'        => __DIR__ . '/service/wego.php',
     ],
     'application' => [
         'debug' => false,
@@ -25,15 +27,15 @@ return [
         ],
     ],
     'email' => [
-        'smtp_user' => 'noreply@hoptrip.us',
-        'smtp_password' => 'xxx',
-        'from_address' => 'noreply@hoptrip.us',
-        'from_name' => 'Hoptrip',
-        'base_url' => 'https://hoptrip.us',
-        'message_log' => '/tmp/email.log', // used in Api\Test\Mailer
-        'email_confirm' => 'https://hoptrip.us/email/confirm/%s',
-        'password_reset' => 'https://hoptrip.us/password/reset/%s',
-        'booking_details_receivers' => []
+        'smtp_user'                 => 'noreply@hoptrip.us',
+        'smtp_password'             => 'xxx',
+        'from_address'              => 'noreply@hoptrip.us',
+        'from_name'                 => 'Hoptrip',
+        'base_url'                  => 'https://hoptrip.us',
+        'message_log'               => '/tmp/email.log', // used in Api\Test\Mailer
+        'email_confirm'             => 'https://hoptrip.us/email/confirm/%s',
+        'password_reset'            => 'https://hoptrip.us/password/reset/%s',
+        'booking_details_receivers' => [],
     ],
     'security' => [
         'enabled' => true,
@@ -96,5 +98,9 @@ return [
     ],
     'image_copier' => [
         'timeout' => 5,
+    ],
+    'jobs' => [
+        'cron_lock' => '/tmp/job_queue.lock',
+        'event_storage_dir' => '/tmp',
     ],
 ];
