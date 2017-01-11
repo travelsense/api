@@ -1,7 +1,7 @@
 <?php
 namespace Api\Controller;
 
-use Api\Event\UpdatePicEvent;
+use Api\Event\UserLoggedWithFacebook;
 use Api\Exception\ApiException;
 use Api\Mapper\DB\UserMapper;
 use Api\Model\User;
@@ -156,6 +156,13 @@ class AuthControllerTest extends ControllerTestCase
                 'fbToken' => 'test_fb_access_token',
             ]));
 
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                UserLoggedWithFacebook::NAME,
+                $this->isInstanceOf(UserLoggedWithFacebook::class)
+            );
+
         $response = $this->controller->create($this->request);
         $this->assertEquals(["token" => "token1"], $response);
     }
@@ -179,8 +186,8 @@ class AuthControllerTest extends ControllerTestCase
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
             ->with(
-                UpdatePicEvent::UPDATE_USER_PIC,
-                $this->isInstanceOf(UpdatePicEvent::class)
+                UserLoggedWithFacebook::NAME,
+                $this->isInstanceOf(UserLoggedWithFacebook::class)
             );
 
         $this->session_manager->method('createSession')

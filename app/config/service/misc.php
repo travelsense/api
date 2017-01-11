@@ -59,9 +59,3 @@ $app['image_copier'] = function (Application $app) {
     );
 };
 
-$app['user_pic_updater'] = function (Application $app) {
-    return new UserPicUpdater(
-        $app['mapper.db.user'],
-        $app['image_copier']
-    );
-};

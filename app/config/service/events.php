@@ -4,8 +4,12 @@
  * @var \Api\Application $app
  */
 
-use Api\Event\UpdatePicEvent;
+use Api\Event\UserLoggedWithFacebook;
+use Api\Job\UpdateAvatar;
+use Api\JobQueue\JobQueueInterface;
 
-$app->on(UpdatePicEvent::UPDATE_USER_PIC, function (UpdatePicEvent $event) use ($app) {
-    $app['user_pic_updater']->updateUserPic($event);
+$app->on(UserLoggedWithFacebook::NAME, function (UserLoggedWithFacebook $event) use ($app) {
+    /** @var JobQueueInterface $queue */
+    $queue = $app['job.queue'];
+    $queue->add(new UpdateAvatar($event->getUserId(), $event->getPicUrl()));
 });
