@@ -28,9 +28,8 @@ class StatisticService
 
     /**
      * @param \DateTime $date
-     * @param string $email
      */
-    public function sendEmail(\DateTime $date, string $email)
+    public function sendEmail(\DateTime $date)
     {
         $ydate = clone $date;
         $stats_yesterday = $this->stats_mapper->getStats($ydate->modify('-1 day'));
@@ -50,6 +49,6 @@ class StatisticService
                 $stats['delta_travels'] = $stats['travels'] - $statistic['travels'];
             }
         }
-        $this->mailer_service->sendStats($stats, $email);
+        $this->mailer_service->sendStats($stats);
     }
 }
