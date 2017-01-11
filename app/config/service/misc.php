@@ -58,4 +58,3 @@ $app['image_copier'] = function (Application $app) {
         $app['config']['image_copier']['timeout']
     );
 };
-

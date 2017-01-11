@@ -25,18 +25,16 @@ $app['job.queue'] = function ($app): JobQueueInterface {
 
 $app['job.processor'] = function ($app): JobProcessorInterface {
     return new JobProcessor([
-        UpdateAvatar::NAME => function(int $user_id, string $url) use ($app) {
+        UpdateAvatar::NAME => function (int $user_id, string $url) use ($app) {
             $app['mapper.db.user']->updatePic($user_id, $app['image_copier']->copyFrom($url));
-        }
+        },
     ]);
 };
 
-$app['job.front_controller']= function ($app) {
+$app['job.front_controller'] = function ($app) {
     return new \Api\JobQueue\FrontController(
         $app['job.queue'],
         $app['job.processor'],
         new \F3\Flock\Lock($app['config']['jobs']['cron_lock'])
-
     );
-
 };
