@@ -7,7 +7,7 @@ class CronJobsTest extends TestCase
 {
     public function testExecutables()
     {
-        $script = __DIR__ . '/../../app/cron/job_queue.php';
+        $script = escapeshellarg(__DIR__ . '/../../app/cron/job_queue.php');
         exec("php $script", $output, $code);
         if ($output) {
             var_dump($output);
