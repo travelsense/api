@@ -9,11 +9,10 @@ class CronJobsTest extends TestCase
     {
         $script = __DIR__ . '/../../app/cron/job_queue.php';
         exec("php $script", $output, $code);
-        $this->assertEquals([], $output);
-        $this->assertEquals(0, $code);
-
         if ($output) {
             var_dump($output);
         }
+        $this->assertEquals([], $output);
+        $this->assertEquals(0, $code);
     }
 }
