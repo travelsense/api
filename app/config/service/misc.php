@@ -60,13 +60,6 @@ $app['image_copier'] = function (Application $app) {
     );
 };
 
-$app['user_pic_updater'] = function (Application $app) {
-    return new UserPicUpdater(
-        $app['mapper.db.user'],
-        $app['image_copier']
-    );
-};
-
 $app['stats_service'] = function (Application $app) {
     return new StatisticService($app['mapper.db.stats'], $app['email.service']);
 };

@@ -3,9 +3,9 @@ namespace Api\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class UpdatePicEvent extends Event
+class UserLoggedWithFacebook extends Event
 {
-    const UPDATE_USER_PIC = 'pic_update';
+    const NAME = 'user_logged_with_facebook';
 
     private $user_id;
     private $pic_url;
@@ -19,7 +19,7 @@ class UpdatePicEvent extends Event
     /**
      * @return int
      */
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
@@ -27,7 +27,7 @@ class UpdatePicEvent extends Event
     /**
      * @return string
      */
-    public function getPicUrl()
+    public function getPicUrl(): string
     {
         return $this->pic_url;
     }
