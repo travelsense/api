@@ -27,7 +27,7 @@ class StatisticServiceTest extends \PHPUnit_Framework_TestCase
                 'travels' => 10
             ]);
         $this->mailer_service->expects($this->once())->method('sendStats')
-            ->with($this->callback(function ($arr){
+            ->with($this->callback(function ($arr) {
                 $this->assertEquals([
                     'users' => 2,
                     'travels' => 10,
@@ -37,6 +37,5 @@ class StatisticServiceTest extends \PHPUnit_Framework_TestCase
                 return $arr;
             }));
         $this->stats_service->sendEmail($date);
-
     }
 }
