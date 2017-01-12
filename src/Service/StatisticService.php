@@ -42,7 +42,7 @@ class StatisticService
                 $stats['travels'] = $statistic['travels'];
             }
         }
-        if (!empty($stats_yesterday)){
+        if (!empty($stats_yesterday)) {
             foreach ($stats_yesterday as $statistic) {
                 if ($statistic['users'] != null) {
                     $stats['delta_users'] = $stats['users'] - $statistic['users'];
