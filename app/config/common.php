@@ -104,5 +104,4 @@ return [
         'cron_lock' => '/tmp/job_queue.lock',
         'event_storage_dir' => '/tmp',
     ],
-    'stats_name' => ['users', 'travels'], // name should be equal table DB name
 ];

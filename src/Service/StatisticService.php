@@ -27,33 +27,45 @@ class StatisticService
     }
 
     /**
+     * Added statistic data to DB
+     */
+    public function buildStats()
+    {
+        $this->stats_mapper->buildStats();
+    }
+
+    /**
      * @param \DateTime $date
      */
     public function sendEmail(\DateTime $date)
     {
+        $stats = $this->getStats($date);
+        $this->mailer_service->sendStats($stats);
+    }
+
+    /**
+     * Getting statistic data
+     * @param \DateTime $date
+     * @return array
+     */
+    private function getStats(\DateTime $date): array
+    {
         $ydate = clone $date;
         $stats_yesterday = $this->stats_mapper->getStats($ydate->modify('-1 day'));
         $stats_today = $this->stats_mapper->getStats($date);
-        $stats = [];
-        foreach ($stats_today as $statistic) {
-            if ($statistic['users'] != null) {
-                $stats['users'] = $statistic['users'];
-            } elseif ($statistic['travels'] != null) {
-                $stats['travels'] = $statistic['travels'];
-            }
-        }
+        $stats = [
+            'users' => $stats_today['users'],
+            'travels' => $stats_today['travels']
+        ];
         if (!empty($stats_yesterday)) {
-            foreach ($stats_yesterday as $statistic) {
-                if ($statistic['users'] != null) {
-                    $stats['delta_users'] = $stats['users'] - $statistic['users'];
-                } elseif ($statistic['travels'] != null) {
-                    $stats['delta_travels'] = $stats['travels'] - $statistic['travels'];
-                }
-            }
+            $delta_users = $stats['users'] - $stats_yesterday['users'];
+            $stats['delta_users'] = ($delta_users > 0) ? ('+'.$delta_users) : $delta_users;
+            $delta_travels = $stats['travels'] - $stats_yesterday['travels'];
+            $stats['delta_travels'] = ($delta_travels > 0) ? ('+'.$delta_travels) : $delta_travels;
         } else {
             $stats['delta_users'] = 0;
             $stats['delta_travels'] = 0;
         }
-        $this->mailer_service->sendStats($stats);
+        return $stats;
     }
 }

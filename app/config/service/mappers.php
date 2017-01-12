@@ -27,7 +27,7 @@ $app['mapper.db.sessions'] = function ($app) {
 };
 
 $app['mapper.db.stats'] = function ($app) {
-    return new StatsMapper($app['dbs']['main'], $app['config']['stats_name']);
+    return new StatsMapper($app['dbs']['main']);
 };
 
 $app['mapper.db.travel'] = function ($app) {

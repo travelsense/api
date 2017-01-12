@@ -10,12 +10,10 @@ class StatsMapper
      * @var Connection
      */
     private $connection;
-    private $conf;
 
-    public function __construct(Connection $connection, array $conf)
+    public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-        $this->conf = $conf;
     }
 
     /**
@@ -23,12 +21,18 @@ class StatsMapper
      */
     public function buildStats()
     {
-        $sql = [];
-        foreach ($this->conf as $key => $name) {
-            $sql[$key] = " ('$name', (SELECT COUNT(*) FROM $name))";
-        }
-        $insert = $this->connection->prepare('INSERT INTO stats (name, value) VALUES' . implode(',', $sql));
-        $insert->execute();
+        $insert = $this->connection->prepare('
+           INSERT INTO stats (name, value)
+           VALUES
+             (:users, (SELECT COUNT(*) FROM users)),
+             (:travels, (SELECT COUNT(*) FROM travels))
+         ');
+        $insert->execute(
+            [
+                ':users' => 'users',
+                ':travels'  => 'travels',
+            ]
+        );
     }
 
     /**
@@ -39,16 +43,13 @@ class StatsMapper
      */
     public function getStats(DateTime $date): array
     {
-        $sql = [];
-        foreach ($this->conf as $key => $name) {
-            $sql[$key] = " (CASE name WHEN '$name' THEN value END) AS $name";
+        $select = $this->connection->prepare('SELECT name, value FROM stats WHERE date = :date');
+        $select->execute([':date' => $date->format('Y-m-d')]);
+        $stats = [];
+        $response = $select->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($response as $item) {
+            $stats[$item['name']] = $item['value'];
         }
-        $select = $this->connection->prepare('SELECT '. implode(',', $sql) . ' FROM stats WHERE date = :date');
-        $select->execute(
-            [
-                ':date' => $date->format('Y-m-d'),
-            ]
-        );
-        return $select->fetchAll(\PDO::FETCH_ASSOC);
+        return $stats;
     }
 }

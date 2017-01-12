@@ -294,34 +294,16 @@ class MappersTest extends TestCase
 
         $this->stats_mapper->buildStats();
         $stats = $this->stats_mapper->getStats(new \DateTime());
-        $statistic = [];
-        foreach ($stats as $stat) {
-            if ($stat['users'] != null) {
-                $statistic['users'] = $stat['users'];
-            } elseif ($stat['travels'] != null) {
-                $statistic['travels'] = $stat['travels'];
-            }
-        }
-
-        $this->sendStats();
 
         $select = $this->connection->prepare('SELECT COUNT(*) FROM users');
         $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
-        $this->assertEquals($row['count'], $statistic['users']);
+        $this->assertEquals($row['count'], $stats['users']);
 
         $select = $this->connection->prepare('SELECT COUNT(*) FROM travels');
         $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
-        $this->assertEquals($row['count'], $statistic['travels']);
-    }
-
-    private function sendStats()
-    {
-        $app = new Application('test');
-        $mailer_service = $app['email.service'];
-        $stats_service = new StatisticService($this->stats_mapper, $mailer_service);
-        $stats_service->sendEmail(new \DateTime());
+        $this->assertEquals($row['count'], $stats['travels']);
     }
 
     /**
