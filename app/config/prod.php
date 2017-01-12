@@ -9,7 +9,7 @@ return array_replace_recursive(
         ],
         'email' => [
             'booking_details_receivers' => ['karapetov@gmail.com', 'book@hoptrip.us'],
-            'stats_details'             => ['karapetov@gmail.com'],
+            'stats_receivers'           => ['karapetov@gmail.com'],
         ],
         'jobs' => [
             'cron_lock' => '/www/cache/job_queue.lock',

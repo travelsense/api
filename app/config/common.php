@@ -36,7 +36,7 @@ return [
         'email_confirm'             => 'https://hoptrip.us/email/confirm/%s',
         'password_reset'            => 'https://hoptrip.us/password/reset/%s',
         'booking_details_receivers' => [],
-        'stats_details'             => [],
+        'stats_receivers'           => [],
     ],
     'security' => [
         'enabled' => true,
@@ -104,4 +104,5 @@ return [
         'cron_lock' => '/tmp/job_queue.lock',
         'event_storage_dir' => '/tmp',
     ],
+    'stats_name' => ['users', 'travels'], // name should be equal table DB name
 ];

@@ -10,10 +10,12 @@ class StatsMapper
      * @var Connection
      */
     private $connection;
+    private $conf;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, array $conf)
     {
         $this->connection = $connection;
+        $this->conf = $conf;
     }
 
     /**
@@ -21,18 +23,13 @@ class StatsMapper
      */
     public function buildStats()
     {
-        $insert = $this->connection->prepare('
-          INSERT INTO stats (name, value)
-          VALUES
-            (:users, (SELECT COUNT(*) FROM users)),
-            (:travels, (SELECT COUNT(*) FROM travels))
-        ');
-        $insert->execute(
-            [
-                ':users' => 'users',
-                ':travels'  => 'travels',
-            ]
-        );
+        $sql = [];
+        foreach ($this->conf as $key => $name) {
+            $sql[$key] = " ('$name', (SELECT COUNT(*) FROM $name))";
+
+        }
+        $insert = $this->connection->prepare('INSERT INTO stats (name, value) VALUES' . implode(',', $sql));
+        $insert->execute();
     }
 
     /**
@@ -43,19 +40,14 @@ class StatsMapper
      */
     public function getStats(DateTime $date): array
     {
-        $select = $this->connection->prepare('
-            SELECT
-              (CASE name WHEN :users THEN value END) AS users,
-              (CASE name WHEN :travels THEN value END) AS travels
-            FROM stats
-            WHERE date BETWEEN :date AND :ydate
-        ');
+        $sql = [];
+        foreach ($this->conf as $key => $name) {
+            $sql[$key] = " (CASE name WHEN '$name' THEN value END) AS $name";
+        }
+        $select = $this->connection->prepare('SELECT '. implode(',', $sql) . ' FROM stats WHERE date = :date');
         $select->execute(
             [
-                ':users' => 'users',
-                ':travels' => 'travels',
                 ':date' => $date->format('Y-m-d'),
-                ':ydate' => $date->modify('+1 day')->format('Y-m-d')
             ]
         );
         return $select->fetchAll(\PDO::FETCH_ASSOC);

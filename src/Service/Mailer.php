@@ -152,7 +152,7 @@ class Mailer
                 'date' => $date
             ]))
             ->setFrom($this->conf['from_address'], $this->conf['from_name'])
-            ->setTo($this->conf['stats_details']);
+            ->setTo($this->conf['stats_receivers']);
         $sent = $this->mailer->send($message);
         if ($this->logger) {
             $this->logger->info(

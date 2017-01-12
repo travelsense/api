@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20170109195646 extends AbstractMigration
+class Version20170112113654 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -19,11 +19,10 @@ class Version20170109195646 extends AbstractMigration
             'CREATE TABLE stats
             (
               id SERIAL NOT NULL PRIMARY KEY ,
-              date TIMESTAMP DEFAULT now(),
+              date DATE DEFAULT now(),
               name TEXT,
               value INTEGER);'
         );
-
     }
 
     /**
