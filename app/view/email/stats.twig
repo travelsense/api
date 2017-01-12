@@ -1,7 +1,23 @@
-{% block subj %}HopTrip Statistic - {{ date|date("F d, Y h:i e") }}{% endblock %}
+{% block subj %}HopTrip Statistic{% endblock %}
 {% block body %}
     <h2>HopTrip Statistic - {{ date|date("F d, Y h:i e") }}</h2>
 
-    <div>Users: {{ stats.users }} ({% if {{ stats.delta_users }} > 0 %}+{% endif %}{{ stats.delta_users }})</div>
-    <div>Travels: {{ stats.travels }} ({% if {{ stats.delta_travels }} > 0 %}+{% endif %}{{ stats.delta_travels }})</div>
+    <div>Users: {{ stats.users }}
+        {% for key, val in stats %}
+            {% if key == 'delta_users' and val > 0 %}
+                (+{{ stats.delta_users }})
+            {% else %}
+                ({{ stats.delta_users }})
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div>Travels: {{ stats.travels }}
+        {% for key, val in stats %}
+            {% if key == 'delta_travels' and val > 0 %}
+                (+{{ stats.delta_travels }})
+            {% else %}
+                ({{ stats.delta_travels }})
+            {% endif %}
+        {% endfor %}
+    </div>
 {% endblock %}

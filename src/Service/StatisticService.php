@@ -42,12 +42,17 @@ class StatisticService
                 $stats['travels'] = $statistic['travels'];
             }
         }
-        foreach ($stats_yesterday as $statistic) {
-            if ($statistic['users'] != null) {
-                $stats['delta_users'] = $stats['users'] - $statistic['users'];
-            } elseif ($statistic['travels'] != null) {
-                $stats['delta_travels'] = $stats['travels'] - $statistic['travels'];
+        if (!empty($stats_yesterday)){
+            foreach ($stats_yesterday as $statistic) {
+                if ($statistic['users'] != null) {
+                    $stats['delta_users'] = $stats['users'] - $statistic['users'];
+                } elseif ($statistic['travels'] != null) {
+                    $stats['delta_travels'] = $stats['travels'] - $statistic['travels'];
+                }
             }
+        } else {
+            $stats['delta_users'] = 0;
+            $stats['delta_travels'] = 0;
         }
         $this->mailer_service->sendStats($stats);
     }

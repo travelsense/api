@@ -19,6 +19,7 @@ use Api\Model\Travel\Category;
 use Api\Model\Travel\Comment;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
+use Api\Service\StatisticService;
 use Api\Test\DatabaseTrait;
 use Doctrine\DBAL\Connection;
 use PDO;
@@ -302,6 +303,8 @@ class MappersTest extends TestCase
             }
         }
 
+        $this->sendStats();
+
         $select = $this->connection->prepare('SELECT COUNT(*) FROM users');
         $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
@@ -311,6 +314,14 @@ class MappersTest extends TestCase
         $select->execute();
         $row = $select->fetch(PDO::FETCH_NAMED);
         $this->assertEquals($row['count'], $statistic['travels']);
+    }
+
+    private function sendStats()
+    {
+        $app = new Application('test');
+        $mailer_service = $app['email.service'];
+        $stats_service = new StatisticService($this->stats_mapper, $mailer_service);
+        $stats_service->sendEmail(new \DateTime());
     }
 
     /**
