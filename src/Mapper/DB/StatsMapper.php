@@ -26,7 +26,6 @@ class StatsMapper
         $sql = [];
         foreach ($this->conf as $key => $name) {
             $sql[$key] = " ('$name', (SELECT COUNT(*) FROM $name))";
-
         }
         $insert = $this->connection->prepare('INSERT INTO stats (name, value) VALUES' . implode(',', $sql));
         $insert->execute();
