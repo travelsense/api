@@ -66,9 +66,14 @@ class StatisticService
         return $stats;
     }
 
-    private function getDelta(int $param1, int $param2)
+    /**
+     * @param int $param1
+     * @param int $param2
+     * @return string
+     */
+    private function getDelta(int $param1, int $param2): string
     {
         $delta_params = $param1 - $param2;
-        return ($delta_params > 0) ? ('+'.$delta_params) : $delta_params;
+        return ($delta_params > 0) ? ('+'.$delta_params) : "$delta_params";
     }
 }

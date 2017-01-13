@@ -38,7 +38,7 @@ class StatisticServiceTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals([
                     'users' => 2,
                     'travels' => 10,
-                    'delta_users' => -1,
+                    'delta_users' => '-1',
                     'delta_travels' => '+2'
                 ], $arr);
                 return $arr;
