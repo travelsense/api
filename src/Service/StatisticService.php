@@ -50,22 +50,25 @@ class StatisticService
      */
     private function getStats(\DateTime $date): array
     {
-        $ydate = clone $date;
-        $stats_yesterday = $this->stats_mapper->getStats($ydate->modify('-1 day'));
         $stats_today = $this->stats_mapper->getStats($date);
+        $stats_yesterday = $this->stats_mapper->getStats($date->modify('-1 day'));
         $stats = [
             'users' => $stats_today['users'],
             'travels' => $stats_today['travels']
         ];
         if (!empty($stats_yesterday)) {
-            $delta_users = $stats['users'] - $stats_yesterday['users'];
-            $stats['delta_users'] = ($delta_users > 0) ? ('+'.$delta_users) : $delta_users;
-            $delta_travels = $stats['travels'] - $stats_yesterday['travels'];
-            $stats['delta_travels'] = ($delta_travels > 0) ? ('+'.$delta_travels) : $delta_travels;
+            $stats['delta_users'] = $this->getDelta($stats['users'], $stats_yesterday['users']);
+            $stats['delta_travels'] = $this->getDelta($stats['travels'], $stats_yesterday['travels']);
         } else {
             $stats['delta_users'] = 0;
             $stats['delta_travels'] = 0;
         }
         return $stats;
+    }
+
+    private function getDelta(int $param1, int $param2)
+    {
+        $delta_params = $param1 - $param2;
+        return ($delta_params > 0) ? ('+'.$delta_params) : $delta_params;
     }
 }

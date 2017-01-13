@@ -21,18 +21,25 @@ class StatisticServiceTest extends \PHPUnit_Framework_TestCase
     public function testSendStats()
     {
         $date = new \DateTime();
-        $this->stats_mapper->expects($this->exactly(2))->method('getStats')
+        $this->stats_mapper->expects($this->at(0))->method('getStats')
+            ->with($date)
             ->willReturn([
                 'users' => 2,
                 'travels' => 10
+            ]);
+        $this->stats_mapper->expects($this->at(1))->method('getStats')
+            ->with($date->modify('-1 day'))
+            ->willReturn([
+                'users' => 3,
+                'travels' => 8
             ]);
         $this->mailer_service->expects($this->once())->method('sendStats')
             ->with($this->callback(function ($arr) {
                 $this->assertEquals([
                     'users' => 2,
                     'travels' => 10,
-                    'delta_users' => 0,
-                    'delta_travels' => 0
+                    'delta_users' => -1,
+                    'delta_travels' => '+2'
                 ], $arr);
                 return $arr;
             }));
