@@ -36,6 +36,7 @@ return [
         'email_confirm'             => 'https://hoptrip.us/email/confirm/%s',
         'password_reset'            => 'https://hoptrip.us/password/reset/%s',
         'booking_details_receivers' => [],
+        'stats_receivers'           => [],
     ],
     'security' => [
         'enabled' => true,

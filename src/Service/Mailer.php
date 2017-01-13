@@ -135,4 +135,34 @@ class Mailer
             );
         }
     }
+
+    /**
+     * Send statistic data about users and travels
+     * @param array $stats
+     */
+    public function sendStats(array $stats)
+    {
+        $date = new DateTime('now', new DateTimeZone('UTC'));
+
+        $template = $this->twig->load('email/stats.twig');
+
+        $message = Swift_Message::newInstance($template->renderBlock('subj', []))
+            ->setBody($template->renderBlock('body', [
+                'stats' => $stats,
+                'date' => $date
+            ]))
+            ->setFrom($this->conf['from_address'], $this->conf['from_name'])
+            ->setTo($this->conf['stats_receivers']);
+        $sent = $this->mailer->send($message);
+        if ($this->logger) {
+            $this->logger->info(
+                'Sending statistic details',
+                [
+                    'sent' => $sent,
+                    'Users' => $stats['users'],
+                    'Travels' => $stats['travels']
+                ]
+            );
+        }
+    }
 }

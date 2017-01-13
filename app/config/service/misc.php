@@ -8,6 +8,7 @@ use Api\ExpirableStorage;
 use Api\Service\ImageCopier;
 use Api\Service\ImageStorage;
 use Api\Service\PdfGenerator;
+use Api\Service\StatisticService;
 use Api\Service\UserPicUpdater;
 use F3\SimpleUber\Uber;
 use Facebook\Facebook;
@@ -57,4 +58,8 @@ $app['image_copier'] = function (Application $app) {
         $app['image_storage'],
         $app['config']['image_copier']['timeout']
     );
+};
+
+$app['stats_service'] = function (Application $app) {
+    return new StatisticService($app['mapper.db.stats'], $app['email.service']);
 };
