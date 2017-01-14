@@ -10,7 +10,6 @@ namespace Api;
 use Api\Mapper\DB\BookingMapper;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\CommentMapper;
-use Api\Mapper\DB\FlaggedCommentMapper;
 use Api\Mapper\DB\StatsMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\User\RoleMapper;
@@ -19,7 +18,6 @@ use Api\Model\Travel\Category;
 use Api\Model\Travel\Comment;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
-use Api\Service\StatService;
 use Api\Test\DatabaseTrait;
 use Doctrine\DBAL\Connection;
 use PDO;
@@ -122,8 +120,11 @@ class MappersTest extends TestCase
 
         // Non empty db
         $this->assertTrue($mapper->emailExists($user->getEmail()));
-        $this->assertSameUsers($user, $mapper->fetchByEmail($user->getEmail()));
-        $this->assertSameUsers($user, $mapper->fetchByEmailAndPassword($user->getEmail(), $user->getPassword()));
+        $this->assertEquals($user->getId(), $mapper->fetchByEmail($user->getEmail())->getId());
+        $this->assertEquals(
+            $user->getId(),
+            $mapper->fetchByEmailAndPassword($user->getEmail(), $user->getPassword())->getId()
+        );
 
         $mapper->confirmEmail($user->getEmail());
         $this->assertTrue($mapper->fetchById($user->getId())->isEmailConfirmed());
@@ -135,11 +136,11 @@ class MappersTest extends TestCase
             ->setLastName("New Tester");
 
         $mapper->update($user);
-        $this->assertSameUsers($user, $mapper->fetchByEmail($user->getEmail()));
+        $this->assertEquals($user->getId(), $mapper->fetchByEmail($user->getEmail())->getId());
 
          // Update picture
         $mapper->updatePic($user->getId(), 'https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5');
-        $this->assertSameUsers($user, $mapper->fetchByEmail($user->getEmail()));
+        $this->assertEquals($user->getId(), $mapper->fetchByEmail($user->getEmail())->getId());
     }
 
     /**
@@ -210,7 +211,7 @@ class MappersTest extends TestCase
         $favorites = $this->travel_mapper->fetchFavorites($user_b->getId());
         $this->assertCount(1, $favorites);
         // The author is User A
-        $this->assertSameUsers($user_a, $favorites[0]->getAuthor());
+        $this->assertEquals($user_a->getId(), $favorites[0]->getAuthorId());
         // And it's the same travel
         $this->assertSameTravels($travel, $favorites[0]);
     }
@@ -413,10 +414,7 @@ class MappersTest extends TestCase
      */
     private function createCategory(string $token): Category
     {
-        $category = new Category();
-        $category
-            ->setName($token)
-        ;
+        $category = new Category($token);
         $this->category_mapper->insert($category);
         return $category;
     }
@@ -467,21 +465,6 @@ class MappersTest extends TestCase
         ;
         $this->user_mapper->insert($user);
         return $user;
-    }
-
-    /**
-     * @param User $a
-     * @param User $b
-     */
-    private function assertSameUsers(User $a, User $b)
-    {
-        $this->assertTrue(
-            $a->getId() === $b->getId()
-            && $a->getEmail() === $b->getEmail()
-            && $a->getFirstName() === $b->getFirstName()
-            && $a->getLastName() === $b->getLastName()
-            && $a->isEmailConfirmed() === $b->isEmailConfirmed()
-        );
     }
 
     /**

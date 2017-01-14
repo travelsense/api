@@ -48,17 +48,15 @@ class CategoriesControllerTest extends ControllerTestCase
 
         $request->method('getContent')->willReturn($json);
 
-        $category = $this->getMockBuilder(Category::class)
-            ->setMethods(['getId', 'getName'])
-            ->getMock();
-
         $this->category_mapper->expects($this->once())
             ->method('insert')
             ->with($this->callback(function (Category $cat) {
+                $cat->setId(1);
                 return $cat->getName() === 'crazy fun';
-            }));
+            }))
+        ;
 
-        $this->assertEquals(['id' => $category->getId()], $this->controller->createCategory($request, $user));
+        $this->assertEquals(['id' => 1], $this->controller->createCategory($request, $user));
     }
 
     /**

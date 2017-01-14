@@ -1,11 +1,11 @@
 <?php
 namespace Api\Model\Travel;
 
-use Api\Model\IdTrait;
+use Api\Model\HasIdTrait;
 
 class Action
 {
-    use IdTrait;
+    use HasIdTrait;
 
     /**
      * @var int
