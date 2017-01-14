@@ -26,6 +26,7 @@ class StatsMapper
            VALUES
              (:date, :users, (SELECT COUNT(*) FROM users)),
              (:date, :travels, (SELECT COUNT(*) FROM travels))
+             ON CONFLICT ON CONSTRAINT stats_date_name DO NOTHING
          ');
         $insert->execute(
             [
@@ -52,5 +53,11 @@ class StatsMapper
             $stats[$item['name']] = $item['value'];
         }
         return $stats;
+    }
+
+    public function isUnique(\DateTime $date)
+    {
+        $select = $this->connection->prepare('SELECT * ');
+        $select->execute([':date' => $date->format('Y-m-d')]);
     }
 }
