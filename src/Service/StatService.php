@@ -3,7 +3,7 @@ namespace Api\Service;
 
 use Api\Mapper\DB\StatsMapper;
 
-class StatisticService
+class StatService
 {
     /**
      * @var Mailer
@@ -28,10 +28,11 @@ class StatisticService
 
     /**
      * Added statistic data to DB
+     * @param \DateTime $date
      */
-    public function buildStats()
+    public function buildStats(\DateTime $date)
     {
-        $this->stats_mapper->buildStats();
+        $this->stats_mapper->buildStats($date);
     }
 
     /**
