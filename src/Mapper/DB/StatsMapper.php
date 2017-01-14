@@ -1,7 +1,6 @@
 <?php
 namespace Api\Mapper\DB;
 
-use DateTime;
 use Doctrine\DBAL\Driver\Connection;
 
 class StatsMapper
@@ -18,19 +17,21 @@ class StatsMapper
 
     /**
      * Create statistic about users and travels
+     * @param \DateTime $date
      */
-    public function buildStats()
+    public function buildStats(\DateTime $date)
     {
         $insert = $this->connection->prepare('
-           INSERT INTO stats (name, value)
+           INSERT INTO stats (date, name, value)
            VALUES
-             (:users, (SELECT COUNT(*) FROM users)),
-             (:travels, (SELECT COUNT(*) FROM travels))
+             (:date, :users, (SELECT COUNT(*) FROM users)),
+             (:date, :travels, (SELECT COUNT(*) FROM travels))
          ');
         $insert->execute(
             [
-                ':users' => 'users',
-                ':travels'  => 'travels',
+                ':users'   => 'users',
+                ':travels' => 'travels',
+                ':date'    => $date->format('Y-m-d'),
             ]
         );
     }
@@ -38,10 +39,10 @@ class StatsMapper
     /**
      * Getting statistic about users and travels
      *
-     * @param DateTime $date
+     * @param \DateTime $date
      * @return array
      */
-    public function getStats(DateTime $date): array
+    public function getStats(\DateTime $date): array
     {
         $select = $this->connection->prepare('SELECT name, value FROM stats WHERE date = :date');
         $select->execute([':date' => $date->format('Y-m-d')]);

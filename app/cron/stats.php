@@ -2,5 +2,8 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 $app = new Api\Application();
-$app['stats_service']->buildStats();
-$app['stats_service']->sendEmail(new DateTime());
+/** @var \Api\Service\StatService $statService */
+$statService = $app['stats_service'];
+$now = new DateTime();
+$statService->buildStats($now);
+$statService->sendEmail($now);

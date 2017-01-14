@@ -15,7 +15,7 @@ class StatisticServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->mailer_service = $this->createMock(Mailer::class);
 
-        $this->stats_service = new StatisticService($this->stats_mapper, $this->mailer_service);
+        $this->stats_service = new StatService($this->stats_mapper, $this->mailer_service);
     }
 
     public function testSendStats()

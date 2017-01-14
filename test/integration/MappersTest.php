@@ -19,7 +19,7 @@ use Api\Model\Travel\Category;
 use Api\Model\Travel\Comment;
 use Api\Model\Travel\Travel;
 use Api\Model\User;
-use Api\Service\StatisticService;
+use Api\Service\StatService;
 use Api\Test\DatabaseTrait;
 use Doctrine\DBAL\Connection;
 use PDO;
@@ -292,8 +292,9 @@ class MappersTest extends TestCase
         $this->createTravel($user_b, 'testTravel 2');
         $this->createTravel($user_b, 'testTravel 3');
 
-        $this->stats_mapper->buildStats();
-        $stats = $this->stats_mapper->getStats(new \DateTime());
+        $now = new \DateTime();
+        $this->stats_mapper->buildStats($now);
+        $stats = $this->stats_mapper->getStats($now);
 
         $select = $this->connection->prepare('SELECT COUNT(*) FROM users');
         $select->execute();
