@@ -2,7 +2,6 @@
 namespace Api\Mapper\DB;
 
 use Api\DB\AbstractMapper;
-use Api\Model\Travel\Banner;
 
 class BannerMapper extends AbstractMapper
 {
@@ -17,18 +16,8 @@ class BannerMapper extends AbstractMapper
         return $select->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param array $row
-     * @return Banner
-     */
-    protected function create(array $row): Banner
+    protected function create(array $row)
     {
-        $banner = new Banner();
-        return $banner
-            ->setId($row['id'])
-            ->setTitle($row['title'])
-            ->setSubtitle($row['subtitle'])
-            ->setImage($row['image'])
-            ->setCategory($row['category']);
+        throw new \BadMethodCallException();
     }
 }

@@ -365,15 +365,12 @@ class TravelController extends ApiController
             $view['transportation'] = $travel->getTransportation();
             $view['app_version'] = $travel->getAppVersion();
 
-            $author = $travel->getAuthor();
-            if ($author) {
-                $view['author'] = [
-                    'id'        => $author->getId(),
-                    'firstName' => $author->getFirstName(),
-                    'lastName'  => $author->getLastName(),
-                    'picture'   => $author->getPicture(),
-                ];
-            }
+            $view['author'] = [
+                'id'        => $travel->getAuthorId(),
+                'firstName' => $travel->getAuthorFirstName(),
+                'lastName'  => $travel->getAuthorLastName(),
+                'picture'   => $travel->getAuthorPicture(),
+            ];
         }
         $view['is_favorited'] = $is_favorited;
         $view['image'] = $travel->getImage();
