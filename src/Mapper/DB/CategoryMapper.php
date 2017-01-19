@@ -144,9 +144,8 @@ class CategoryMapper extends AbstractMapper
      */
     protected function create(array $row): Category
     {
-        $category = new Category();
-        return $category
-            ->setId($row['id'])
-            ->setName($row['name']);
+        $category = new Category($row['name']);
+        $category->setId($row['id']);
+        return $category;
     }
 }

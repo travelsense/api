@@ -32,8 +32,7 @@ class CategoriesController extends ApiController
     {
         $json = DataObject::createFromString($request->getContent());
 
-        $category = new Category();
-        $category->setName($json->getString('name'));
+        $category = new Category($json->getString('name'));
         $this->category_mapper->insert($category);
         return ['id' => $category->getId()];
     }

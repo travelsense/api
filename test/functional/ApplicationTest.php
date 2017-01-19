@@ -138,11 +138,9 @@ class ApplicationTest extends ApplicationTestCase
         $this->category_mapper = $app['mapper.db.category'];
         $this->connection = $app['dbs']['main'];
 
-        $cat_a = new Category();
-        $cat_a = $cat_a->setName('a');
+        $cat_a = new Category('a');
         $this->category_mapper->insert($cat_a);
-        $cat_b = new Category();
-        $cat_b = $cat_b->setName('b');
+        $cat_b = new Category('b');
         $this->category_mapper->insert($cat_b);
 
         $cats = $this->client->getTravelCategories();

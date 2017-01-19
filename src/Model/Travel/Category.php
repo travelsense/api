@@ -1,32 +1,27 @@
 <?php
 namespace Api\Model\Travel;
 
-use Api\Model\IdTrait;
+use Api\Model\HasIdTrait;
 
 class Category
 {
-    use IdTrait;
+    use HasIdTrait;
 
     /**
      * @var string
      */
     private $name;
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function __construct(string $name)
     {
-        return $this->name;
+        $this->name = $name;
     }
 
     /**
-     * @param string $name
-     * @return Category
+     * @return string
      */
-    public function setName($name)
+    public function getName(): string
     {
-        $this->name = $name;
-        return $this;
+        return $this->name;
     }
 }

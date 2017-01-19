@@ -1,16 +1,16 @@
 <?php
 namespace Api\Model\Travel;
 
-use Api\Model\AuthorTrait;
-use Api\Model\IdTrait;
-use Api\Model\TimestampTrait;
+use Api\Model\HasAuthorTrait;
+use Api\Model\HasIdTrait;
+use Api\Model\HasTimestampTrait;
 use Api\Security\Access\SubjectInterface;
 
 class Travel implements SubjectInterface
 {
-    use IdTrait;
-    use TimestampTrait;
-    use AuthorTrait;
+    use HasIdTrait;
+    use HasTimestampTrait;
+    use HasAuthorTrait;
 
     /**
      * @var string

@@ -393,7 +393,6 @@ class TravelMapper extends AbstractMapper
         $travel->setPublished($row['is_published']);
         $travel->setImage($row['image']);
         $travel->setCreated(new \DateTime($row['created']));
-        $travel->setUpdated(new \DateTime($row['updated']));
         $travel->setCreationMode($row['creation_mode']);
         $travel->setEstimatedPrice($row['estimated_price']);
         $travel->setTransportation($row['transportation']);

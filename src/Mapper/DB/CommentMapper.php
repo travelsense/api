@@ -134,8 +134,7 @@ class CommentMapper extends AbstractMapper
             ->setAuthorId($row['author_id'])
             ->setTravelId($row['travel_id'])
             ->setText($row['text'])
-            ->setCreated(new \DateTime($row['created']))
-            ->setUpdated(new \DateTime($row['updated']));
+            ->setCreated(new \DateTime($row['created']));
     }
 
     protected function build(array $row)

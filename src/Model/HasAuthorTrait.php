@@ -5,7 +5,7 @@ namespace Api\Model;
  * Entity having a User as the author
  * @package Api\Model
  */
-trait AuthorTrait
+trait HasAuthorTrait
 {
     /**
      * @var int
@@ -25,9 +25,24 @@ trait AuthorTrait
         return $this->author_id;
     }
 
+    public function getAuthorFirstName(): string
+    {
+        return $this->author->getFirstName();
+    }
+
+    public function getAuthorLastName(): string
+    {
+        return $this->author->getLastName();
+    }
+
+    public function getAuthorPicture(): string
+    {
+        return $this->author->getPicture();
+    }
+
     /**
      * @param int $author_id
-     * @return self
+     * @return HasAuthorTrait
      */
     public function setAuthorId(int $author_id): self
     {
@@ -36,21 +51,13 @@ trait AuthorTrait
     }
 
     /**
-     * @return User
-     */
-    public function getAuthor(): User
-    {
-        return $this->author;
-    }
-
-    /**
      * @param User $author
-     * @return self
+     * @return HasAuthorTrait
      */
     public function setAuthor(User $author): self
     {
         $this->author = $author;
-        $this->author_id = $author->getId();
+        $this->setAuthorId($author->getId());
         return $this;
     }
 }
