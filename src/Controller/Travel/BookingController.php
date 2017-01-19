@@ -74,10 +74,10 @@ class BookingController
      */
     public function getStats(User $user): array
     {
-       $bookings_total = $this->booking_mapper->getBookingsTotal($user->getId());
+        $bookings_total = $this->booking_mapper->getBookingsTotal($user->getId());
         return [
             'bookingsTotal' => $bookings_total['bookings_total'],
-            'rewardTotal' => sprintf("%.02f",$bookings_total['reward_total']),
+            'rewardTotal' => sprintf("%.02f", $bookings_total['reward_total']),
             'bookingsLastWeek' => $this->booking_mapper->getStats($user->getId()),
         ];
     }

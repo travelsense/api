@@ -23,7 +23,8 @@ class BookingMapper
     public function registerBooking(int $user_id, int $travel_id, float $reward = 0)
     {
         $insert = $this->connection->prepare(
-            'INSERT INTO bookings (user_id, travel_id, reward) VALUES (:user_id, :travel_id, :reward) ON CONFLICT DO NOTHING'
+            'INSERT INTO bookings (user_id, travel_id, reward)
+            VALUES (:user_id, :travel_id, :reward) ON CONFLICT DO NOTHING'
         );
         $insert->execute([
             ':user_id' => $user_id,
