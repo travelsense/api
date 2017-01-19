@@ -1,6 +1,7 @@
 <?php
 namespace Api\Controller\Travel;
 
+use Api\JSON\DataObject;
 use Api\Mapper\DB\BookingMapper;
 use Api\Model\User;
 use Api\Service\Mailer;
@@ -24,7 +25,7 @@ class BookingController
     /**
      * @var float
      */
-    private $point_price = 0.01;
+    private $percent_reward = 0.01; // 1 %
 
     /**
      * StatsController constructor.
@@ -38,11 +39,11 @@ class BookingController
     }
 
     /**
-     * @param float $point_price
+     * @param float $percent_reward
      */
-    public function setPointPrice(float $point_price)
+    public function setPercentReward(float $percent_reward)
     {
-        $this->point_price = $point_price;
+        $this->percent_reward = $percent_reward;
     }
 
     /**
@@ -54,10 +55,14 @@ class BookingController
     public function registerBooking(User $user, int $id, Request $request)
     {
         $json = $request->getContent();
+        $json_obj = DataObject::createFromString($json);
+        $json_obj = $json_obj->getRootObject();
+        $reward = $json_obj->totalPrice ? ($json_obj->totalPrice * $this->percent_reward) : 0;
+        var_dump($reward);
         if ($this->logger) {
             $this->logger->debug($json);
         }
-        $this->booking_mapper->registerBooking($user->getId(), $id);
+        $this->booking_mapper->registerBooking($user->getId(), $id, $reward);
         $this->mailer_service->sendBookingDetails(json_decode($json, true));
         return [];
     }
@@ -69,10 +74,10 @@ class BookingController
      */
     public function getStats(User $user): array
     {
-        $bookings_total = $this->booking_mapper->getBookingsTotal($user->getId());
+       $bookings_total = $this->booking_mapper->getBookingsTotal($user->getId());
         return [
-            'bookingsTotal' => $bookings_total,
-            'rewardTotal' => $bookings_total * $this->point_price,
+            'bookingsTotal' => $bookings_total['bookings_total'],
+            'rewardTotal' => sprintf("%.02f",$bookings_total['reward_total']),
             'bookingsLastWeek' => $this->booking_mapper->getStats($user->getId()),
         ];
     }
