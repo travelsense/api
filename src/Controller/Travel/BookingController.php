@@ -58,7 +58,6 @@ class BookingController
         $json_obj = DataObject::createFromString($json);
         $json_obj = $json_obj->getRootObject();
         $reward = $json_obj->totalPrice ? ($json_obj->totalPrice * $this->percent_reward) : 0;
-        var_dump($reward);
         if ($this->logger) {
             $this->logger->debug($json);
         }
