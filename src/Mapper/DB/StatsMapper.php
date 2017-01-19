@@ -26,6 +26,7 @@ class StatsMapper
            VALUES
              (:date, :users, (SELECT COUNT(*) FROM users)),
              (:date, :travels, (SELECT COUNT(*) FROM travels))
+             ON CONFLICT ON CONSTRAINT stats_date_name DO NOTHING
          ');
         $insert->execute(
             [
