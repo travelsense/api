@@ -54,10 +54,4 @@ class StatsMapper
         }
         return $stats;
     }
-
-    public function isUnique(\DateTime $date)
-    {
-        $select = $this->connection->prepare('SELECT * ');
-        $select->execute([':date' => $date->format('Y-m-d')]);
-    }
 }
