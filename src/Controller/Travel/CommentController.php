@@ -1,14 +1,12 @@
 <?php
-
 namespace Api\Controller\Travel;
 
 use Api\Controller\ApiController;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
-use Api\Mapper\DB\CommentMapper;
+use Api\Mapper\DB\Travel\CommentMapper;
 use Api\Model\Travel\Comment;
 use Api\Model\User;
-use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

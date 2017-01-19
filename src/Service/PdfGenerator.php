@@ -23,7 +23,8 @@ class PdfGenerator
     public function generate(string $html, mPDF $mpdf = null): string
     {
         $mpdf = $mpdf ?: new mPDF();
-        $mpdf->WriteHTML($html);
+        // TODO remove error suppression when fixed https://github.com/dompdf/dompdf/issues/1272
+        @$mpdf->WriteHTML($html);
         $mpdf->SetProtection($this->permissions, $this->password, null, $this->key_length);
         return $mpdf->Output(null, self::AS_STRING);
     }

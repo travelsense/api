@@ -1,7 +1,8 @@
 <?php
-namespace Api\Mapper\DB;
+namespace Api\Mapper\DB\Travel;
 
 use Api\DB\AbstractMapper;
+use Api\Mapper\DB\UserMapper;
 use Api\Model\Travel\Comment;
 use Api\Model\User;
 
