@@ -74,7 +74,7 @@ class BookingController
         $bookings_total = $this->booking_mapper->getBookingsTotal($user->getId());
         return [
             'bookingsTotal' => $bookings_total['bookings_total'],
-            'rewardTotal' => round($bookings_total['reward_total'], 2, PHP_ROUND_HALF_ODD),
+            'rewardTotal' => $bookings_total['reward_total'],
             'bookingsLastWeek' => $this->booking_mapper->getStats($user->getId()),
         ];
     }
