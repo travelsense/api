@@ -18,9 +18,9 @@ class BookingMapper
     /**
      * @param int $user_id
      * @param int $travel_id
-     * @param float $reward
+     * @param int $reward
      */
-    public function registerBooking(int $user_id, int $travel_id, float $reward = 0)
+    public function registerBooking(int $user_id, int $travel_id, int $reward = 0)
     {
         $insert = $this->connection->prepare(
             'INSERT INTO bookings (user_id, travel_id, reward)
