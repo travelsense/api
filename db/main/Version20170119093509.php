@@ -15,7 +15,7 @@ class Version20170119093509 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $this->addSql('ALTER TABLE bookings ADD COLUMN reward FLOAT4 NOT NULL DEFAULT 0');
+        $this->addSql('ALTER TABLE bookings ADD COLUMN reward INTEGER NOT NULL DEFAULT 0');
     }
 
     /**

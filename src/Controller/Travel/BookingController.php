@@ -1,7 +1,6 @@
 <?php
 namespace Api\Controller\Travel;
 
-use Api\JSON\DataObject;
 use Api\Mapper\DB\BookingMapper;
 use Api\Model\User;
 use Api\Service\Mailer;
@@ -55,13 +54,12 @@ class BookingController
     public function registerBooking(User $user, int $id, Request $request)
     {
         $json = $request->getContent();
-        $json_obj = DataObject::createFromString($json);
-        $json_obj = $json_obj->getRootObject();
-        $reward = $json_obj->totalPrice ? ($json_obj->totalPrice * $this->percent_reward) : 0;
+        $json_obj = json_decode($json);
+        $reward = $json_obj->totalPrice ? (($json_obj->totalPrice * 100) * $this->percent_reward) : 0;
         if ($this->logger) {
             $this->logger->debug($json);
         }
-        $this->booking_mapper->registerBooking($user->getId(), $id, $reward);
+        $this->booking_mapper->registerBooking($user->getId(), $id, round($reward));
         $this->mailer_service->sendBookingDetails(json_decode($json, true));
         return [];
     }
@@ -76,7 +74,7 @@ class BookingController
         $bookings_total = $this->booking_mapper->getBookingsTotal($user->getId());
         return [
             'bookingsTotal' => $bookings_total['bookings_total'],
-            'rewardTotal' => sprintf("%.02f", $bookings_total['reward_total']),
+            'rewardTotal' => round($bookings_total['reward_total'], 2, PHP_ROUND_HALF_ODD),
             'bookingsLastWeek' => $this->booking_mapper->getStats($user->getId()),
         ];
     }

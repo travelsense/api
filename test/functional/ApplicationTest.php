@@ -177,7 +177,7 @@ class ApplicationTest extends ApplicationTestCase
         $this->client->registerBooking($id, $payload);
         $stats = $this->client->getStats();
         $this->assertEquals(1, $stats->bookingsTotal);
-        $this->assertEquals(12.35, $stats->rewardTotal);
+        $this->assertEquals(1235, $stats->rewardTotal);
         $total = 0;
         foreach ($stats->bookingsLastWeek as $item) {
             $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item->date);
