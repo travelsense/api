@@ -351,8 +351,14 @@ class MappersTest extends TestCase
         }
 
         // getBookingsTotal
-        $this->assertEquals(2, $this->booking_mapper->getBookingsTotal($author_a->getId()));
-        $this->assertEquals(1, $this->booking_mapper->getBookingsTotal($author_b->getId()));
+        $this->assertEquals([
+            'bookings_total' => 2,
+            'reward_total' => 0
+        ], $this->booking_mapper->getBookingsTotal($author_a->getId()));
+        $this->assertEquals([
+            'bookings_total' => 1,
+            'reward_total' => 0
+        ], $this->booking_mapper->getBookingsTotal($author_b->getId()));
 
         // getStats
         $stats = $this->booking_mapper->getStats($author_a->getId());

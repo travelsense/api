@@ -146,7 +146,7 @@ class Mailer
 
         $template = $this->twig->load('email/stats.twig');
 
-        $message = Swift_Message::newInstance($template->renderBlock('subj', []))
+        $message = Swift_Message::newInstance($template->renderBlock('subj', ['date' => $date]))
             ->setBody($template->renderBlock('body', [
                 'stats' => $stats,
                 'date' => $date

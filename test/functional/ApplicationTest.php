@@ -172,10 +172,12 @@ class ApplicationTest extends ApplicationTestCase
             'transportation' => 2,
         ]);
 
-        $this->client->registerBooking($id, ['foo' => 'bar']);
+        $payload = json_decode(file_get_contents(__DIR__ . '/stub/booking_request.json'), true);
+
+        $this->client->registerBooking($id, $payload);
         $stats = $this->client->getStats();
         $this->assertEquals(1, $stats->bookingsTotal);
-        $this->assertEquals(0.1, $stats->rewardTotal);
+        $this->assertEquals(1235, $stats->rewardTotal);
         $total = 0;
         foreach ($stats->bookingsLastWeek as $item) {
             $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item->date);
