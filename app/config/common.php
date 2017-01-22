@@ -82,7 +82,7 @@ return [
         'ts_code' => 'xxx',
     ],
     'booking' => [
-        'reward_point_price' => 0.1, // 10 cents
+        'percent_reward' => 0.01, // 1 %
     ],
     'pdf_generator' => [
         'permissions' => ['copy', 'print', 'extract', 'print-highres'],
