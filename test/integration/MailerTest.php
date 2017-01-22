@@ -66,11 +66,11 @@ class MailerTest extends PHPUnit_Framework_TestCase
         $test = $this;
         $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
             $test->assertEquals(
-            "    Hop Trip Stats - ".date('F d, Y')."\n\n    Users: 2 (-1)\n    Travels: 10 (+5)\n",
+            "    HopTrip Stats - ".date('F d, Y')."\n\n    Users: 2 (-1)\n    Travels: 10 (+5)\n",
                 $msg->getBody()
             );
             $test->assertEquals(
-                "Hop Trip Stats ".date('M d'),
+                "HopTrip Stats ".date('M d'),
                 $msg->getSubject()
             );
         });
