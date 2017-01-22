@@ -4,17 +4,16 @@
  * @var $app Api\Application
  */
 
+use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\BannerMapper;
 use Api\Mapper\DB\BookingMapper;
+use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\StatsMapper;
+use Api\Mapper\DB\Travel\CommentMapper;
 use Api\Mapper\DB\TravelMapper;
-use Api\Mapper\DB\CommentMapper;
 use Api\Mapper\DB\User\RoleMapper;
 use Api\Mapper\DB\UserMapper;
-use Api\Mapper\DB\CategoryMapper;
-use Api\Mapper\DB\ActionMapper;
-use Api\Mapper\DB\FlaggedCommentMapper;
 
 $app['mapper.db.user'] = function ($app) {
     $mapper = new UserMapper($app['dbs']['main']);

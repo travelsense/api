@@ -40,6 +40,7 @@ $app['storage.expirable_storage'] = function (Application $app) {
 $app['pdf_generator'] = function (Application $app) {
     $conf = $app['config']['pdf_generator'];
     return new PdfGenerator(
+        new \Api\Service\SilentMPDF(),
         $conf['permissions'],
         $conf['password'],
         $conf['key_length']
