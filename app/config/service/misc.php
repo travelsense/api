@@ -5,6 +5,9 @@
 
 use Api\Application;
 use Api\ExpirableStorage;
+use Api\Service\GeoCoder\DateStorage;
+use Api\Service\GeoCoder\GoogleMapsClient;
+use Api\Service\GeoCoder\GeocoderService;
 use Api\Service\ImageCopier;
 use Api\Service\ImageStorage;
 use Api\Service\PdfGenerator;
@@ -63,4 +66,22 @@ $app['image_copier'] = function (Application $app) {
 
 $app['stats_service'] = function (Application $app) {
     return new StatService($app['mapper.db.stats'], $app['email.service']);
+};
+
+$app['google_maps_client'] = function (Application $app) {
+    return new GoogleMapsClient(
+        $app['config']['google_maps_geocoding']['url'],
+        $app['config']['google_maps_geocoding']['key']
+    );
+};
+
+$app['geocoder_service'] = function (Application $app) {
+    $date_write_reader = new DateStorage(
+        $app['config']['google_maps_geocoding']['file_name']
+    );
+    return new GeocoderService(
+        $app['google_maps_client'],
+        $date_write_reader,
+        $app['mapper.db.travel']
+    );
 };
