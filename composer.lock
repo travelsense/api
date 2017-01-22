@@ -4,8 +4,174 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7660ab7fe617f0b14ba6144727fb0387",
+    "content-hash": "a283d21b8e32d56175ec7eb22ffab78e",
     "packages": [
+        {
+            "name": "beberlei/assert",
+            "version": "v2.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beberlei/assert.git",
+                "reference": "c33b48de9ab5c254347ef40389f012b655a04cba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/c33b48de9ab5c254347ef40389f012b655a04cba",
+                "reference": "c33b48de9ab5c254347ef40389f012b655a04cba",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpunit/phpunit": "@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Assert\\": "lib/Assert"
+                },
+                "files": [
+                    "lib/Assert/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Richard Quadling",
+                    "email": "rquadling@gmail.com",
+                    "role": "Collaborator"
+                }
+            ],
+            "description": "Thin assertion library for input validation in business models.",
+            "keywords": [
+                "assert",
+                "assertion",
+                "validation"
+            ],
+            "time": "2017-01-06T18:10:03+00:00"
+        },
+        {
+            "name": "bernard/bernard",
+            "version": "1.0.0-alpha4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bernardphp/bernard.git",
+                "reference": "bdb69cb895ec82d600c42c486e6c94391bc8f128"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bernardphp/bernard/zipball/bdb69cb895ec82d600c42c486e6c94391bc8f128",
+                "reference": "bdb69cb895ec82d600c42c486e6c94391bc8f128",
+                "shasum": ""
+            },
+            "require": {
+                "beberlei/assert": "~2.1",
+                "bernard/normalt": "~1.0",
+                "php": "~5.4|~7.0",
+                "symfony/event-dispatcher": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "~2.4|~3.0",
+                "doctrine/dbal": "~2.3",
+                "iron-io/iron_mq": "~1.4",
+                "league/container": "~1.0",
+                "pda/pheanstalk": "~3.0",
+                "php-amqplib/php-amqplib": "~2.5",
+                "phpspec/phpspec": "~2.0",
+                "pimple/pimple": "~1.0",
+                "predis/predis": "~0.8",
+                "psr/log": "~1.0",
+                "symfony/console": "~2.3|~3.0",
+                "symfony/dependency-injection": "~2.3|~3.0"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "Allow sending messages to AWS services like Simple Queue Service",
+                "doctrine/dbal": "Allow sending messages to simulated message queue in a database via doctrine dbal",
+                "iron-io/iron_mq": "Allow sending messages to IronMQ",
+                "mongodb/mongodb": "Allow sending messages to a MongoDB server via PHP Driver",
+                "pda/pheanstalk": "Allow sending messages to Beanstalk using pheanstalk",
+                "php-amqplib/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
+                "predis/predis": "Allow sending messages to Redis using predis"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Bernard\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Message queue implemented in PHP with Redis as a backend.",
+            "homepage": "https://github.com/bernardphp/bernard",
+            "keywords": [
+                "bernard",
+                "message",
+                "message queue",
+                "queue"
+            ],
+            "time": "2016-10-12T07:10:56+00:00"
+        },
+        {
+            "name": "bernard/normalt",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bernardphp/normalt.git",
+                "reference": "1cde16b1a2a5a20964c3e2fea66e2b98c3f57d41"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bernardphp/normalt/zipball/1cde16b1a2a5a20964c3e2fea66e2b98c3f57d41",
+                "reference": "1cde16b1a2a5a20964c3e2fea66e2b98c3f57d41",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/serializer": "^2.3 || ^3.0"
+            },
+            "require-dev": {
+                "doctrine/common": "^2.1",
+                "phpspec/phpspec": "^2.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Normalt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Normalt is a extension to Symfony Serializer that only implements the Normalization part",
+            "keywords": [
+                "denormalization",
+                "normalization"
+            ],
+            "time": "2016-05-03T08:09:59+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.3.1",
@@ -548,6 +714,55 @@
                 "migrations"
             ],
             "time": "2016-12-25T22:54:00+00:00"
+        },
+        {
+            "name": "f3ath/flock",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/f3ath/flock.git",
+                "reference": "7044a588457fb649acb7acf0c8b0cf4701d19292"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/f3ath/flock/zipball/7044a588457fb649acb7acf0c8b0cf4701d19292",
+                "reference": "7044a588457fb649acb7acf0c8b0cf4701d19292",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "f3ath/forkrunner": "0.*",
+                "phpunit/phpunit": "^5.7",
+                "squizlabs/php_codesniffer": "^2.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "F3\\Flock\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Karapetov",
+                    "email": "karapetov@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Simple locking mechanism on top of flock(). Ideal for cron jobs.",
+            "homepage": "https://github.com/f3ath/Flock",
+            "keywords": [
+                "cron",
+                "flock",
+                "lock",
+                "locking"
+            ],
+            "time": "2017-01-09T01:17:23+00:00"
         },
         {
             "name": "f3ath/simpleuber",
@@ -2239,6 +2454,80 @@
             "time": "2016-12-08T15:18:22+00:00"
         },
         {
+            "name": "symfony/serializer",
+            "version": "v3.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/serializer.git",
+                "reference": "a47a5151f72908781df6daf1a00f31c4efa33c63"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/a47a5151f72908781df6daf1a00f31c4efa33c63",
+                "reference": "a47a5151f72908781df6daf1a00f31c4efa33c63",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "conflict": {
+                "symfony/property-access": ">=3.0,<3.0.4|>=2.8,<2.8.4",
+                "symfony/yaml": "<3.1"
+            },
+            "require-dev": {
+                "doctrine/annotations": "~1.0",
+                "doctrine/cache": "~1.0",
+                "phpdocumentor/reflection-docblock": "~3.0",
+                "symfony/cache": "~3.1",
+                "symfony/config": "~2.8|~3.0",
+                "symfony/http-foundation": "~2.8|~3.0",
+                "symfony/property-access": "~2.8|~3.0",
+                "symfony/property-info": "~3.1",
+                "symfony/yaml": "~3.1"
+            },
+            "suggest": {
+                "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
+                "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
+                "psr/cache-implementation": "For using the metadata cache.",
+                "symfony/config": "For using the XML mapping loader.",
+                "symfony/http-foundation": "To use the DataUriNormalizer.",
+                "symfony/property-access": "For using the ObjectNormalizer.",
+                "symfony/property-info": "To deserialize relations.",
+                "symfony/yaml": "For using the default YAML mapping loader."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Serializer\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Serializer Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-12-13T09:39:43+00:00"
+        },
+        {
             "name": "symfony/translation",
             "version": "v3.2.1",
             "source": {
@@ -2762,16 +3051,16 @@
         },
         {
             "name": "f3ath/git-changelog",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/f3ath/git-changelog.git",
-                "reference": "1775a02759af14c218f919626cb596854f550ded"
+                "reference": "54992bde1a8ea304430cef5b50c5639ecf0cbdb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/f3ath/git-changelog/zipball/1775a02759af14c218f919626cb596854f550ded",
-                "reference": "1775a02759af14c218f919626cb596854f550ded",
+                "url": "https://api.github.com/repos/f3ath/git-changelog/zipball/54992bde1a8ea304430cef5b50c5639ecf0cbdb7",
+                "reference": "54992bde1a8ea304430cef5b50c5639ecf0cbdb7",
                 "shasum": ""
             },
             "require": {
@@ -2813,7 +3102,7 @@
                 "release",
                 "release notes"
             ],
-            "time": "2017-01-06T18:55:07+00:00"
+            "time": "2017-01-07T01:48:17+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -4662,6 +4951,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "bernard/bernard": 15,
         "squizlabs/php_codesniffer": 5
     },
     "prefer-stable": false,

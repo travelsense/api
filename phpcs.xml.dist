@@ -6,6 +6,7 @@
     <file>src</file>
     <file>test</file>
     <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>src/Service/SilentMPDF.php</exclude-pattern>
     <rule ref="PSR2"/>
     <rule ref="vendor/f3ath/code-sniffs/src"/>
 </ruleset>

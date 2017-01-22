@@ -5,8 +5,8 @@ use Api\Security\Access\ActorInterface;
 
 class User implements ActorInterface
 {
-    use IdTrait;
-    use TimestampTrait;
+    use HasIdTrait;
+    use HasTimestampTrait;
 
     /**
      * @var string

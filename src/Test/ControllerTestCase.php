@@ -1,10 +1,9 @@
 <?php
 namespace Api\Test;
 
-use DateTime;
-use PHPUnit_Framework_TestCase;
+use Api\Model\Travel\Category;
 
-class ControllerTestCase extends PHPUnit_Framework_TestCase
+class ControllerTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
@@ -20,7 +19,7 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
         $user->method('getLastName')->willReturn('Tester');
         $user->method('getId')->willReturn(1);
         $user->method('isCreator')->willReturn(false);
-        $user->method('getCreated')->willReturn(new DateTime('2000-01-01'));
+        $user->method('getCreated')->willReturn(new \DateTime('2000-01-01'));
         return $user;
     }
 
@@ -29,9 +28,7 @@ class ControllerTestCase extends PHPUnit_Framework_TestCase
      */
     protected function buildCategory()
     {
-        $category = $this->getMockBuilder('Api\\Model\\Travel\\Category')
-            ->setMethods(['getId', 'getName'])
-            ->getMock();
+        $category = $this->createMock(Category::class);
         $category->method('getId')->willReturn(1);
         $category->method('getName')->willReturn('test_category');
         return $category;

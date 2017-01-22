@@ -54,4 +54,27 @@ class MailerTest extends PHPUnit_Framework_TestCase
 
         $this->service->sendPasswordResetLink('user@examle.com', 'xxx');
     }
+
+    public function testSendStats()
+    {
+        $stats = [
+            'users' => 2,
+            'travels' => 10,
+            'delta_users' => -1,
+            'delta_travels' => "+5"
+        ];
+        $test = $this;
+        $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
+            $test->assertEquals(
+            "    HopTrip Stats - ".date('F d, Y')."\n\n    Users: 2 (-1)\n    Travels: 10 (+5)\n",
+                $msg->getBody()
+            );
+            $test->assertEquals(
+                "HopTrip Stats ".date('M d'),
+                $msg->getSubject()
+            );
+        });
+
+        $this->service->sendStats($stats);
+    }
 }

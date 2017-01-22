@@ -3,9 +3,7 @@ namespace Api\Mapper\DB;
 
 use Api\DB\AbstractMapper;
 use Api\Model\Travel\Travel;
-use DateTime;
-use Doctrine\DBAL\Statement;
-use PDO;
+use Doctrine\DBAL\Driver\Statement;
 
 /**
  * Class TravelMapper
@@ -62,7 +60,7 @@ class TravelMapper extends AbstractMapper
             'SELECT t.*, u.* FROM travels t JOIN users u ON t.author_id = u.id WHERE t.id = :id AND NOT deleted'
         );
         $select->execute(['id' => $id]);
-        $row = $select->fetch(PDO::FETCH_NAMED);
+        $row = $select->fetch(\PDO::FETCH_NAMED);
         if (empty($row)) {
             return null;
         }
@@ -131,9 +129,9 @@ class TravelMapper extends AbstractMapper
         ');
         $this->bindCommonValues($insert, $travel);
         $insert->execute();
-        $row = $insert->fetch(PDO::FETCH_ASSOC);
+        $row = $insert->fetch(\PDO::FETCH_ASSOC);
         $travel->setId($row['id']);
-        $travel->setCreated(new DateTime($row['created']));
+        $travel->setCreated(new \DateTime($row['created']));
 
         $this->category_mapper->setTravelCategories($travel->getId(), $travel->getCategoryIds());
     }
@@ -381,7 +379,7 @@ class TravelMapper extends AbstractMapper
             WHERE id = :id
         ');
         $this->bindCommonValues($update, $travel);
-        $update->bindValue('id', $travel->getId(), PDO::PARAM_INT);
+        $update->bindValue('id', $travel->getId(), \PDO::PARAM_INT);
         $update->execute();
     }
 
@@ -412,8 +410,7 @@ class TravelMapper extends AbstractMapper
         $travel->setTitle($row['title']);
         $travel->setPublished($row['is_published']);
         $travel->setImage($row['image']);
-        $travel->setCreated(new DateTime($row['created']));
-        $travel->setUpdated(new DateTime($row['updated']));
+        $travel->setCreated(new \DateTime($row['created']));
         $travel->setCreationMode($row['creation_mode']);
         $travel->setEstimatedPrice($row['estimated_price']);
         $travel->setTransportation($row['transportation']);

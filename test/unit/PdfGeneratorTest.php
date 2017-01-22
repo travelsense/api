@@ -25,14 +25,8 @@ class PdfGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('SetProtection')
             ->with($perm, 'my_password', null, 512);
 
-        $generator = new PdfGenerator($perm, 'my_password', 512);
+        $generator = new PdfGenerator($mpdf, $perm, 'my_password', 512);
 
-        $this->assertEquals('my pdf', $generator->generate('my html', $mpdf));
-    }
-
-    public function testDefaultMpdf()
-    {
-        $generator = new PdfGenerator([], 'my_password', 512);
-        $this->assertNotEmpty($generator->generate('my html'));
+        $this->assertEquals('my pdf', $generator->generate('my html'));
     }
 }

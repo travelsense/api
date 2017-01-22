@@ -8,6 +8,7 @@ use Api\ExpirableStorage;
 use Api\Service\ImageCopier;
 use Api\Service\ImageStorage;
 use Api\Service\PdfGenerator;
+use Api\Service\StatService;
 use Api\Service\UserPicUpdater;
 use F3\SimpleUber\Uber;
 use Facebook\Facebook;
@@ -39,6 +40,7 @@ $app['storage.expirable_storage'] = function (Application $app) {
 $app['pdf_generator'] = function (Application $app) {
     $conf = $app['config']['pdf_generator'];
     return new PdfGenerator(
+        new \Api\Service\SilentMPDF(),
         $conf['permissions'],
         $conf['password'],
         $conf['key_length']
@@ -59,9 +61,6 @@ $app['image_copier'] = function (Application $app) {
     );
 };
 
-$app['user_pic_updater'] = function (Application $app) {
-    return new UserPicUpdater(
-        $app['mapper.db.user'],
-        $app['image_copier']
-    );
+$app['stats_service'] = function (Application $app) {
+    return new StatService($app['mapper.db.stats'], $app['email.service']);
 };

@@ -1,9 +1,19 @@
 <?php
 namespace Api\Mapper\DB;
 
+use Doctrine\DBAL\Driver\Connection;
+
 class SessionMapper
 {
-    use ConnectionDependentTrait;
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
 
     /**
      * @param int    $user_id

@@ -1,7 +1,7 @@
 <?php
 namespace Api\Controller;
 
-use Api\Event\UpdatePicEvent;
+use Api\Event\UserLoggedWithFacebook;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
 use Api\Mapper\DB\UserMapper;
@@ -125,8 +125,8 @@ class AuthController extends ApiController
         $pic = $fb_user->getPicture();
         if ($pic) {
             $this->dispatcher->dispatch(
-                UpdatePicEvent::UPDATE_USER_PIC,
-                new UpdatePicEvent($user->getId(), $pic->getUrl())
+                UserLoggedWithFacebook::NAME,
+                new UserLoggedWithFacebook($user->getId(), $pic->getUrl())
             );
         }
         return $user;
