@@ -1,5 +1,5 @@
 <?php
-return array_merge_recursive(
+return array_replace_recursive(
     require __DIR__ . '/common.php',
     [
         'application' => [
