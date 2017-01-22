@@ -4,6 +4,7 @@ namespace Test;
 use Api\Application;
 use Api\Mapper\DB\CategoryMapper;
 use Api\Model\Travel\Category;
+use Api\Service\Mailer;
 use Api\Test\ApplicationTestCase;
 use Api\Test\DatabaseTrait;
 use Api\Test\FunctionalTestCase;
@@ -137,11 +138,9 @@ class ApplicationTest extends ApplicationTestCase
         $this->category_mapper = $app['mapper.db.category'];
         $this->connection = $app['dbs']['main'];
 
-        $cat_a = new Category();
-        $cat_a = $cat_a->setName('a');
+        $cat_a = new Category('a');
         $this->category_mapper->insert($cat_a);
-        $cat_b = new Category();
-        $cat_b = $cat_b->setName('b');
+        $cat_b = new Category('b');
         $this->category_mapper->insert($cat_b);
 
         $cats = $this->client->getTravelCategories();
@@ -158,6 +157,8 @@ class ApplicationTest extends ApplicationTestCase
 
     public function testBookingStats()
     {
+        $mailer_service = $this->createMock(Mailer::class);
+        $this->app['email.service'] = $mailer_service;
         $this->createAndLoginUser();
         $this->client->createCategory('test cat1');
         $this->client->createCategory('test cat2');
@@ -171,10 +172,12 @@ class ApplicationTest extends ApplicationTestCase
             'transportation' => 2,
         ]);
 
-        $this->client->registerBooking($id, ['foo' => 'bar']);
+        $payload = json_decode(file_get_contents(__DIR__ . '/stub/booking_request.json'), true);
+
+        $this->client->registerBooking($id, $payload);
         $stats = $this->client->getStats();
         $this->assertEquals(1, $stats->bookingsTotal);
-        $this->assertEquals(0.1, $stats->rewardTotal);
+        $this->assertEquals(1235, $stats->rewardTotal);
         $total = 0;
         foreach ($stats->bookingsLastWeek as $item) {
             $this->assertRegExp('/^\d{4}-\d{2}-\d{2}$/', $item->date);

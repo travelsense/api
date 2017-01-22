@@ -1,14 +1,12 @@
 <?php
-
 namespace Api\Controller\Travel;
 
 use Api\Controller\ApiController;
 use Api\Exception\ApiException;
 use Api\JSON\DataObject;
-use Api\Mapper\DB\CommentMapper;
+use Api\Mapper\DB\Travel\CommentMapper;
 use Api\Model\Travel\Comment;
 use Api\Model\User;
-use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -73,20 +71,19 @@ class CommentController extends ApiController
      * @param int $offset
      * @return array
      */
-    public function getAllByTravelId(Request $r, int $id, int $limit = 10, int $offset = 0): array
+    public function getAllByTravelId(int $id, int $limit = 10, int $offset = 0): array
     {
         $response = [];
         foreach ($this->comment_mapper->fetchByTravelId($id, $limit, $offset) as $comment) {
-            $author = $comment->getAuthor();
             $response[] = [
                 'id' => $comment->getId(),
                 'created' => $comment->getCreated()->format(self::DATETIME_FORMAT),
                 'text' => $comment->getText(),
                 'author' => [
-                    'id'        => $author->getId(),
-                    'firstName' => $author->getFirstName(),
-                    'lastName'  => $author->getLastName(),
-                    'picture'   => $author->getPicture(),
+                    'id'        => $comment->getAuthorId(),
+                    'firstName' => $comment->getAuthorFirstName(),
+                    'lastName'  => $comment->getAuthorLastName(),
+                    'picture'   => $comment->getAuthorPicture(),
                 ]
             ];
         }

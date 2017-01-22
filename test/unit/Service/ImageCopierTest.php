@@ -1,8 +1,6 @@
 <?php
-namespace Api;
+namespace Api\Service;
 
-use Api\Service\ImageCopier;
-use Api\Service\ImageStorage;
 use PHPUnit_Framework_TestCase;
 
 class ImageCopierTest extends PHPUnit_Framework_TestCase

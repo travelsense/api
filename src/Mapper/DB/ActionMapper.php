@@ -3,9 +3,7 @@ namespace Api\Mapper\DB;
 
 use Api\DB\AbstractMapper;
 use Api\Model\Travel\Action;
-use Doctrine\DBAL\Statement;
-use PDO;
-use PDOException;
+use Doctrine\DBAL\Driver\Statement;
 
 /**
  * Class ActionMapper
@@ -43,7 +41,7 @@ class ActionMapper extends AbstractMapper
         );
         $this->bindCommonValues($insert, $action);
         $insert->execute();
-        $row = $insert->fetch(PDO::FETCH_ASSOC);
+        $row = $insert->fetch(\PDO::FETCH_ASSOC);
         $action->setId($row['id']);
     }
 
@@ -80,7 +78,7 @@ class ActionMapper extends AbstractMapper
             WHERE id = :id
         ');
         $this->bindCommonValues($update, $action);
-        $update->bindValue('id', $action->getId(), PDO::PARAM_INT);
+        $update->bindValue('id', $action->getId(), \PDO::PARAM_INT);
         $update->execute();
     }
 
@@ -122,7 +120,7 @@ class ActionMapper extends AbstractMapper
                 $this->insert($action);
             }
             $this->connection->commit();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->connection->rollBack();
         }
     }

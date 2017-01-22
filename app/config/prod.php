@@ -8,7 +8,19 @@ return array_replace_recursive(
             'base_url' => 'https://static.hoptrip.us',
         ],
         'email' => [
-            'booking_details_receivers' => ['karapetov@gmail.com', 'book@hoptrip.us']
+            'booking_details_receivers' => [
+                'karapetov@gmail.com',
+                'book@hoptrip.us',
+            ],
+            'stats_receivers' => [
+                'karapetov@gmail.com',
+                'a.y.remizov@gmail.com',
+                'maksymenkool@gmail.com',
+            ],
+        ],
+        'jobs' => [
+            'cron_lock' => '/www/cache/job_queue.lock',
+            'event_storage_dir' => '/www/cache',
         ],
     ]
 );

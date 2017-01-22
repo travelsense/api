@@ -5,7 +5,7 @@ namespace Api\Model;
  * Entity with id
  * @package Api\Model
  */
-trait IdTrait
+trait HasIdTrait
 {
     /**
      * @var int
@@ -13,18 +13,18 @@ trait IdTrait
     private $id;
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * @param int $id
-     * @return self
+     * @return $this
      */
-    public function setId(int $id): self
+    public function setId(int $id)
     {
         $this->id = $id;
         return $this;

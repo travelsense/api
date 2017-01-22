@@ -1,7 +1,7 @@
 <?php
 /**
  * Translator service config
- * @var $app Application
+ * @var $app \Api\Application
  */
 
 use Silex\Provider\TranslationServiceProvider;
