@@ -1,7 +1,7 @@
-{% block subj %}HopTrip Stats {{ date|date("M d") }}{% endblock %}
+{% block subj %}HopTrip stats {{ date|date("M d") }} - U: {{ stats.users }} ({{ stats.delta_users }}), T: {{ stats.travels }} ({{ stats.delta_travels }}){% endblock %}
 {% block body %}
-    HopTrip Stats - {{ date|date("F d, Y") }}
+HopTrip Stats - {{ date|date("F d, Y") }}
 
-    Users: {{ stats.users }} ({{ stats.delta_users }})
-    Travels: {{ stats.travels }} ({{ stats.delta_travels }})
+Users: {{ stats.users }} ({{ stats.delta_users }})
+Travels: {{ stats.travels }} ({{ stats.delta_travels }})
 {% endblock %}

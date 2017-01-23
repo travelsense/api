@@ -58,23 +58,23 @@ class MailerTest extends PHPUnit_Framework_TestCase
     public function testSendStats()
     {
         $stats = [
-            'users' => 2,
-            'travels' => 10,
-            'delta_users' => -1,
-            'delta_travels' => "+5"
+            'users'         => 2,
+            'travels'       => 10,
+            'delta_users'   => -1,
+            'delta_travels' => "+5",
         ];
         $test = $this;
         $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
             $test->assertEquals(
-            "    HopTrip Stats - ".date('F d, Y')."\n\n    Users: 2 (-1)\n    Travels: 10 (+5)\n",
+                "HopTrip Stats - January 02, 2017\n\nUsers: 2 (-1)\nTravels: 10 (+5)\n",
                 $msg->getBody()
             );
             $test->assertEquals(
-                "HopTrip Stats ".date('M d'),
+                "HopTrip stats Jan 02 - U: 2 (-1), T: 10 (+5)",
                 $msg->getSubject()
             );
         });
 
-        $this->service->sendStats($stats);
+        $this->service->sendStats($stats, new \DateTime('2017-01-02'));
     }
 }

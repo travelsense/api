@@ -36,12 +36,12 @@ class StatService
     }
 
     /**
-     * @param \DateTime $date
+     * @param \DateTimeInterface $date
      */
-    public function sendEmail(\DateTime $date)
+    public function sendEmail(\DateTimeInterface $date)
     {
         $stats = $this->getStats($date);
-        $this->mailer_service->sendStats($stats);
+        $this->mailer_service->sendStats($stats, $date);
     }
 
     /**
