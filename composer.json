@@ -13,8 +13,12 @@
       "url": "git@github.com:travelsense/lib-silex-app.git"
     }
   ],
+  "config": {
+    "platform": {
+      "php": "7.0"
+    }
+  },
   "require": {
-    "php": "^7.0",
     "doctrine/dbal": "^2.5",
     "doctrine/migrations": "^1.4",
     "f3ath/simpleuber": "^1.0",
