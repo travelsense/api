@@ -8,7 +8,6 @@
 
 namespace Api\Model;
 
-
 trait HasUuidTrait
 {
     /**
