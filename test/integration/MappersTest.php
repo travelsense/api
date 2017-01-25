@@ -129,15 +129,6 @@ class MappersTest extends TestCase
         $mapper->confirmEmail($user->getEmail());
         $this->assertTrue($mapper->fetchById($user->getId())->isEmailConfirmed());
 
-        // Update
-        $user
-            ->setEmail('new_email@example.com')
-            ->setFirstName('New')
-            ->setLastName("New Tester");
-
-        $mapper->update($user);
-        $this->assertEquals($user->getId(), $mapper->fetchByEmail($user->getEmail())->getId());
-
          // Update picture
         $mapper->updatePic($user->getId(), 'https://static.hoptrip.us/36/43/36439437709f38e3800e7d08504626b170d651d5');
         $this->assertEquals($user->getId(), $mapper->fetchByEmail($user->getEmail())->getId());
