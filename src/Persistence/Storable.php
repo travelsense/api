@@ -3,5 +3,5 @@ namespace Api\Persistence;
 
 interface Storable
 {
-    public function storeIn(Storage $storage);
+    public function saveTo(Storage $storage);
 }

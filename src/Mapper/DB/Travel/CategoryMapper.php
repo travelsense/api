@@ -1,5 +1,5 @@
 <?php
-namespace Api\Mapper\DB;
+namespace Api\Mapper\DB\Travel;
 
 use Api\DB\AbstractMapper;
 use Api\Model\Travel\Category;
@@ -7,18 +7,6 @@ use Api\Persistence\Storage;
 
 class CategoryMapper extends AbstractMapper implements Storage
 {
-    /**
-     * @param Category $category
-     */
-    public function insert(Category $category)
-    {
-        $insert = $this->connection->prepare('INSERT INTO categories (name) VALUES (:name) RETURNING id');
-        $insert->execute([
-            ':name' => $category->getName(),
-        ]);
-        $category->setId($insert->fetchColumn());
-    }
-
     /**
      * @return Category[]
      */
@@ -145,18 +133,22 @@ class CategoryMapper extends AbstractMapper implements Storage
      */
     protected function create(array $row): Category
     {
-        return Category::restoreFrom($row);
+        return Category::fromSaved($row);
     }
 
-    public function save(array $dto): int
+    public function insert(array $dto): int
     {
         $insert = $this->connection->prepare(
-            'INSERT INTO categories (id, name) VALUES (:id, :name) ON CONFLICT DO UPDATE set name =:name RETURNING id'
+            'INSERT INTO categories (name) VALUES (:name) RETURNING id'
         );
         $insert->execute([
-            ':id' => $dto['id'],
             ':name' => $dto['name'],
         ]);
         return $insert->fetchColumn();
+    }
+
+    public function update(int $id, array $dto)
+    {
+        // TODO: Implement update() method.
     }
 }

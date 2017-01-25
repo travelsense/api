@@ -21,19 +21,16 @@ class Category implements Storable
         $this->name = $name;
     }
 
-    public static function restoreFrom(array $dto): self
+    public static function fromSaved(array $dto): self
     {
         $cat = new self($dto['name']);
         $cat->id = $dto['id'];
         return $cat;
     }
 
-    public function storeIn(Storage $storage)
+    public function saveTo(Storage $storage)
     {
-        $this->id = $storage->save([
-            'id' => $this->id,
-            'name'=> $this->name,
-        ]);
+        $this->id = $storage->insert(['name'=> $this->name]);
     }
 
     /**

@@ -2,6 +2,7 @@
 namespace Api\Mapper\DB;
 
 use Api\DB\AbstractMapper;
+use Api\Mapper\DB\Travel\CategoryMapper;
 use Api\Model\Travel\Travel;
 use Doctrine\DBAL\Driver\Statement;
 

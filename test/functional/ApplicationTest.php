@@ -2,12 +2,11 @@
 namespace Test;
 
 use Api\Application;
-use Api\Mapper\DB\CategoryMapper;
+use Api\Mapper\DB\Travel\CategoryMapper;
 use Api\Model\Travel\Category;
 use Api\Service\Mailer;
 use Api\Test\ApplicationTestCase;
 use Api\Test\DatabaseTrait;
-use Api\Test\FunctionalTestCase;
 use Doctrine\DBAL\Connection;
 use HopTrip\ApiClient\ApiClient;
 use HopTrip\ApiClient\ApiClientException;
@@ -139,9 +138,9 @@ class ApplicationTest extends ApplicationTestCase
         $this->connection = $app['dbs']['main'];
 
         $cat_a = new Category('a');
-        $this->category_mapper->insert($cat_a);
+        $cat_a->saveTo($this->category_mapper);
         $cat_b = new Category('b');
-        $this->category_mapper->insert($cat_b);
+        $cat_b->saveTo($this->category_mapper);
 
         $cats = $this->client->getTravelCategories();
         $cat_ids = [];

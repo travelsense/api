@@ -8,8 +8,7 @@
 namespace Api;
 
 use Api\Mapper\DB\BookingMapper;
-use Api\Mapper\DB\CategoryMapper;
-use Api\Mapper\DB\CommentMapper;
+use Api\Mapper\DB\Travel\CategoryMapper;
 use Api\Mapper\DB\StatsMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\User\RoleMapper;
@@ -421,7 +420,7 @@ class MappersTest extends TestCase
     private function createCategory(string $token): Category
     {
         $category = new Category($token);
-        $this->category_mapper->insert($category);
+        $category->saveTo($this->category_mapper);
         return $category;
     }
 

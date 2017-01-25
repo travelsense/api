@@ -3,5 +3,6 @@ namespace Api\Persistence;
 
 interface Storage
 {
-    public function save(array $dto): int;
+    public function insert(array $dto): int;
+    public function update(int $id, array $dto);
 }

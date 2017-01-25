@@ -3,7 +3,7 @@ namespace Api\Controller\Travel;
 
 use Api\Controller\ApiController;
 use Api\JSON\DataObject;
-use Api\Mapper\DB\CategoryMapper;
+use Api\Mapper\DB\Travel\CategoryMapper;
 use Api\Model\Travel\Category;
 use Api\Model\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +33,7 @@ class CategoriesController extends ApiController
         $json = DataObject::createFromString($request->getContent());
 
         $category = new Category($json->getString('name'));
-        $this->category_mapper->insert($category);
+        $category->saveTo($this->category_mapper);
         return ['id' => $category->getId()];
     }
 
