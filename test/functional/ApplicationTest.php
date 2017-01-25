@@ -71,21 +71,6 @@ class ApplicationTest extends ApplicationTestCase
         $this->assertEquals('Pushkin', $user->lastName);
         $this->assertEquals('sasha@pushkin.ru', $user->email);
         $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
-
-        $this->client->updateUser([
-            'id'        => 1,
-            'firstName' => 'Natalia',
-            'lastName'  => 'Pushkina',
-            'picture'   => 'http://pushkin.ru/sasha.jpg',
-            'email'     => 'sasha@pushkin.ru',
-            'creator'   => false,
-        ]);
-        $user = $this->client->getCurrentUser();
-
-        $this->assertEquals('Natalia', $user->firstName);
-        $this->assertEquals('Pushkina', $user->lastName);
-        $this->assertEquals('sasha@pushkin.ru', $user->email);
-        $this->assertEquals('http://pushkin.ru/sasha.jpg', $user->picture);
     }
     
     public function testTravelCreationAndRetrieval()

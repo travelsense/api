@@ -172,31 +172,4 @@ class UserController extends ApiController
         $this->user_mapper->updatePasswordByEmail($email, $password);
         return [];
     }
-
-    /**
-     * Update User data by id
-     *
-     * @param User    $user
-     * @param Request $request
-     * @return array
-     */
-    public function updateUser(User $user, Request $request): array
-    {
-        $json = DataObject::createFromString($request->getContent());
-        $email = $json->getString('email');
-        $email_update = ($user->getEmail() !== $email);
-        $user
-            ->setEmail($json->getString('email'))
-            ->setFirstName($json->getString('firstName'))
-            ->setLastName($json->getString('lastName'))
-            ->setCreator($json->has('creator') ? $json->getBoolean('creator') : false);
-        if ($email_update) {
-            $user->setEmailConfirmed(false);
-        }
-        $this->user_mapper->update($user);
-        if ($email_update) {
-            $this->sendConfirmationLink($user);
-        }
-        return [];
-    }
 }

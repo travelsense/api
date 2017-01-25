@@ -70,40 +70,6 @@ class UserMapper extends AbstractMapper
     }
 
     /**
-     * @param User $user
-     * @return void
-     */
-    public function update(User $user)
-    {
-        $email = $user->getEmail();
-        $first_name = $user->getFirstName();
-        $last_name = $user->getLastName();
-        $email_confirmed = $user->isEmailConfirmed();
-        $creator = $user->isCreator();
-        $id = $user->getId();
-        $update = $this->connection->prepare(
-            'UPDATE users 
-            SET 
-              email = :email, 
-              first_name = :firstname, 
-              last_name = :lastname, 
-              email_confirmed = :email_confirmed, 
-              creator = :creator 
-            WHERE id = :id'
-        );
-        $values = [
-            'email' => $email,
-            'firstname' => $first_name,
-            'lastname' => $last_name,
-            'email_confirmed' => $email_confirmed,
-            'id' => $id,
-            'creator' => $creator,
-        ];
-        $this->helper->bindValues($update, $values);
-        $update->execute();
-    }
-
-    /**
      * @param string $email
      * @param string $password
      * @return User|null
