@@ -16,7 +16,7 @@ class Version20170125074906 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-//        $this->addSql('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+        $this->addSql('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
         $tables = [
             'actions',
             'banners',
