@@ -16,6 +16,7 @@ class Version20170125074906 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+//        $this->addSql('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
         $tables = [
             'actions',
             'banners',
@@ -30,8 +31,7 @@ class Version20170125074906 extends AbstractMigration
         ];
 
         foreach ($tables as $table) {
-            $uuid = HasUuidTrait::generateUuid();
-            $this->addSql("ALTER TABLE $table ADD COLUMN uuid TEXT NOT NULL DEFAULT '$uuid'");
+            $this->addSql("ALTER TABLE $table ADD COLUMN uuid UUID NOT NULL DEFAULT uuid_generate_v4()");
         }
     }
 
