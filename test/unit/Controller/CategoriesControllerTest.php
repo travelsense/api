@@ -36,7 +36,7 @@ class CategoriesControllerTest extends ControllerTestCase
      */
     public function testCreateCategory()
     {
-        $user = $this->buildUser();
+        $user = $this->createMock(User::class);
 
         $json = json_encode([
             'name' => 'crazy fun',

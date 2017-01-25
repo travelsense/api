@@ -3,8 +3,9 @@ namespace Api\Mapper\DB;
 
 use Api\DB\AbstractMapper;
 use Api\Model\Travel\Category;
+use Api\Persistence\Storage;
 
-class CategoryMapper extends AbstractMapper
+class CategoryMapper extends AbstractMapper implements Storage
 {
     /**
      * @param Category $category
@@ -144,8 +145,18 @@ class CategoryMapper extends AbstractMapper
      */
     protected function create(array $row): Category
     {
-        $category = new Category($row['name']);
-        $category->setId($row['id']);
-        return $category;
+        return Category::restoreFrom($row);
+    }
+
+    public function save(array $dto): int
+    {
+        $insert = $this->connection->prepare(
+            'INSERT INTO categories (id, name) VALUES (:id, :name) ON CONFLICT DO UPDATE set name =:name RETURNING id'
+        );
+        $insert->execute([
+            ':id' => $dto['id'],
+            ':name' => $dto['name'],
+        ]);
+        return $insert->fetchColumn();
     }
 }
