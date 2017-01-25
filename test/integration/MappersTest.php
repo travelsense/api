@@ -225,9 +225,7 @@ class MappersTest extends TestCase
         $this->createTravel($user, 'b');
 
         $cat_list = $this->category_mapper->fetchByTravelId($travel_a->getId());
-        $cat_ids_list = $this->category_mapper->fetchIdsByTravelId($travel_a->getId());
         $this->assertSameCategories($cat_a, $cat_list[0]);
-        $this->assertEquals([$cat_a->getId()], $cat_ids_list);
 
         $this->assertEquals([], $this->travel_mapper->fetchByCategory($cat_b->getName(), 1, 0));
         $travel_list = $this->travel_mapper->fetchByCategory($cat_a->getName(), 1, 0);
