@@ -183,7 +183,7 @@ class Mailer
      * @param int $status
      * @param \DateTimeInterface $date
      */
-    public function sendErrorMessage(string $mes, int $status,\DateTimeInterface $date)
+    public function sendErrorMessage(string $mes, int $status, \DateTimeInterface $date)
     {
         $template = $this->twig->load('email/error.twig');
 
