@@ -179,11 +179,9 @@ class Mailer
 
     /**
      * Send error message
-     * @param string $mes
-     * @param int $status
-     * @param \DateTimeInterface $date
+     * @param Throwable $e
      */
-    public function sendErrorMessage(string $mes, int $status, \DateTimeInterface $date)
+    public function sendErrorMessage(Throwable $e)
     {
         $template = $this->twig->load('email/error.twig');
 
@@ -191,8 +189,7 @@ class Mailer
             $template->renderBlock(
                 'subj',
                 [
-                    'message' => $mes,
-                    'date'    => $date,
+                    'e' => $e,
                 ]
             )
         )
@@ -202,9 +199,7 @@ class Mailer
                 $template->renderBlock(
                     'body',
                     [
-                        'message' => $mes,
-                        'status'  => $status,
-                        'date'    => $date,
+                        'e' => $e,
                     ]
                 )
             );
@@ -214,8 +209,9 @@ class Mailer
                 'Sending error message',
                 [
                     'sent'    => $sent,
-                    'Status'  => $status,
-                    'Message' => $mes,
+                    'Status'  => $e->getCode(),
+                    'Message' => $e->getMessage(),
+                    'File'    => $e->getFile() . "(" . $e->getLine() . ")",
                 ]
             );
         }

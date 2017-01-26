@@ -1,8 +1,7 @@
-{% block subj %}HopTrip - {{ message }} ({{ date|date("M d, H:i") }}){% endblock %}
+{% block subj %}HopTrip Error: {{ e.getMessage }} (code: {{ e.getCode }}){% endblock %}
 {% block body %}
-HopTrip - {{ date|date("F d, Y H:i") }}
-Big trouble, we're have a Exception!
+Message: {{ e.getMessage }}
+Code: {{ e.getCode }}
 
-Message: {{ message }}
-Status: {{ status }}
+{{ e.__toString }}
 {% endblock %}
