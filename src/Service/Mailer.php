@@ -7,6 +7,7 @@ use Psr\Log\LoggerAwareTrait;
 use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
+use Throwable;
 use Twig_Environment;
 
 class Mailer
