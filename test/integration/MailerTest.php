@@ -77,4 +77,25 @@ class MailerTest extends PHPUnit_Framework_TestCase
 
         $this->service->sendStats($stats, new \DateTime('2017-01-02'));
     }
+
+    public function testErrorMessage()
+    {
+        $test = $this;
+        $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
+            $test->assertEquals(
+                "HopTrip - January 02, 2017 20:01\nBig trouble,"
+                ." we're have a Exception!\n\nMessage: Internal Server Error\nStatus: 500\n",
+                $msg->getBody()
+            );
+            $test->assertEquals(
+                "HopTrip - Internal Server Error (Jan 02, 20:01)",
+                $msg->getSubject()
+            );
+        });
+
+        $this->service->sendErrorMessage(
+            'Internal Server Error',
+            \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR,
+            new \DateTime('2017-01-02 20:01:01'));
+    }
 }

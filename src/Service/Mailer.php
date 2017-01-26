@@ -176,4 +176,48 @@ class Mailer
             );
         }
     }
+
+    /**
+     * Send error message
+     * @param string $mes
+     * @param int $status
+     * @param \DateTimeInterface $date
+     */
+    public function sendErrorMessage(string $mes, int $status,\DateTimeInterface $date)
+    {
+        $template = $this->twig->load('email/error.twig');
+
+        $message = Swift_Message::newInstance(
+            $template->renderBlock(
+                'subj',
+                [
+                    'message' => $mes,
+                    'date'    => $date,
+                ]
+            )
+        )
+            ->setFrom($this->conf['from_address'], $this->conf['from_name'])
+            ->setTo($this->conf['error_message'])
+            ->setBody(
+                $template->renderBlock(
+                    'body',
+                    [
+                        'message' => $mes,
+                        'status'  => $status,
+                        'date'    => $date,
+                    ]
+                )
+            );
+        $sent = $this->mailer->send($message);
+        if ($this->logger) {
+            $this->logger->info(
+                'Sending error message',
+                [
+                    'sent'    => $sent,
+                    'Status'  => $status,
+                    'Message' => $mes,
+                ]
+            );
+        }
+    }
 }

@@ -37,6 +37,7 @@ $app->error(function (Throwable $e) use ($app) {
         $code = 0;
         $message = 'Internal Server Error';
         $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+        $app['email.service']->sendErrorMessage($message, $status, new DateTime());
     }
     return $app->json(
         [
