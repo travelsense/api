@@ -8,6 +8,7 @@ class MailerTest extends PHPUnit_Framework_TestCase
 {
     private $mailer;
     private $service;
+    private $e;
 
     public function setUp()
     {
@@ -80,43 +81,19 @@ class MailerTest extends PHPUnit_Framework_TestCase
 
     public function testErrorMessage()
     {
+        $this->e = new \Exception('Test Exception');
         $test = $this;
         $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
             $test->assertEquals(
-                "Message: Invalid Argument\nCode: 0\n\n"
-                ."InvalidArgumentException: Invalid Argument in /vagrant/test/integration/MailerTest.php:120\n"
-                ."Stack trace:\n"
-                ."#0 [internal function]: Api\MailerTest-&gt;testErrorMessage()\n"
-                ."#1 /vagrant/vendor/phpunit/phpunit/src/Framework/TestCase.php(1111): "
-                ."ReflectionMethod-&gt;invokeArgs(Object(Api\MailerTest), Array)\n"
-                ."#2 /vagrant/vendor/phpunit/phpunit/src/Framework/TestCase.php(962): "
-                ."PHPUnit_Framework_TestCase-&gt;runTest()\n"
-                ."#3 /vagrant/vendor/phpunit/phpunit/src/Framework/TestResult.php(709): "
-                ."PHPUnit_Framework_TestCase-&gt;runBare()\n"
-                ."#4 /vagrant/vendor/phpunit/phpunit/src/Framework/TestCase.php(917): "
-                ."PHPUnit_Framework_TestResult-&gt;run(Object(Api\MailerTest))\n"
-                ."#5 /vagrant/vendor/phpunit/phpunit/src/Framework/TestSuite.php(728): "
-                ."PHPUnit_Framework_TestCase-&gt;run(Object(PHPUnit_Framework_TestResult))\n"
-                ."#6 /vagrant/vendor/phpunit/phpunit/src/Framework/TestSuite.php(728): "
-                ."PHPUnit_Framework_TestSuite-&gt;run(Object(PHPUnit_Framework_TestResult))\n"
-                ."#7 /vagrant/vendor/phpunit/phpunit/src/Framework/TestSuite.php(728): "
-                ."PHPUnit_Framework_TestSuite-&gt;run(Object(PHPUnit_Framework_TestResult))\n"
-                ."#8 /vagrant/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(487): "
-                ."PHPUnit_Framework_TestSuite-&gt;run(Object(PHPUnit_Framework_TestResult))\n"
-                ."#9 /vagrant/vendor/phpunit/phpunit/src/TextUI/Command.php(188): "
-                ."PHPUnit_TextUI_TestRunner-&gt;doRun(Object(PHPUnit_Framework_TestSuite), Array, true)\n"
-                ."#10 /vagrant/vendor/phpunit/phpunit/src/TextUI/Command.php(118): "
-                ."PHPUnit_TextUI_Command-&gt;run(Array, true)\n"
-                ."#11 /vagrant/vendor/phpunit/phpunit/phpunit(52): PHPUnit_TextUI_Command::main()\n"
-                ."#12 {main}\n",
-                $msg->getBody()
+                "Message: Test Exception\nCode: 0\n\n".$this->e->__toString()."\n",
+                str_replace('&gt;', '>', $msg->getBody())
             );
             $test->assertEquals(
-                "HopTrip Error: Invalid Argument (code: 0)",
+                "HopTrip Error: Test Exception (code: 0)",
                 $msg->getSubject()
             );
         });
 
-        $this->service->sendErrorMessage( new \InvalidArgumentException('Invalid Argument'));
+        $this->service->sendErrorMessage( $this->e );
     }
 }
