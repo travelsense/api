@@ -8,6 +8,7 @@ class MailerTest extends PHPUnit_Framework_TestCase
 {
     private $mailer;
     private $service;
+
     public function setUp()
     {
         $app = new Application('test');
