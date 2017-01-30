@@ -35,16 +35,7 @@ $app->error(function (Throwable $e) use ($app) {
         $message = $e->getMessage();
         $status = $e->getStatusCode();
     } else {
-        $app['monolog']->pushHandler(new ErrorLogHandler(ErrorLogHandler::SAPI, Logger::EMERGENCY));
         $app['monolog']->emergency($e);
-        $mes = Swift_Message::newInstance(
-            'HopTrip ERROR: '.$e->getMessage().' (code: '.$e->getCode().')'
-        )
-            ->setFrom($app['config']['email']['from_address'], $app['config']['email']['from_name'])
-            ->setTo($app['config']['email']['error_message']);
-        $mailStream = new SwiftMailerHandler($app['mailer'], $mes, Logger::EMERGENCY);
-        $app['monolog']->pushHandler($mailStream);
-
         $code = 0;
         $message = 'Internal Server Error';
         $status = Response::HTTP_INTERNAL_SERVER_ERROR;
@@ -89,6 +80,17 @@ $app->register(new MonologServiceProvider, [
     'monolog.level' => $app['config']['log']['main']['level'],
     'monolog.name' => 'api',
 ]);
+
+$app->extend('monolog', function($monolog, $app) {
+    $monolog->pushHandler(new ErrorLogHandler(ErrorLogHandler::SAPI, Logger::EMERGENCY));
+    $message = Swift_Message::newInstance(' HopTrip ERROR!!! ')
+        ->setFrom($app['config']['email']['from_address'], $app['config']['email']['from_name'])
+        ->setTo($app['config']['email']['error_message']);
+    $mailStream = new SwiftMailerHandler($app['mailer'], $message, Logger::EMERGENCY);
+    $monolog->pushHandler($mailStream);
+
+    return $monolog;
+});
 
 // Pimple dumper
 if ($app['env'] === 'dev') {
