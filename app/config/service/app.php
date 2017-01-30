@@ -6,6 +6,9 @@
  */
 
 use Api\Exception\ApiException;
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Handler\SwiftMailerHandler;
+use Monolog\Logger;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
@@ -32,12 +35,19 @@ $app->error(function (Throwable $e) use ($app) {
         $message = $e->getMessage();
         $status = $e->getStatusCode();
     } else {
-        error_log($e);
-        $app['monolog']->emergency($e->getMessage());
+        $app['monolog']->pushHandler(new ErrorLogHandler(ErrorLogHandler::SAPI, Logger::EMERGENCY));
+        $app['monolog']->emergency($e);
+        $mes = Swift_Message::newInstance(
+            'HopTrip ERROR: '.$e->getMessage().' (code: '.$e->getCode().')'
+        )
+            ->setFrom($app['config']['email']['from_address'], $app['config']['email']['from_name'])
+            ->setTo($app['config']['email']['error_message']);
+        $mailStream = new SwiftMailerHandler($app['mailer'], $mes, Logger::EMERGENCY);
+        $app['monolog']->pushHandler($mailStream);
+
         $code = 0;
         $message = 'Internal Server Error';
         $status = Response::HTTP_INTERNAL_SERVER_ERROR;
-        $app['email.service']->sendErrorMessage($e);
     }
     return $app->json(
         [

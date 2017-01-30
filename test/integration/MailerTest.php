@@ -78,22 +78,4 @@ class MailerTest extends PHPUnit_Framework_TestCase
 
         $this->service->sendStats($stats, new \DateTime('2017-01-02'));
     }
-
-    public function testErrorMessage()
-    {
-        $this->e = new \Exception('Test Exception');
-        $test = $this;
-        $this->mailer->method('send')->willReturnCallback(function (Swift_Message $msg) use ($test) {
-            $test->assertEquals(
-                "Message: Test Exception\nCode: 0\n\n".$this->e->__toString()."\n",
-                str_replace('&gt;', '>', $msg->getBody())
-            );
-            $test->assertEquals(
-                "HopTrip Error: Test Exception (code: 0)",
-                $msg->getSubject()
-            );
-        });
-
-        $this->service->sendErrorMessage( $this->e );
-    }
 }

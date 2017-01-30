@@ -7,7 +7,6 @@ use Psr\Log\LoggerAwareTrait;
 use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
-use Throwable;
 use Twig_Environment;
 
 class Mailer
@@ -173,46 +172,6 @@ class Mailer
                     'sent'    => $sent,
                     'Users'   => $stats['users'],
                     'Travels' => $stats['travels'],
-                ]
-            );
-        }
-    }
-
-    /**
-     * Send error message
-     * @param Throwable $e
-     */
-    public function sendErrorMessage(Throwable $e)
-    {
-        $template = $this->twig->load('email/error.twig');
-
-        $message = Swift_Message::newInstance(
-            $template->renderBlock(
-                'subj',
-                [
-                    'e' => $e,
-                ]
-            )
-        )
-            ->setFrom($this->conf['from_address'], $this->conf['from_name'])
-            ->setTo($this->conf['error_message'])
-            ->setBody(
-                $template->renderBlock(
-                    'body',
-                    [
-                        'e' => $e,
-                    ]
-                )
-            );
-        $sent = $this->mailer->send($message);
-        if ($this->logger) {
-            $this->logger->info(
-                'Sending error message',
-                [
-                    'sent'    => $sent,
-                    'Status'  => $e->getCode(),
-                    'Message' => $e->getMessage(),
-                    'File'    => $e->getFile() . "(" . $e->getLine() . ")",
                 ]
             );
         }
