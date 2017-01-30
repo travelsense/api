@@ -81,7 +81,7 @@ $app->register(new MonologServiceProvider, [
     'monolog.name' => 'api',
 ]);
 
-$app->extend('monolog', function($monolog, $app) {
+$app->extend('monolog', function ($monolog, $app) {
     $monolog->pushHandler(new ErrorLogHandler(ErrorLogHandler::SAPI, Logger::EMERGENCY));
     $message = Swift_Message::newInstance(' HopTrip ERROR!!! ')
         ->setFrom($app['config']['email']['from_address'], $app['config']['email']['from_name'])
