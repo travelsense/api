@@ -37,6 +37,7 @@ return [
         'password_reset'            => 'https://hoptrip.us/password/reset/%s',
         'booking_details_receivers' => [],
         'stats_receivers'           => [],
+        'swift_subj'                => 'HopTrip EMERGENCY: %context%',
     ],
     'security' => [
         'enabled' => true,

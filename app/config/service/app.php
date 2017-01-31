@@ -35,7 +35,7 @@ $app->error(function (Throwable $e) use ($app) {
         $message = $e->getMessage();
         $status = $e->getStatusCode();
     } else {
-        $app['monolog']->emergency($e);
+        $app['monolog']->emergency($e, [get_class($e).': '.$e->getMessage().' in '.($e->getFile().':'.$e->getLine())]);
         $code = 0;
         $message = 'Internal Server Error';
         $status = Response::HTTP_INTERNAL_SERVER_ERROR;
@@ -83,7 +83,7 @@ $app->register(new MonologServiceProvider, [
 
 $app->extend('monolog', function ($monolog, $app) {
     $monolog->pushHandler(new ErrorLogHandler(ErrorLogHandler::SAPI, Logger::EMERGENCY));
-    $message = Swift_Message::newInstance(' HopTrip ERROR!!! ')
+    $message = Swift_Message::newInstance($app['config']['email']['swift_subj'])
         ->setFrom($app['config']['email']['from_address'], $app['config']['email']['from_name'])
         ->setTo($app['config']['email']['error_message']);
     $mailStream = new SwiftMailerHandler($app['mailer'], $message, Logger::EMERGENCY);
