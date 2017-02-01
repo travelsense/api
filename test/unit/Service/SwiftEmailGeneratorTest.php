@@ -41,8 +41,7 @@ class SwiftEmailGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $this->mailer->method('send')
             ->willReturnCallback(function (Swift_Message $msg) use ($test) {
-
-                $subj = explode($this->e->getLine(),$this->e->__toString());
+                $subj = explode($this->e->getLine(), $this->e->__toString());
                 $test->assertEquals(
                     'HopTrip EMERGENCY: ['.date('Y-m-d H:i:s', $msg->getDate()).'] api.EMERGENCY: '
                     .$subj[0].$this->e->getLine(),
