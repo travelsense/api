@@ -27,9 +27,13 @@ class SwiftEmailGenerator
 
     public function __invoke(string $content, array $records)
     {
-        $mes = explode(' Stack trace', $content);
+        $mes = ($records[0]['context']['exception']) ? (": "
+            .get_class($records[0]['context']['exception']).': '
+            .$records[0]['context']['exception']->getMessage()
+            .' in '.$records[0]['context']['exception']->getFile().':'
+            .$records[0]['context']['exception']->getLine()) : '';
         $message = \Swift_Message::newInstance()
-            ->setSubject("HopTrip ".$records[0]['level_name'].": ".$mes[0])
+            ->setSubject("HopTrip ".$records[0]['level_name'].$mes)
             ->setFrom($this->from_address, $this->from_name)
             ->setTo($this->to);
         return $message;

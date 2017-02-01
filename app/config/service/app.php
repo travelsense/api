@@ -35,7 +35,7 @@ $app->error(function (Throwable $e) use ($app) {
         $message = $e->getMessage();
         $status = $e->getStatusCode();
     } else {
-        $app['monolog']->emergency($e);
+        $app['monolog']->emergency($e, ['exception' => $e]);
         $code = 0;
         $message = 'Internal Server Error';
         $status = Response::HTTP_INTERNAL_SERVER_ERROR;
