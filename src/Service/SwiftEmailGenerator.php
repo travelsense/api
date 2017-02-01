@@ -1,0 +1,37 @@
+<?php
+namespace Api\Service;
+
+class SwiftEmailGenerator
+{
+    /**
+     * @var string
+     */
+    private $from_address;
+
+    /**
+     * @var string
+     */
+    private $from_name;
+
+    /**
+     * @var array
+     */
+    private $to;
+
+    public function __construct(string $from_address, string $from_name, array $to)
+    {
+        $this->from_address = $from_address;
+        $this->from_name = $from_name;
+        $this->to = $to;
+    }
+
+    public function __invoke(string $content, array $records)
+    {
+        $mes = explode('Stack', $records[0]['message']);
+        $message = \Swift_Message::newInstance()
+            ->setSubject('HopTrip EMERGENCY: '.$mes[0])
+            ->setFrom($this->from_address, $this->from_name)
+            ->setTo($this->to);
+        return $message;
+    }
+}
