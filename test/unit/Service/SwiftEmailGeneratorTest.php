@@ -5,11 +5,6 @@ use Swift_Mailer;
 
 class SwiftEmailGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var SwiftEmailGenerator
-     */
-    private $swift_email;
-
     public function testEmailGenerator()
     {
         $e = new \Exception('Test Exception');
@@ -27,9 +22,9 @@ class SwiftEmailGeneratorTest extends \PHPUnit_Framework_TestCase
         ];
         $content = "[2017-02-02 07:24:53] api.EMERGENCY: Exception: Test Exception";
 
-        $this->swift_email = new SwiftEmailGenerator('from_test@example.com', 'Test name', ['to_test@example.com']);
+        $swift_email = new SwiftEmailGenerator('from_test@example.com', 'Test name', ['to_test@example.com']);
 
-        $message = call_user_func($this->swift_email, $content, $records);
+        $message = call_user_func($swift_email, $content, $records);
 
         $this->assertInstanceOf('Swift_Message', $message);
         $this->assertEquals('Exception: Test Exception', $message->getSubject());
