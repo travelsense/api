@@ -41,6 +41,6 @@ class SwiftEmailGenerator
      */
     private function getSubj(\Throwable $e): string
     {
-        return ': '.get_class($e).': '.$e->getMessage().' in '.$e->getFile().':'.$e->getLine();
+        return ': '.get_class($e).': '.$e->getMessage();
     }
 }
