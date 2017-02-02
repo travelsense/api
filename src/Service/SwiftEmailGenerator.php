@@ -27,9 +27,8 @@ class SwiftEmailGenerator
 
     public function __invoke(string $content, array $records)
     {
-        $mes = $this->getSubj($records[0]['context']['exception']);
         $message = \Swift_Message::newInstance()
-            ->setSubject("HopTrip ".$records[0]['level_name'].$mes)
+            ->setSubject($this->getSubj($records[0]['context']['exception']))
             ->setFrom($this->from_address, $this->from_name)
             ->setTo($this->to);
         return $message;
@@ -41,6 +40,6 @@ class SwiftEmailGenerator
      */
     private function getSubj(\Throwable $e): string
     {
-        return ': '.get_class($e).': '.$e->getMessage();
+        return get_class($e).': '.$e->getMessage();
     }
 }
