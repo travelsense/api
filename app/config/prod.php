@@ -17,7 +17,7 @@ return array_replace_recursive(
                 'a.y.remizov@gmail.com',
                 'maksymenkool@gmail.com',
             ],
-            'error_message' => [
+            'error_receivers' => [
                 'karapetov@gmail.com',
             ],
         ],

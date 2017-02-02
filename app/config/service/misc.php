@@ -69,6 +69,6 @@ $app['swift_email_generator'] = function (Application $app) {
     return new \Api\Service\SwiftEmailGenerator(
         $app['config']['email']['from_address'],
         $app['config']['email']['from_name'],
-        $app['config']['email']['error_message']
+        $app['config']['email']['error_receivers']
     );
 };

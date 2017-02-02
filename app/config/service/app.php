@@ -83,9 +83,7 @@ $app->register(new MonologServiceProvider, [
 
 $app->extend('monolog', function ($monolog, $app) {
     $monolog->pushHandler(new ErrorLogHandler(ErrorLogHandler::SAPI, Logger::EMERGENCY));
-    $mailStream = new SwiftMailerHandler($app['mailer'], $app['swift_email_generator'], Logger::EMERGENCY);
-    $monolog->pushHandler($mailStream);
-
+    $monolog->pushHandler(new SwiftMailerHandler($app['mailer'], $app['swift_email_generator'], Logger::EMERGENCY));
     return $monolog;
 });
 

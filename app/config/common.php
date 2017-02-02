@@ -37,7 +37,7 @@ return [
         'password_reset'            => 'https://hoptrip.us/password/reset/%s',
         'booking_details_receivers' => [],
         'stats_receivers'           => [],
-        'error_message'             => [],
+        'error_receivers'             => [],
     ],
     'security' => [
         'enabled' => true,
