@@ -6,6 +6,9 @@
  */
 
 use Api\Exception\ApiException;
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Handler\SwiftMailerHandler;
+use Monolog\Logger;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Sorien\Provider\PimpleDumpProvider;
@@ -32,8 +35,7 @@ $app->error(function (Throwable $e) use ($app) {
         $message = $e->getMessage();
         $status = $e->getStatusCode();
     } else {
-        error_log($e);
-        $app['monolog']->emergency($e->getMessage());
+        $app['monolog']->emergency($e, ['exception' => $e]);
         $code = 0;
         $message = 'Internal Server Error';
         $status = Response::HTTP_INTERNAL_SERVER_ERROR;
@@ -78,6 +80,12 @@ $app->register(new MonologServiceProvider, [
     'monolog.level' => $app['config']['log']['main']['level'],
     'monolog.name' => 'api',
 ]);
+
+$app->extend('monolog', function ($monolog, $app) {
+    $monolog->pushHandler(new ErrorLogHandler(ErrorLogHandler::SAPI, Logger::EMERGENCY));
+    $monolog->pushHandler(new SwiftMailerHandler($app['mailer'], $app['swift_email_generator'], Logger::EMERGENCY));
+    return $monolog;
+});
 
 // Pimple dumper
 if ($app['env'] === 'dev') {
