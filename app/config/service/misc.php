@@ -64,3 +64,11 @@ $app['image_copier'] = function (Application $app) {
 $app['stats_service'] = function (Application $app) {
     return new StatService($app['mapper.db.stats'], $app['email.service']);
 };
+
+$app['swift_email_generator'] = function (Application $app) {
+    return new \Api\Service\SwiftEmailGenerator(
+        $app['config']['email']['from_address'],
+        $app['config']['email']['from_name'],
+        $app['config']['email']['error_receivers']
+    );
+};

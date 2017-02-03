@@ -17,6 +17,9 @@ return array_replace_recursive(
                 'a.y.remizov@gmail.com',
                 'maksymenkool@gmail.com',
             ],
+            'error_receivers' => [
+                'karapetov@gmail.com',
+            ],
         ],
         'jobs' => [
             'cron_lock' => '/www/cache/job_queue.lock',
