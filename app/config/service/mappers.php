@@ -7,9 +7,9 @@
 use Api\Mapper\DB\ActionMapper;
 use Api\Mapper\DB\BannerMapper;
 use Api\Mapper\DB\BookingMapper;
-use Api\Mapper\DB\CategoryMapper;
 use Api\Mapper\DB\SessionMapper;
 use Api\Mapper\DB\StatsMapper;
+use Api\Mapper\DB\Travel\CategoryMapper;
 use Api\Mapper\DB\Travel\CommentMapper;
 use Api\Mapper\DB\TravelMapper;
 use Api\Mapper\DB\User\RoleMapper;

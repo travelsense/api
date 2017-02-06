@@ -1,11 +1,15 @@
 <?php
 namespace Api\Model\Travel;
 
-use Api\Model\HasIdTrait;
+use Api\Persistence\Storable;
+use Api\Persistence\Storage;
 
-class Category
+class Category implements Storable
 {
-    use HasIdTrait;
+    /**
+     * @var int
+     */
+    private $id;
 
     /**
      * @var string
@@ -17,11 +21,31 @@ class Category
         $this->name = $name;
     }
 
+    public static function fromSaved(array $dto): self
+    {
+        $cat = new self($dto['name']);
+        $cat->id = $dto['id'];
+        return $cat;
+    }
+
+    public function saveTo(Storage $storage)
+    {
+        $this->id = $storage->insert(['name'=> $this->name]);
+    }
+
     /**
      * @return string
      */
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

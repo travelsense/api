@@ -1,8 +1,8 @@
 <?php
 namespace Api\Controller\Travel;
 
-use Api\Mapper\DB\CategoryMapper;
-use Api\Model\Travel\Category;
+use Api\Mapper\DB\Travel\CategoryMapper;
+use Api\Model\User;
 use Api\Test\ControllerTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,10 +19,7 @@ class CategoriesControllerTest extends ControllerTestCase
 
     public function setUp()
     {
-        $this->category_mapper = $this->getMockBuilder(CategoryMapper::class)
-            ->setMethods(['insert', 'fetchAll', 'fetchAllByName'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->category_mapper = $this->createMock(CategoryMapper::class);
 
         $this->controller = new CategoriesController(
             $this->category_mapper
@@ -36,24 +33,21 @@ class CategoriesControllerTest extends ControllerTestCase
      */
     public function testCreateCategory()
     {
-        $user = $this->buildUser();
+        $user = $this->createMock(User::class);
 
         $json = json_encode([
             'name' => 'crazy fun',
         ]);
 
-        $request = $this->getMockBuilder(Request::class)
-            ->setMethods(['getContent'])
-            ->getMock();
-
+        $request = $this->createMock(Request::class);
         $request->method('getContent')->willReturn($json);
 
         $this->category_mapper->expects($this->once())
             ->method('insert')
-            ->with($this->callback(function (Category $cat) {
-                $cat->setId(1);
-                return $cat->getName() === 'crazy fun';
-            }))
+            ->with([
+                'name' => 'crazy fun',
+            ])
+            ->willReturn(1);
         ;
 
         $this->assertEquals(['id' => 1], $this->controller->createCategory($request, $user));

@@ -1,23 +1,12 @@
 <?php
-namespace Api\Mapper\DB;
+namespace Api\Mapper\DB\Travel;
 
 use Api\DB\AbstractMapper;
 use Api\Model\Travel\Category;
+use Api\Persistence\Storage;
 
-class CategoryMapper extends AbstractMapper
+class CategoryMapper extends AbstractMapper implements Storage
 {
-    /**
-     * @param Category $category
-     */
-    public function insert(Category $category)
-    {
-        $insert = $this->connection->prepare('INSERT INTO categories (name) VALUES (:name) RETURNING id');
-        $insert->execute([
-            ':name' => $category->getName(),
-        ]);
-        $category->setId($insert->fetchColumn());
-    }
-
     /**
      * @return Category[]
      */
@@ -61,22 +50,6 @@ class CategoryMapper extends AbstractMapper
         return $this->createAll($select);
     }
 
-    /**
-     * @param int $travel_id
-     * @return int[]
-     */
-    public function fetchIdsByTravelId(int $travel_id): array
-    {
-        $select = $this->connection->prepare('
-            SELECT ct.category_id FROM travel_categories ct 
-            WHERE ct.travel_id = :travel_id
-        ');
-        $select->execute([
-            'travel_id' => $travel_id,
-        ]);
-        return $select->fetchAll(\PDO::FETCH_COLUMN);
-    }
-    
     /**
      * @param int $id
      * @return Category
@@ -144,8 +117,22 @@ class CategoryMapper extends AbstractMapper
      */
     protected function create(array $row): Category
     {
-        $category = new Category($row['name']);
-        $category->setId($row['id']);
-        return $category;
+        return Category::fromSaved($row);
+    }
+
+    public function insert(array $dto): int
+    {
+        $insert = $this->connection->prepare(
+            'INSERT INTO categories (name) VALUES (:name) RETURNING id'
+        );
+        $insert->execute([
+            ':name' => $dto['name'],
+        ]);
+        return $insert->fetchColumn();
+    }
+
+    public function update(int $id, array $dto)
+    {
+        // TODO: Implement update() method.
     }
 }
